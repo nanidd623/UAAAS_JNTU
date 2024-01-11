@@ -1,0 +1,733 @@
+﻿body{
+	margin:0px;
+	font-family:arial;
+	font-size:12px;
+	background:url(https://www.antiragging.in/site/images/body_bg1.jpg) repeat-x;
+}
+
+.wrapper{
+	width:1000px;
+	margin:0 auto;
+}
+.outer{
+	width:1000px;
+	float:left;
+}
+.top_band{
+	float: left;
+    padding: 10px 5px 0px 5px;
+    width: 990px;
+}
+.logo{
+	float:left;
+	padding-top:00px;
+}
+.logo_a{
+	float:right;
+	padding-right:20px;
+}
+.login{
+	float:right;
+	width:290px;
+	padding-right:50px;
+}
+.login .txt{
+	color:#004076;
+	text-transform:uppercase;
+	float:left;
+	font-weight:bold;
+	padding:5px;
+	vertical-align:middle;
+}
+.login .input_outer {
+	float:left;
+	margin-right:3px
+
+}
+.login input[type="text"]{
+width:86px;
+
+border:1px solid #4d80ad;
+font-size:11px;
+color:#004076;
+height:15px;
+float:left;
+padding:2px 2px 2px 5px;
+}
+.login input[type="password"]{
+width:86px;
+border:1px solid #4d80ad;
+font-size:11px;
+color:#004076;
+height:15px;
+float:left;
+padding:2px 2px 2px 5px;
+}
+.login .bt{
+	float:left;
+}
+.login input[type="radio"]{
+font-size:11px;
+color:#004076;
+
+}
+.login td{
+	color:#004076;
+	float:left;
+	font-weight:bold;
+	padding:3px;
+}
+.menu{
+	float:left;
+	padding-left:80px;
+	width:900px;
+
+}
+
+
+.top_box {
+  background: url(https://www.antiragging.in/site/images/top_box.jpg);
+    background-repeat: no-repeat;
+    background-size: 650px 140px;
+    width: 650px;
+    height: 140px;
+    float: left;
+    margin-right: 3px;
+}
+
+.last_box {
+   border: 1px solid  #c9e1fa;
+	border-radius:5px;
+	background-color:#ECF1F5;
+
+    background-size: 226px 50px;
+    width: 226px;
+    height: 71px;
+    float: left;
+    margin-left: 48px;
+
+
+}
+
+
+.top_box .head_wrap{
+	margin:auto;
+	width:50%;
+}
+.top_box .head_out{
+float:left;
+background:url(https://www.antiragging.in/site/images/top_box_mid.jpg) repeat-x;
+width:100%;
+}
+.top_box .head_lft{
+float:left;
+}
+.top_box .head_rght{
+float:right;
+}
+.top_box .head_mid{
+float:left;
+width:96%;
+text-align:center;
+font-weight:bold;
+color:#fff;
+}
+.top_box .cont{
+float: left;
+    padding-left: 17px;
+    padding-top: 7px;
+    width: 94%;
+}
+
+
+
+.last_box .head_wrap{
+	margin:auto;
+	width:77%;
+}
+.last_box .head_out{
+float:left;
+background:url(https://www.antiragging.in/site/images/top_box_mid.jpg) repeat-x;
+width:100%;
+}
+.last_box .head_lft{
+float:left;
+}
+.last_box .head_rght{
+float:right;
+}
+.last_box .head_mid{
+float:left;
+width:93%;
+text-align:center;
+font-weight:bold;
+color:#fff;
+}
+.last_box .cont{
+	width:100%;
+	float:left;
+	padding-top:7px;
+	text-align:center;
+	font-weight:bold;
+}
+.second_band{
+	width:1000px;
+	float:left;
+	background:url(https://www.antiragging.in/site/images/abut_mid.jpg) repeat-x;
+}
+.second_band .lft{
+	float:left;
+}
+.second_band .rght{
+	float:right;
+}
+.second_band .mid{
+	float:left;
+	color:#fff;
+	font-weight:bold;
+	padding:0px 10px 20px 10px;
+	width:960px;
+	line-height:15px;
+	
+
+}
+.second_band .heading{
+	font-size:20px;
+	color:#003366;
+	/*font-weight:none;*/
+	text-transform:uppercase;	padding:25px 10px 10px 10px;
+	width:960px;
+	float:left;
+}
+
+.third_band{
+	width:1000px;
+	float:left;
+	background:url(https://www.antiragging.in/site/images/last_mid.jpg) repeat-x;
+margin-left:-10px;
+}
+.third_band .lft{
+	float:left;
+}
+.third_band .rght{
+	float:right;
+}
+.third_band .mid{
+	float:left;
+	color:#fff;
+	font-weight:bold;
+	padding:0px 10px 20px 10px;
+	width:960px;
+	line-height:15px;
+	
+
+}
+.third_band .heading{
+	font-size:20px;
+	color:#003366;
+	/*font-weight:none;*/
+	text-transform:uppercase;	padding:25px 10px 10px 10px;
+	width:960px;
+	float:left;
+}	
+	.third_outer_wrap{
+    float: left;
+    margin: 0 auto;
+    padding-left: 10px;
+    /*width: 676px;*/    width: 990px;
+	margin-top:-8px;
+	
+	}
+.third_outer{
+	background: none repeat scroll 0 0 #FFFFFF;
+    float: left;
+   /* margin-left: 10px;*/
+
+    padding: 10px;
+    width: 960px;
+	margin:0 auto;
+}
+.cont_img{
+	width:313px;
+	height:187px;
+	float:left;
+	padding-right:10px;
+	padding-bottom:20px;
+background:url(https://www.antiragging.in/site/images/stop1.jpg) no-repeat;
+}
+
+.cont_imga_n{
+	 width:298px;
+		float:Left;
+	 padding-bottom:10px;
+	background:url(https://www.antiragging.in/site/images/blank.jpg) no-repeat;
+}
+.cont_imga{
+	width:313px;
+	height:187px;
+	float:right;
+		padding-bottom:10px;
+	
+}
+.cont_imgaa{
+border-bottom: 1px solid #aaaaaa;
+    float: right;
+    height: 385px;
+    padding: 10px 9px 0px 10px;
+    width: 295px;
+	
+}
+
+.titile{
+	font-size:28px;
+	color:#fff;
+	font-weight:bold;
+	width:100%;
+	text-align:center;
+	border-bottom:1px solid #fff;
+	font-family:"Century Gothic";
+}
+
+.faq_cont{
+	 background: #FFFFFF;
+    color: #FFFFFF;
+    float: left;
+    font-weight: bold;
+    padding-top: 0;
+    width: 100%;
+	}
+	
+.faq_cont_out {
+
+    background: none ;
+
+    float: left;
+
+    margin-left: -21px;
+
+    margin-top: -18px;
+
+    padding-bottom: 0px;
+
+    width: 100%;
+
+
+}
+
+
+	.faq_cont_arrow{
+	float:left;
+	padding-right:10px;
+	}
+	.faq_cont_txt{
+	float:left;	
+	}
+	.number{
+color: #fff;
+    float: left;
+    font-size: 21px;
+    line-height:25px;
+    text-align: center;
+    width: 100%;
+    padding-top: 20px;
+    height: 79px;
+}
+
+.number1{
+		float:left;
+		font-size:18px;
+		color:#7a7a7a;
+		width:100%;
+		text-align:center;
+		line-height:40px;
+	}
+	.folow{
+		 background: url("https://www.antiragging.in/site/images/folow_bg.jpg") repeat-x scroll 0 0 transparent;
+    float: left;
+    height: 64px;
+ 
+    width: 99%;
+margin-top:-9px;
+	}
+.rss{
+		float:left;
+		padding-left:10px;
+		padding-top:15px;
+	}
+	.face{
+		float:right;
+		padding-right:10px;
+		padding-top:15px;
+	}
+.visitor{
+		float:right;
+		padding-right:10px;
+	padding-top:22px;
+		color:#4d82ad;
+		text-align:left;
+	}
+	
+	
+	.copy{
+		float:left;
+		padding-left:10px;
+	padding-top:0px;
+		color:#4d82ad;
+		text-align:right;
+	}
+	.visitor_no{
+		color:#015091;
+		font-weight:bold;
+	}
+	
+
+
+	
+	
+
+
+.l {background:url(https://www.antiragging.in/site/images/faq_arrow1.png); background-attachment: scroll;
+    background-clip: border-box;
+    background-color: transparent;
+    background-origin: padding-box;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    padding-bottom: 0px;
+    padding-left: 25px;
+    padding-right: 0px;
+    padding-top: 0px;
+	list-style:none;
+	
+	
+	}
+	.l a{
+		color:#fff;
+		text-decoration:none;
+	}
+	.l a:hover{
+		color:#fff;
+		text-decoration:none;
+	}
+	
+	#marqueecontainer ul{
+		margin:0px;
+		padding:0px;
+		font-size:12px;
+		font-family:arial;
+	}
+		#marqueecontainer ul li{
+		
+		padding-bottom:10px;
+		line-height:18px;
+	
+	}
+	#marqueecontainer ul li span
+	{
+		font-style:normal;
+		font-size:12px;
+		font-weight:bold;
+		color:#fff;
+		font-family:Arial;
+		
+	}
+	
+	#marqueecontainer a{
+		font-size:12px;
+		text-decoration:none;
+	}
+	#marqueecontainer a:hover{
+		font-size:12px;
+		text-decoration:none;
+	}
+	
+	
+.form_haeding{
+  font-family:arial;
+  font-size:12px;
+  vertical-align:middle;
+width:100px;
+ }
+input[type="text"]{
+width:440px;
+border:1px solid #6fa2db;
+font-size:11px;
+color:#000;
+height:15px;
+float:left;
+padding:7px 2px 7px 5px;
+/*background:#ECF3FB;*/
+}
+textarea{
+width:440px;
+border:1px solid #6fa2db;
+font-size:11px;
+color:#000;
+height:60px;
+float:left;
+padding:2px 2px 2px 5px;
+/*background:#ECF3FB;*/
+}
+
+ 
+ .heading{
+
+font-family:Verdana ;
+
+font-size:25px;
+
+vertical-align:middle;
+text-decoration:underline;
+
+}
+
+.heading1{
+font-family:Verdana ;
+font-size:25px;
+vertical-align:middle;
+}
+.subheading{
+font-family:arial;
+font-size:20px;
+vertical-align:middle;
+text-decoration:underline
+}
+.text{
+font-family:arial;
+font-size:18px;
+vertical-align:middle;
+}
+
+
+	
+
+
+
+ 
+ input[type="button"]{
+ width:100px;
+border:1px solid #4d80ad;
+font-size:11px;
+ 
+height:20px;
+ background:#ADCCE9;
+
+
+ }
+ 
+
+.body_outer{
+	 background: none repeat scroll 0 0 #FFFFFF;
+    float: left;
+    margin-left: 5px;
+    padding: 5px;
+    width: 976px;
+}
+
+.body_outer1 {
+    background: none repeat scroll 0 0 #FFFFFF;
+    float: left;
+    margin: 8px auto 0;
+    padding: 10px;
+    width: 960px;
+}
+
+
+input[type="submit"]{
+  
+ text-align:center;
+		color:#fff;
+		background:#005aa3;
+		font-size:12px;
+		font-weight:bold;
+		border:none;
+		padding:5px;
+		width:70px;
+		margin-right:10px;
+ }
+ 
+
+
+
+.form td
+{
+	text-align:left;
+	vertical-align:middle;
+padding:5px 8px 5px 8px;
+}
+
+
+.third_outer_internal{
+	background: none repeat scroll 0 0 #FFFFFF;
+    float: left;
+	text-align:justify;
+    margin-left: 10px;
+
+    padding: 10px;
+    /*width: 675px;*/  width: 961px;
+	margin:0 auto;
+	margin-top:-14px;
+}
+
+
+.number_internal{
+		float:left;
+		font-size:24px;
+		color:#7a7a7a;
+		width:99%;
+		text-align:center;
+		line-height:40px;
+		background:#e9ecef;
+		
+	}
+	
+	.second_band_internal .heading_internal{
+	font-size:18px;
+	color:#003366;
+	/*font-weight:none;*/
+	text-transform:uppercase;	padding:5px 10px 0px 10px;
+	/*width:675px;*/   width:960px;
+    text-align:center;
+}
+
+.second_band_internal{
+	/*width:715px;*/   width:1000px;
+	float:left;
+	background:url(https://www.antiragging.in/images/abut_mid_internal.jpg) repeat-x;
+	height:55px;
+}
+
+.second_band_internal .lft{
+	float:left;
+}
+
+.second_band_internal .rght{
+	float:right;
+}
+
+
+
+.highlight{
+		color:#0063a1;
+		font-weight:bold;
+	}
+
+
+.third_outer_internal .header td{
+	background:#005f9d;
+	padding:5px;
+	color:#fff;
+	font-weight:bold;
+	text-align:center;
+	
+}
+.third_outer_internal .a{
+	background:#005f9d;
+	padding:5px;
+	color:#fff;
+	font-weight:bold;
+	text-align:center;
+	
+}
+.third_outer_internal .b{
+	background:#0f72b3;
+	padding:5px;
+	color:#fff;
+	font-weight:bold;
+	text-align:center;
+	border-right:1px solid #fff;
+	
+}
+.third_outer_internal .c{
+	background:#1e87cb;
+	padding:5px;
+	color:#fff;
+	font-weight:bold;
+	text-align:center;
+	
+}
+.third_outer_internal .d{
+	background:#3499db;
+	padding:5px;
+	color:#fff;
+	font-weight:bold;
+	text-align:center;
+	
+}
+.third_outer_internal .first{
+	font-size:12px;
+	text-align:right;
+	padding:5px 5px 5px 10px;
+	color:#000;
+		font-weight:normal;
+		background:#c5c5c5;
+		width:40px;
+}
+	
+	.third_outer_internal .second{
+	font-size:12px;
+	text-align:left;
+		padding:5px 5px 5px 10px;
+	color:#000;
+	font-weight:normal;
+		background:#d4d4d4;
+}
+
+	
+	.third_outer_internal .third{
+	font-size:12px;
+	text-align:left;
+		padding:5px 5px 5px 10px;
+	color:#000;
+	font-weight:normal;
+		background:#e0e0e0;
+}
+	.third_outer_internal .fourth{
+	font-size:12px;
+text-align:center;
+		padding:0px 5px 0px 10px;
+	color:#000;
+	font-weight:normal;
+		background:#e8e9e9;
+		width:80px;
+}
+.active{
+	background:#0063a1;
+	padding:3px 7px 3px 7px;
+	color:#fff;
+	text-align:center;
+}
+.nonactive{
+
+	padding:3px 7px 3px 7px;
+	color:#0063a1;
+	text-align:center;
+}
+
+error
+{
+	font-family: arial;
+}
+.inputt[type="text"]{
+    background: none repeat scroll 0 0 #ECF3FB;
+    border: 1px solid #6FA2DB;
+    color: #999999;
+    float: left;
+    font-size: 11px;
+    height: 15px;
+    padding: 7px 2px 7px 5px;
+    width: 240px;
+}
+.textareaa {
+    background: none repeat scroll 0 0 #ECF3FB;
+    border: 1px solid #6FA2DB;
+    color: #999999;
+    float: left;
+    font-size: 11px;
+    height: 60px;
+    padding: 2px 2px 2px 5px;
+    width: 240px;
+}
+
+
+
