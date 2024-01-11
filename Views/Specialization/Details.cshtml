@@ -1,0 +1,54 @@
+﻿@model UAAAS.Models.Specialization
+@{
+    ViewBag.Title = "Specialization Details";
+}
+<h2>Specialization Details</h2>
+<div class="details_table">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.degreeId)
+    </div>
+    <div class="editor-field">
+      @Html.DisplayFor(model=>model.degree)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.departmentId)
+    </div>
+    <div class="editor-field">
+        @Html.DisplayFor(model => model.departmentName)
+    </div>   
+    <div class="display-label">Specialization Name</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.specializationName)
+    </div>
+    <div class="display-label">Description</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.specializationDescription)
+    </div>
+
+    <div class="display-label">Status</div>
+    <div class="display-field">
+        @if (this.Model.isActive == true)
+        { <label>Active</label>}
+        else
+        {<label>Inactive</label>}
+    </div>
+
+
+    @Html.HiddenFor(model => model.createdOn)
+    @Html.HiddenFor(model => model.createdBy)
+    @Html.HiddenFor(model => model.updatedOn)
+    @Html.HiddenFor(model => model.updatedBy)
+
+    <div class="display-label last-row">
+        &nbsp;
+    </div>
+    <div class="display-field last-row">
+        <p>
+            @Html.ActionLink("Back", "Index", null, new { @class = "back_button" })
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }, new { @class = "submit_button" })
+        </p>
+    </div>
+    <div class="clear"></div>
+</div>
+

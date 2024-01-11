@@ -1,0 +1,51 @@
+﻿@model IEnumerable<UAAAS.Models.my_aspnet_roles>
+@{
+    ViewBag.Title = "Role Management";
+}
+
+<h2>Role Management</h2>
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 10,
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ]
+                           });
+}
+
+<p class="create_link_right">
+    @Html.ActionLink("Add Role", "Create", null, new { @class = "create_button" })
+</p>
+
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th style="width: 50px; text-align: center;">S.No.
+            </th>
+            <th>Role Name
+            </th>
+            @*<th style="width: 50px; text-align: center;">Delete</th>*@
+            <th style="width: 50px; text-align: center;">Edit</th>
+            <th style="width: 50px; text-align: center;">View</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Select((item, index) => new { item, index }))
+        {
+            <tr>
+                <td style="text-align: center;">
+                    @*@Html.DisplayFor(modelItem => item.index, new { id = "index" })*@
+                    @string.Format("{0}", item.index + 1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.item.name)
+                </td>
+                @*<td style="width: 50px; text-align: center; vertical-align: middle;">@Html.ActionLink("Delete", "Delete", new { id = item.item.id }, new { @class = "delete_button" })</td>*@
+                <td style="width: 50px; text-align: center; vertical-align: middle;">@Html.ActionLink("Edit", "Edit", new { id = item.item.id }, new { @class = "edit_button" })</td>
+                <td style="width: 50px; text-align: center; vertical-align: middle;">@Html.ActionLink("Details", "Details", new { id = item.item.id }, new { @class = "view_button" })</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<br />

@@ -1,0 +1,133 @@
+﻿@using (Html.BeginForm())
+{
+    int count = 0; 
+    <table border="1" style="width: 100%">
+        <tr>
+            <th style="text-align: center;background-color:yellow;" rowspan="2">S.No
+            </th>
+            <th style="text-align: center;background-color:yellow;" rowspan="2">College Code
+            </th>
+            <th rowspan="2" style="text-align: center;background-color:yellow;">College Name
+            </th>
+            <th style="text-align: center;background-color:yellow;" rowspan="2">Specializations
+            </th>
+            <th style="text-align: center;background-color:yellow;" rowspan="2">Labs 
+            </th>
+            <th style="text-align: center;background-color:yellow;" rowspan="2">Computers
+            </th>
+            <th style="text-align: center;background-color:yellow;" rowspan="2">Intake
+            </th>
+            <th style="text-align: center;background-color:yellow;" rowspan="2">Faculty 
+            </th>
+            <th style="text-align: center;background-color:yellow;" colspan="2">Ratified
+            </th>
+            <th style="text-align: center;background-color:yellow;" rowspan="2">Library 
+            </th>
+            <th style="text-align: center;background-color:yellow;" rowspan="2">Boys Hostel
+            </th>
+            <th style="text-align: center;background-color:yellow;" rowspan="2">Girls Hostel
+            </th>
+            <th style="text-align: center;background-color:yellow;" rowspan="2">Placement & Training Cell
+            </th>
+        </tr>
+        <tr>
+            <th style="text-align: center;background-color:yellow;">Number	
+            </th>
+            <th style="text-align: center;background-color:yellow;">%
+            </th>
+        </tr>
+        @foreach (var item in ViewBag.CollegeSpecializations)
+        {
+            <tr>
+                <td style="text-align: center;vertical-align:top">
+                    @(count = count + 1)
+                </td>
+                <td style="text-align: center;vertical-align:top">
+                    <label style="text-transform: uppercase">@item.CollegeCode</label>
+                </td>
+                <td style="text-align: left;vertical-align:top">
+                    <label>@item.CollegeName</label>
+                    <br />
+                    <label>@item.CollegeAddress</label>
+                </td>
+                <td style="">
+                    @if (item.CollegeSpecializations != null)
+                    {
+                        foreach (var specialization in item.CollegeSpecializations)
+                        {
+                            if (specialization.Intake != null && specialization.Intake != string.Empty &&
+                                 specialization.Specialization != null && specialization.Specialization != string.Empty)
+                            {
+                        <table style="border-collapse: collapse; width: 420px">
+                            <tr>
+                                <td style="border: none; text-align: left;vertical-align:top">
+                                    @if (specialization.Intake.Contains("#") == true)
+                                    {                                        
+                                        <b>@specialization.Specialization</b>
+                                    }
+                                    else
+                                    {
+                                        <label>@specialization.Specialization</label>  
+                                    }
+                                </td>
+                                <td style="border: none; text-align: right;vertical-align:top">
+                                    @if (specialization.Intake.Contains("$") == true)
+                                    {
+                                        string[] specializations = specialization.Intake.Split('$');
+                                        <label>@specializations[0]</label>                      
+                                    }
+                                    else if (specialization.Intake.Contains("*") == true)
+                                    {
+                                        string[] specializations = specialization.Intake.Split('*');
+                                        <b>@specializations[0]</b>  
+                                    }
+                                    else if (specialization.Intake.Contains("#") == true)
+                                    {
+                                        string[] specializations = specialization.Intake.Split('#');
+                                        <b>@specializations[0]</b>
+                                    }
+                                    else
+                                    {
+                                        <label>@specialization.Intake</label>          
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                            }
+                        }
+                    }
+                </td>
+                <td style="text-align: center;vertical-align:top">
+                    @item.Labs
+                </td>
+                <td style="text-align: center;vertical-align:top">
+                    @item.Computers
+                </td>
+                <td style="text-align: center;vertical-align:top">
+                    @item.Strength
+                </td>
+                <td style="text-align: center;vertical-align:top">
+                    @item.Faculty
+                </td>
+                <td style="text-align: center;vertical-align:top">
+                    @item.FacultyNumber
+                </td>
+                <td style="text-align: center;vertical-align:top">
+                    @item.FacultyPercentage
+                </td>
+                <td style="text-align: center;vertical-align:top">
+                    @item.Library
+                </td>
+                <td style="text-align: center;vertical-align:top">
+                    @item.BoysHostel
+                </td>
+                <td style="text-align: center;vertical-align:top">
+                    @item.GirlsHostel
+                </td>
+                <td style="text-align: center;vertical-align:top">
+                    @item.PlacementAndTraining
+                </td>
+            </tr>
+        }
+    </table>
+}

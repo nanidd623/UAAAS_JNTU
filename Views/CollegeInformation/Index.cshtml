@@ -1,0 +1,82 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Home";
+}
+
+@*<br />
+<span style="font-size: 16px; color: red; font-weight: bold;">
+    We are taking backup of the server and upgrading the performance for your better user experience. Please visit after 2 hours. Request you to bear with us. The data you have entered has been saved. Thank you.
+</span>*@
+
+<div style="font-size: 15px; color: red;">
+    <b>Inspection alert : @if (ViewBag.InpsectionDate != null)
+                          {<span>Your college inspection will be held on @ViewBag.InpsectionDate <span style="font-size: 12px;">(DD/MM/YYYY)</span></span> }
+                          else
+                          { <span>Not yet scheduled</span>} </b>
+    <hr />
+</div>
+
+<div class="news">
+    <h2 class="news_header_lower">Bulletin Board</h2>
+    @foreach (var item in ViewBag.CollegeNews)
+    {  
+        <ul class="newstitle">
+            @if (!string.IsNullOrWhiteSpace(item.navigateURL))
+            {
+                <li>
+                    <a class="navigationurl" href="@item.navigateURL" target="_blank">@item.title</a>
+                    @if (item.isLatest == true)
+                    {
+                        <img src="../Content/images/latest.gif" alt="latest" />
+                    }
+                </li>
+                            
+            }
+            else
+            {
+                <li>
+                    @item.title
+                    @if (item.isLatest == true)
+                    {
+                        <img src="../Content/images/latest.gif" alt="latest" />
+                    }
+                </li>
+            }
+        </ul>
+    }
+</div>
+<br />
+<div class="news">
+    <h2 class="news_header_lower">College News</h2>
+    @foreach (var item in ViewBag.Events)
+    {  
+        <ul class="newstitle">
+            @if (!string.IsNullOrWhiteSpace(item.navigateURL))
+            {
+                <li>
+                    <a class="navigationurl" href="@item.navigateURL" target="_blank">@item.title</a>
+                    @if (item.newsOrder == 1)
+                    {
+                        <img src="../Content/images/latest.gif" alt="latest" />
+                    }
+                </li>
+                            
+            }
+            else
+            {
+                <li>
+                    @item.title
+                    @if (item.newsOrder == 1)
+                    {
+                        <img src="../Content/images/latest.gif" alt="latest" />
+                    }
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@*<div>
+    <h2 style="text-transform: none">College Data Validation</h2>
+    @Html.ActionLink("Cick Here To Validate Data", "ValidateCollegeDataIndex", "ValidateCollegeData", null, new { target = "_blank" })
+</div>*@

@@ -1,0 +1,140 @@
+﻿@model UAAAS.Models.DD_Payments
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "Index";
+}
+
+@*<h2>Dashboard</h2>*@
+
+<head>
+    <title></title>
+   
+    <script type="text/javascript" src="~/Scripts/AccountsDashboard.js"></script>
+
+    <script type="text/javascript">
+    function initialize() {
+        DrawChart();
+    };
+
+    function DrawChart() {
+
+        $.ajax({
+            url: "/CollegesFee/Get_Bank_DD_Payments",
+            type: "GET",
+            success: function (response) {
+
+                if (response != null) {
+                    Get_Bank_DDs(response);
+                    return false;
+                }
+            },
+            error: function ajaxError(response) {
+                alert(response.status + '-' + response.statusText);
+            }
+        });
+    };
+
+    function Get_Bank_DDs(response) {
+
+        var list = response;
+        var dataArray = [['BankName', 'BankDDCount']];
+        $.each(list.response, function (index, table) {
+            dataArray.push([table.BankName, table.BankDDCount]);
+        });
+        var data = google.visualization.arrayToDataTable(dataArray);
+        var options = {
+            title: 'Bank wise Data Entry Chart',
+            backgroundColor: "#fcfcfc",
+            sliceVisibilityThreshold: 0,
+            colors: ["#148df1", "#2796f2", "#399ff3", "#4ca8f4", "#5eb1f6", "#71baf7", "#83c3f8", "#96ccf9", "#a8d5fa", "#BBDEFB", "#90CAF9", "#64B5F6", "#42A5F5", "#2196F3", "#1E88E5", "#1976D2"]
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+        return false;
+    };
+
+    google.load("visualization", "1", { packages: ["corechart"] });
+    google.setOnLoadCallback(initialize);
+    </script>
+
+</head>
+<style>
+    .Div{ width:auto;height:52px; padding:14px;border-radius:1px;text-align:center;}
+    .ClassNew {font-size:1.0rem; text-align:center;font-family :'Open Sans', sans-serif, 'Georgia', serif;color:white;} 
+    #upright { width:1119px; height:104px;  border-radius:3px;padding-top:5px;}
+    #below {width:1119px; height:135px;  border-radius:3px;}
+    #more { width:200px;text-align:center;color:white; }
+</style>
+
+<div style="min-height:470px;background-color:#fcfcfc;width:105%;">
+    <table>
+        <tr>
+            <td>
+                <div id="upright">
+                    <table style="padding-left:117px;padding-top:8px;">
+                        <tr>
+                            <td>
+                                <div class="Div" style="background-color:green">
+                                    <p class="ClassNew">Today Transactions</p><br />
+                                    <span class="ClassNew">@Model.Today_Transactons</span>  
+                                </div>
+                                @*<div id="more" style="background-color:#139358;">
+                                    <a href="">More info</a>
+                                </div>*@
+                            </td>
+                            <td width="15px;"></td>
+                            <td>
+                                <div class="Div" style="background-color:#1F7DDA;">
+                                    <p class="ClassNew">Today Amount</p><br />
+                                    <span  class="ClassNew">@Model.Today_Amount</span>
+
+                                </div>
+                                @*<div id="more" style="background-color:#1cafd3;">
+                                    <a href="" style="color:white">
+                                        More info
+                                    </a>
+                                </div>*@
+                            </td>
+                            <td width="15px;"></td>
+                            <td>
+                                <div class="Div" style="background-color:#BF8D2C;">
+                                    <p  class="ClassNew">Total DD Entrys</p><br />
+                                    <span  class="ClassNew">@Model.TotalDD_Count</span>
+                                </div>
+                                @*<div id="more" style="background-color:#c27c0e;">
+                                    <a href="" style="color:white">
+                                        More info
+                                    </a>
+                                </div>*@
+                            </td>                                                
+                            <td width="15px;"></td>
+                            <td>
+                                <div class="Div" style="background-color:#71468A">
+                                    <p  class="ClassNew">Total Amount Received</p><br />
+                                    <span  class="ClassNew">@Model.PaymentAmount</span>                                 
+                                </div>
+                                @*<div id="more" style="background-color:#b03c2d;">
+                                    <a href="" style="color:white">
+                                        More info
+                                    </a>
+                                </div>*@
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;&nbsp;</td>
+        </tr>
+        <tr>
+            <td>
+                <div id="below">
+                    <div id="piechart" style="height:220px;text-align:center;width:50%;margin-left:39px;">
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

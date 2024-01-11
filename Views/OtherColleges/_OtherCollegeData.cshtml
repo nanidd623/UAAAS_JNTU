@@ -1,0 +1,108 @@
+﻿@model UAAAS.Models.OtherCollege
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#tr1").hide();
+        $("#tr2").hide();
+
+        ShowHide();
+
+        $("#University").change(function () {
+            ShowHide();
+        });
+
+        function ShowHide()
+        {
+            if ($("#University option:selected").text() == "Other") {
+                $("#tr1").show();
+                $("#tr2").show();
+            }
+            else {
+                $("#tr1").hide();
+                $("#tr2").hide();
+            }
+        }
+    });
+</script>
+@using (Ajax.BeginForm("AddEditRecord", "OtherColleges", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "studentDialog" }))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    <table class="downloads_table" style="width: 100%;">
+        <tr>
+            <td class="editor-label1" style="width: 100%;">
+                @Html.LabelFor(model => model.collegeName)
+            </td>
+        </tr>
+        <tr>
+            <td class="editor-field1 focus" style="width: 100%;">
+                @Html.TextBoxFor(model => model.collegeName, new { style = "width: 80%" })
+                @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+                @Html.ValidationMessageFor(model => model.collegeName)
+            </td>
+        </tr>
+          <tr>
+            <td class="editor-label1" style="width: 100%;">
+                @Html.LabelFor(model => model.yearOfEstablishment)
+            </td>
+        </tr>
+        <tr>
+            <td class="editor-field1 focus" style="width: 100%;">
+                @Html.TextBoxFor(model => model.yearOfEstablishment, new { style = "width: 80%" })
+                @Html.ValidationMessageFor(model => model.yearOfEstablishment)
+            </td>
+        </tr>
+        <tr>
+            <td class="editor-label1" style="width: 100%;">
+                @Html.LabelFor(model => model.affiliatedUniversityId)
+            </td>
+        </tr>
+        <tr>
+            <td class="editor-field1" style="width: 100%;">
+                @Html.DropDownListFor(model => model.affiliatedUniversityId,
+                new SelectList(ViewBag.University, "id", "universityName"),
+                "-- Select --", new { id = "University" })
+                @Html.ValidationMessageFor(model => model.affiliatedUniversityId)
+            </td>
+        </tr>
+        <tr id="tr1">
+            <td class="editor-label1" style="width: 100%;">
+                @Html.LabelFor(model => model.otherUniversityName)
+            </td>
+        </tr>
+        <tr id="tr2">
+            <td class="editor-field1" style="width: 100%;">
+                @Html.EditorFor(model => model.otherUniversityName)
+                @Html.ValidationMessageFor(model => model.otherUniversityName)
+            </td>
+        </tr>
+        @Html.HiddenFor(model => model.createdBy)
+        @Html.HiddenFor(model => model.createdOn)
+    </table>
+    <p>
+        @if (ViewBag.IsUpdate == true)
+        {
+            <input type="submit" value="Update" id="btnUpdate" name="cmd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+        }
+        else
+        {
+            <input type="submit" value="Save" id="btnSave" name="cmd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+        }
+        <input type="button" value="Cancel" id="btnCancel" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+    </p>
+}

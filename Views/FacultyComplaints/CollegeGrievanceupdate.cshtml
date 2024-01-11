@@ -1,0 +1,319 @@
+﻿@model UAAAS.Models.FacultyComplaintsClass
+@using UAAAS.Models;
+
+@{
+    ViewBag.Title = "CollegeGrievanceupdate";
+   
+}
+
+<h2>College Grievance Supporting Document</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<style>
+    /*.col2, .col4 {
+        width: 10px;
+    }*/
+    b {
+        font-weight: normal;
+    }
+
+    .faculty_table {
+        width: 100%;
+    }
+
+    tbody tr td:nth-child(5).col1 {
+        width: 25%;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+    
+
+    
+
+        $(".viewDialog").live("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Staff Details',
+                autoOpen: false,
+                resizable: false,
+                height: 250,
+                width: 600,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#Collegesupportingdocument").change(function () {
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "complaintFile");
+                size = size / 1048576;
+                if (size > 1) {
+                    alert("Document should not exceed 1 MB in Size");
+                    $(this).val('');
+                } else {
+                    $(".complaintFile > span").text("");
+                }
+            }
+
+            //get file size
+            function GetFileSize(fileid, title) {
+
+                try {
+                    var fileSize = 0;
+                    //for IE
+                    if ($.browser.msie) {
+                        //before making an object of ActiveXObject,
+                        //please make sure ActiveX is enabled in your IE browser
+                        var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                        var filePath = $("#" + fileid)[0].value;
+                        var objFile = objFSO.getFile(filePath);
+                        var fileSize = objFile.size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+                        //for FF, Safari, Opeara and Others
+                    else {
+                        fileSize = $("#" + title)[0].files[0].size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+
+                    return fileSize;
+                } catch (e) {
+
+                    //alert("Error is : " + e);
+                }
+            }
+
+            //get file path from client system
+            function getNameFromPath(strFilepath) {
+                var objRE = new RegExp(/([^\/\\]+)$/);
+                var strName = objRE.exec(strFilepath);
+
+                if (strName == null) {
+                    return null;
+                }
+                else {
+                    return strName[0];
+                }
+            }
+
+
+
+        });
+
+    });
+
+</script>
+
+<div style="float:left;">
+    @if (TempData["Success"] != null)
+    {
+        <p style="color:forestgreen"><strong><b>Success</b> : </strong>@TempData["Success"].ToString()</p>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <p style="color:red"><strong><b>Error</b> : </strong>@TempData["Error"].ToString()</p>
+    }
+</div>
+
+@*<div class="create_link_right">
+    @Html.ActionLink("Edit", "CollegeGrievancesupportdoc", "FacultyComplaints", new { id = Model.id }, new { @class = "viewDialog" })
+  
+
+</div>*@
+
+@using (Html.BeginForm("CollegeGrievanceupdate", "FacultyComplaints", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <table id="example" class="faculty_table">
+        <tbody>
+            <tr>
+                <td class="col1">
+                    <b><span>Name</span></b>
+                </td>
+                @Html.HiddenFor(m => m.id)
+                <td class="col2">
+                    <span id="sname">@Model.Facultyname</span>
+                    @*@Html.DisplayFor(model => model.fa)*@
+                </td>
+
+                <td class="col3">
+                    <b><span>Registration Number</span></b>
+                </td>
+
+                <td class="col4">
+                    <span id="shallticketno">@Model.RegistrationNumber</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b><span>Address</span></b>
+                </td>
+
+                <td class="col2">
+                    
+                    <span id="saddress">@Model.FacultyAddress</span>
+                </td>
+
+                <td class="col3">
+                    <b><span>College</span></b>
+                </td>
+
+                <td class="col4">
+                    <span id="scollege">@Model.Collegename</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b><span>Compliant Type</span></b>
+                </td>
+
+                <td class="col2">
+                    @Model.complaintname
+                </td>
+
+                <td class="col3">
+                    <b><span>Complaint Date</span></b>
+                </td>
+
+                <td class="col4">
+                    @Model.complaintdate
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" colspan="1">
+                    <b><span>Complaint Description</span></b>
+                </td>
+
+                <td class="col2" colspan="3">
+                    
+                    <span id="scdesc">@Model.ComplaintDesc</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" colspan="1">
+                    <b><span>Supporting Document</span></b>
+                </td>
+
+                <td class="col2" colspan="3">
+                    <a href="/Content/Upload/ComplaintsGivenbyFaculty/ComplaintFile/@Model.FacultycomplaintFileview" target="_blank" title="Supporting Document">
+                        <span style="color:red;">View</span>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table> 
+    <table>
+        <tr>
+            <td class="col1" colspan="1">
+                @Html.LabelFor(m => m.Collegesupportingdocument)
+            </td>
+            <td class="col2" colspan="3">
+
+
+                @if (Model.Collegesupportingdocumentname != null)
+                {
+                    @Html.TextBoxFor(m => m.Collegesupportingdocument, new { type = "file" }) <span>&nbsp;&nbsp;&nbsp;</span>
+                    <a href="/Content/Upload/FacultyComplaints/CollegeGrievancesupportdoc/@Model.Collegesupportingdocumentname" target="_blank" title="Supporting Document">
+                        <span style="color:red;">View</span>
+                    </a>
+
+                    @Html.HiddenFor(m => m.Collegesupportingdocumentname)
+                }
+                else
+                {
+                    @Html.TextBoxFor(m => m.Collegesupportingdocument, new { type = "file", @class = "required" })
+                }
+
+            </td>
+        </tr>
+        <tr>
+            <td class="col1" colspan="1">
+                @Html.LabelFor(m => m.CollegeRemarks)
+            </td>
+            <td class="col2" colspan="3">
+                @if (Model.CollegeRemarks != null)
+                {
+                    @Html.TextAreaFor(m => m.CollegeRemarks, new { @maxlength = "500", @class = "required" })
+                }
+                else
+                {
+                    @Html.TextAreaFor(m => m.CollegeRemarks, new { @maxlength = "500", @class = "required" })
+                }
+
+            </td>
+
+
+        </tr>
+
+    </table>
+    if(Model.Collegesupportingdocumentname == null && Model.CollegeRemarks == null)
+    {
+        <div style="line-height: 1.2rem;" class="right_buttons submitButton">
+            <input type="submit" id="btnsave" value="Save" class="submit" name="Command" />
+        </div>
+    }
+    else
+    {
+        <div style="line-height: 1.2rem;" class="right_buttons submitButton">
+            <input type="submit" id="btnupdate" value="Update" class="submit" name="Command" />
+        </div>
+    }
+
+    <div id="dialog-view" style="display: none">
+    </div>
+}

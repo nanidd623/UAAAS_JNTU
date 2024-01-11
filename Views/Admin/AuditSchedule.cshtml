@@ -1,0 +1,429 @@
+﻿@model UAAAS.Models.AuditSchedule
+@{
+    ViewBag.Title = "Audit Schedule";
+}
+
+<h2>Audit Schedule</h2>
+
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        $("#District").change(function () {
+
+            var select = $("#Pincode");
+            select.empty();
+            select.append($('<option/>',{
+                value: '',
+                text: '-- Select --'
+            }));
+
+            var select = $("#College");
+            select.empty();
+            select.append($('<option/>',{
+                value: '',
+                text: '-- Select --'
+            }));
+
+            var DistrictID = $(this).val();
+            GetPincodes(DistrictID);
+        });
+
+        if ($("#District").val() > 0) {
+            var DistrictID = $("#District").val();
+            GetPincodes(DistrictID);
+        }
+
+        function GetPincodes(DistrictID){
+            $.getJSON("/AuditSchedule/GetPincodes",{ id : DistrictID},
+                function(data){
+                    var select = $("#Pincode");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+
+                    $.each(data,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.pincode ? true : false)
+                        }));
+                    });
+
+                    if ($("#Pincode").val() != '') {            
+                        var Pincode = $("#Pincode").val();
+                        GetColleges(Pincode);
+                    }
+
+                });
+            }
+
+        $("#Pincode").change(function () {
+            var Pincode = $(this).val();
+            GetColleges(Pincode);
+        });
+        
+        function GetColleges(Pincode){
+           
+            $.getJSON("/AuditSchedule/GetPincodeColleges",{ id : Pincode},
+                function(data){
+                    var select = $("#College");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(data,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.collegeId ? true : false)
+                        }));
+                    });
+                });
+            }
+        
+    });
+</script>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+
+    if (TempData["auditorsCount"] != null)
+    {
+        <div>
+            <p style="color:red;"><strong>Error : </strong>@TempData["auditorsCount"].ToString()</p>
+        </div>
+    }
+    
+    @Html.HiddenFor(model => model.InspectionPhaseId)
+    <div class="details_table">
+
+        @*<div class="editor-label">
+            @Html.LabelFor(model => model.districtid)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.districtid,
+            new SelectList(ViewBag.District as System.Collections.IEnumerable, "id", "districtName"),
+            "-- Select --", new { id = "District" })
+            @Html.ValidationMessageFor(model => model.districtid)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.pincode)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.pincode,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "Text", "Value"),
+            "-- Select --", new { id = "Pincode" })
+            @Html.ValidationMessageFor(model => model.pincode)
+        </div>*@
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.collegeId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.collegeId,
+new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"),
+            "-- Select --", new { id = "College" })
+            @Html.ValidationMessageFor(model => model.collegeId)
+        </div>
+        @*<div class="editor-field">
+            @Html.DropDownListFor(model => model.collegeId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "Text", "Value"),
+            "-- Select --", new { id = "College" })
+            @Html.ValidationMessageFor(model => model.collegeId)
+        </div>*@
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.auditDate)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.auditDate, new { @class = "calendar1", style = "width: 80px", @onblur = "IsAuditDate(this,event.keyCode)", @onkeydown = "return IsValidFormat(this,event.keyCode)" })
+            @Html.ValidationMessageFor(model => model.auditDate)
+            &nbsp; &nbsp; &nbsp;<input type="submit" value="Get Details" class="submit" name="cmd" style="margin: 0;" />
+            @*&nbsp; &nbsp; &nbsp; Alternate Audit Date @Html.TextBoxFor(model => model.alternateAuditDate, new { @class = "calendar1", style = "width: 80px", @onblur = "IsAuditDate(this,event.keyCode)", @onkeydown = "return IsValidFormat(this,event.keyCode)" })
+            @Html.ValidationMessageFor(model => model.alternateAuditDate)*@
+           
+        </div>
+
+       
+
+
+        @*<div class="editor-label">
+            @Html.LabelFor(model => model.orderDate)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.orderDate, new { @class = "calendar1", style = "width: 80px", @onblur = "IsAuditDate(this,event.keyCode)", @onkeydown = "return IsValidFormat(this,event.keyCode)" })
+            @Html.ValidationMessageFor(model => model.orderDate)
+            
+            
+        </div>*@
+
+        @*<div class="editor-label">
+            @Html.LabelFor(model => model.isRevised)
+        </div>
+        <div class="editor-field">
+            <label>@Html.RadioButtonFor(model => model.isRevised, false, new { @id = "rbtnapprove" }) Order</label>
+            <label>@Html.RadioButtonFor(model => model.isRevised, true, new { @id = "rbtnreject" }) Revised Order</label>
+            @Html.ValidationMessageFor(model => model.isRevised)
+        </div>*@
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.departments)
+        </div>
+        <div class="editor-field">
+
+            @if (Model.departments != null)
+            {
+                string prevDegree = string.Empty;
+                int index = 0;
+                var oldDListId = string.Empty;
+
+                foreach (var item in Model.departments)
+                {
+                    var dlistId = "dlist_" + index;
+                    if (prevDegree != item.degreeName)
+                    {
+                <div style="width: 19%; display: block; float: left; margin: 0 5px 5px 0; padding: 0px;">
+                    <div style="font-weight: bold; padding: 2px 5px; border: solid 1px #eee;" class="rounded_corners_top">
+                        @Html.DisplayFor(model => item.degreeName)
+                    </div>
+                    <div class="rounded_corners_bottom" style="padding-bottom: 5px;">
+                        <div style="font-weight: normal; padding: 1px 5px;" id="@dlistId">
+                            @Html.DisplayFor(model => item.deptartmentName)<br />
+                        </div>
+
+                    </div>
+                </div>
+                        oldDListId = dlistId;
+                    }
+                    else
+                    {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        var select = $("#@oldDListId");
+                        select.append('@Html.DisplayFor(model => item.deptartmentName)<br />');
+                    });
+                </script>
+                    }
+                    index++;
+                    prevDegree = item.degreeName;
+                }
+            }
+            else
+            {
+                <div id="MsgDepartments">Departments not found (Fill all mandatory fields & Click 'Get Details')</div>
+            }
+
+            @Html.ValidationMessageFor(model => model.departments)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.availableAuditors)
+        </div>
+        <div class="editor-field">
+
+            @if (Model.availableAuditors != null)
+            {
+                string prevDept = string.Empty;
+                int index = 0;
+                var oldListId = string.Empty;
+                foreach (var item in Model.availableAuditors)
+                {
+                    var listId = "list_" + index;
+                    //var oldListId = "list_" + (index - 1);
+                    var optionValue = item.auditorId;
+                    var selectValue = Model.availableAuditors[index].auditorSelected;
+                    var color = "black";
+
+                    if (int.Parse(Model.availableAuditors[index].auditorLoad) == 1)
+                    {
+                        color = "blue";
+                    }
+                    if (int.Parse(Model.availableAuditors[index].auditorLoad) == 2)
+                    {
+                        color = "orange";
+                    }
+                    if (int.Parse(Model.availableAuditors[index].auditorLoad) >= 3)
+                    {
+                        color = "red";
+                    }
+
+                    if (prevDept != item.deptartmentName)
+                    {
+                        
+                <div style="width: 49%; display: block; float: left; margin: 0 5px 5px 0; padding: 0px;">
+                    <div style="font-weight: bold; padding: 2px 5px; border: solid 1px #eee;" class="rounded_corners_top">
+                        @Html.DisplayFor(model => item.deptartmentName)
+                        @Html.HiddenFor(model => model.availableAuditors[index].departmentId)
+                        @Html.HiddenFor(model => model.availableAuditors[index].deptartmentName)
+                        @Html.HiddenFor(model => model.availableAuditors[index].auditorId)
+                        @Html.HiddenFor(model => model.availableAuditors[index].auditorName)
+                        @Html.HiddenFor(model => model.availableAuditors[index].auditorLoad)
+                        @Html.HiddenFor(model => model.availableAuditors[index].auditorDesignation)
+                        @Html.HiddenFor(model => model.availableAuditors[index].preferredDesignation)
+                    </div>
+                    <div class="rounded_corners_bottom" style="padding-bottom: 5px;">
+                        <div style="height: 90px; padding: 0 0 0 3px; margin-right: 1px; overflow-y: scroll;" id="@listId">
+                            @Html.CheckBoxFor(model => model.availableAuditors[index].auditorSelected, new { onClick = "this.form.submit();", id = "@optionValue", @checked = Model.availableAuditors[index].auditorSelected == true ? true : false })
+                            <span style="color: @color">@Html.DisplayFor(model => model.availableAuditors[index].auditorName)
+                                - [ @Html.DisplayFor(model => model.availableAuditors[index].auditorDesignation) ]
+                            - [ Load : @Html.DisplayFor(model => model.availableAuditors[index].auditorLoad) ]</span><br />
+                        </div>
+                    </div>
+                </div>
+                        oldListId = listId;
+                    }
+                    else
+                    {
+                @Html.HiddenFor(model => model.availableAuditors[index].departmentId)
+                @Html.HiddenFor(model => model.availableAuditors[index].deptartmentName)
+                @Html.HiddenFor(model => model.availableAuditors[index].auditorId)
+                @Html.HiddenFor(model => model.availableAuditors[index].auditorName)
+                @Html.HiddenFor(model => model.availableAuditors[index].auditorLoad)
+                @Html.HiddenFor(model => model.availableAuditors[index].auditorDesignation)
+                @Html.HiddenFor(model => model.availableAuditors[index].preferredDesignation)
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        var select = $("#@oldListId");
+                        select.append('@Html.CheckBoxFor(model => model.availableAuditors[index].auditorSelected, new { onClick = "this.form.submit();", id = "@optionValue", @checked = Model.availableAuditors[index].auditorSelected == true ? true : false }) <span style="color: @color">@Html.DisplayFor(model => model.availableAuditors[index].auditorName) - [ @Html.DisplayFor(model => model.availableAuditors[index].auditorDesignation) ] - [ Load : @Html.DisplayFor(model => model.availableAuditors[index].auditorLoad) ]</span><br />');
+                    });
+                </script>
+                    }
+                    index++;
+                    prevDept = item.deptartmentName;
+                    
+                <script type="text/javascript">
+                    if(selectValue == true)
+                        $("#@optionValue").attr('checked', 'checked');
+                    else
+                        $("#@optionValue").attr('checked', null);
+                </script>
+                }
+            }
+            else
+            {
+                <div id="MsgAvailableAuditors">Auditors not found (Fill all mandatory fields & Click 'Get Details')</div>
+            }
+            @Html.ValidationMessageFor(model => model.availableAuditors)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.assignedAuditors)
+        </div>
+        <div class="editor-field">
+            @if (ViewBag.MoreConvenors == true)
+            {
+                <div class="error">
+                    <p><strong>Alert:</strong> <span>Only one convenor per committee is allowed. Please select only one convenor.</span></p>
+                </div>
+            }
+            @if (ViewBag.NoConvenor == true)
+            {
+                <div class="error">
+                    <p><strong>Alert:</strong> <span>Committee should have atleast one member and one convenor.</span></p>
+                </div>
+            }
+            @if (Model.assignedAuditors != null && Model.assignedAuditors.Count() > 0)
+            {
+                int index = 0;
+                
+                <table width="100%">
+                    <tr>
+                        <td width="600" style="font-weight: bold; background-color: #eee; padding: 2px 5px; border: solid 1px #eee; background-color: #eee;"
+                            class="gray-gradient">Auditor
+                        </td>
+                        <td style="font-weight: bold; background-color: #eee; padding: 2px 5px; text-align: left; border: solid 1px #eee; background-color: #eee;"
+                            class="gray-gradient">Department
+                        </td>
+                        @*<td width="60" style="font-weight: bold; background-color: #eee; padding: 2px 5px; text-align: center; border: solid 1px #eee; background-color: #eee;"
+                            class="gray-gradient">Convenor
+                        </td>
+                        <td width="60" style="font-weight: bold; background-color: #eee; padding: 2px 5px; text-align: center; border: solid 1px #eee; background-color: #eee;"
+                            class="gray-gradient">Sequence
+                        </td>*@
+                    </tr>
+
+                    @foreach (var item in Model.assignedAuditors)
+                    {
+                        var alistId = "list_" + index;
+                        var oldListId = "list_" + (index - 1);
+                        var optionValue = item.auditorId;
+                        var selectValue = Model.assignedAuditors[index].isConvenor;
+                        var sequenceid = "seq_" + index;
+                        
+                        <tr>
+                            <td width="600" style="padding: 2px 5px; border: solid 1px #eee;">
+                                @Html.DisplayFor(model => model.assignedAuditors[index].auditorName)
+                                - [ @Html.DisplayFor(model => model.assignedAuditors[index].preferredDesignation) ]
+                             - [ Load : @Html.DisplayFor(model => model.assignedAuditors[index].auditorLoad) ]
+                            </td>
+                            <td style="padding: 2px 5px; border: solid 1px #eee;">
+                                @Html.DisplayFor(model => item.deptartmentName)
+                                @Html.HiddenFor(model => model.assignedAuditors[index].departmentId, new { Value = Model.assignedAuditors[index].departmentId })
+                                @Html.HiddenFor(model => model.assignedAuditors[index].deptartmentName, new { Value = Model.assignedAuditors[index].deptartmentName })
+                                @Html.HiddenFor(model => model.assignedAuditors[index].auditorId, new { Value = Model.assignedAuditors[index].auditorId })
+                                @Html.HiddenFor(model => model.assignedAuditors[index].auditorName, new { Value = Model.assignedAuditors[index].auditorName })
+                                @Html.HiddenFor(model => model.assignedAuditors[index].auditorLoad, new { Value = Model.assignedAuditors[index].auditorLoad })
+                                @Html.HiddenFor(model => model.assignedAuditors[index].auditorDesignation, new { Value = Model.assignedAuditors[index].auditorDesignation })
+                                @Html.HiddenFor(model => model.assignedAuditors[index].preferredDesignation, new { Value = Model.assignedAuditors[index].preferredDesignation })
+                            </td>
+                            @*<td width="60" style="padding: 2px 5px; border: solid 1px #eee; text-align: center;">
+                                @Html.CheckBoxFor(model => model.assignedAuditors[index].isConvenor, new { onClick = "this.form.submit();", id = "@optionValue" })
+                                <script type="text/javascript">
+                                    if(selectValue == true)
+                                        $("#@optionValue").attr('checked', 'checked');
+                                    else
+                                        $("#@optionValue").attr('checked', null);
+                                </script>
+                            </td>*@
+                            @*<td width="60" style="padding: 2px 5px; border: solid 1px #eee; text-align: center;">
+                                @Html.DropDownListFor(model => model.assignedAuditors[index].memberOrder,
+                                new SelectList(ViewBag.Sequence as System.Collections.IEnumerable, "text", "value"),
+                                "-- Select --", new { id = sequenceid })
+                                @Html.ValidationMessageFor(model => model.assignedAuditors[index].memberOrder)
+                                <script type="text/javascript">
+                                    $('#@sequenceid option[value="@item.memberOrder"]').attr("selected","selected");
+                                </script>
+                            </td>*@
+                        </tr>
+                        index++;
+                    }
+                </table>
+            }
+            else
+            {
+                <div id="MsgAssignedAuditors">Auditors not selected (Select auditors from the available auditors)</div>
+            }
+            @Html.ValidationMessageFor(model => model.assignedAuditors)
+        </div>
+
+        <div class="clear"></div>
+        <div style="text-align: center">
+            <p>
+                <input type="submit" value="Save" class="submit" name="cmd" />
+            </p>
+        </div>
+
+    </div>
+}

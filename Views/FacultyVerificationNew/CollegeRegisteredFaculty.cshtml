@@ -1,0 +1,240 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_registered_faculty>
+@{
+    ViewBag.Title = "CollegeRegisteredFaculty";
+    var index = 1;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/FacultyVerification/CollegeRegisteredFaculty?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerification/CollegeRegisteredFaculty';
+            }
+        });
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Verify Faculty',
+            autoOpen: false,
+            resizable: false,
+            height: 520,
+            width: 640,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Faculty'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Verify Faculty'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+
+            $("#dialog-confirm").dialog({
+                title: 'Delete Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+    });
+</script>
+<h2>Teaching Faculty</h2>
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 2000,
+                              "bStateSave": false,
+                              "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null, null, null, null ]
+                           });
+}
+@using (Html.BeginForm())
+{
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    <table class="faculty_table">
+        <tr>
+            <td class="col1">College
+            </td>
+            <td class="col2">
+                @Html.DropDownList("collegeId", new SelectList(@ViewBag.Colleges, "collegeId", "collegeName"),
+                "--Select--", new { id = "college", @style = "width:95%" })
+            </td>
+        </tr>
+    </table>
+    
+    <p class="create_link_right">
+        @Html.ActionLink("Add Teaching Faculty", "AddEditCollegeFaculty", "FacultyVerification", new {collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })
+    </p>
+    
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No
+                </th>
+                <th>Name
+                </th>
+                <th style="width: 150px; text-align: left;">Designation
+                </th>
+                <th style="width: 150px; text-align: left;">Department
+                </th>
+                <th class="ui-state-default" style="width: 150px; text-align: center;">Faculty Registration Number
+                </th>
+                <th class="ui-state-default" style="width: 150px; text-align: center;">Verification Status
+                </th>
+                <th class="ui-state-default" colspan="2" style="width: 60px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                //var rid = db.jntuh_college_faculty_registered.Where(f => f.RegistrationNumber == item.FacultyRegistrationNumber && f.collegeId == item.collegeId).Select(f => f.id).FirstOrDefault();
+                //var encString = UAAAS.Models.Utilities.EncryptString(rid.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]);
+            
+                <tr>
+                    <td style="text-align: center;">
+                        @(index++)
+
+                    </td>
+                    <td>
+                        @item.FirstName
+                        @item.MiddleName
+                        @item.LastName
+
+                    </td>
+                    <td style="text-align: left;">
+                        @if (item.DesignationId != null)
+                        {
+                            @item.jntuh_designation.designation
+                        }
+                        else
+                        {
+                            @item.OtherDesignation
+                        }
+                    </td>
+                    <td style="text-align: left;">
+                        @if (item.DepartmentId != null)
+                        {
+                            @item.jntuh_department.departmentName
+                        }
+                        else
+                        {
+                            @item.OtherDepartment
+                        }
+                    </td>
+                    <td style="text-align: center;">
+                        @item.RegistrationNumber
+                    </td>
+                    <td style="text-align: center;">
+                        @if (!string.IsNullOrEmpty(item.RegistrationNumber))
+                        { <span style="color: green; font-weight: bold;">CONFIRMED</span>}
+                        else
+                        { <span style="color: red;">NOT CONFIRMED</span>}
+                    </td>
+                    <td style="width: 30px; text-align: center;">
+                        @if (string.IsNullOrEmpty(item.RegistrationNumber))
+                        {
+                            @Html.ActionLink("Edit", "AddEditCollegeFaculty", "FacultyVerification", new { regno = UAAAS.Models.Utilities.EncryptString(item.RegistrationNumber.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeId = @ViewBag.collegeId }, new { @class = "editDialog edit_button1" })
+                        }
+                    </td>
+                    <td style="width: 30px; text-align: center;">
+                        @Html.ActionLink("Delete", "DeleteCollegeFaculty","FacultyVerification", new { regno = UAAAS.Models.Utilities.EncryptString(item.RegistrationNumber.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) ,collegeId=@ViewBag.collegeId}, new { @class = "confirmDialog delete_button1" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>
+    </div>
+
+    <div id="dialog-edit">
+    </div>
+    <div id="dialog-add" style="display: none">
+    </div>
+}
+

@@ -1,0 +1,203 @@
+﻿
+@model List<UAAAS.Controllers.Collegecodesreports>
+@using UAAAS.Models;
+@{
+    //uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "CollegesReports";
+
+    string[] courtCollegesNew = new string[] { "DT"};
+    uaaasDBContext db = new uaaasDBContext();
+}
+<h2>CollegesReports</h2>
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        $('#DistrictId').removeClass('input-validation-error');
+        $('#DegreeId').removeClass('input-validation-error');
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+@{
+   
+    var CollegeRandomCodes = db.jntuh_college_416randomcodes.ToList();
+}
+@using (Html.BeginForm())
+{
+    int count = 1;
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">
+                    S.No
+                </th>
+                <th style="width: 50px; text-align: center;">
+                    Code
+                </th>
+                <th style="text-align: center;">
+                    College Name
+                </th>
+                <th style="text-align: left;">
+                    FFC Reports
+                </th>
+                <th style="text-align: left;">
+                    Deficiency Reports
+                </th>
+                <th style="text-align: left;">
+                    ReInspection Reports
+                </th>
+                <th style="text-align: left;">
+                    Recommendations of appellate Commitee
+                </th>
+                <th style="text-align: left;">
+                   Final Affiliation Letters
+                </th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="width: 50px; text-align: center;">
+                            @(count++)
+                        </td>
+                        <td style="width: 50px; text-align: center; text-transform: uppercase;">
+                            @item.CollegeCode
+                            @*@Html.ActionLink(@item.collegeCode.ToString(), "TeachingFaculty", new { collegeId = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { target = "_blank" })*@
+                        </td>
+                        <td style="text-align: left;">
+                            @item.CollegeName
+                            @*@Html.ActionLink(@item.collegeName.ToString(), "TeachingFaculty", new { collegeId = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { target = "_blank" })*@
+                        </td>
+                        <td style="text-align: center;">
+                            @if (item.CollegeCode != null)
+                            {
+                                //CollegeRandomCodes
+                               <a href="~/Content/Upload/2016-17-Pdf/@CollegeRandomCodes.Where(R=>R.Collegecode==item.CollegeCode).Select(R=>R.Collegecode).FirstOrDefault()-@CollegeRandomCodes.Where(R => R.Collegecode == item.CollegeCode).Select(R => R.Randomcode + ".pdf").FirstOrDefault()" target="_blank"><img src="../../Content/images/pdf.png" /></a>
+                                
+                            }
+                            else
+                            {<span>-</span>}
+                        </td>
+                        <td style="text-align: center;">
+                            @if (item.CollegeCode != null)
+                            {
+                                <a href="~/Content/Upload/Deficiency Reports 2016-17/@(item.CollegeCode)-@("Deficiency Report" + UAAAS.Models.Utilities.EncryptString(item.CollegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) + ".pdf") " target=" _blank"><img src="../../Content/images/pdf.png" /></a>
+
+                            }
+                            else
+                            {<span>-</span>}
+                        </td>
+                        <td style="text-align: center;">
+                            @if (item.CollegeCode != null && item.ReinspectionIds.Contains(item.CollegeId))
+                            {
+                                <a href="~/Content/Upload/JointInspectionReports/@(item.CollegeCode)-@(UAAAS.Models.Utilities.EncryptString(item.CollegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) + ".pdf") " target=" _blank"><img src="../../Content/images/pdf.png" /></a>
+                               
+                            }
+                            else
+                            {<span>-</span>}
+                        </td>
+                        <td style="text-align: center;">
+                            @if (item.CollegeCode != null && item.RecommendationIds.Contains(item.CollegeId))
+                            {
+                                <a href="~/Content/Upload/Appeal Reports 2016-17/@(item.CollegeCode + ".pdf") " target=" _blank"><img src="../../Content/images/pdf.png" /></a>
+
+                            }
+                            else
+                            {<span>-</span>}
+                        </td>
+                        <td style="text-align: center;">
+                            @if (item.CollegeCode != null && item.AffiliationIds.Contains(item.CollegeId))
+                            {
+                                <a href="~/Content/Upload/Affiliation Reports-2016-17/All/@(item.CollegeCode)-@(UAAAS.Models.Utilities.EncryptString(item.CollegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]))-@("AffiliationProceedings" + ".pdf") " target=" _blank"><img src="../../Content/images/pdf.png" /></a>
+                            }
+                            else
+                            {<span>-</span>}
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th style="width: 50px;">
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="width: 50px;">
+                    <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th style="width: 50px;">
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="width: 50px;">
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+
+                <th style="width: 50px;">
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="width: 50px;">
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="width: 50px;">
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+}

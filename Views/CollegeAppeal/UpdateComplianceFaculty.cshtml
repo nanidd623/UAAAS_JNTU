@@ -1,0 +1,850 @@
+﻿@model UAAAS.Models.CollegeFaculty
+@{
+    ViewBag.Title = "Compliance Faculty";
+    string NoticicationfilePath = string.Empty;
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(".IdentifiedFor").click(function () {
+        var selectedValue = $(this).val();
+
+        if (selectedValue != "UG") {
+            $(".specialization").css("display", "block");
+        } else {
+            $(".specialization").css("display", "none");
+            //$("#specialization").attr('selectedIndex', 0);
+            //$(".specialization option:first").attr('selected', 'selected');
+            // $("#specialization option:first").attr("selected", "selected");
+        }
+
+    });
+
+    //for image upload
+    $(".noticicationfile").change(function (e) {
+
+        if (this.disabled) return alert('File upload not supported!');
+        var F = this.files;
+        if (F && F[0]) for (var i = 0; i < F.length; i++) readDocument(F[i], '300x250', '100', 'Notification Document');
+
+    });
+
+    function readDocument(file, minimum, fsize, title) {
+
+        var reader = new FileReader();
+        var image = new Image();
+
+        reader.readAsDataURL(file);
+        reader.onload = function (_file) {
+            image.src = _file.target.result;              // url.createObjectURL(file);
+            image.onload = function () {
+                var w = this.width,
+                    h = this.height,
+                    t = file.type,                           // ext only: // file.type.split('/')[1],
+                    n = file.name,
+                    s = ~~(file.size / 1024); //s = ~~(file.size/1024) +'KB';
+
+                //alert(w+'x'+h+' '+s+' '+t+' '+n);
+                //alert(w+'-'+minimum.split('x')[0]);alert(h+'-'+minimum.split('x')[1]);
+                //if(w<minimum.split('x')[0])
+                //{alert('width-notok');}else{alert('width-ok');}
+                //if(h<minimum.split('x')[1])
+                //{alert('height-notok');}else{alert('height-ok');}
+                //if(s>fsize)
+                //{alert('size-notok');}else{alert('size-ok');}
+                if (w < minimum.split('x')[0] || h < minimum.split('x')[1] || s > fsize) {
+                    alert(title + " should be Minimum - " + minimum + " pixels and less than " + fsize + " KB size");
+
+                    var filephoto;
+
+                    if (title == 'Notification Document') {
+                        filephoto = $('.noticicationfile');
+                    }
+
+                    //if (title == 'Aadhaar Card Document') {
+                    //    filephoto = $('.aadhaarfile');
+                    //}
+
+                    //if (title == 'Proceedings Document') {
+                    //    filephoto = $('.SelectionCommitteeProceedingsDocument');
+                    //}
+
+                    //if (title == '10th Or Equivalent Document') {
+                    //    filephoto = $('.1-certificate');
+                    //}
+
+
+
+                    file.replaceWith(filephoto.val('').clone(true));
+                    return false;
+                }
+
+                if (t != 'image/jpeg') {
+                    alert(title + " should be in JPEG/JPG format only");
+
+                    var filephoto;
+
+                    if (title == 'Notification Document') {
+                        filephoto = $('.noticicationfile');
+                    }
+
+                    //if (title == 'Aadhaar Card Document') {
+                    //    filephoto = $('.panfile');
+                    //}
+
+                    //if (title == 'Proceedings Document') {
+                    //    filephoto = $('.SelectionCommitteeProceedingsDocument');
+                    //}
+
+                    //if (title == '10th Or Equivalent Document') {
+                    //    filephoto = $('.1-certificate');
+                    //}
+
+                    //if (title == 'UG Document') {
+                    //    filephoto = $('.3-certificate');
+                    //}
+
+
+
+                    file.replaceWith(filephoto.val('').clone(true));
+                    return false;
+                }
+            };
+            image.onerror = function () {
+                alert('Invalid file type: ' + file.type);
+            };
+        };
+    }
+
+    // for pdf upload
+
+    $(document).ready(function () {
+
+        function CheckIdentified(Identified) {
+            debugger
+            if (Identified.defaultValue == "PG") {
+                return "PG";
+            }
+            else {
+                return "UG";
+            }
+        }
+
+        $(".IdentifiedFor").click(function () {
+            debugger;
+            var selectedValue = $(this).val();
+
+            if (selectedValue != "UG") {
+                $(".UgDept").css("display", "none");
+                $(".PgDept").css("display", "block");
+                $(".specialization").css("display", "block");
+
+                //$(".specialization").css("display", "block");
+            } else {
+                $(".PgDept").css("display", "none");
+                $(".UgDept").css("display", "block");
+                //$(".FacultySpecialization").css("display", "none");
+                $(".specialization").css("display", "none");
+
+            }
+
+        });
+
+        $("#UGDepartment").change(function () {
+            var value = $(this).val();
+            if (value == "26") {
+                //$(".FacultySpecialization").css("display", "block");
+            }
+            else if (value == "" || value == null) {
+
+            }
+            else {
+                //$(".FacultySpecialization").css("display", "none");
+            }
+        });
+
+        $("#PGDepartment").change(function () {
+            debugger;
+            var value = $(this).val();
+            if (value == "36" || value == "27" || value == "39") {
+                $.ajax({
+                    type: "GET",
+                    url: "/FacultyVerification/GetSpecializations?id=" + value,
+                    dataType: "Json",
+                    contentType: "application/json",
+                    success: function (data) {
+                        $("#SpecializationId").find("option").remove();
+                        var item = "<option value=''>---Select---</option>";
+                        $.each(data.data, function (i, state) {
+                            item += "<option value ='" + state.Specid + "'>'" + state.Specname + "'</option>";
+                        })
+                        $("#SpecializationId").html(item);
+                    },
+                    error: function () {
+
+                    }
+
+                });
+                $(".specialization").css("display", "block");
+                //$(".FacultySpecialization").css("display", "block");
+
+            }
+            else if (value == "" || value == null) {
+
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "/FacultyVerification/GetSpecializations?id=" + value,
+                    dataType: "Json",
+                    contentType: "application/json",
+                    success: function (data) {
+                        debugger;
+                        $("#SpecializationId").find('option').remove();
+                        var item = "<option value=''>---Select---</option>";
+                        $.each(data.data, function (i, state) {
+                            item += "<option value='" + state.Specid + "'>" + state.Specname + "</option>";
+                        });
+                        $("#SpecializationId").html(item);
+                    },
+                    error: function () {
+
+                    }
+
+                });
+                $(".specialization").css("display", "block");
+                //$(".FacultySpecialization").css("display", "none");
+            }
+        });
+
+        //get file size
+        function GetNotificationFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#NotificationDocument")[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        function GetselectioncommitteeFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#SelectionCommitteeDocument")[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        function GetappointmentFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#AppointmentOrderDocument")[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        function GetjoiningreportFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#JoiningReportDocument")[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //Get File Size of Appeal Reverification Screen shot
+        function GetAppealReverificationscreenshotFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#AppealReverificationScreenShot")[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        $(".aadhaarfile1").change(function () {
+            debugger;
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("Aadhaar Card document should be in JPEG format only");
+                $(this).val('');
+                return false;
+            }
+            else {
+                var size = GetCertificateSize(this.id);
+
+                if (size > 102400) {
+                    alert("Aadhaar Card document size should not exceed 100 KB in Size");
+                    $(this).val('');
+                }
+                //else
+                //    if (size  ) {
+
+                //}
+            }
+
+
+        });
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+
+
+        //for notification doc
+        $(function () {
+            $(".notificationfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".notificationfiles > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".notificationfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".notificationfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+        //for selectioncommittee doc
+        $(function () {
+            $(".selectioncommitteefile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".selectionfiles > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetselectioncommitteeFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".selectionfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".selectionfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+        //for appointmentorder doc
+        $(function () {
+            $(".appointmentfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".appointmentfiles > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetappointmentFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".appointmentfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".appointmentfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+        //for joiningreport doc
+        $(function () {
+            $(".joiningfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".joiningfiles > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetjoiningreportFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".joiningfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".joiningfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+        //for Appeal Reverification Screen shot doc
+        $(function () {
+            $(".appealreverificationscreenshot").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".appealreverificationscreenshots > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetAppealReverificationscreenshotFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".appealreverificationscreenshots > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".appealreverificationscreenshots > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+    });
+
+</script>
+@*@using (Html.BeginForm())*@
+@using (Ajax.BeginForm("UpdateComplianceFaculty", "CollegeAppeal", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "studentDialog" }, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+
+    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    @Html.HiddenFor(model => model.id, new { @Value = Model.id })
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label" style="width: 250px;">
+            <span>Registration Number</span>
+        </div>
+        <div class="editor-field" style="width:420px;">
+            @*@Html.TextBoxFor(model => model.FacultyRegistrationNumber, new { @maxlength = "25", @placeholder = "Enter Faculty Registration Number", style = "width: 300px;", @required = "true" })*@
+            @Html.DisplayFor(model => model.FacultyRegistrationNumber)
+            @Html.HiddenFor(model => model.FacultyRegistrationNumber);
+        </div>
+
+        <div class="editor-label" style="width: 250px;">
+            <span>Identified For <span style="color: red">*</span></span>
+        </div>
+    <div class="editor-field" style="width: 420px;">
+        @Html.DisplayFor(model => model.facultyRecruitedFor)
+        @Html.HiddenFor(model => model.facultyRecruitedFor)
+    </div>
+
+        @if (Model.facultyRecruitedFor == "UG")
+        {
+            <div class="UgDept">
+                <div class="editor-label" style="width:250px;">
+                    <span>UG Departments</span>
+                </div>
+                <div class="editor-field" style="width: 420px;">
+                    @Html.HiddenFor(model => model.facultyDepartmentId)
+                    @Html.DisplayFor(model => model.department)
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="PgDept">
+                <div class="editor-label" style="width:250px;">
+                    <span>PG Departments</span>
+                </div>
+                <div class="editor-field" style="width: 420px;">
+                    @Html.HiddenFor(model => model.facultyPGDepartmentId)
+                    @Html.DisplayFor(model => model.department)
+                </div>
+            </div>
+            <div class="specialization">
+                <div class="editor-label" style="width: 250px;">
+                    <span>PG Specialization</span>
+                </div>
+                <div class="editor-field" style="width: 420px;">
+                    @Html.HiddenFor(model => model.SpecializationId)
+                    @Html.DisplayFor(model => model.SpecializationName)
+                </div>
+            </div>
+        }
+        <div class="editor-label" style="width: 250px;">
+            <span>AadharNumber</span>
+        </div>
+        <div class="editor-field" style="width: 420px;">
+            @Html.TextBoxFor(model => model.facultyAadhaarNumber, new { @id = "facultyAadhaarNumber", @maxlength = "12", @placeholder = "Enter AadhaarNumber" })
+            @Html.ValidationMessageFor(model => model.facultyAadhaarNumber)
+        </div>
+        <br />
+        <div class="editor-label" style="width: 250px;">
+            <span>AadharDocument</span>
+        </div>
+        <div class="editor-field" style="width: 420px;">
+            @if (String.IsNullOrEmpty(@Model.facultyAadharDocument))
+            {
+                @Html.TextBoxFor(model => model.facultyAadharPhotoDocument, new { type = "file", @class = "aadhaarfile1 required" })
+                @Html.ValidationMessageFor(model => model.facultyAadharPhotoDocument)
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.facultyAadharPhotoDocument, new { type = "file", @class = "aadhaarfile1" })
+                @Html.ValidationMessageFor(model => model.facultyAadharPhotoDocument)
+                <a href="../@Model.facultyAadharDocument.Replace("~", "")" target="_blank">
+                    <span style="font-weight: bold; color: red">View</span>
+                </a>
+                @Html.HiddenFor(model => model.facultyAadharDocument)
+            }
+        </div>
+        <div class="editor-label" style="width: 250px; height: 39px">
+            <span>
+                Notification Report <br />
+                <span style="color: blue;">
+                    (Pdf should be less than 1 MB size)
+                </span>
+            </span>
+        </div>
+        <div class="editor-field notificationfiles" style="width: 420px; height: 39px">
+            @if (String.IsNullOrEmpty(@Model.ViewNotificationDocument))
+            {
+                @Html.TextBoxFor(model => model.NotificationDocument, new { type = "file", @class = "notificationfile", @required = "true" })
+               
+                <span style="color: red;"></span>
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.NotificationDocument, new { type = "file", @class = "notificationfile" })
+               
+                <a href="../@Model.ViewNotificationDocument.Replace("~", "")" target="_blank">
+                    <span style="font-weight: bold; color: red">View</span>
+                </a>
+                @Html.HiddenFor(model => model.ViewNotificationDocument)
+            }
+        </div>
+        <div class="editor-label" style="width: 250px; height: 39px">
+            <span>
+                Selection Committee Minutes<br />
+                <span style="color: blue;">
+                    (Pdf should be less than 1 MB size)
+                </span>
+            </span>
+        </div>
+        <div class="editor-field selectionfiles" style="width: 420px; height: 39px">
+            @if (String.IsNullOrEmpty(@Model.ViewSelectionCommitteeDocument))
+            {
+                @Html.TextBoxFor(model => model.SelectionCommitteeDocument, new { type = "file", @class = "selectioncommitteefile", @required = "true" })
+               
+                <span style="color: red;"></span>
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.SelectionCommitteeDocument, new { type = "file", @class = "selectioncommitteefile" })
+               
+                <a href="../@Model.ViewSelectionCommitteeDocument.Replace("~", "")" target="_blank">
+                    <span style="font-weight: bold; color: red">View</span>
+                </a>
+                @Html.HiddenFor(model => model.ViewSelectionCommitteeDocument)
+            }
+        </div>
+        <div class="editor-label" style="width: 250px; height: 39px">
+            <span>
+                Apppointment Order<br />
+                <span style="color: blue;">
+                    (Pdf should be less than 1 MB size)
+                </span>
+            </span>
+        </div>
+        <div class="editor-field appointmentfiles" style="width: 420px; height: 39px">
+            @if (String.IsNullOrEmpty(@Model.ViewAppointmentOrderDocument))
+            {
+                @Html.TextBoxFor(model => model.AppointmentOrderDocument, new { type = "file", @class = "appointmentfile", @required = "true" })
+              
+                <span style="color: red;"></span>
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.AppointmentOrderDocument, new { type = "file", @class = "appointmentfile" })
+              
+                <a href="../@Model.ViewAppointmentOrderDocument.Replace("~", "")" target="_blank">
+                    <span style="font-weight: bold; color: red">View</span>
+                </a>
+                @Html.HiddenFor(model => model.ViewAppointmentOrderDocument)
+            }
+        </div>
+        <div class="editor-label" style="width: 250px; height: 39px">
+            <span>
+                Joining Report <br />
+                <span style="color: blue;">
+                    (Pdf should be less than 1 MB size)
+                </span>
+            </span>
+        </div>
+        <div class="editor-field joiningfiles" style="width: 420px; height: 39px">
+            @if (String.IsNullOrEmpty(@Model.ViewJoiningReportDocument))
+            {
+                @Html.TextBoxFor(model => model.JoiningReportDocument, new { type = "file", @class = "joiningfile", @required = "true" })
+               
+                <span style="color: red;"></span>
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.JoiningReportDocument, new { type = "file", @class = "joiningfile" })
+               
+                 <a href="../@Model.ViewJoiningReportDocument.Replace("~", "")" target="_blank">
+                    <span style="font-weight: bold; color: red">View</span>
+                </a>
+                @Html.HiddenFor(model => model.ViewJoiningReportDocument)
+            }
+        </div>
+        <div class="editor-label" style="width: 250px;">
+            <span>Upload Candidate All Original Certificates</span><br />
+            <span style="color: blue;">
+                (Pdf should be less than 1 MB size)
+            </span>
+        </div>
+    <div class="editor-field appealreverificationscreenshots" style="width: 420px; height: 57px">
+        @if (String.IsNullOrEmpty(@Model.ViewAppealReverificationScreenShot))
+        {
+            @Html.TextBoxFor(model => model.AppealReverificationScreenShot, new {type = "file", @class = "appealreverificationscreenshot", @required = "true"})
+            
+            <span style="color: red;"></span>
+        }
+        else
+        {
+             @Html.TextBoxFor(model => model.AppealReverificationScreenShot, new {type = "file", @class = "appealreverificationscreenshot"})          
+             <a href="../@Model.ViewAppealReverificationScreenShot.Replace("~", "")" target="_blank">
+                    <span style="font-weight: bold; color: red">View</span>
+             </a>
+             @Html.HiddenFor(model => model.ViewAppealReverificationScreenShot)
+        }
+    </div>
+        <div style="text-align: center">
+            <p>
+                <input type="submit" value="Submit" id="btnsend" name="cmd" />
+                @*@Html.ActionLink("Cancel", "CollegeFacultyWithIntake", "FacultyVerification", null, new { @class = "create_button" })*@
+            </p>
+        </div>
+    </fieldset>
+}

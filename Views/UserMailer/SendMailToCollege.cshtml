@@ -1,0 +1,12 @@
+﻿@* Dear @ViewBag.Username,
+<br />
+<br />
+<p>@ViewBag.Message</p>
+<p>Login to <a href="http://www.jntuhaac.in" target="_blank">www.jntuhaac.in</a></p>
+<br />
+<br />
+Thanks & Regards<br />
+Director, AAC,<br />
+JNTUH, Hyderabad*@
+<p>@ViewBag.subject</p>
+@Html.Raw(HttpUtility.HtmlDecode(ViewBag.MailMessage))

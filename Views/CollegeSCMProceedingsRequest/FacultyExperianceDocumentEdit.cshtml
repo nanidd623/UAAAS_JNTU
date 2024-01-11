@@ -1,0 +1,237 @@
+﻿@model UAAAS.Controllers.College.ScmProceedingsRequestAddReg
+@{
+    ViewBag.Title = "Faculty Experiance";
+}
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        debugger;
+        //$(".explabel").hide();
+        //$(".expfile").hide();
+        //  $("#collegeId1 option:first").val("");
+        $("#collegeId1").find('option:selected').removeAttr("selected");
+        $("#collegeId").find('option:selected').removeAttr("selected");
+        $("#facultyId").change(function() {
+            //debugger;
+            var id = $(this).val();
+            //if (id == 1 || id == 2) {
+            //    $(".explabel").show();
+            //    $(".expfile").show();
+            //}
+            //else {
+            //    $(".explabel").hide();
+            //    $(".expfile").hide();
+            //}
+        });
+
+        $("body").on("submit", "#ExpId", function() {
+            return confirm("Do you want to Replace Previous Document?");
+        });
+      
+        //$("body").on("submit", "#Form1", function () {
+        //    debugger;
+        //    return confirm("Do you want to Replace Document?");
+        //});
+        //$("body").on("submit", "#ExpId", function () {
+        //    debugger;
+        //    //return confirm("Do you want to Replace Document");
+        //    $(".confirrm").live("click", function (e) {
+        //        var url = $(this).attr("href");
+        //         var mid = $(this).attr("mid");
+        //        var url = '/Admin/DeleteAuditor?Id=' +500;
+        //        $("#dialog-confirm").dialog({
+        //            title: 'Delete SCM',
+        //            autoOpen: false,
+        //            resizable: false,
+        //            height: 150,
+        //            width: 500,
+        //            show: { effect: 'drop', direction: "up" },
+        //            modal: true,
+        //            draggable: true,
+        //            buttons: {
+        //                "Yes": function () {
+        //                    $(this).dialog("close");
+        //                    return true;
+        //                    //});
+
+        //                },
+        //                "No": function () {
+        //                    $(this).dialog("close");
+        //                    return true;
+
+        //                }
+        //            }
+        //        });
+    
+        //        $("#dialog-confirm").dialog('open');
+        //        return false;
+        //    });
+        //});       
+          
+        //get pdf file size
+        function GetNotificationFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#ExperianceDocument")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+        //change function for pdf doc
+        $(function () {
+            $(".Experiancefile").change(function () {
+                debugger;
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".expfile > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".expfile > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $(".expfile > span").text("");
+                    }
+                }
+
+            });
+        });
+    });
+
+</script>
+<div style="background-color:maroon; border: 1px solid #ffffff;color: white">
+    @*<p><b>Note:</b> In case of Assoc. Professor & Professor the faculty has to upload all the scanned original appointment and service certificates, by making single PDF against their experience column. <br />Faculty who satisfy the required experience only will be considered for facing selection committee.</p>*@
+</div><br />
+@using (Ajax.BeginForm("FacultyExperianceDocumentEdit", "CollegeSCMProceedingsRequest", new AjaxOptions(), new { enctype = "multipart/form-data", @id = "ExpId" }))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+
+
+
+    <fieldset>
+        <legend></legend>
+
+        @*@if (Model.Id > 0)
+        {*@
+        @Html.HiddenFor(model => model.RegistrationNo)
+        @Html.HiddenFor(model => model.FacultyId)
+        @Html.HiddenFor(model => model.FacultyType)
+        @Html.HiddenFor(model => model.ScmId)
+        @*@Html.HiddenFor(model => model.CollegeId)*@
+        <div class="editor-label" style="width: 200px;">
+            <b> @Html.Label("RegistrationNumber")</b>
+        </div>
+        <div class="editor-field" style="width: 380px;">
+            @Html.DisplayFor(model => model.RegistrationNo)
+            @Html.HiddenFor(model => model.RegistrationNo)
+        </div>
+
+        <div class="editor-label" style="width: 200px;">
+            <b> @Html.Label("Department")</b>
+        </div>
+        <div class="editor-field" style="width: 380px;">
+            @Html.DisplayFor(model => model.DepartmentName)
+            @Html.HiddenFor(model => model.DepartmentName)
+        </div>
+
+        <div class="editor-label explabel" style="width: 200px; height: 35px">
+            <b> <span>Experiance Document</span></b>
+        </div>
+        <div class="editor-field expfile" style="width: 380px; height: 35px; align-content: center">
+            @Html.TextBoxFor(model => model.ExperianceDocument, new {type = "file", @class = "Experiancefile required"})
+            @if (@Model.ExperianceDocumentView!=null)
+
+            {
+                <b><a href="../Content/Upload/SCMPROCEEDINGSREQUEST/FacultyExperianceDocuments/@Model.ExperianceDocumentView" target="_blank" style="color: red">View</a></b>
+            }            
+            <br/>
+            <span style="color: red;"></span>
+                
+
+        </div>
+        <div style="text-align: center">
+            <p>
+                <input type="submit" value="Submit" id="btnsend" name="cmd" />
+                @*@Html.ActionLink("Cancel", "CollegeScmProceedingsRequest", "CollegeSCMProceedingsRequest", null, new { @class = "create_button" })*@
+            </p>
+        </div>
+
+        @*}*@
+
+
+
+    </fieldset>
+    <div id="dialog-confirm" style="display:none">Are you sure to Replace Document?</div>
+}
+
+
+
+

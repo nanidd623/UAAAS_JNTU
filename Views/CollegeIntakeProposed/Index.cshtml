@@ -1,0 +1,204 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeIntakeProposed>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "Proposed Intake";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit College',
+            autoOpen: false,
+            resizable: false,
+            height: 450,
+            width: 600,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add College Intake Proposed'
+            });
+            url = $("#openDialog").attr('href');
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('.webGrid').find('tbody').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit College Proposed Intake'
+            });
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete College Proposed Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View College Proposed Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 450,
+                width: 600,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+</script>
+
+<h2>Proposed Intake</h2>
+<span><b>Note:</b>
+    <br />
+    1.	The Colleges which desires to apply New courses/ Increase/ Decrease in intake should specify clearly.
+    <br />
+    2.	JNTUH will inspect only the below mentioned courses for the Academic Year @ViewBag.NextAcademicYear.
+</span>
+@if (ViewBag.NotUpload == true)
+{
+
+}
+else
+{
+    <p class="create_link_right">
+       @Html.ActionLink("Add College Proposed Intake", "AddEditRecord", "CollegeIntakeProposed", new { collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })
+    </p>
+}
+@if (TempData["IntakeError"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["IntakeError"].ToString()</p>
+    </div>
+}
+@if (TempData["IntakeSuccess"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["IntakeSuccess"].ToString()</p>
+    </div>
+}
+@{
+    var grid = new WebGrid(Model.Select((element, index) => new { Data = element, Index = index }),
+        canPage: false,
+        // rowsPerPage: 10,
+        selectionFieldName: "selectedRow",
+        ajaxUpdateContainerId: "gridContent"
+        );
+    // grid.Pager(WebGridPagerModes.NextPrevious);
+}
+@if (ViewBag.NotUpload == true)
+{
+    <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+}
+else
+{
+    <div id="gridContent">
+        @grid.GetHtml(tableStyle: "webGrid",
+                headerStyle: "gridHeader",
+                alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: grid.Columns(
+                grid.Column("ID", "S.No.", format: item => item.Index + 1, style: "row_number", canSort: true),
+                grid.Column("Data.Degree", "Degree", null, style: "align_left", canSort: true),
+                grid.Column("Data.Department", "Department", null, style: "align_left", canSort: true),
+                grid.Column("Data.Specialization", "Specialization", null, style: "align_left", canSort: true),
+                grid.Column("Data.Shift", "Shift", null, style: "align_left", canSort: true),
+                //grid.Column("Data.CourseAffiliationStatusCode", "Program Status", null, style: "align_left", canSort: true),
+                grid.Column("Data.ExistingIntake", "Sanctioned Intake for the A.Y." + ViewBag.AcademicYear, style: "align_left", canSort: true),
+                grid.Column("Data.proposedIntake", "Sanctioned Intake for the A.Y." + ViewBag.NextAcademicYear, style: "align_left", canSort: true),
+                grid.Column("Edit", "Edit", format: @<text>@Html.ActionLink("Edit", "AddEditRecord", new { id = item.Data.id }, new { @class = "editDialog edit_button" }) </text>, style: "edit", canSort: true),
+                grid.Column("Details", "Details", format: @<text>@Html.ActionLink("Details", "Details", new { id = item.Data.id }, new { @class = "viewDialog view_button" }) </text>, style: "view", canSort: true),
+                grid.Column("Delete", "Delete", format: @<text>@Html.ActionLink("Delete", "DeleteRecord", new { id = item.Data.id }, new { @class = "confirmDialog delete_button" }) </text>, style: "view", canSort: true)
+         ))
+    </div>
+
+    if (ViewBag.Count == 0)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+    }
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+}

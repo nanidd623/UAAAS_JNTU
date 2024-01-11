@@ -1,0 +1,688 @@
+﻿@model UAAAS.Controllers.FacultyCerificatesAddingController.Faculty
+@{
+    ViewBag.Title = "UpdateFacultyCeritificates";
+
+}
+<div>
+    <table width="100%">
+        <tr>
+            <td width="75%"><h2>Update Faculty Ceritificates</h2></td>
+            <td width="25%" style="text-align:right;">
+                <a href="/FacultyCerificatesAdding/GetFacultyRegistrationDetails" class="create_button">
+                    New Faculty
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<br />
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".SSCcertificate").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("Document should be in JPEG format only");
+                $(this).val('');
+                return false;
+            }
+            else {
+                var size = GetCertificateSize(this.id);
+
+                if (size > 102400) {
+                    alert("Document should not exceed 100 KB in Size");
+                    $(this).val('');
+                }
+                else {
+                    //$(".certificates > span").text("");
+                }
+            }
+        });
+
+        $(".UGcertificate").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("Document should be in JPEG format only");
+                $(this).val('');
+                return false;
+            }
+            else {
+                var size = GetCertificateSize(this.id);
+
+                if (size > 102400) {
+                    alert("Document should not exceed 100 KB in Size");
+                    $(this).val('');
+                }
+                else {
+                    //$(".certificates > span").text("");
+                }
+            }
+        });
+
+        $(".PGcertificate").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("Document should be in JPEG format only");
+                $(this).val('');
+                return false;
+            }
+            else {
+                var size = GetCertificateSize(this.id);
+
+                if (size > 102400) {
+                    alert("Document should not exceed 100 KB in Size");
+                    $(this).val('');
+                }
+                else {
+                    //$(".certificates > span").text("");
+                }
+            }
+        });
+
+        $(".MPhilcertificate").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("Document should be in JPEG format only");
+                $(this).val('');
+                return false;
+            }
+            else {
+                var size = GetCertificateSize(this.id);
+
+                if (size > 102400) {
+                    alert("Document should not exceed 100 KB in Size");
+                    $(this).val('');
+                }
+                else {
+                    //$(".certificates > span").text("");
+                }
+            }
+        });
+
+        $(".PhDcertificate").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("Document should be in JPEG format only");
+                $(this).val('');
+                return false;
+            }
+            else {
+                var size = GetCertificateSize(this.id);
+
+                if (size > 102400) {
+                    alert("Document should not exceed 100 KB in Size");
+                    $(this).val('');
+                }
+                else {
+                    //$(".certificates > span").text("");
+                }
+            }
+        });
+
+        //get file size
+        function GetCertificateSize(fileid) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + fileid)[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+    });
+</script>
+
+<div>
+    @if (TempData["Error"] != null)
+    {
+        <p style="color:red;"><b>Error :</b>@TempData["Error"].ToString()</p>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <p style="color:green;"><b>Success :</b>@TempData["Success"].ToString()</p>
+    }
+</div>
+
+@using (Html.BeginForm("EditFacultyCertificates", "FacultyCerificatesAdding", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div style="background-color:whitesmoke;padding-top:8px;padding-bottom:8px;border:2px solid brown; border-radius:5px;">
+        <table style="padding-left:259px;">
+            <tr>
+                <td class="col1" style="width:20%;">
+                    @Html.LabelFor(model => model.RegistrationNumber)
+                </td>
+                <td class="col2" style="width:30%;">
+                    @Html.DisplayFor(model => model.RegistrationNumber)
+                    @Html.HiddenFor(model => model.RegistrationNumber)
+                </td>
+                <td class="col1" style="width:20%;">
+                    FacultyName
+                </td>
+                <td class="col2" style="width:30%;">
+                    @Html.DisplayFor(model => model.FullName)
+                    @Html.HiddenFor(model => model.FullName)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="width:20%;">
+                    @Html.LabelFor(model => model.AadharNumber)
+                </td>
+                <td class="col2" style="width:30%;">
+                    @Html.TextBoxFor(model => model.AadharNumber)
+                </td>
+                <td class="col3" style="width:20%;">
+                    @Html.LabelFor(model => model.AadharDocument)
+                </td>
+                <td class="col4" style="width:30%;">
+                    @if (Model.AadharDocument != null)
+                    {
+                        <a href="../Content/Upload/Faculty/AADHAARCARDS/@Model.AadharDocument" target="_blank">
+                            <span style="font-weight:bold;color:red">View</span>
+                            @*<img src="../Content/Upload/Faculty/Certificates/@Model.AadharDocument" style="height: 60px;" />*@
+                        </a>
+                        @Html.TextBoxFor(model => model.EditAadharDocument, new { type = "file", @style = "width: 180px;" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.EditAadharDocument, new { type = "file", @style = "width: 180px;" })
+                    }
+
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="width:20%;">
+                    @Html.LabelFor(model => model.PANNumber)
+                </td>
+                <td class="col2" style="width:30%;">@Html.TextBoxFor(model => model.PANNumber)</td>
+                <td class="col3" style="width:20%;">
+                    @Html.LabelFor(model => model.PANDocument)
+                </td>
+                <td class="col4" style="width:30%;">
+                    @if (Model.PANDocument != null)
+                    {
+                        <a href="../Content/Upload/Faculty/PANCARDS/@Model.PANDocument" target="_blank">
+                            <span style="font-weight:bold;color:red">View</span>
+                            @*<img src="../Content/Upload/Faculty/Certificates/@Model.AadharDocument" style="height: 60px;" />*@
+                        </a>
+                        @Html.TextBoxFor(model => model.EditPANDocument, new { type = "file", @style = "width: 180px;" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.EditPANDocument, new { type = "file", @style = "width: 180px;" })
+                    }
+
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <br />
+    <table class="faculty_table education" id="tblQualification" style="border: solid 1px #ccc;">
+        <thead>
+            <tr>
+                <td class="row" colspan="10">
+                    <b>Educational Qualifications</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="row" style="text-align: center; width: 100px;"></td>
+                <td class="row" style="text-align: center; width: 125px;">Hall Ticket / Roll Number</td>
+                <td class="row" style="text-align: center; width: 125px;">Course Studied</td>
+                <td class="row" style="text-align: center; width: 125px;">Branch / Specialization</td>
+                <td class="row" style="text-align: center; width: 100px;">Year of Passing (YYYY)</td>
+                <td class="row" style="text-align: center; width: 80px;">
+                    % of
+                    <br />
+                    Marks / CGPA
+                </td>
+                <td class="row" style="text-align: center; width: 90px;">Division</td>
+                <td class="row" style="text-align: center;">Board/University</td>
+                <td class="row" style="text-align: center; width: 180px;">Place</td>
+                <td class="row" style="text-align: center; width: 200px !important;">
+                    Scanned Certificate<br />
+                    <span style="color: blue;">
+                        (Minimum 600x800 pixels
+                        <br />
+                        and less than 100 KB size)
+                    </span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < 5; i++)
+            {
+                <tr class="col2" style="height:33px;">
+                    @if (i == 0)
+                    {
+                        <td>10th / Equivalent</td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].hallticketno != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].hallticketno)
+                                @Html.HiddenFor(model => model.Education[i].hallticketno)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].hallticketno, new { style = "width:120px;" })
+                            }
+                        </td>
+                        <td></td>
+                        <td></td>
+                    }
+                    else if (i == 1)
+                    {
+                        <td>UG</td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].hallticketno != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].hallticketno)
+                                @Html.HiddenFor(model => model.Education[i].hallticketno)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].hallticketno, new { style = "width:120px;" })
+                            }
+                        </td>
+                        <td style="text-align:center;">
+
+                            @if (Model.Education[i].CouseStudied != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].CouseStudied)
+                                @Html.HiddenFor(model => model.Education[i].CouseStudied)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].CouseStudied, new { style = "width:120px;" })
+                            }
+
+                        </td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].Specialization != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].Specialization)
+                                @Html.HiddenFor(model => model.Education[i].Specialization)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].Specialization, new { style = "width:120px;" })
+                            }
+                        </td>
+                    }
+                    else if (i == 2)
+                    {
+                        <td>PG</td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].hallticketno != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].hallticketno)
+                                @Html.HiddenFor(model => model.Education[i].hallticketno)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].hallticketno, new { style = "width:120px;" })
+                            }
+                        </td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].CouseStudied != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].CouseStudied)
+                                @Html.HiddenFor(model => model.Education[i].CouseStudied)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].CouseStudied, new { style = "width:120px;" })
+                            }
+
+                        </td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].Specialization != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].Specialization)
+                                @Html.HiddenFor(model => model.Education[i].Specialization)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].Specialization, new { style = "width:120px;" })
+                            }
+                        </td>
+                    }
+                    else if (i == 3)
+                    {
+                        <td>M.Phil</td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].hallticketno != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].hallticketno)
+                                @Html.HiddenFor(model => model.Education[i].hallticketno)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].hallticketno, new { style = "width:120px;" })
+                            }
+                        </td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].CouseStudied != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].CouseStudied)
+                                @Html.HiddenFor(model => model.Education[i].CouseStudied)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].CouseStudied, new { style = "width:120px;" })
+                            }
+
+                        </td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].Specialization != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].Specialization)
+                                @Html.HiddenFor(model => model.Education[i].Specialization)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].Specialization, new { style = "width:120px;" })
+                            }
+                        </td>
+                    }
+                    else if (i == 4)
+                    {
+                        <td>Ph.D</td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].hallticketno != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].hallticketno)
+                                @Html.HiddenFor(model => model.Education[i].hallticketno)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].hallticketno, new { style = "width:120px;" })
+                            }
+                        </td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].CouseStudied != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].CouseStudied)
+                                @Html.HiddenFor(model => model.Education[i].CouseStudied)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].CouseStudied, new { style = "width:120px;" })
+                            }
+
+                        </td>
+                        <td style="text-align:center;">
+                            @if (Model.Education[i].Specialization != null)
+                            {
+                                @Html.DisplayFor(model => model.Education[i].Specialization)
+                                @Html.HiddenFor(model => model.Education[i].Specialization)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Education[i].Specialization, new { style = "width:120px;" })
+                            }
+                        </td>
+                    }
+
+                    <td style="text-align:center;">
+                        @if (Model.Education[i].PassedYear != 0)
+                        {
+                            @Html.DisplayFor(model => model.Education[i].PassedYear)
+                            @Html.HiddenFor(model => model.Education[i].PassedYear)
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.Education[i].PassedYear, new SelectList(ViewBag.years as System.Collections.IEnumerable, "Value", "Text")
+                                , "---Select---", new { style = "width:100px;" })
+                        }
+                    </td>
+                    <td style="text-align:center;">
+                        @if (Model.Education[i].MarksPercentage != null)
+                        {
+                            @Html.DisplayFor(model => model.Education[i].MarksPercentage)
+                            @Html.HiddenFor(model => model.Education[i].MarksPercentage)
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.Education[i].MarksPercentage, new { style = "width:75px;" })
+                        }
+
+                    </td>
+                    <td style="text-align:center;">
+                        @if (Model.Education[i].division != null)
+                        {
+                            @Html.DisplayFor(model => model.Education[i].division)
+                            @Html.HiddenFor(model => model.Education[i].division)
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.Education[i].division, new SelectList(ViewBag.division as System.Collections.IEnumerable, "Value", "Text")
+                                , "---Select---", new { style = "width:85px;" })
+                        }
+                    </td>
+                    <td style="text-align:center;">
+                        @if (Model.Education[i].BoardOfUnivercity != null)
+                        {
+                            @Html.DisplayFor(model => model.Education[i].BoardOfUnivercity)
+                            @Html.HiddenFor(model => model.Education[i].BoardOfUnivercity)
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.Education[i].BoardOfUnivercity, new { style = "width:165px;" })
+                        }
+                    </td>
+                    <td style="text-align:center;">
+                        @if (Model.Education[i].PlaceOfEducation != null)
+                        {
+                            @Html.DisplayFor(model => model.Education[i].PlaceOfEducation)
+                            @Html.HiddenFor(model => model.Education[i].PlaceOfEducation)
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.Education[i].PlaceOfEducation, new { style = "width:165px;" })
+                        }
+                    </td>
+                    @if (i == 0)
+                    {
+                        <td style="text-align:center;">
+
+                            @if (!string.IsNullOrEmpty(@Model.FacultySSCcertificate))
+                            {
+                                <a href="../Content/Upload/Faculty/Certificates/@Model.FacultySSCcertificate" target="_blank">
+                                    <span style="font-weight:bold;color:red">View</span>
+                                </a>
+                                @Html.TextBoxFor(model => model.SSCcertificate, new { type = "file", @style = "width: 180px;", @class = "SSCcertificate" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.SSCcertificate, new { type = "file", @style = "width: 180px;", @class = "SSCcertificate" })
+                            }
+                        </td>
+                    }
+                    else if (i == 1)
+                    {
+                        <td style="text-align:center;">
+                            @if (!string.IsNullOrEmpty(@Model.FacultyUGcertificate))
+                            {
+                                <a href="../Content/Upload/Faculty/Certificates/@Model.FacultyUGcertificate" target="_blank">
+                                    <span style="font-weight:bold;color:red">View</span>
+
+                                </a>
+                                @Html.TextBoxFor(model => model.UGcertificate, new { type = "file", @style = "width: 180px;", @class = "UGcertificate" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.UGcertificate, new { type = "file", @style = "width: 180px;", @class = "UGcertificate" })
+                            }
+                        </td>
+                    }
+                    else if (i == 2)
+                    {
+                        <td style="text-align:center;">
+                            @if (!string.IsNullOrEmpty(@Model.FacultyPGcertificate))
+                            {
+                                <a href="../Content/Upload/Faculty/Certificates/@Model.FacultyPGcertificate" target="_blank">
+                                    <span style="font-weight:bold;color:red">View</span>
+
+                                </a>
+                                @Html.TextBoxFor(model => model.PGcertificate, new { type = "file", @style = "width: 180px;", @class = "PGcertificate" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.PGcertificate, new { type = "file", @style = "width: 180px;", @class = "PGcertificate" })
+                            }
+                        </td>
+                    }
+                    else if (i == 3)
+                    {
+                        <td style="text-align:center;">
+                            @if (!string.IsNullOrEmpty(@Model.FacultyMphilcertificate))
+                            {
+                                <a href="../Content/Upload/Faculty/Certificates/@Model.FacultyMphilcertificate" target="_blank">
+                                    <span style="font-weight:bold;color:red">View</span>
+
+                                </a>
+                                @Html.TextBoxFor(model => model.MPhilcertificate, new { type = "file", @style = "width: 180px;", @class = "MPhilcertificate" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.MPhilcertificate, new { type = "file", @style = "width: 180px;", @class = "MPhilcertificate" })
+                            }
+                        </td>
+                    }
+                    else if (i == 4)
+                    {
+                        <td style="text-align:center;">
+                            @if (!string.IsNullOrEmpty(@Model.FacultyPhDcertificate))
+                            {
+                                <a href="../Content/Upload/Faculty/Certificates/@Model.FacultyPhDcertificate" target="_blank">
+                                    <span style="font-weight:bold;color:red">View</span>
+
+                                </a>
+                                @Html.TextBoxFor(model => model.PhDcertificate, new { type = "file", @style = "width: 180px;", @class = "PhDcertificate" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.PhDcertificate, new { type = "file", @style = "width: 180px;", @class = "PhDcertificate" })
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div style="text-align:right;">
+        <input type="submit" value="Update" name="Command" style="text-align:right;" />
+    </div>
+
+}

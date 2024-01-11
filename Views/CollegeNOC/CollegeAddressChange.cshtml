@@ -1,0 +1,26 @@
+﻿@model UAAAS.Controllers.College_Noc
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Change Of Location";
+}
+
+<h2>CollegeAddressChange</h2>
+@using (Html.BeginForm("CollegeAddressChange", "CollegeNOC"))
+{
+    <table class ="four_columns">
+        <tr>
+            <td class="col11">
+                Name<br />
+                <input type="text" id="txtName" style="width:140px" />
+            </td>
+            <td class="col11">
+                Country:<br />
+                <input type="text" id="txtCountry" style="width:140px" />
+            </td>
+            <td s class="col11">
+                <br />
+                <input type="button" id="btnAdd" value="Add" />
+            </td>
+        </tr>
+        </table>
+}

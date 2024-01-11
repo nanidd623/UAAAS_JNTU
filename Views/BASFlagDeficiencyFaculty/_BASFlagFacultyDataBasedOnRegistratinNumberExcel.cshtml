@@ -1,0 +1,92 @@
+﻿
+@model List<UAAAS.Controllers.BASFlagDeficiencyFacultyController.CollegeWiseBasFlagFacultyNew>
+@{
+    ViewBag.Title = "ExcelFileDownload";
+    int Count = 1;
+}
+
+
+@using (Html.BeginForm())
+{
+
+    <table style="width: 100%; border: 1px;" border="1">
+        <tr>
+            <th style="text-align: center; vertical-align: top; background-color:yellow">SNo</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">CollegeCode</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">CollegeName</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">RegistrationNumber</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">FacultyName</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Mobile</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Email</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Department</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">BAS Joining Date</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">TotalWorkingDays</th>
+            
+            <th style="text-align: center; vertical-align: top; background-color: yellow">JulyPresentDays</th>
+           
+            <th style="text-align: center; vertical-align: top; background-color: yellow">AugustPresentDays</th>
+         
+            <th style="text-align: center; vertical-align: top; background-color: yellow">SeptemberPresentDays</th>
+         
+            <th style="text-align: center; vertical-align: top; background-color: yellow">OctoberPresentDays</th>
+         
+            <th style="text-align: center; vertical-align: top; background-color: yellow">NovemberPresentDays</th>
+        
+            <th style="text-align: center; vertical-align: top; background-color: yellow">DecemberPresentDays</th>
+        
+            <th style="text-align: center; vertical-align: top; background-color: yellow">JanuaryPresentDays</th>
+   
+            <th style="text-align: center; vertical-align: top; background-color: yellow">FebruaryPresentDays</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">TotalPresentDays</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Status</th>
+
+        </tr>
+
+
+
+
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: left; vertical-align: top;">@Count</td>
+
+                    <td style="text-align: left; vertical-align: top;">@item.CollegeCode</td>
+                    <td style="text-align: left; vertical-align: top;">@item.CollegeName</td>
+                    <td style="text-align: left; vertical-align: top;">@item.Registraionnumber</td>
+                    <td style="text-align: left; vertical-align: top;">@item.Name</td>
+                    <td style="text-align: left; vertical-align: top;">@item.Mobile</td>
+                    <td style="text-align: left; vertical-align: top;">@item.Email</td>
+                    <td style="text-align: left; vertical-align: top;">@item.Department</td>
+                    <td style="text-align: left; vertical-align: top;">@item.BASJoiningDate</td>
+                    <td style="text-align: left; vertical-align: top;">@item.TotalWorkingDays</td>
+       
+                    <td style="text-align: left; vertical-align: top;">@item.JulyPresentDays</td>
+                   
+                    <td style="text-align: left; vertical-align: top;">@item.AugustPresentDays</td>
+             
+                    <td style="text-align: left; vertical-align: top;">@item.SeptemberPresentDays</td>
+                  
+                    <td style="text-align: left; vertical-align: top;">@item.OctoberPresentDays</td>
+                  
+                    <td style="text-align: left; vertical-align: top;">@item.NovemberPresentDays</td>
+                 
+                    <td style="text-align: left; vertical-align: top;">@item.DecemberPresentDays</td>
+                  
+                    <td style="text-align: left; vertical-align: top;">@item.JanuaryPresentDays</td>
+                    
+                    <td style="text-align: left; vertical-align: top;">@item.FebruaryPresentDays</td>
+                    <td style="text-align: left; vertical-align: top;">@item.TotalPresentDays</td>
+                    <td style="text-align: left; vertical-align: top;">@item.Cleared</td>
+                </tr>
+                Count++;
+            }
+        }
+
+
+    </table>
+
+
+}
+

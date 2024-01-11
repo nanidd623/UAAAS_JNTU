@@ -1,0 +1,65 @@
+﻿@model IEnumerable<UAAAS.Models.OperationalFunds>
+@{
+    ViewBag.Title = "Operational Funds";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    int num = 1;
+}
+<h2>Operational Funds</h2>
+<table class="four_columns" style="width: 100%">
+    <tr>
+        <th style="text-align: center;" class="col11">S.No
+        </th>
+        <th class="col11">Name of the </br> &nbsp;&nbsp;&nbsp;&nbsp;Bank
+        </th>
+        <th style="text-align: center;" class="col11">Branch
+        </th>
+        <th style="text-align: center;" class="col11">Address
+        </th>
+        <th style="text-align: center;" class="col11">Account No
+        </th>
+        <th style="text-align: center; width: 150px;" class="col11">FDR, if any (Excluding FDR submitted to AICTE)
+        </th>
+        <th style="text-align: center;" class="col11">Cash Balance
+            <br />
+            (Rs. in Lakhs)
+        </th>
+        <th style="text-align: center;" class="col11">Total
+        </th>
+    </tr>
+    @foreach (var item in ViewBag.OperationalFunds as List<UAAAS.Models.OperationalFunds>)
+    {
+        <tr>
+            <td style="width: 50px; text-align: center;" class="col21">
+                @(num++)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(modelItem => item.bankName)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(modelItem => item.bankBranch)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(modelItem => item.bankAddress)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(modelItem => item.bankAccountNumber)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(modelItem => item.FDR)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(modelItem => item.cashBalance)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(modelItem => item.total)
+            </td>
+        </tr>
+    }
+</table>
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+

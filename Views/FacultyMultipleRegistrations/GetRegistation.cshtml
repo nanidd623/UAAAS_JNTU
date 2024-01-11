@@ -1,0 +1,102 @@
+﻿@model UAAAS.Models.FacultyRegistration
+
+@{
+    ViewBag.Title = "AddDeleteFaculty";
+}
+
+<h2>Delete Faculty Multiple Registration Numbers</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p class="SuccessText" style="text-align: center;font-weight: bold">@TempData["Success"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+ <br/>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="details_table">
+
+        <div class="editor-label">
+            @Html.LabelFor(m => m.RegistrationNumber)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.RegistrationNumber, new { @required = "required" })
+            @Html.ValidationMessageFor(m => m.RegistrationNumber)
+        </div>
+        <br />
+        <div class="editor-label">
+            @Html.LabelFor(m => m.IsStatus)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.IsStatus, new { @required = "required" })
+            @Html.ValidationMessageFor(m => m.IsStatus)
+        </div>
+        <div class="display-label last-row">
+            &nbsp;
+        </div>
+        <div class="display-field last-row">
+            <p>
+                <input type="submit" value="Submit" />
+            </p>
+        </div>
+        <div class="clear"></div>
+    </div> 
+    
+    <br/><br/>
+    if(Model.FirstName != null && Model.LastName != null)
+    {
+        <table width="100%">
+            <thead>
+                <tr class="col1">
+                    <th>Registration Number</th>
+                    <th>Name</th>
+                    <th>PAN Number</th>
+                    <th>Aadhaar Number</th>
+                    <th>Associated College</th>
+                    <th>Click</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="col2">
+                    <td>
+                        @Html.DisplayFor(model=>model.RegistrationNumber)
+                    </td>
+                    <td>
+                        <span>
+                            @Html.DisplayFor(model => model.FirstName)
+                            @Html.DisplayFor(model => model.MiddleName)
+                            @Html.DisplayFor(model => model.LastName)
+                        </span>  
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.PANNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.AadhaarNumber)
+                    </td>
+                    <td>
+                        @if (Model.CollegeCode != null)
+                        {
+                            @Html.DisplayFor(model => model.CollegeName)<span>(@Model.CollegeCode) <span style="color:red;">(@Model.Type)</span></span>
+                        }
+                        
+                    </td>
+                    <td>
+                        <a href="/FacultyMultipleRegistrations/AddFaculty?fid=@Model.id&&isstatus=@Model.IsStatus">Delete</a>
+                           @*@Html.ActionLink("Delete", "AddFaculty", "FacultyMultipleRegistrations", new { fid = Model.id })*@
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+}

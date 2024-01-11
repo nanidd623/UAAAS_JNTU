@@ -1,0 +1,495 @@
+﻿@model UAAAS.Models.CollegePaymentDetails
+@using UAAAS.Models;
+@{
+    ViewBag.Title = "Edit_DataEntry_Scenes";
+    // Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    int count = 1;
+    uaaasDBContext db = new uaaasDBContext();
+    var jntuh_departments = (from d in db.jntuh_department
+                             join de in db.jntuh_degree on d.degreeId equals de.id
+                             where d.isActive == true && de.isActive == true
+                             select new
+                             {
+                                 id = d.id,
+                                 departmentName = de.degree + "-" + d.departmentName
+                             }).ToList();
+    var Dept_String = "";
+    string Datetext = "";
+
+}
+
+<h2>Edit_DataEntry_Scenes</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<style>
+    /*.tableborder {
+        border: 1px solid black;
+        font-family: Calibri;
+        text-align: center;
+    }*/
+</style>
+
+
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+
+
+        $("#FeeTypeId").change(function () {
+            debugger;
+            var id = $(this).val();
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "/CollegesFee/Get_SubPurposes?FeeTypeId=" + id,
+                dataType: "Json",
+                success: function (Data) {
+                    debugger;
+                    if (Data != null) {
+                        // first remove the current options if any
+                        $("#Sub_PurposeId").find('option').remove();
+                        var item = "<option value=''>---Select---</option>";
+
+                        $.each(Data.Data, function (i, state) {
+
+                            item += "<option value=" + state.Sub_Id + " >" + state.Sub_type + "</option>";
+                        });
+                        $("#Sub_PurposeId").html(item).css('display', 'block');
+                    }
+                },
+                error: function ajaxError(response) {
+                    alert(response.status + ' ' + response.statusText);
+                }
+            });
+        });
+
+        $("#CollegeId").change(function () {
+            debugger;
+            var collegeId = $(this).val();
+            window.location.href = "/CollegesFee/Edit_DataEntry_Scenes?collegeId=" + collegeId;
+
+        });
+
+        $('.EditDialog').on('click', function () {
+            debugger;
+
+            var $row = $(this).closest('tr');
+            var $columns = $row.find('td');
+
+            var values = "";
+
+            $.each($columns, function (i, item) {
+                var sdsd = item.id;
+                values += item.innerHTML + ';';
+            });
+
+            var List = values.split(';');
+
+            var NewTypeId = $columns[6].id;
+            var DeptsData = $columns[3].id;
+
+
+            if (NewTypeId == 1)
+                $("#Trans_Number").css({ "display": "block" }).val(List[7]);
+            else
+                $("#Trans_Number").css({ "display": "none" })
+
+            $("#AcademicYearId").val($columns[1].id);
+            $("#TypeId").val(NewTypeId);
+            $("#DD_Date").val(List[8]);
+            //$("#TotalAmount").val(List[5]);
+            $("#PaidAmount").val(List[5]);
+            // $("#DueAmount").val(List[5]);
+            $("#BankId").val($columns[4].id);
+            $("#FeeTypeId").val($columns[2].id);
+            $("#Sub_PurposeId").val(DeptsData);
+            $("#Id").val(List[9]);
+            $("#CreatedOn").val(List[10]);
+            $("#CreatedBy").val(List[11]);
+
+            if (DeptsData == "2") {
+                $(".Depts").css({ "display": "block" });
+                $("#SelectedDepats").css({ "display": "block" }).val(List[12]);
+            }
+
+        });
+
+
+        $("#TypeId").change(function () {
+            debugger;
+            var Type = $(this).val();
+            if (Type != null) {
+                if (Type == "1") {
+                    $("#Trans_Number").css({ 'display': 'block', "height": "16px" });
+                }
+                else if (Type == "2") {
+                    $("#Trans_Number").css({ 'display': 'block', "height": "16px" });
+                }
+                else if (Type == "") {
+                    $("#Trans_Number").css({ 'display': 'none', "height": "16px" });
+                }
+            }
+        });
+
+        $(".Depts").change(function () {
+            debugger;
+            var item = $(this).val();
+
+            var savedItem = item;
+
+            $("#SelectedDepats").val(savedItem);
+        });
+
+        $("#Sub_PurposeId").change(function () {
+            debugger;
+            var FeeTypeId = $("#FeeTypeId").val();
+            var Sub_PurposeId = $(this).val();
+            if (FeeTypeId != null && Sub_PurposeId != null) {
+                if (FeeTypeId == "9" && Sub_PurposeId == "2") {
+                    $(".Depts").css({ "display": "block" });
+                    $("#SelectedDepats").css({ "display": "block" });
+                }
+                else {
+                    $(".Depts").css({ "display": "none" });
+                    $("#SelectedDepats").css({ "display": "none" });
+                }
+            }
+
+
+        });
+
+        $("#BankId").change(function () {
+            debugger;
+            var bank = $(this).val();
+            if (bank == "36") {
+                $(".hide").css({ "display": "block" });
+            }
+            else {
+                $(".hide").css({ "display": "none" });
+            }
+        });
+
+    });
+</script>
+
+<div>
+    @if (TempData["Success"] != null)
+    {
+        <div class="success" style="background-color: gold; border: 1px solid #f49820;height:12px;">
+            <p style="text-align: center;font-weight: bold;margin-top:-3px;"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+        </div>
+    }
+    else if (TempData["Error"] != null)
+    {
+        <div class="error" style="background-color: red; border: 1px solid #f49820;height:12px;">
+            <p style="text-align: center;font-weight: bold;color:white;margin-top:-3px;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+        </div>
+    }
+</div>
+<br />
+
+@using (Html.BeginForm("Edit_DataEntry_Scenes", "CollegesFee"))
+{
+
+    <div>
+        <div class="editor-label" style="width:151px;">
+            <span>Colleges</span>
+
+        </div>
+        <div class="editor-field" style="width:693px;">
+            @Html.DropDownListFor(model => model.CollegeId, new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "CollegeId", "CollegeName"), "---Select---", new { @style = "width:689px;" })
+        </div>
+    </div>
+    <div>
+        <div class="editor-label" style="width:190px;">
+            <span>Academic Years</span>
+
+        </div>
+        <div class="editor-field" style="width:241px;">
+            @Html.DropDownListFor(model => model.AcademicYearId, new SelectList(ViewBag.AcademicYears as System.Collections.IEnumerable, "AcademicYearId", "AcademicYear"), "---Select---", new { @style = "width:240px;" })
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.CreatedOn)
+    @Html.HiddenFor(model => model.CreatedBy)
+
+    <table width="75%" style="padding-left:170px;float:left" id="Test">
+        <tr>
+
+            <td class="col1" width="12%;">
+                <div>
+                    Payment Type
+                </div>
+            </td>
+            <td class="col2">
+                <div style="display:-webkit-box">
+                    @Html.DropDownListFor(model => model.TypeId, new SelectList(ViewBag.Types as System.Collections.IEnumerable, "Id", "payment_Type"), "---Select---", new { @style = "width:150px;" })
+                    <br />
+                    @Html.TextBoxFor(model => model.Trans_Number, new { @placeholder = "Enter DD Number", @style = "display:none;" })
+                </div>
+            </td>
+            <td class="col1">
+                <div>
+                    <span>Payment Date</span>
+                    @*@Html.LabelFor(model => model.DD_Date)*@
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.TextBoxFor(model => model.DD_Date, new { @class = "calendar", @placeholder = "Select Date of Birth" })
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="col1">
+                <div>
+                    @Html.LabelFor(model => model.PaidAmount)
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.TextBoxFor(model => model.PaidAmount, new { @placeholder = "Enter Paid Amount" })
+                    <span id="Paid"></span>
+                </div>
+            </td>
+            <td class="col1">
+                <div>
+                    Bank Name
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.DropDownListFor(model => model.BankId, new SelectList(ViewBag.BankNames as System.Collections.IEnumerable, "BankId", "BankName"), "---Select---", new { @style = "width:270px;", @Id = "BankId" })
+                    <br />
+                    <span class="hide" style="display:none;">
+                        <br />@Html.TextBox("OtherBank", null, new { @style = "display:block;" })
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                <div>
+                    Payment
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.DropDownListFor(model => model.FeeTypeId, new SelectList(ViewBag.FeeTypes as System.Collections.IEnumerable, "FeeId", "FeeType"), "---Select---", new { @style = "width:270px;" })
+                </div>
+            </td>
+            <td class="col1">
+                <div>
+                    Sub_purpose
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.DropDownListFor(model => model.Sub_PurposeId, new SelectList(ViewBag.SubPurposes as System.Collections.IEnumerable, "SubPurposeId", "SubPurposeType"), "---Select---", new { @class = "Sub_PurposeId", @style = "width:270px;" })
+
+                    <span>
+                        <br /> @Html.TextBox("SelectedDepats", null, new { @style = "display:none;" })
+                    </span>
+                    @*@Html.TextBox("SelectedDepats", null, new { @style = "display:none;" })*@
+                </div>
+            </td>
+            @*<td>
+                    @Html.ListBoxFor(model => model.DepartmentIds, new SelectList(ViewBag.Departments, "Value", "Text"), new { @class = "Depts", @style = "display:none;" })
+                </td>*@
+        </tr>
+
+        <tr></tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="float:right;">
+                <div>
+                    <input type="submit" value="Update Payment" />
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div style="float:right;width:23%">
+        @Html.ListBoxFor(model => model.DepartmentIds, new SelectList(ViewBag.Departments, "Value", "Text"), new { @class = "Depts", @style = "display:none;height:156px;width:299px;background-color:aliceblue;" })
+    </div>
+    <br /><br />
+}
+
+@if (ViewBag.Alldetails != null)
+{
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th class="">Academic year</th>
+                <th class="">Nature of Payment</th>
+                <th class="">Nature of Sub-Payment</th>
+                <th class="">Bank</th>
+                <th class="">Paid Amount</th>
+                <th class="">Payment Type</th>
+                <th class="">Trans_Number</th>
+                <th class="">Payment Date</th>
+                <th class="" width="100px">Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item2 in ViewBag.Alldetails)
+            {
+                <tr>
+                    <td>@(count++)</td>
+                    <td id="@item2.AcademicYearId">@item2.AcademicYear</td>
+                    <td id="@item2.FeeTypeId">@item2.FeeType</td>
+                    <td id="@item2.Sub_PurposeId" width="15%">
+                        @if (item2.Sub_Purpose == "Departments")
+                        {
+                            Dept_String = "";
+                            if (item2.DepartmentIds != null && item2.DepartmentIds != "")
+                            {
+                                string[] Spit_Dept = item2.DepartmentIds.Split(',');
+                                foreach (var item1 in Spit_Dept)
+                                {
+                                    int deptid = Convert.ToInt32(item1);
+                                    Dept_String += jntuh_departments.Where(e => e.id == deptid).Select(e => e.departmentName).FirstOrDefault();
+                                    if (Spit_Dept.Length > 1)
+                                    {
+                                        Dept_String += ", ";
+                                    }
+                                }
+                            }
+                        }
+                        @item2.Sub_Purpose <br /><span>(@Dept_String)</span>
+                    </td>
+                    <td id="@item2.BankId">@item2.Bank</td>
+                    <td>@item2.PaidAmount</td>
+                    <td id="@item2.TypeId">@item2.Type</td>
+                    <td>@item2.Trans_Number</td>
+                    <td class="" style="text-align:center;">
+                        @if (item2.DDdate_New != null)
+                        {
+                           
+                            {
+                                Datetext = item2.DDdate_New.ToString().Split(' ')[0];
+                            }
+                        }
+
+                        @Datetext
+                    </td>
+
+                    <td style="display:none">@item2.Id</td>
+                    <td style="display:none">@item2.CreatedOn</td>
+                    <td style="display:none">@item2.CreatedBy</td>
+                    <td style="display:none">@item2.DepartmentIds</td>
+                    <td style="text-align:center;">
+                        <input type="button" class="EditDialog edit_button" value="Edit" />
+                    </td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-6" style="width: 90%; text-align: center" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-6" style="width: 90%; text-align: center" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+
+}

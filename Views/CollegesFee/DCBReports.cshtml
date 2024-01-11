@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "DCBReports";
+}
+
+
+
+@using (Html.BeginForm("DCBReports", "CollegesFee"))
+{
+
+<div style="float:left;min-height:335px;padding-top:18px;border:1px solid gray;border-radius:5px;width:1120px;background-color:#2A3F54;background-color:#EAEDED;">
+    <div style="padding-left:10px;">
+        <h2>DCBReports</h2>
+    </div>
+
+    <hr />
+    <div style="text-align:-webkit-center;">
+        <table>
+            <tr>
+                <td>Year Wise DCB Reports &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>
+                    @Html.DropDownList("AcademicYearId", new SelectList(ViewBag.AcademicYears as System.Collections.IEnumerable, "AcademicYearId", "AcademicYear"), "---Select---", new { @style = "width:240px;" })
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Download" name="Download" style="border-color:#337ab7;background-color:#337ab7;height:25px;border-radius:5px;width:85px;color:white;" />
+                </td>
+            </tr>
+        </table>
+        <span></span>
+
+    </div>
+  
+</div>
+}
+

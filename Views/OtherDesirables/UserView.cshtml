@@ -1,0 +1,65 @@
+﻿@model IList<UAAAS.Models.OtherDesirableRequirements>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Other Desirables";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+}
+<h2>Other Desirables</h2>
+@using (Html.BeginForm())
+{
+    if (ViewBag.Norecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+    }
+    else
+    {    
+    <table class="four_columns">
+        @for (int i = 0; i < ViewBag.Count; i++)
+        {
+            <tr>
+                <td class="col11" style="width: 800px">
+                    @Html.LabelFor(m => m[i].requirementType, Model[i].requirementType == null ? string.Empty : Model[i].requirementType.ToString())
+                    @Html.HiddenFor(m => m[i].id)
+                </td>
+                <td class="col21" style="width: 200px">
+                    @if (Model[i].requirementType == "No. of Governing Body meetings held in the past one academic year")
+                    {
+                        if (Model[i].governingBodymeetings == 2)
+                        {                            
+                        <label>One or more</label>                            
+                        }
+                        else
+                        {
+                            if (Model[i].isSelected == "True")
+                            {
+                        <label>NIL</label>
+                            }
+                            if (Model[i].isSelected == "False")
+                            {
+                        <label>One</label>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Model[i].isSelected == "New")
+                        {
+                        <label></label>
+                        }
+                        if (Model[i].isSelected == "True")
+                        {
+                        <label>Yes</label>
+                        }
+                        if (Model[i].isSelected == "False")
+                        {
+                        <label>No</label>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </table>   
+    }
+}

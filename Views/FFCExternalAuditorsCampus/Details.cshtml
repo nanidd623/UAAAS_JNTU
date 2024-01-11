@@ -1,0 +1,52 @@
+﻿@model UAAAS.Models.jntuh_ffc_external_auditor_groups
+@{
+    ViewBag.Title = "External Auditors Campus";
+}
+@using (Html.BeginForm())
+{     
+    <div class="details_table">
+        <div class="editor-label">
+            @Html.LabelFor(model => model.University)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.University)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Group)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.Group)
+        </div>
+        <div class="editor-label">
+           <span>Status</span>
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.isActive)
+        </div>
+        @*<div class="editor-label">
+            @Html.LabelFor(model => model.createdBy)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.createdBy)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.createdOn)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.createdOn)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.updatedBy)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.updatedBy)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.updatedOn)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.updatedOn)
+        </div>*@       
+    </div>
+}
+

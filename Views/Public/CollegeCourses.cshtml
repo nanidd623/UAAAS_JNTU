@@ -1,0 +1,271 @@
+﻿@model Tuple<UAAAS.Models.CollegeDetails, List<UAAAS.Controllers.CollegeCourses>>
+@{
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+    ViewBag.Title = @Model.Item1.Name + "- List of Courses";
+    int count = 1;
+}
+<h2 style="text-align:center">@Model.Item1.Name &nbsp;(@Html.DisplayFor(model => model.Item1.Code))</h2>
+
+@using (Html.BeginForm())
+{
+    if (ViewBag.AcademicYear == "2014-15")
+    {
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 50%; vertical-align: top; padding-right: 100px;">
+                    <table class="four_columns" style="width: 100%;">
+                        <tr>
+                            <td class="col11" style="width: 150px;">
+                                College Name
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.Name)
+                                &nbsp;(@Html.DisplayFor(model => model.Item1.Code))
+                            </td>
+                            <td class="col11">
+                                Established Year
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.EstablishedYear)
+                            </td>
+                        </tr>
+                        @*@if (!string.IsNullOrEmpty(Model.Item1.EamcetCode))
+                            {
+                            <tr>
+                                <td class="col11">
+                                    EAMCET Code
+                                </td>
+                                <td class="col21">
+                                    @Html.DisplayFor(model => model.Item1.EamcetCode)
+                                </td>
+                            </tr>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Item1.IcetCode))
+                            {
+                            <tr>
+                                <td class="col11">
+                                    ICET Code
+                                </td>
+                                <td class="col21">
+                                    @Html.DisplayFor(model => model.Item1.IcetCode)
+                                </td>
+                            </tr>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Item1.PgcetCode))
+                            {
+                            <tr>
+                                <td class="col11">
+                                    PGCET Code
+                                </td>
+                                <td class="col21">
+                                    @Html.DisplayFor(model => model.Item1.PgcetCode)
+                                </td>
+                            </tr>
+                            }*@
+                        <tr>
+                            <td class="col11">
+                                Address
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.Address), @Html.DisplayFor(model => model.Item1.Mandal), @Html.DisplayFor(model => model.Item1.District), @Html.DisplayFor(model => model.Item1.Pincode)
+                            </td>
+                            <td class="col11">
+                                Website
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.Website)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col11">
+                                Phone Number
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.Mobile)
+                            </td>
+                            <td class="col11">
+                                Email
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.Email)
+                            </td>
+                        </tr>
+                        @*<tr>
+                            <td class="col11">
+                                Land Line
+                            </td>
+                            <td class="col21" colspan="3">
+                                @Html.DisplayFor(model => model.Item1.LandLine)
+                            </td>
+                        </tr>*@
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+        <br />
+        <h2 style="text-align:center">List of Courses Granted Affiliation for the Academic Year @ViewBag.AcademicYear</h2>
+
+        <table class="webGrid" style="width:50%;margin:auto">
+            <thead class="col1">
+                <tr>
+                    <th style="width: 50px; text-align: center;">
+                        S.No
+                    </th>
+                    <th style="text-align: left;">
+                        Course Name
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="col2">
+                @if (Model.Item2.Count() > 0)
+                {
+                    foreach (var item in Model.Item2)
+                    {
+                        <tr>
+                            <td style="width: 50px; text-align: center;">
+                                @(count++)
+                            </td>
+                            <td style="text-align: left;">
+                                @item.DegreeName-@item.SpecializationName
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 50%; vertical-align: top; padding-right: 100px;">
+                    <table class="four_columns" style="width: 100%;">
+                        <tr>
+                            <td class="col11" style="width: 150px;">
+                                College Name
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.Name)
+                                &nbsp;(@Html.DisplayFor(model => model.Item1.Code))
+                            </td>
+                            <td class="col11">
+                                Established Year
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.EstablishedYear)
+                            </td>
+                        </tr>
+                        @*@if (!string.IsNullOrEmpty(Model.Item1.EamcetCode))
+                            {
+                                <tr>
+                                    <td class="col11">
+                                        EAMCET Code
+                                    </td>
+                                    <td class="col21">
+                                        @Html.DisplayFor(model => model.Item1.EamcetCode)
+                                    </td>
+                                </tr>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Item1.IcetCode))
+                            {
+                                <tr>
+                                    <td class="col11">
+                                        ICET Code
+                                    </td>
+                                    <td class="col21">
+                                        @Html.DisplayFor(model => model.Item1.IcetCode)
+                                    </td>
+                                </tr>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Item1.PgcetCode))
+                            {
+                                <tr>
+                                    <td class="col11">
+                                        PGCET Code
+                                    </td>
+                                    <td class="col21">
+                                        @Html.DisplayFor(model => model.Item1.PgcetCode)
+                                    </td>
+                                </tr>
+                            }*@
+                        <tr>
+                            <td class="col11">
+                                Address
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.Address), @Html.DisplayFor(model => model.Item1.Mandal), @Html.DisplayFor(model => model.Item1.District), @Html.DisplayFor(model => model.Item1.Pincode)
+                            </td>
+                            <td class="col11">
+                                Website
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.Website)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col11">
+                                Phone Number
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.Mobile)
+                            </td>
+                            <td class="col11">
+                                Email
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.Item1.Email)
+                            </td>
+                        </tr>
+                        @*<tr>
+                            <td class="col11">
+                                Land Line
+                            </td>
+                            <td class="col21" colspan="3">
+                                @Html.DisplayFor(model => model.Item1.LandLine)
+                            </td>
+                        </tr>*@
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+        <br />
+        <h2 style="text-align:center">List of Courses Granted Affiliation for the Academic Year @ViewBag.AcademicYear</h2>
+        <table class="webGrid" style="width:50%;margin:auto">
+            <thead class="col1">
+                <tr>
+                    <th style="width: 50px; text-align: center;">
+                        S.No
+                    </th>
+                    <th style="text-align: left;">
+                        Course Name
+                    </th>
+                    <th style="text-align: center;">
+                        Approved Intake
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="col2">
+                @if (Model.Item2.Count() > 0)
+                {
+                    foreach (var item in Model.Item2)
+                    {
+                        <tr>
+                            <td style="width: 50px; text-align: center;">
+                                @(count++)
+                            </td>
+                            <td style="text-align: left;">
+                                @item.DegreeName-@item.SpecializationName
+                            </td>
+                            <td style="text-align: center;">
+                                @item.ApprovedIntake
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+
+}

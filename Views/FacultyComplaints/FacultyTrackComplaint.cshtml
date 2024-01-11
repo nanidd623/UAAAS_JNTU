@@ -1,0 +1,163 @@
+﻿@model List<UAAAS.Models.FacultyComplaintsClass>
+@{
+    ViewBag.Title = "Faculty Track Complaint";
+}
+
+<h2>Track Grievance</h2>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //    $("#btnbutton").click(function () {
+        //        alert();
+        //        debugger;
+        //        $(".PreviewDiv").dialog({
+        //            title: "Complaint Details",
+        //            width: 700,
+        //            height: 450,
+        //            autoOpen: false,
+        //            model: true,
+        //            resizable: true,
+        //            show: { effect: "drop", direction: "up" },
+        //            draggable: true
+        //        });
+
+        //        $(".PreviewDiv").dialog('open');
+        //        return false;
+        //    });
+        //});
+        ///////////////////////
+        $(".editdilog1").live("click", function (e) {
+            var url = $(this).attr("href");
+            debugger;
+
+            $("#dialog-edit").dialog({
+
+                title: 'Edit Event',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 800,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    location.reload();
+                }
+            });
+
+            $("#dialog-edit").dialog('open');
+            return false;
+        });
+
+
+    });
+</script>
+
+    @using (Html.BeginForm("FacultyTrackComplaint", "FacultyComplaints", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @*<table width="50%" style="padding-left:100px;">
+        <tr>
+            <td>
+                Enter Your Grievance ID :
+            </td>
+            <td>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </td>
+            <td>
+                @Html.TextBox("ticketid", null, new { required = "required" })
+            </td>
+            <td>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </td>
+            <td>
+                <input type="submit" value="Get Complaint" />
+            </td>
+        </tr>
+    </table>*@
+
+   
+
+    <br /><br />
+    if (Model != null)
+    {
+        <table width="100%">
+            <thead style="background-color:brown;color:white;font-weight:bold;text-align:center;">
+                <tr>
+                    <td>Ticket Id</td>
+                    <td>Name</td>
+                    <td>Grievance Type</td>
+                    <td>Grievance Date</td>
+                    <td>Grievance File</td>
+                    <td>Grievance Status</td>
+                    <td>View</td>
+                </tr>
+            </thead>
+            <tbody style="background-color:moccasin;font-weight:bold;">
+             @*@if(@Model.TicketId!=null)
+             {*@
+@foreach (var item in Model)
+{
+
+    <tr>
+        <td style="text-align:center;">@item.TicketId</td>
+        <td style="text-align:center;">@item.Facultyname</td>
+        <td style="text-align:center;">@item.complaintname</td>
+        <td style="text-align:center;">@item.complaintdate</td>
+
+        <td style="text-align: center;">
+            <a href="/Content/Upload/ComplaintsGivenbyFaculty/ComplaintFile/@item.complaintFileview" target="_blank" title="Lab Deficiency">
+                <span style="color:red;">View</span>
+            </a>
+        </td>
+
+
+        <td style="text-align:center;">
+            @item.complaintStatusName
+            @*@if (item.complaintStatus == 1)
+            {
+                <span>Processing</span>
+            }
+            else if (item.complaintStatus == 2)
+            {
+                <span>Not in Grivance</span>
+            }
+            else if (item.complaintStatus == 3)
+            {
+                <span>Not Relavent documents or desc not understand</span>
+            }
+            else if (item.complaintStatus == 4)
+            {
+                <span>Proced to college</span>
+            }
+            else if (item.complaintStatus == 5)
+            {
+                <span>Closed</span>
+            }
+            else
+            {
+                <span>No Status Found</span>
+            }*@
+        </td>
+
+
+        <td style="text-align:center;">
+            <a href="/FacultyComplaints/FacultyTrackComplaintpoup?id=@item.id" class="editdilog1" style="text-align:center"><span>View</span></a>
+          
+        </td>
+      
+
+    </tr>
+}
+
+           
+            </tbody>
+        </table>
+    }
+
+   
+}
+<div id="dialog-edit" style="display: none">
+</div>

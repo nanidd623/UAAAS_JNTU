@@ -1,0 +1,282 @@
+﻿@using UAAAS.Models;
+@*@model UAAAS.Models.Dashbord*@
+@{
+    ViewBag.Title = "College Dashboard";
+    var principal = false;
+    var faculty = false;
+    uaaasDBContext db = new uaaasDBContext();
+}
+
+<link href="../../Scripts/Slider/main.css" rel="stylesheet" />
+<script src="../../Scripts/Slider/main.js"></script>
+<script src="../../Scripts/Slider/modernizr-2.6.2.min.js"></script>
+
+<link href="~/Scripts/Counter/flipclock.css" rel="stylesheet" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="~/Scripts/Counter/flipclock.min.js"></script>
+@model UAAAS.Models.UGWithDeficiency
+@{
+    
+    int userID = Convert.ToInt32(Membership.GetUser(User.Identity.Name).ProviderUserKey);
+    //get current user CollegeId
+    int userCollegeID = db.jntuh_college_users.Where(u => u.userID == userID).Select(u => u.collegeID).FirstOrDefault();
+    
+    int[] CollegeIds = new int[] { 4, 5, 6, 7, 8, 9, 11, 12, 17, 20, 22, 23, 24, 26, 27, 29, 30, 32, 34, 35, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 50, 52, 54, 55, 56, 58, 60, 65, 68, 69, 70, 72, 74, 75, 77, 78, 79, 80, 81, 84, 85, 86, 87, 88, 90, 91, 97, 100, 103, 104, 105, 107, 108, 109, 110, 111, 113, 114, 116, 117, 118, 119, 121, 122, 123, 125, 127, 128, 129, 130, 134, 135, 136, 137, 138, 139, 140, 141, 144, 145, 146, 147, 148, 150, 152, 153, 155, 156, 157, 158, 159, 162, 163, 164, 165, 166, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 182, 183, 184, 185, 186, 187, 188, 189, 192, 193, 194, 195, 196, 197, 198, 201, 202, 203, 204, 206, 207, 210, 211, 213, 214, 215, 218, 219, 222, 223, 225, 227, 228, 229, 234, 237, 238, 241, 242, 243, 244, 245, 246, 249, 250, 252, 253, 254, 256, 260, 261, 262, 264, 266, 267, 271, 273, 276, 279, 282, 283, 286, 287, 290, 291, 292, 293, 295, 296, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 313, 314, 316, 317, 318, 319, 320, 321, 324, 325, 326, 327, 329, 330, 332, 334, 335, 336, 342, 343, 348, 349, 350, 352, 355, 360, 362, 364, 365, 366, 367, 368, 370, 371, 373, 374, 376, 379, 380, 382, 384, 385, 386, 389, 392, 393, 394, 395, 399, 400, 410, 411, 414, 416, 423, 427, 428, 429, 430, 435, 436, 439, 441, 442, 445, 45, 375 };
+    int collegeid = userCollegeID;
+
+    //int collegeid = 43;
+    DateTime todayDate = DateTime.Now.Date;
+    int status = db.jntuh_college_edit_status.Where(editStatus => editStatus.collegeId == collegeid &&
+                                                                  editStatus.IsCollegeEditable == false &&
+                                                                  editStatus.editFromDate <= todayDate &&
+                                                                  editStatus.editToDate >= todayDate)
+                                             .Select(editStatus => editStatus.id)
+                                             .FirstOrDefault();
+    string CollegeCode = db.jntuh_college.Where(c => c.id == collegeid).Select(c => c.collegeCode).FirstOrDefault();
+    string StrCollegeFee = db.jntuh_paymentresponse.Where(E => E.CollegeId == CollegeCode && E.AuthStatus == "0300").Select(E => E.ErrorDescription).FirstOrDefault();
+
+    var AffliationStatus = db.jntuh_college_news.Where(n => n.collegeId == collegeid && n.title.Contains("Letter of Grant of Affiliation")).Select(n => n).FirstOrDefault();
+    var CollegeRandomCodes = db.jntuh_college_416randomcodes.Where(R => R.CollegeId == collegeid).ToList();
+    int AppealCollegeId = db.jntuh_appeal_college_edit_status.Where(E => E.collegeId == collegeid).Select(E => E.collegeId).FirstOrDefault();
+    //string Collegecode=CollegeRandomCodes
+    //Get current Date and time
+    DateTime dateTime = DateTime.Now.Date;
+
+    //Get bulletin board events based on start date and end date
+    List<CollegeDashboardNews> news = db.jntuh_newsevents.Where(n => n.isActive == true &&
+                                                    n.isNews == false &&
+                                                    (n.startDate == null || n.startDate <= dateTime) &&
+                                                    (n.endDate == null || n.endDate >= dateTime))
+                                                    .Select(n => new CollegeDashboardNews { url = n.navigateURL, newstitle = n.title, createdDate = n.createdOn }).OrderByDescending(n => n.createdDate).ToList();
+
+    //Get College News and events based on start date and end date
+    List<CollegeDashboardNews> cNews = db.jntuh_college_news.Where(collegeNews => collegeNews.isActive == true &&
+                                                      collegeNews.collegeId == userCollegeID &&
+                                                      (collegeNews.startDate == null ||
+                                                      collegeNews.startDate <= dateTime) &&
+                                                      (collegeNews.endDate == null ||
+                                                      collegeNews.endDate >= dateTime)
+                                                      && collegeNews.title != "DEFICIENCY REPORT AS PER FORM 415"
+                                                      )
+                                                      .Select(n => new CollegeDashboardNews { url = n.navigateURL, newstitle = n.title, createdDate = n.createdOn }).OrderByDescending(collegeNews => collegeNews.createdDate).ToList();
+
+    //List<CollegeDashboardNews> cNews1 = new List<CollegeDashboardNews>();
+    CollegeDashboardNews cn = new CollegeDashboardNews();
+
+    var submittedIds = db.college_circulars.Where(cs => cs.isActive == true).Select(cs => cs.collegeId).ToList();
+
+    if (submittedIds.Contains(userCollegeID))
+    {
+        cn.url = "/Content/Upload/News/AcknowledgementforBoth.pdf";
+        cn.newstitle = "Acknowledgement for PG Courses submitted - Both Soft and Hard Copies";
+        cn.createdDate = Convert.ToDateTime("09/04/2014");
+
+        cNews.Add(cn);
+    }
+    else
+    {
+        var notSubmittedIds = db.jntuh_college_pgcourses.Where(pg => pg.isActive == true).Select(pg => pg.collegeId).ToList();
+
+        if (notSubmittedIds.Contains(userCollegeID))
+        {
+            cn.url = "/Content/Upload/News/OnlySoftCopySubmitted.pdf";
+            cn.newstitle = "Acknowledgement for PG Courses submitted - Soft Copy only";
+            cn.createdDate = Convert.ToDateTime("09/04/2014");
+
+            cNews.Add(cn);
+        }
+    }
+
+    ViewBag.Events = news.Union(cNews).OrderByDescending(collegeNews => collegeNews.createdDate).Take(5);
+
+
+}
+
+@using (Html.BeginForm())
+{
+    <div style="float: left; width: 300px;">
+        <h2>College Dashboard</h2>
+    </div>
+
+    <div style="float: right; width: 400px; text-align: right; color: red; font-style: italic; font-weight: bold;">
+
+        @if (CollegeRandomCodes != null)
+        {
+            <img src="../Content/images/latest.gif" alt="latest" /><a href="~/Content/Upload/2017-18-Pdf/@CollegeRandomCodes.Select(R=>R.Collegecode).FirstOrDefault()-@CollegeRandomCodes.Select(R => R.Randomcode + ".pdf").FirstOrDefault()" target="_blank"><span>Download FFC Report-2017</span><img src="../../Content/images/pdf.png" /></a>
+        }
+
+
+        @*else
+            {<span>-</span>}*@@if (status == 0)
+            {
+
+                @*<a href='@Url.Action("CollegeData", "SubmitData", new { preview = 0, strcollegeId = UAAAS.Models.Utilities.EncryptString(Model.CollegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) })' target="_blank" title="Click here for A-115">
+
+                        <b>Download College Data</b>
+                        <img src="@Url.Content("../../Content/images/pdf.png")" style="vertical-align: middle;" alt="A-115" height="18">
+                    </a>
+
+                        <span style="color: red; font-style: italic; font-weight: bold;">
+                            <a href='@Url.Action("CollegeData2", "SubmitData", new { preview = 0, strcollegeId = UAAAS.Models.Utilities.EncryptString(Model.CollegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) })' target="_blank" title="Click here for Acknowledgement">
+
+                                <b>Acknowledgement</b>
+                                <img src="@Url.Content("../../Content/images/pdf.png")" style="vertical-align: middle;" alt="A-115" height="18">
+                            </a>
+                        </span>*@
+
+
+            }
+            else
+            {
+                @*<span>PDF will be available after submission.</span>*@
+            }
+            @{
+
+                @*if (db.jntuh_college_news.Where(c => c.collegeId == collegeid && c.title == "DEFICIENCY REPORT AS PER FORM 415").Select(c => c).Count() != 0)
+                    {
+                        <a href='@Url.Action("Deficiency", "Dashboard", new {strcollegeId = UAAAS.Models.Utilities.EncryptString(collegeid.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) })' target="_blank" title="Deficiency">
+                            <b>College Deficiency</b>
+                        </a>
+                    }*@
+            }
+
+
+        </div>
+
+        <hr style="clear: both;" />
+        @*class="news"*@
+        <div style="margin-bottom:170px">
+            <table border="1" style="width: 100%">
+                <tr>
+                    <td style="width: 33%; background-color: #E6EAEE; padding: 5px;" class="rounded_corners_box">
+                        <b class="news_header_lower_1">NEWS / CIRCULARS / NOTICES :</b>
+                        @foreach (var item in ViewBag.Events)
+                        {
+                            <ul class="newstitle">
+                                @if (!string.IsNullOrWhiteSpace(item.url))
+                                {
+                                    <li>
+                                        @if (@item.createdDate != null)
+                                        {
+                                            <a class="navigationurl" href="@item.url" target="_blank">@item.createdDate.ToString("dd-MMM-yyy") : @item.newstitle</a>
+                                            if (item.createdDate >= DateTime.Now.AddDays(-10))
+                                            {
+                                                <img src="../Content/images/latest.gif" alt="latest" />
+                                            }
+                                        }
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        @item.createdDate.ToString("dd-MMM-yyy") : @item.newstitle
+                                        @if (item.createdDate >= DateTime.Now.AddDays(-10))
+                                        {
+                                            <img src="../Content/images/latest.gif" alt="latest" />
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                    <td style="width: 33%; background-color: #E6EAEE; padding: 5px;" class="rounded_corners_box">
+                        @*<div class="alerttext" style="background-color: cornflowerblue; border: 1px solid #f49820;">
+                                <p style="text-align: justify"><b>Urgent: All the Colleges who have requested for Selection Committee University Nominees are hereby informed to click on the SUBMIT button in the Selection Committee Request after having completed adding the required faculty in the respective department.</b>
+                                </p>
+                            </div>*@
+                        <table border="1" style="width: 100%">
+                            <tr>
+                                <td colspan="2"></td>
+                            </tr>
+                        </table>
+
+                        <span style="font-family: 'Bookman Old Style'; font-size: 24px; color: red;"><strong>Countdown:</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: 'Bookman Old Style'; font-size: 18px; color: blue;">Appeal submission last date: <b>29th May, 2017</b></span>
+
+                        <div class="clock" style="margin:2em;"></div>
+
+                        <script type="text/javascript">
+                            var clock;
+
+                            $(document).ready(function () {
+
+                                // Grab the current date
+                                var currentDate = new Date();
+
+                                // Set some date in the past. In this case, it's always been since Jan 1
+                                // var pastDate  = new Date(currentDate.getFullYear(), 0, 1);
+                                var pastDate = new Date("2017-05-30 00:00:00");
+                                // Calculate the difference in seconds between the future and current date
+                                var diff = (pastDate.getTime() / 1000) - (currentDate.getTime() / 1000);
+
+                                if (diff < 0) {
+                                    diff = 0;
+                                }
+
+                                // Instantiate a coutdown FlipClock
+                                clock = $('.clock').FlipClock(diff, {
+                                    clockFace: 'DailyCounter'
+                                    , countdown: true
+                                    , css: true
+                                });
+                            });
+                        </script>
+                        <hr />
+                        <br /><img src="~/Content/images/hand-point.png"> &nbsp;<span style="font-family: 'Bookman Old Style'; font-size: 16px;">@Html.ActionLink("Appeal SCM Request For Teaching Faculty", "AppealCollegeScmProceedingsRequest", "CollegeSCMProceedingsRequest")</span> &nbsp; <img src="../Content/images/latest.gif" alt="latest" />
+                        <br /><img src="~/Content/images/hand-point.png"> &nbsp;<span style="font-family: 'Bookman Old Style'; font-size: 16px;">@Html.ActionLink("Appeal SCM Request For Principal", "AppealCollegeScmProceedingsPrincipalRequest", "CollegeSCMProceedingsRequest")</span> &nbsp; <img src="../Content/images/latest.gif" alt="latest" />
+                        <br />
+                        @if (CollegeIds.Contains(collegeid))
+                        {
+
+                            @*  <img src="~/Content/images/hand-point.png"><span style="font-family: 'Bookman Old Style'; font-size: 16px;"> @Html.ActionLink("Appeal InActive Faculty", "AppealInActiveFaculty", "FacultyVerification")</span>*@
+                        }
+
+
+
+
+                    </td>
+
+                </tr>
+                <tr></tr>
+                <tr>
+                    <td style="width: 33%; background-color: aquamarine; padding: 5px; font-size: 15px; font-family: sans-serif;font-weight:bold" class="rounded_corners_box" colspan="2">
+
+
+                        <div class="alerttext">
+                            <p style="text-align: left; font-weight: bold; color: red;font-size:15px"><b>Noscm17 means either the faculty may not be having SCM or did not upload all the relevant  certificates in the portal .</b></p>
+                        </div>
+
+
+                    </td>
+
+                </tr>
+            </table>
+
+        </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        window.setInterval(changeerror, 1000);
+    });
+
+    var c = 1;
+
+    function changeerror() {
+
+        switch (c) {
+            case 0:
+                $(".alerttext p,.submitalert").css("color", "yellow");
+                //$(".error p").attr({"color": "red","text-align"});
+                c = 1;
+                break;
+            case 1:
+                $(".alerttext p,.submitalert").css("color", "red");
+                c = 2;
+                break;
+            case 2:
+                $(".alerttext p,.submitalert").css("color", "brown");
+                c = 0;
+                break;
+        }
+    }
+</script>

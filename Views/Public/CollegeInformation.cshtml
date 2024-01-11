@@ -1,0 +1,215 @@
+﻿@model Tuple<UAAAS.Models.CollegeDetails, UAAAS.Models.PrincipalDetails>
+@{
+    ViewBag.Title = @Model.Item1.Name;
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+
+<h2>@Model.Item1.Name</h2>
+
+<script src="@Url.Content("~/Scripts/Slider/jquery.bxslider.min.js")" type="text/javascript"></script>
+<link href="@Url.Content("~/Content/jquery.bxslider.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.bxslider').bxSlider({
+            mode: 'fade',
+            captions: true,
+            auto: true,
+            slideWidth: 500,
+            slideHeight: 250,
+            autoControls: false
+        });
+    });
+</script>
+
+<table style="width: 100%;">
+    <tr>
+        <th></th>
+        @*<th style="text-align: center;display:none">PRINCIPAL DETAILS</th>*@
+    </tr>
+    <tr>
+        <td style="width: 50%; vertical-align: top; padding-right: 100px;">
+            <table class="four_columns" style="width: 100%;">
+                <tr>
+                    <td class="col11" style="width: 150px;">
+                        College Name
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item1.Name)
+                        &nbsp;(@Html.DisplayFor(model => model.Item1.Code))
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        Established Year
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item1.EstablishedYear)
+                    </td>
+                </tr>
+                @if (!string.IsNullOrEmpty(Model.Item1.EamcetCode))
+                {
+                    <tr>
+                        <td class="col11">
+                            EAMCET Code
+                        </td>
+                        <td class="col21">
+                            @Html.DisplayFor(model => model.Item1.EamcetCode)
+                        </td>
+                    </tr>
+                }
+                @if (!string.IsNullOrEmpty(Model.Item1.IcetCode))
+                {
+                    <tr>
+                        <td class="col11">
+                            ICET Code
+                        </td>
+                        <td class="col21">
+                            @Html.DisplayFor(model => model.Item1.IcetCode)
+                        </td>
+                    </tr>
+                }
+                @if (!string.IsNullOrEmpty(Model.Item1.PgcetCode))
+                {
+                    <tr>
+                        <td class="col11">
+                            PGCET Code
+                        </td>
+                        <td class="col21">
+                            @Html.DisplayFor(model => model.Item1.PgcetCode)
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td class="col11">
+                        Address
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item1.Address), @Html.DisplayFor(model => model.Item1.Mandal), @Html.DisplayFor(model => model.Item1.District), @Html.DisplayFor(model => model.Item1.Pincode)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        Website
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item1.Website)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        Phone Number
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item1.Mobile)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        Email
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item1.Email)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        Land Line
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item1.LandLine)
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+        @*<td style="vertical-align: top;display:none">
+            <table class="four_columns" style="width: 50%;float:left;">
+                <tr>
+                    <td class="col11" style="width: 150px;">
+                        First Name
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item2.FirstName)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11" style="width: 150px;">
+                        Last Name
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item2.LastName)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11" style="width: 150px;">
+                        Sur Name
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item2.SurName)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        Department
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item2.Department)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        Date of Appointment
+                    </td>
+                    <td class="col21">
+                        @if (@Model.Item2.DateofAppointment != "")
+                        {
+                            @Html.DisplayFor(model => model.Item2.DateofAppointment)<span> (DD/MM/YYYY)</span>
+                        }
+                    </td>
+                </tr>
+            </table>
+
+            <table class="four_columns" style="width: 50%;float:left;">
+                <tr>
+                    <td class="col11" style="width: 150px;text-align:center">
+                        @if (@Model.Item2.Photo != null)
+                        {
+                            <a href="/Content/Upload/PrincipalDirectorPhotos/@Model.Item2.Photo.Replace("~", "")" target=" target=" _blank">
+                                <img src="/Content/Upload/PrincipalDirectorPhotos/@Model.Item2.Photo.Replace("~", "")" style="height: 200px;" />
+                            </a>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </td>*@
+    </tr>
+</table>
+<br />
+<br />
+@*<table style="width: 100%;display:none">
+    <tr>
+        <td style="width: 50%;vertical-align: top; padding-right: 100px;">
+            <table style="width: 46%;border-collapse:collapse">
+                <tr>
+                    <td class="col11" style="width: 150px;">
+                        Last Updated on
+                    </td>
+                    <td class="col21" style="">
+                        @if (@Model.Item2.LastUpdatedDate == "--/--/----")
+                        {
+                            @Html.DisplayFor(model => model.Item2.LastUpdatedDate)
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(model => model.Item2.LastUpdatedDate)<span> (DD/MM/YYYY)</span>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<p class="create_link_right" style="display: none">
+    @Html.ActionLink("View Faculty", "TeachingFaculty", "Public", new { collegeId = UAAAS.Models.Utilities.EncryptString(@Model.Item1.Id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "create_button", target = "_blank" })
+</p>*@

@@ -1,0 +1,38 @@
+﻿@model UAAAS.Models.jntuh_college_screens
+@using (Html.BeginForm("AddEditRecord", "CollegeEnclosures"))
+    @Html.ValidationSummary(true)   
+    <table class="downloads_table" style="width: 100%;">
+        <tr>
+            <td class="editor-label1" style="width: 100%;">Screen Code
+            </td>
+        </tr>
+        <tr>
+            <td class="editor-field1" style="width: 100%;">
+               @Html.TextBoxFor(m=>m.ScreenCode)
+            </td>
+        </tr>
+        <tr id="tr1">
+            <td class="editor-label1" style="width: 100%;">Screen Name
+            </td>
+        </tr>
+        <tr id="tr2">
+            <td class="editor-field1 files" style="width: 100%;">
+               @Html.TextBoxFor(m=>m.ScreenName)
+            </td>
+        </tr>
+        @Html.HiddenFor(m => m.IsActive)
+        @Html.HiddenFor(m => m.CreatedBy)
+        @Html.HiddenFor(m => m.CreatedOn)
+    </table>
+    <p>
+        @if (ViewBag.IsUpdate == true)
+        {
+            <input type="submit" value="Update" id="btnUpdate" name="cmd" class="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+        }
+        else
+        {
+            <input type="submit" value="Save" id="btnSave" name="cmd" class="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+        }
+        <input type="button" value="Cancel" id="btnCancel" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+    </p>
+}

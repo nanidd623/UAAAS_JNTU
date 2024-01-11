@@ -1,0 +1,130 @@
+﻿@model IList<UAAAS.Models.Lab>
+@using UAAAS.Models;
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "Summary";
+    int count = 0;
+}
+
+<h2>Summary Of Experiments</h2>
+
+
+@if (ViewBag.NotUpload == true)
+{
+    <b>Experiments</b><br />
+    <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+}
+else
+{
+    <br />
+
+    <table class="webGrid" style="width: 100%;">
+        <tr style="font-weight: bold;" class="gridHeader">
+            <td style="text-align: left; width:  5%;">S.No</td>
+            <td style="text-align: left; width: 10%;">Degree</td>
+            <td style="text-align: left; width: 10%;">Department</td>
+            <td style="text-align: left; width: 10%;">Specialization</td>
+            <td style="text-align: left; width:  8%;">Year</td>
+            <td style="text-align: left; width:  8%;">Semester</td>
+            <td style="text-align: left; width:  8%;">Lab Code</td>
+            <td style="text-align: left; width: 25%;">Lab Name</td>
+            <td style="text-align: left; width:  2%;">Experiment Count</td>
+            @if (ViewBag.iseditable == true)
+                {
+                    <td style="text-align: left; width: 15%;" >Details of Labs</td>
+                }
+            else
+            {
+                
+            }
+        </tr>
+        @*  <tr>
+                <td colspan="9" style="text-align: center;">
+                    <div style="text-align: center;">
+                        <img src="../../Content/images/loader.gif" /><br />
+                        Loading Labs list .....
+                    </div>
+                </td>
+            </tr>*@
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            <tr>
+                <td style="text-align: center; width: 5%; background-color: #FCF1D1" class="col1">
+                    @Html.HiddenFor(m => m[i].id)
+                    @Html.HiddenFor(m => m[i].degreeId)
+                    @Html.HiddenFor(m => m[i].departmentId)
+                    @Html.HiddenFor(m => m[i].specializationId)
+                    @Html.HiddenFor(m => m[i].year)
+                    @Html.HiddenFor(m => m[i].LabName)
+                    @Html.HiddenFor(m => m[i].ExperimentName)
+                    @Html.HiddenFor(m => m[i].ExperimentAutoincrementID)
+                    @(i + 1)
+                </td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].degree)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].department)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].specializationName)</td>
+                @if (Model[i].year != 0)
+                {
+                    <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].year)</td>
+                }
+                else
+                {
+                    <td style="background-color: #FCF1D1"></td>
+                }
+                @if (Model[i].Semester != 0)
+                {
+                    <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].Semester)</td>
+                }
+                else
+                {
+                    <td style="background-color: #FCF1D1"></td>
+                }
+
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].Labcode)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].LabName)</td>
+                @{
+                var eqid = Model[i].ExperimentAutoincrementID;
+                var id = Model[i].id;
+                var collegeId = Model[i].collegeId;
+                var ExpName1 = Model[i].ExperimentName;
+                var labcode = Model[i].Labcode;
+                var expid = Model[i].ExperimentID;
+                var spclId = Model[i].specializationId;
+                var year = Model[i].year;
+                var semester = Model[i].Semester;
+                count = db.jntuh_college_experiments.Where(l => l.Id == id && l.CollegeId == collegeId).Select(l => l.Id).Count();
+                }
+                <td style="background-color: #FCF1D1">
+                    @Html.DisplayFor(m => m[i].ExpCount) / @Html.DisplayFor(m => m[i].MasterExpCount)
+                </td>
+                @if (ViewBag.iseditable == true)
+                {
+                    <td style="text-align: center;" class="col21 view_hide">
+                    @Html.ActionLink("Details", "Details", "Experiments", new { labcode = labcode, spclid = spclId, year = year, semester = semester }, new { @class = "edit_button" })
+                    </td>
+                }
+                else
+                { 
+                    
+                }
+            </tr>
+        }
+    </table>
+
+    if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }
+}
+
+<style>
+    .webgrid .create_button{
+        color:white;
+        text-decoration-color:white;
+    }
+</style>
+
+

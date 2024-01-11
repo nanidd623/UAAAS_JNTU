@@ -1,0 +1,59 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_college>
+@{
+    ViewBag.Title = "District Wise Colleges";
+    var index = 1;
+}
+
+@if(ViewBag.DistrictWise == true)
+{
+    <h2>@ViewBag.Districtname Colleges</h2>
+}
+else
+{
+    <h2>@ViewBag.DegreeName Colleges</h2>
+}
+<br />
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "bStateSave": false@*,
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ]*@
+                           });
+}
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th style="width: 40px; text-align: center;">S.No
+            </th>
+            <th style="width: 60px; text-align: center;">Code
+            </th>
+            <th style="text-align: left;">College Name
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 100px; text-align: center;">
+                    @(index++)
+                </td>
+                <td style="width: 100px; text-align: center; text-transform: uppercase;">
+                    @Html.DisplayFor(modelItem => item.collegeCode)
+                </td>
+                <td style="text-align: left;">
+                    @Html.DisplayFor(modelItem => item.collegeName)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}

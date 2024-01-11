@@ -1,0 +1,215 @@
+﻿@model IEnumerable<UAAAS.Models.StudentRegistration>
+
+@{
+    ViewBag.Title = "ViewStudents";
+    int i = 1;
+}
+
+<h2>View Students</h2>
+@if (TempData["Error"] != null)
+    {
+         <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+          </div>
+    }
+    @if (TempData["Success"] != null)
+    {
+<div class="success">
+    <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+</div>
+    }
+<table class="webGrid">
+    <thead>
+    <tr class="gridHeader">
+        <th>S.No.</th>
+        <th>
+            @Html.DisplayNameFor(model => model.HallTicketNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            Gender
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FatherOrhusbandName)
+        </th>
+        @*<th>
+                    @Html.DisplayNameFor(model => model.Mobile)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AadhaarNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AadhaarDocumentview)
+                </th>*@
+
+
+        <th>
+            Department
+            @*@Html.DisplayNameFor(model => model.department)*@
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.SpecializationName)
+        </th>
+        <th>Aadhaar Number</th>
+        <th>Aadhaar Document</th>
+        <th>
+            Edit
+        </th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tbody style="background: #FCF1D1;">
+        <tr>
+            <td>@(i ++)</td>
+            @Html.HiddenFor(modelItem => item.Id)
+            @Html.HiddenFor(modelItem => item.SpecializationId)
+            <td>
+                @Html.DisplayFor(modelItem => item.HallTicketNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @if (@item.GenderId == 1)
+                {
+                    <span>Male</span>
+                }
+                else
+                {
+                    <span>Female</span>
+
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FatherOrhusbandName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.department)
+            </td>
+
+            <td>
+                @if(item.ShiftId==1)
+                {
+                    @Html.DisplayFor(modelItem => item.SpecializationName)
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.SpecializationName)<span>-2</span>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AadhaarNumber)
+            </td>
+            <td>
+                @if (@item.AadhaarDocumentview != null)
+                {
+                    <a href="../Content/Upload/Student/AADHAARCARDS/@item.AadhaarDocumentview.Replace("~", "")" target="_blank">
+                   <span style="font-weight: bold; color: red;">View</span>
+                    </a>
+               }
+               else
+               {
+                    <span style="font-weight: bold; color: red;">---</span>
+                }
+            </td>
+            <td style="width: 100px; text-align: center">
+                @*@if (item.Isedit == true)
+                {*@
+                    @Html.ActionLink("Edit", "EditStudent", "CollegeStudentRegistration",   new { @sid = UAAAS.Models.Utilities.EncryptString(item.Id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @id = "openDialog", @class = "create_button", @style = "color:white" })
+                @*}
+                else
+                {
+
+                }*@
+            </td>
+
+            <td>@Html.ActionLink("Delete Student", "DeleteStudentNumber", "CollegeStudentRegistration", new {@Id = @item.Id}, new {@id = "confirmDialog", @class = "confirmDialog create_button", @style = "color:white"}) </td>
+        </tr>
+        </tbody>
+    }
+
+</table>
+
+<div id="dialog-add" style="display: none">
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#openDialog").live("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+
+            $("#dialog-add").dialog({
+                title: 'Edit Student',
+                autoOpen: false,
+                resizable: false,
+                height: 300,
+                width: 580,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    location.reload();
+                    //$(this).dialog("close");
+                }
+
+            });
+            $("#dialog-add").dialog('open');
+            return false;
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+
+            $("#dialog-confirm").dialog({
+                title: 'Delete Student',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+
+    });
+
+
+</script>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>

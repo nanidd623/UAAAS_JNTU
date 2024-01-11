@@ -1,0 +1,51 @@
+@using Mvc.Mailer
+<html>
+<head>
+    <title></title>
+    <link href="@Url.Abs("/Content/jntuh-styles.css")" rel="stylesheet" type="text/css" />
+    <style>
+        .button {
+            background-color: #4D90FE;
+            border-bottom-color: #3079ED;
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+            border-bottom-width: 0px;
+            border-collapse: separate;
+            border-left-color: #3079ED;
+            border-left-width: 0px;
+            border-right-color: #3079ED;
+            border-right-width: 0px;
+            border-top-color: #3079ED;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            border-top-width: 0px;
+            color: rgb(255, 255, 255);
+            cursor: auto;
+            direction: ltr;
+            display: inline-block;
+            font-family: arial, sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            height: 27px;
+            line-height: 27px;
+            min-height: 27px;
+            padding-left: 8px;
+            padding-right: 8px;
+            text-align: center;
+            text-decoration: none solid rgb(255, 255, 255);
+            width: 91px;
+            font-family: arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    @*@Html.Partial("_Header")*@
+<br/>
+    <div class="body_content">
+        @RenderBody()
+        @*<br />
+        sent by @ViewBag.UserName*@
+    </div>
+    @*@Html.Partial("_Footer")*@
+</body>
+</html>

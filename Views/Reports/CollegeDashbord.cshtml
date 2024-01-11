@@ -1,0 +1,753 @@
+﻿@model UAAAS.Models.Dashbord
+@{
+    ViewBag.Title = "Dashboard";
+}
+<h2>Dashboard</h2>
+@using (Html.BeginForm())
+{
+    <div style="font-size: 15px; color: red;">
+        <b>Inspection alert : @if (ViewBag.InpsectionDate != null)
+                              {
+            <span>Your college inspection will be held on @ViewBag.InpsectionDate
+                <span style="font-size: 12px;">(DD/MM/YYYY)
+                </span>
+            </span>
+                              }
+                              else
+                              { 
+            <span>Not yet scheduled</span>
+                              }
+        </b>
+        <hr />
+    </div>
+    <div class="news">
+        <h2 class="news_header_lower">Bulletin Board</h2>
+        @foreach (var item in ViewBag.CollegeNews)
+        {  
+            <ul class="newstitle">
+                @if (!string.IsNullOrWhiteSpace(item.navigateURL))
+                {
+                    <li>
+                        <a class="navigationurl" href="@item.navigateURL" target="_blank">@item.title</a>
+                        @if (item.isLatest == true)
+                        {
+                            <img src="../Content/images/latest.gif" alt="latest" />
+                        }
+                    </li>                            
+                }
+                else
+                {
+                    <li>
+                        @item.title
+                        @if (item.isLatest == true)
+                        {
+                            <img src="../Content/images/latest.gif" alt="latest" />
+                        }
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+    <br />
+    <div class="news">
+        <h2 class="news_header_lower">College News</h2>
+        @foreach (var item in ViewBag.Events)
+        {  
+            <ul class="newstitle">
+                @if (!string.IsNullOrWhiteSpace(item.navigateURL))
+                {
+                    <li>
+                        <a class="navigationurl" href="@item.navigateURL" target="_blank">@item.title</a>
+                        @if (item.newsOrder == 1)
+                        {
+                            <img src="../Content/images/latest.gif" alt="latest" />
+                        }
+                    </li>                            
+                }
+                else
+                {
+                    <li>
+                        @item.title
+                        @if (item.newsOrder == 1)
+                        {
+                            <img src="../Content/images/latest.gif" alt="latest" />
+                        }
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+    <br />
+    <table style="width: 100%; border: 1px solid black; border-collapse: collapse;">
+        <tr>
+            <td style="border: 1px solid black; border-collapse: collapse; padding: 5px; width: 50%">
+                <div style="width: 100%">
+                    <div style="width: 90%; float: left">
+                        <b><u>College Details</u></b>
+                    </div>
+                    <div>
+                        @if (Model.IsEditable == true)
+                        {
+                            @Html.ActionLink("Edit", "Edit", "CollegeInformation", null, new { @class = "create_button", target = "_blank", disabled = "disabled" })
+                        }
+                        else
+                        {
+                            <label class="create_button">Edit</label>
+                        }
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 160px">College Code
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.CollegeCode)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>College Name
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.CollegeName)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EAMCET Code
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.EamcetCode)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ICET Code
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.IcetCode)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>College Type
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.CollegeType)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Courses
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.CourseInformation)</label>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="border: 1px solid black; border-collapse: collapse; padding: 5px; width: 50%">
+                <div style="width: 100%">
+                    <div style="width: 90%; float: left">
+                        <b><u>College Contact Details</u></b>
+                    </div>
+                    <div>
+                        @if (Model.IsEditable == true)
+                        {
+                            @Html.ActionLink("Edit", "Edit", "CollegeInformation", null, new { @class = "create_button", target = "_blank" })
+                        }
+                        else
+                        {
+                            <label class="create_button">Edit</label>
+                        }
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 160px">Landline
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.Landline)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mobile
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.Mobile)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Email
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.Email)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Website Address
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.Website)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fax
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.Fax)</label>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; border-collapse: collapse; padding: 5px; width: 50%">
+                <div style="width: 100%">
+                    <div style="width: 90%; float: left">
+                        <b><u>Course & intake Details(Proposed Intake is not included)</u></b>
+                    </div>
+                    <div>
+                        @if (Model.IsEditable == true)
+                        {
+                            @Html.ActionLink("Edit", "Index", "CollegeIntakeExisting", null, new { @class = "create_button", target = "_blank" })
+                        }
+                        else
+                        {
+                            <label class="create_button">Edit</label>
+                        }
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    @if (Model.CollegeIntakeDetails.Count() != 0)
+                    {
+                        foreach (var item in Model.CollegeIntakeDetails)
+                        {
+                        <tr>
+                            <td style="width: 160px">@item.DegreeName
+                            </td>
+                            <td>: &nbsp;
+                                @if (item.AdmittedIntake == 0 && item.ApprovedIntake == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>@item.AdmittedIntake / @item.ApprovedIntake</label>
+                                }
+                            </td>
+                        </tr>
+                        }
+                    }
+                </table>
+            </td>
+            <td style="border: 1px solid black; border-collapse: collapse; padding: 5px; width: 50%">
+                <div style="width: 100%">
+                    <div style="width: 90%; float: left">
+                        <b><u>Faculty</u></b>
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 160px">
+                            @if (Model.IsEditable == true)
+                            {
+                                @Html.ActionLink("Teaching", "Teaching", "Faculty", null, new { target = "_blank", @style = "color:black" })
+                            }
+                            else
+                            {
+                                <label>Teaching</label>
+                            }
+                        </td>
+                        <td>: &nbsp;
+                            @if (Model.TeachingFaculty != 0)
+                            {
+                                <label>@Html.DisplayFor(model => model.TeachingFaculty)</label>
+                            }
+                            else
+                            {
+                                <label>-</label>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @if (Model.IsEditable == true)
+                            {
+                                @Html.ActionLink("Non-Teaching", "NonTeaching", "Faculty", null, new { target = "_blank", @style = "color:black" })
+                            }
+                            else
+                            {
+                                <label>Non-Teaching</label>
+                            }
+                        </td>
+                        <td>: &nbsp;
+                            @if (Model.NonTeachingFaculty != 0)
+                            {
+                                <label>@Html.DisplayFor(model => model.NonTeachingFaculty)</label>
+                            }
+                            else
+                            {
+                                <label>-</label>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @if (Model.IsEditable == true)
+                            {
+                                @Html.ActionLink("Technical", "Technical", "Faculty", null, new { target = "_blank", @style = "color:black" })
+                            }
+                            else
+                            {
+                                <label>Technical</label>
+                            }
+                        </td>
+                        <td>: &nbsp;
+                            @if (Model.TechnicalFaculty != 0)
+                            {
+                                <label>@Html.DisplayFor(model => model.TechnicalFaculty)</label>
+                            }
+                            else
+                            {
+                                <label>-</label>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ratified
+                        </td>
+                        <td>: &nbsp;
+                            @if (Model.RatifiedFaculty != 0)
+                            {
+                                <label>@Html.DisplayFor(model => model.RatifiedFaculty)</label>
+                            }
+                            else
+                            {
+                                <label>-</label>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; border-collapse: collapse; padding: 5px; width: 50%">
+                <div style="width: 100%">
+                    <div style="width: 90%; float: left">
+                        <b><u>Principal Contact Details</u></b>
+                    </div>
+                    <div>
+                        @if (Model.IsEditable == true)
+                        {
+                            @Html.ActionLink("Edit", "Edit", "PrincipalDirector", null, new { @class = "create_button", target = "_blank" })
+                        }
+                        else
+                        {
+                            <label class="create_button">Edit</label>
+                        }
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 160px">Name
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.PrincipalName)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Landline
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.PrincipalLandLine)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mobile
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.PrincipalMobile)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Email
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.PrincipalEmail)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fax
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.PrincipalFax)</label>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="border: 1px solid black; border-collapse: collapse; padding: 5px; width: 50%">
+                <div style="width: 100%">
+                    <div style="width: 90%; float: left">
+                        <b><u>Director Contact Details</u></b>
+                    </div>
+                    <div>
+                        @if (Model.IsEditable == true)
+                        {
+                            @Html.ActionLink("Edit", "Edit", "PrincipalDirector", null, new { @class = "create_button", target = "_blank" })
+                        }
+                        else
+                        {
+                            <label class="create_button">Edit</label>
+                        }
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 160px">Name
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.DirectorName)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Landline
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.DirectorLandLine)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mobile
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.DirectorMobile)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Email
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.DirectorEmail)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fax
+                        </td>
+                        <td>: &nbsp;
+                            <label>@Html.DisplayFor(model => model.DirectorFax)</label>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; border-collapse: collapse; padding: 5px; width: 50%">
+                <div style="width: 100%">
+                    <div style="width: 90%; float: left">
+                        <b><u>Academic Performance</u></b>
+                    </div>
+                    <div>
+                        @if (Model.IsEditable == true)
+                        {
+                            @Html.ActionLink("Edit", "Index", "AcademicPerformance", null, new { @class = "create_button", target = "_blank" })
+                        }
+                        else
+                        {
+                            <label class="create_button">Edit</label>
+                        }
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td style="padding-left: 10px"><b>Fourth Year</b></td>
+                        <td style="text-align: center"><b>Third year</b></td>
+                        <td style="text-align: center"><b>Second Year</b></td>
+                        <td style="text-align: center"><b>First Year</b></td>
+                    </tr>
+                    @if (Model.CollegeAcademicPerformanceDetails.Count() != 0)
+                    {
+                        foreach (var item in Model.CollegeAcademicPerformanceDetails)
+                        {
+                        <tr>
+                            <td style="width: 160px">@item.DegreeName
+                            </td>
+                            <td style="width: 100px">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @if (item.Percentage1 == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {   
+                                    <label>@item.Percentage1</label>
+                                }
+                            </td>
+                            <td style="width: 100px; text-align: center">
+                                @if (item.Percentage2 == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>@item.Percentage2</label>
+                                }
+                            </td>
+                            <td style="width: 100px; text-align: center">
+                                @if (item.Percentage3 == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>@item.Percentage3</label>
+                                }
+                            </td>
+                            <td style="width: 100px; text-align: center">
+                                @if (item.Percentage4 == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>@item.Percentage4</label>
+                                }
+                            </td>
+                        </tr>
+                        }
+                    }
+                </table>
+            </td>
+            <td style="border: 1px solid black; border-collapse: collapse; padding: 5px; width: 50%">
+                <div style="width: 100%">
+                    <div style="width: 90%; float: left">
+                        <b><u>Placements</u></b>
+                    </div>
+                    <div>
+                        @if (Model.IsEditable == true)
+                        {
+                            @Html.ActionLink("Edit", "Index", "CollegePlacement", null, new { @class = "create_button", target = "_blank" })
+                        }
+                        else
+                        {
+                            <label class="create_button">Edit</label>
+                        }
+
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td style="padding-left: 10px"><b>@ViewBag.AcademicYear3</b></td>
+                        <td style="text-align: center"><b>@ViewBag.AcademicYear2</b></td>
+                        <td style="text-align: center"><b>@ViewBag.AcademicYear1</b></td>
+                        <td style="text-align: center"><b>@ViewBag.AcademicYear</b></td>
+                    </tr>
+                    @if (Model.CollegePlacementsDetails.Count() != 0)
+                    {
+                        foreach (var item in Model.CollegePlacementsDetails)
+                        {
+                        <tr>
+                            <td style="width: 160px">@item.DegreeName
+                            </td>
+                            <td style="width: 100px">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @if (item.Percentage4 == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {   
+                                    <label>@item.Percentage4</label>
+                                }
+                            </td>
+                            <td style="width: 100px; text-align: center">
+                                @if (item.Percentage3 == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>@item.Percentage3</label>
+                                }
+                            </td>
+                            <td style="width: 100px; text-align: center">
+                                @if (item.Percentage2 == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>@item.Percentage2</label>
+                                }
+                            </td>
+                            <td style="width: 100px; text-align: center">
+                                @if (item.Percentage1 == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>@item.Percentage1</label>
+                                }
+                            </td>
+                        </tr>
+                        }
+                    }
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; border-collapse: collapse; padding: 5px; width: 50%">
+                <div style="width: 100%">
+                    <div style="width: 90%; float: left">
+                        <b><u>Library Books</u></b>
+                    </div>
+                    <div>
+                        @if (Model.IsEditable == true)
+                        {
+                            @Html.ActionLink("Edit", "Edit", "CollegeLibraryDetails", null, new { @class = "create_button", target = "_blank" })
+                        }
+                        else
+                        {
+                            <label class="create_button">Edit</label>
+                        }
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td style="padding-left: 10px"><b>Titles</b></td>
+                        <td style="text-align: center"><b>Volumes</b></td>
+                        <td style="text-align: center"><b>N-Journals</b></td>
+                        <td style="text-align: center"><b>I-Journals</b></td>
+                        <td style="text-align: center"><b>E-Journals</b></td>
+                    </tr>
+                    @if (Model.CollegeLibraryDetails.Count() != 0)
+                    {
+                        foreach (var item in Model.CollegeLibraryDetails)
+                        {
+                        <tr>
+                            <td style="width: 160px">@item.DegreeName
+                            </td>
+                            <td style="width: 100px">:&nbsp;&nbsp;&nbsp;
+                                @if (item.TotalTitles == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {   
+                                    <label>@item.TotalTitles</label>
+                                }
+                            </td>
+                            <td style="width: 100px; text-align: center">
+                                @if (item.TotalVolumes == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>@item.TotalVolumes</label>
+                                }
+                            </td>
+                            <td style="width: 100px; text-align: center">
+                                @if (item.TotalNationalJournals == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>@item.TotalNationalJournals</label>
+                                }
+                            </td>
+                            <td style="width: 100px; text-align: center">
+                                @if (item.TotalInterNationalJournals == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>@item.TotalInterNationalJournals</label>
+                                }
+                            </td>
+                            <td style="width: 100px; text-align: center">
+                                @if (item.TotalEJournals == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {
+                                    <label>@item.TotalEJournals</label>
+                                }
+                            </td>
+                        </tr>
+                        }
+                    }
+                </table>
+            </td>
+            <td style="border: 1px solid black; border-collapse: collapse; padding: 5px; width: 50%">
+                <div style="width: 100%">
+                    <div style="width: 90%; float: left">
+                        <b><u>Computers</u></b>
+                    </div>
+                    <div>
+                        @if (Model.IsEditable == true)
+                        {
+                            @Html.ActionLink("Edit", "Edit", "CollegeComputerStudentRatio", null, new { @class = "create_button", target = "_blank" })
+                        }
+                        else
+                        {
+                            <label class="create_button">Edit</label>
+                        }
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    @if (Model.CollegeComputersDetails.Count() != 0)
+                    {
+                        foreach (var item in Model.CollegeComputersDetails)
+                        {
+                        <tr>
+                            <td style="width: 160px">@item.DegreeName
+                            </td>
+                            <td style="width: 100px">:&nbsp;&nbsp;&nbsp;
+                                @if (item.TotalComputers == 0)
+                                {
+                                    <label>-</label>
+                                }
+                                else
+                                {   
+                                    <label>@item.TotalComputers</label>
+                                }
+                            </td>
+                        </tr>
+                        }
+                    }
+                </table>
+            </td>
+        </tr>
+    </table>
+}

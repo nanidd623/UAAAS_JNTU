@@ -1,0 +1,366 @@
+﻿@model List<UAAAS.Models.PharmacyIntakeFaculty>
+@{
+    ViewBag.Title = "EditPharmacyIntake";
+    int count = 1;
+}
+
+<h2>Edit Pharmacy Faculty</h2>
+
+<script type="text/javascript">
+
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $('#example').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $("#btncancel").live("click", function (e) {
+            debugger;
+            $("#dialog-edit").dialog("close");
+        });
+
+        $("#collegeId").change(function () {
+
+            var collegeid = $(this).val();
+
+            if (collegeid != null && collegeid != " ") {
+                window.location = "/Pharmacyreport/EditPharmacyIntake?collegeId=" + collegeid;
+            }
+            else {
+                window.location = "/Pharmacyreport/EditPharmacyIntake";
+            }
+        });
+
+        $("#DegreeId").change(function () {
+            debugger;
+            var degreeid = $(this).val();
+            var collegeId = $("#collegeId").val();
+            if (degreeid == "" || degreeid == null) {
+                window.location = "/Pharmacyreport/EditPharmacyIntake?collegeId=" + collegeId;
+            }
+            else if (degreeid != null || degreeid != "") {
+                if (degreeid == 5) {
+                    window.location = "/Pharmacyreport/EditPharmacyIntake?collegeId=" + collegeId + "&&DegreeId=" + degreeid;
+                    //$.ajax({
+                    //    type: "GET",
+                    //    url: "/FacultyVerificationDENew/GetGroups?DegreeId=" + degreeid,
+                    //    dataType: "json",
+                    //    ContentType: "application/json",
+                    //    success: function (data) {
+                    //        debugger;
+                    //        $("#GroupId").find('option').remove();
+                    //        var item = "<option value=''>---Select---</option>";
+                    //        if (data != null) {
+                    //            $.each(data.data, function (i, state) {
+                    //                item += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                    //            });
+                    //            $("#GroupId").html(item);
+                    //            $("#TotalRequiredFaculty").val(null);
+                    //        }
+
+                    //    },
+                    //    error: function () {
+
+
+                    //    }
+
+                    //});
+                }
+                else {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Pharmacyreport/GetSpecializations?DegreeId=" + degreeid + "&&collegeId=" + collegeId,
+                        dataType: "json",
+                        ContentType: "application/json",
+                        success: function (data) {
+                            debugger;
+                            $("#GroupId").find('option').remove();
+                            var item = "<option>--Select---</option>";
+                            if (data != null) {
+                                $.each(data.data, function (i, state) {
+                                    item += "<option value='" + state.id + "'>" + state.Specname + "</option>";
+                                });
+                                $("#GroupId").html(item);
+                                $("#TotalRequiredFaculty").val(2);
+                                $("#SpecializationWiseFaculty").val(2);
+                            }
+                        },
+                        error: function () {
+
+                        }
+                    });
+                }
+            }
+
+        });
+
+        $("#GroupId").change(function () {
+            debugger;
+            var collegeId = $("#collegeId").val();
+            var DegreeId = $("#DegreeId").val();
+            var GroupId = $(this).val();
+            var RequiredFacultyCount = $("#TotalRequiredFaculty").val();
+            var SpecializationWiseFaculty = $("#SpecializationWiseFaculty").val();
+            if (GroupId == "" || GroupId == null || GroupId == "--Select---") {
+                window.location = "/Pharmacyreport/EditPharmacyIntake?collegeId=" + collegeId;
+            }
+            else if (DegreeId == 5 && GroupId != null) {
+                if ((collegeId != null && collegeId != "") && (GroupId != null && GroupId != "")) {
+                    window.location = "/Pharmacyreport/EditPharmacyIntake?collegeId=" + collegeId + "&&DegreeId=" + DegreeId + "&&GroupId=" + GroupId;
+                }
+                else if ((collegeId != null && collegeId != "") && (GroupId == null && GroupId == "")) {
+                    window.location = "/Pharmacyreport/EditPharmacyIntake?collegeId=" + collegeId + "&&DegreeId=" + DegreeId + "&&GroupId=null";
+                }
+                else {
+                    window.location = "/Pharmacyreport/EditPharmacyIntake";
+                }
+            }
+            else {
+                window.location = "/Pharmacyreport/EditPharmacyIntake?collegeId=" + collegeId + "&&DegreeId=" + DegreeId + "&&GroupId=" + GroupId + "&&TotalRequiredFaculty=" + RequiredFacultyCount + "&&SpecializationWiseFaculty=" + SpecializationWiseFaculty;
+            }
+        });
+    });
+</script>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <table>
+            <tr>
+                <td class="col1">Colleges</td>
+                <td class="col2">
+                    @Html.DropDownList("collegeId", new SelectList(ViewBag.PharmacyCollegeList as System.Collections.IEnumerable, "collegeId", "collegeName"), "---Select---", new { id = "collegeId" })
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br />
+    <div>
+        @if (TempData["Success"] != null)
+        {
+            <p style="color:green;"><span style="font-weight:bold;">Success : </span>@TempData["Success"].ToString()</p>
+        }
+    </div>
+    <br />
+
+    <table width="100%">
+        <tr>
+            <td style="width:15%;background-color:#E8EFF3;border:1px solid #bbb;height:23%;">
+                Degrees
+            </td>
+            <td style="width:35%;background-color:#FCF1D1;border:1px solid #bbb;height:23%;">
+                @Html.DropDownList("DegreeId", new SelectList(ViewBag.Degrees as System.Collections.IEnumerable, "DegreeId", "Degreename"), "---Select---", new { id = "DegreeId", @style = "width:76%", @class = "", @required = true })
+            </td>
+            <td style="width:15%;background-color:#E8EFF3;border:1px solid #bbb;height:23%;">
+                TotalRequiredFaculty
+            </td>
+            <td style="width:35%;background-color:#FCF1D1;border:1px solid #bbb;height:23%;">
+                @if (TempData["TotalRequiredFaculty"] == null)
+                {
+                    @Html.TextBox("TotalRequiredFaculty", null, new { required = "required" })
+                }
+                else
+                {
+                    @Html.TextBox("TotalRequiredFaculty", TempData["TotalRequiredFaculty"].ToString(), new { required = "required" })
+                }
+            </td>
+          
+
+
+        </tr>
+        <tr>
+
+            <td style="width:15%;background-color:#E8EFF3;border:1px solid #bbb;height:23%;">
+                Groups
+            </td>
+            <td style="width:35%;background-color:#FCF1D1;border:1px solid #bbb;height:23%;">
+
+                @if (ViewBag.AfterCollegeSelect == null)
+                {
+                    @Html.DropDownList("GroupId", new SelectList(ViewBag.Groups as System.Collections.IEnumerable, "GroupId", "GroupName"), "---Select---", new { id = "GroupId", @style = "width:76%", @class = "" })
+                }
+                else
+                {
+                    @Html.DropDownList("GroupId", new SelectList(ViewBag.Groups as System.Collections.IEnumerable, "GroupId", "GroupName"), "---Select---", new { id = "GroupId", @style = "width:76%", @class = "" })
+                }
+
+                @*@Html.DropDownList("GroupId", new SelectList(ViewBag.Groups as System.Collections.IEnumerable, "GroupId", "GroupName"), "---Select---", new { id = "GroupId", @style = "width:76%", @class = "", @required = true })*@
+            </td>
+            <td style="width:15%;background-color:#E8EFF3;border:1px solid #bbb;height:23%;">
+                SpecializationWiseFaculty
+            </td>
+            <td style="width:35%;background-color:#FCF1D1;border:1px solid #bbb;height:23%;">
+                @if (TempData["SpecializationWiseFaculty"] == null)
+                {
+                    @Html.TextBox("SpecializationWiseFaculty", null, new { })
+                }
+                else
+                {
+                    @Html.TextBox("SpecializationWiseFaculty", TempData["SpecializationWiseFaculty"].ToString(), new { })
+                }
+            </td>
+           
+        </tr>
+        <tr>
+            <td style="width:15%;background-color:#E8EFF3;border:1px solid #bbb;height:23%;">
+                Proposed Intake
+            </td>
+            <td style="width:35%;background-color:#FCF1D1;border:1px solid #bbb;height:23%;">
+                @Html.TextBox("ProposedIntake", TempData["ProposedIntake"], new { })
+            </td>
+            @*<td style="border:none;"></td>
+            <td style="border:none;"></td>*@
+            <td style="border:none;"></td>
+            <td colspan="4" style="float:right;border:none; ">
+                <input type="submit" value="Save" id="save" />
+            </td>
+        </tr>
+    </table>
+
+    <br/>
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Department</th>
+                <th>Specialization</th>
+                <th>Groups</th>
+                <th>TotalIntake</th>
+                <th>ProposedIntake</th>
+                <th>TotalFaculty</th>
+                <th>SpecializationFaculty</th>
+                <th>SpecializationFacultyCount</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="text-align: center;">@(count++)</td>
+                        <td style="text-align: center;">@item.Department</td>
+                        <td style="text-align: center;">@item.Specialization</td>
+                        <td style="text-align: center;">
+                            @if (item.GroupId == "1")
+                            {
+                                <span>Group1</span>
+                            }
+                            else if (item.GroupId == "2")
+                            {
+                                <span>Group2</span>
+                            }
+                            else if (item.GroupId == "3")
+                            {
+                                <span>Group3</span>
+                            }
+                            else if (item.GroupId == "4")
+                            {
+                                <span>Group4</span>
+                            }
+                        </td>
+
+                        <td style="text-align: center;">@item.TotalIntake</td>
+                        <td style="text-align: center;">@item.ProposedIntake</td>
+                        <td style="text-align: center;">@item.TotalRequiredFaculty</td>
+                        <td style="text-align: center;">@item.SpecializationWiseFaculty</td>
+                        <td style="text-align: center;">@item.FacultyCount</td>
+
+                    </tr>
+                }
+            }
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 90%; text-align: center; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 90%; text-align: center; display: none;" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+
+}
+
+

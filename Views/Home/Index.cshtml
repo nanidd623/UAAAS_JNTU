@@ -1,0 +1,395 @@
+﻿@model UAAAS.Models.jntuh_newsevents
+@using UAAAS.Models;
+
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "JNTUH AAC (Affiliations & Academic Audit)";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+    var imagepaths = new string[] { "Nehrustatu.jpg", "sms.jpg" };
+    string Serverurl = TempData["ServerUrl"].ToString();
+    string HostUrl = Serverurl.Split(':')[1];
+    string PortUrl = Serverurl.Split(':')[2];
+
+
+    string Url = Serverurl;
+
+}
+<style type="text/css">
+    .DashboardEmails {
+        margin-right: 15px;
+        background-color: white;
+        color: black;
+        border: solid 1px #e6e6e6;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .DivHeaders {
+        text-align: center;
+        /*background-color: #1F7DDA;*/
+        color: white;
+    }
+
+    .DashboardLinks {
+        margin-left: 15px;
+        text-align: center;
+        background-color: white;
+        border: solid 1px #e6e6e6;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        color: white;
+    }
+
+    .DivLinksHeaders {
+        text-align: center;
+        /*background-color:#71468A;*/
+    }
+
+    .DivLinks {
+        text-align: center;
+        color: black;
+        line-height: 27.2px;
+    }
+
+    .VCProfile, .DirectorProfile {
+        background-color: #2384c6;
+        width: 315px;
+    }
+
+    .CoordProfile {
+        background-color: #2384c6;
+        width: 315px;
+    }
+
+    .DivStlye {
+        font-size: 0.8rem;
+        font-weight: normal;
+        line-height: 1.25rem;
+        margin-left: 67px;
+        margin-right: 67px;
+    }
+
+    .Design {
+        text-align: center;
+        color: red;
+        width: auto;
+    }
+
+    .Readmore {
+        float: right;
+        border: 1px solid black;
+        border-radius: 4px;
+        margin-right: 5px;
+        font-size: 15px;
+        background-color: #002942;
+    }
+
+        .Readmore:hover {
+            background: #F2552C;
+            border: 1px solid #F2552C;
+        }
+
+    .hyper {
+        font-weight: bold;
+        position: relative;
+        animation-name: colorchange1;
+        -webkit-animation: colorchange1 5s infinite; /* Safari 4.0 - 8.0 */
+        animation: colorchange1 10s infinite alternate;
+    }
+
+    @@-webkit-keyframes colorchange1 {
+        0% {
+            color: blue;
+        }
+
+        10% {
+            color: red;
+        }
+
+        20% {
+            color: green;
+        }
+
+        30% {
+            color: orange;
+        }
+
+        40% {
+            color: pink;
+        }
+
+        50% {
+            color: black;
+        }
+
+        60% {
+            color: gray;
+        }
+
+        70% {
+            color: tomoto;
+        }
+
+        80% {
+            color: brown;
+        }
+
+        90% {
+            color: #2980b9;
+        }
+
+        100% {
+            color: pink;
+        }
+    }
+</style>
+
+<script type="text/javascript" lang="javascript">
+    $(document).ready(function () {
+        var ee = @Html.Raw(Json.Encode(@imagepaths));
+        var i = 0;
+        $('#dvImage').prepend('<img id="theImg" src="../../Content/images/'+ee[i]+'" style="width:100%;height:450px;"/>')
+        setInterval(function () {
+            i++;
+            if (i == ee.length) {
+                i = 0;
+            }
+            $("#dvImage").fadeOut("slow", function () {
+                $('#dvImage').empty();
+                $('#dvImage').prepend('<img id="theImg" src="../../Content/images/'+ee[i]+'" style="width:100%;height:450px;"/>')
+                $(this).fadeIn("slow");
+            });
+        }, 7000);
+    });
+
+</script>
+<div ng-app="DashboardModule" ng-controller="DashboardController">
+    <div id="Top">
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="height:450px;width:100%;">
+            <div id="dvImage" style="height: 450px; width:100%;"></div>
+        </div>
+    </div>
+    <br />
+    <div class="DivStlye">
+        <div class="hyper" style="text-align:center;color:#0187d0; font-size: 15px;font-weight: bold">Welcome to Directorate of Affiliations & Academic Audit  , JNTU Hyderabad</div>
+        <div class="Design">......................................................................................................................................................................................................</div><br />
+        <div>
+            This PORTAL will help those seeking Information about various Engineering (or) Pharmacy (or) MBA (or) MCA (or) 5-Year MBA(Integrated) (or) Pharm.D (or) Pharm.D PB Colleges
+            which are affiliated to JNTUH. It also offers a platform for stakeholders to express their Views (or) Opinions (or) Suggestions
+            freely for effective feedback to the University.
+        </div>
+    </div>
+    <br />
+    <div style="text-align:-webkit-center;">
+        <table width="100%" style="display:inline;">
+            <tr>
+                <td width="45%">
+                    <div class="VCProfile" style="width: 350px;">
+                        <a href="~/AcademicAuditCell/ViceChancellor" target="_blank">
+                            <div style=" display:inline-flex;">
+                                @*<img src="../../Content/images/vcic.jpg" width="140px" height="140px" />&nbsp;&nbsp;&nbsp;&nbsp;*@
+                                <img src="../../Content/images/Katta_Narasimha_Reddy_vice_chancellor_jntuh.jpg" width="140px" height="140px" style="border-left: 1px solid rgba(0, 0, 0, 0.1);border-top: 1px solid rgba(0, 0, 0, 0.1);" />&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div style="color: white; margin-top: 45px; font-weight: bold; text-align: center;">
+                                    <span>Prof. Katta Narasimha Reddy</span><br />
+                                    <span>Vice-Chancellor</span>
+                                    @*<span>Prof. A. Venugopal Reddy</span><br />
+                                        <span>Vice-Chancellor</span>*@
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </td>
+                <td width="5%"></td>
+                <td width="45%">
+                    <div class="DirectorProfile" style="width: 350px;">
+                        <a href="~/AcademicAuditCell/Director" target="_blank">
+                            <div style="display: inline-flex;">
+                                <img src="../../Content/images/Dr.D.Srinivasa_Rao.jpg" width="140px" height="140px" style="border-left: 1px solid rgba(0, 0, 0, 0.1);border-top: 1px solid rgba(0, 0, 0, 0.1);" />&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div style="color: white; margin-top: 45px; font-weight: bold; text-align: center;">
+                                    <span>Dr. Duggirala Srinivasa Rao</span><br />
+                                    <span>Director<br /> Affiliations & Academic Audit</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="DivStlye">
+            <div class="Design">........................................................................................................................................................................................................................................................................................</div>
+        </div>
+        <table width="100%" style="display:inline;">
+            <tr>
+                <td width="45%">
+                    <div class="CoordProfile">
+                        <a href="~/AcademicAuditCell/DeputyDirector" target="_blank">
+                            <div style=" display:inline-flex;">
+                                <img src="~/Content/images/Ravindra_Reddy.jpg" width="140px" height="140px" style=" border-left:1px solid rgba(0,0,0,0.1);border-top:1px solid rgba(0,0,0,0.1);" />
+                                <div style="color:white; margin-top:45px; font-weight:bold; text-align:center;">
+                                    <span>Dr. B. Ravindra Reddy </span> <br />
+                                    <span>Deputy Director <br /> Affiliations & Academic Audit</span>
+                                </div>
+                            </div>
+
+                    </div>
+                </td>
+                <td width="5%"></td>
+                <td width="45%">
+                    <div class="CoordProfile">
+                        <a href="~/AcademicAuditCell/AssistantDirector" target="_blank">
+
+                            <div style="display: inline-flex;">
+                                <img src="../../Content/images/Dr. Prattipati_Prasanna.jpeg" width="140px" height="140px" style="border-left: 1px solid rgba(0, 0, 0, 0.1);border-top: 1px solid rgba(0, 0, 0, 0.1);" />&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div style="color: white; margin-top: 45px; font-weight: bold; text-align: center;">
+                                    <span>Dr. Prattipati Prasanna</span><br />
+                                    <span>Assistant Director <br /> Affiliations & Academic Audit</span>
+                                </div>
+                            </div>
+                    </div>
+                </td>
+                <td width="5%" style="display:none;"></td>
+                <td width="30%" style="display:none;">
+                    <div class="DirectorProfile">
+                    </div>
+                </td>
+                <td width="5%" style="display:none;"></td>
+                <td width="30%" style="display:none;">
+                    <div class="DirectorProfile">
+                        <a href="~/AcademicAuditCell/Coordinatorone" target="_blank">
+                            <div style="display: inline-flex;">
+                                <img src="../../Content/images/vijaykumar.JPG" width="140px" height="140px" style="border-left: 1px solid rgba(0, 0, 0, 0.1);border-top: 1px solid rgba(0, 0, 0, 0.1);" />&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div style="color: white; margin-top: 45px; font-weight: bold; text-align: center;">
+                                    <span>Dr. K Vijaya Kumar</span><br />
+                                    <span>Coordinator</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="DivStlye" style="display:none;">
+        <div class="Design">......................................................................................................................................................................................................................</div>
+    </div>
+    <br />
+    <div class="DivStlye">
+        <table width="100%">
+            <tr>
+                <td width="15%" style="vertical-align:top;">
+                    <div class="DashboardEmails" style="background-color:#fff7ea;">
+                        <div class="DivHeaders" style="background-color:#1F7DDA;">
+                            <b>Official Emails</b>
+                        </div>
+                        <div class="DivLinks">
+                            <b>Vice-Chancellor:</b> vcjntu@jntuh.ac.in<br />
+                            <b>Rector:</b> pa2rector@jntuh.ac.in<br />
+                            <b>Registrar:</b> pa2registrar@jntuh.ac.in
+                        </div>
+                    </div>
+                    <br />
+                    <div class="DashboardEmails" style="background-color:#fff7ea;">
+                        <div class="DivHeaders" style="background-color:#F2552C;">
+                            <b>AAC Contact Info</b>
+                        </div>
+                        <div class="DivLinks">
+                            <b>Phone:</b> 040 - 23150010
+                            <br />
+                            <b>Email:</b> duaac@jntuh.ac.in
+                        </div>
+                    </div>
+                    <br />
+                    <div class="DashboardEmails" style="background-color:#fff7ea;">
+                        <div class="DivHeaders" style="background-color:#407F46;">
+                            <b>Anti Ragging Email</b>
+                        </div>
+                        <div class="DivLinks">
+                            <a href="mailto:antiragginghelpline@jntuh.ac.in">
+                                <img src="http://jntuh.ac.in/images/anti_ragginghelp_jntu.gif" alt="Please send Ragging Informationto antiragginghelpline@jntuh.ac.in" title="Please send Ragging Informationto antiragginghelpline@jntuh.ac.in">
+                            </a>
+                        </div>
+
+                    </div>
+                </td>
+                <td width="63%">
+                    <div class="news">
+                        <h2 class="" style="text-transform:none;">News / Circulars / Notices</h2>
+                        @foreach (var item in ViewBag.News)
+                        {
+                            <ul class="newstitle">
+                                @if (!string.IsNullOrWhiteSpace(item.navigateURL))
+                                {
+                                    <li style="text-align: justify;">
+                                        <a class="navigationurl" href="@item.navigateURL" target="_blank">@item.title</a>
+                                        @if (item.newsOrder == 1)
+                                        {
+                                            <img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" />
+                                        }
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        @item.title
+                                        @if (item.newsOrder == 1)
+                                        {
+                                            <img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" />
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+
+                        <div class="Readmore">
+                            @Html.ActionLink("Read more", "Public", "NewsEvents", null, new { @style = "font-family: 'Arial Narrow';padding:7px;color:white;" })
+                        </div>
+
+                    </div>
+                </td>
+                <td width="22%" style="vertical-align:top;">
+                    <div class="DashboardLinks" style="background-color: #fff7ea;">
+                        <div class="DivLinksHeaders" style="background-color: #71468A;">
+                            <b>Faculty Registration</b>
+                        </div>
+                        <div class="DivLinks">
+                            @Html.ActionLink("Faculty Registration", "Welcome", "NewOnlineRegistration", null, new { target = "_blank", @style = "font-weight:bold;" })
+                            <img src="/Content/images/latest.gif" alt="latest" style="vertical-align: middle" />
+                            <br />
+                            <span style="color: black;">Total Faculty Registrations : @db.jntuh_registered_faculty.Count()</span>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="DashboardLinks" style="background-color:#fff7ea;">
+                        <div class="DivLinksHeaders" style="background-color:#1E98A7;">
+                            <b>Student Corner</b>
+                        </div>
+                        <div class="DivLinks">
+                            @Html.ActionLink("Student Corner", "StudentIndex", "FacultyComplaints", null, new { target = "_blank", @style = "font-weight:bold;" })
+                            <img src="/Content/images/latest.gif" alt="latest" style="vertical-align: middle" />
+                            <br />
+
+                        </div>
+                    </div>
+                    @*<br />
+                        <div class="DashboardLinks" style="background-color:#fff7ea;">
+                            <div class="DivLinksHeaders" style="background-color:#BF8D2C;">
+                                <b>Faculty Development Programs</b>
+                            </div>
+                            <div class="DivLinks">
+                                <a href="http://jntuhaac.in:78/" target="_blank">
+                                    <span style="color:black;">Faculty Development Programs</span>
+                                </a>
+                            </div>
+                        </div>*@
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    function DisplayMessage() {
+        alert("The Adjunct Faculty service will be avilable shortly");
+    }
+</script>
+

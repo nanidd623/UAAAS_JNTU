@@ -1,0 +1,258 @@
+﻿@using (Html.BeginForm())
+{
+    int count = 0;
+    var principal = false;
+    var faculty = false;
+     <div style="text-align:center"><span><b>Enclosure-I</b></span></div>
+    <table border="1" style="width: 100%">      
+        <tr class="DataTables_sort_wrapper" style="border: solid 1px #ccc;">
+            <td colspan="13" style="text-align: right; font-size: 11px;">
+                <u><b>Computers Norms</b></u>: B.Tech-1:4, B.Pharmacy-1:6, M.Tech-1:2, M.Pharmacy-1:6, MBA-1:2, MCA-1:2, MAM-1:2, MTM-1:2, Pharm.D-1:6, Pharm.D PB-1:6 &nbsp;&nbsp;&nbsp;
+                    <u><b>Principal</b></u>: A = Quallified Principal, B = Not Qualified Principal &nbsp;&nbsp;&nbsp;
+                    <u><b>Faculty Norms</b></u>: B.Tech-1:15, B.Pharmacy-1:15, M.Tech-1:12, M.Pharmacy-1:12, MBA-1:15, MCA-1:15, MAM-1:12, MTM-1:12, Pharm.D-1:12, Pharm.D PB-1:12 &nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
+        <tr>
+            <th style="text-align: center; background-color: yellow; width: 3%" rowspan="2">S.No
+            </th>
+            <th rowspan="2" style="text-align: center; background-color: yellow; width: 20%">College Name
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 4%" rowspan="2">College Code
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 50%" rowspan="2">Specializations
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Labs (shortage)
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Computers (shortage)
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Principal
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Faculty (shortage)
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 13%" colspan="2">Ratified
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Library (shortage)
+            </th>           
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">NBA
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">NAAC
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Deficiencies / Remarks (*)
+            </th>
+           
+        </tr>
+        <tr>
+            <th style="text-align: center; background-color: yellow; width: 50%">Number	
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 50%">%
+            </th>
+        </tr>
+        @foreach (var item in ViewBag.CollegeSpecializations)
+        {
+            <tr>
+                <td style="text-align: center; vertical-align: top">
+                    @(count = count + 1)
+                </td>
+                <td style="text-align: left; vertical-align: top">
+                    <table style="border-collapse: collapse; width: 550px">
+                        <tr>
+                            <td style="border: none; text-align: left; vertical-align: top">
+                                <label>@item.CollegeName.Replace("’", "'") </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; text-align: left; vertical-align: top">
+                                <label>@item.CollegeAddress</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; text-align: left; vertical-align: top">
+                                <label>@item.IsPermanentCollege</label>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="text-align: center; vertical-align: top">
+                    <table style="border-collapse: collapse; width: 550px">
+                        <tr>
+                            <td style="border: none; text-align: center; vertical-align: top">
+                                <label style="text-transform: uppercase">@item.CollegeCode</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; text-align: center; vertical-align: top">
+                                <label>@item.Establishyear</label>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="">
+                    @if (item.CollegeSpecializations != null)
+                    {
+                        foreach (var specialization in item.CollegeSpecializations)
+                        {
+                            if (specialization.Intake != null && specialization.Intake != string.Empty &&
+                                 specialization.Specialization != null && specialization.Specialization != string.Empty)
+                            {
+                        <table style="border-collapse: collapse; width: 100%">
+                            <tr>
+                                <td style="border: none; text-align: left; vertical-align: top">
+                                    @if (specialization.Intake.Contains("#") == true)
+                                    { 
+                                        <b>@specialization.Specialization</b>    
+                                    }
+                                    else
+                                    {
+                                        <label>@specialization.Specialization</label>  
+                                    }
+                                </td>
+                                <td style="border: none; text-align: right; vertical-align: top">
+                                    @if (specialization.Intake.Contains("$") == true)
+                                    {
+                                        string[] specializations = specialization.Intake.Split('$');
+                                        <label>@specializations[0]</label>                      
+                                    }
+                                    else if (specialization.Intake.Contains("*") == true)
+                                    {
+                                        string[] specializations = specialization.Intake.Split('*');
+
+                                            
+                                        //if [existing intake > proposed intake] then show [existing intake - decrease in proposed intake]
+                                        if (specialization.ExistingIntake > Convert.ToInt32(specializations[0]))
+                                        {
+                                            if (Convert.ToInt32(specializations[0]) == 0)
+                                            {
+                                        @specialization.ExistingIntake.ToString()<label style='font-weight: bold'>(0)</label>
+                                            }
+                                            else
+                                            {
+                                        <label>@specialization.ExistingIntake.ToString() - </label> <label style='font-weight: bold'>  @(specialization.ExistingIntake - Convert.ToInt32(specializations[0])) </label> 
+                                            }
+                                        }
+
+                                        //if [existing intake < proposed intake] then show [existing intake + increase in proposed intake]
+                                        if (specialization.ExistingIntake < Convert.ToInt32(specializations[0]))
+                                        {
+                                                
+                                        <label>@specialization.ExistingIntake.ToString() + </label> <label style='font-weight: bold'>  @(Convert.ToInt32(specializations[0]) - specialization.ExistingIntake) </label> 
+                                                
+                                        }
+                                    }
+                                    else if (specialization.Intake.Contains("#") == true)
+                                    {
+                                        string[] specializations = specialization.Intake.Split('#');
+                                        <b>@specializations[0]</b>   
+                                    }
+                                    else
+                                    {
+                                        <label>@specialization.Intake</label>          
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                            }
+                        }
+                    }
+                </td>
+                <td style="text-align: center; text-align: center">
+                    <table style="border-collapse: collapse; width: 550px">
+                        <tr>
+                            <td style="border: none; text-align: center; vertical-align: top">
+                                <label>@item.LabsShortage</label>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="text-align: center;">
+                    @if (item.ComputersShortage != null)
+                    {
+                        foreach (var ComptersShortage in item.ComputersShortage)
+                        {
+                        <table style="border-collapse: collapse; text-align: center">
+                            <tr>
+                                <td style="border: none; text-align: center; vertical-align: top">
+                                    @ComptersShortage
+                                </td>
+                            </tr>
+                        </table>
+                        }
+                    }
+                </td>
+                <td style="text-align: center; text-align: center">
+                    <table style="border-collapse: collapse; width: 550px">
+                        <tr>
+                            <td style="border: none; text-align: center; vertical-align: top">
+                                <label>@item.PrincipalGrade</label>
+                                  @if(@item.PrincipalGrade=="B")
+                                    {
+                                    principal = true;
+                                    }
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="text-align: center;">
+                    @if (item.FacultyShortage != null)
+                    {
+                        foreach (var FacultyShortage in item.FacultyShortage)
+                        {
+                        <table style="border-collapse: collapse; text-align: center">
+                            <tr>
+                                <td style="border: none; text-align: center; vertical-align: top">
+                                    @FacultyShortage
+                                </td>
+                            </tr>
+                        </table>
+                        }
+                    }
+                </td>
+                <td style="width: 200px; text-align: center; vertical-align: top">
+                    <label>@item.Number</label>
+                </td>
+                <td style="width: 200px; text-align: center; vertical-align: top">
+                    <label>@item.Percentage</label>
+                </td>
+                <td style="width: 200px; text-align: center; vertical-align: top">
+                    <label>@item.LibraryShortage</label>
+                </td>               
+                <td style="text-align: center; width: 60px; border: solid 1px #ccc; vertical-align: top">
+                    <label>@item.NBAStatus</label></td>
+                <td style="text-align: center; width: 60px; border: solid 1px #ccc; vertical-align: top">
+                    <label>@item.NAACStatus</label></td>
+                <td style="width: 200px; text-align: left; vertical-align: top">
+                    @if (item.UGObservations != null)
+                    {
+                        int i = 1;
+                        foreach (var UGObservations in item.UGObservations)
+                        {
+                            if (UGObservations.Contains("Shortage of faculty"))
+                            {
+                                faculty = true;
+                            }
+                        <table style="border-collapse: collapse; width: 550px">
+                            <tr>
+                                <td style="border: none; text-align: left; vertical-align: top">
+                                    <label>@(i++)</label>. @UGObservations<label></label>
+                                </td>
+                            </tr>
+                        </table>
+                        }
+                    }
+                </td>                
+            </tr>
+        }   
+        </table>
+    <span>
+          @if(faculty==true)
+          {
+              <b>Note: The Existing faculty is not ratified as per JNTUH norms (50 % ) and/ or do not have qualification in relevant specialization (PG or Ph. D level) as per AICTE norms.</b>
+          }
+    </span>
+    <br />
+     <span>
+          @if(principal==true)
+          {
+              <b> Principal is not ratified.</b>
+          }
+    </span>
+}

@@ -1,0 +1,82 @@
+﻿@model List<UAAAS.Models.AffiliatedColleges>
+
+@using (Html.BeginForm())
+{
+    int count = 1;
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    S.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top;width:auto;">
+                    College Code
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Name
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Address
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Affiliation Status
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                   Submitted Date
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Email
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Mobile
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Society Email
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Society Mobile
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Secretary Email
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Secretary Mobile
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Prinipal Name
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Prinipal Email
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Prinipal Mobile
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count() != 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="text-align: left;">@(count++)</td>
+                        <td style="text-align: left;">@item.CollegeCode</td>
+                        <td style="text-align: left;">@item.CollegeName</td>
+                        <td style="text-align: left;">@item.CollegeAddress</td>
+                        <td style="text-align: left;">@item.AffiliatedStatus</td>
+                        <td style="text-align: left;">@item.SubmissionDate</td>
+                        <td style="text-align: left;">@item.CollegeEmail</td>
+                        <td style="text-align: left;">@item.CollegeMobile</td>
+                        <td style="text-align: left;">@item.SocietyEmail</td>
+                        <td style="text-align: left;">@item.SocietyMobile</td>
+                        <td style="text-align: left;">@item.SecretaryEmail</td>
+                        <td style="text-align: left;">@item.SecretaryMobile</td>
+                        <td style="text-align: left;">@item.PrincipalName</td>
+                        <td style="text-align: left;">@item.SecretaryEmail</td>
+                        <td style="text-align: left;">@item.PrincipalMobile</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}

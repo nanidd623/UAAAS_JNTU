@@ -1,0 +1,19 @@
+﻿@model UAAAS.Models.OtherCourse
+<div class="details_table">
+    <div class="display-label" style="width: 40%;">Course Name</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.courseName)
+    </div>
+
+    <div class="display-label" style="width: 40%;">Affiliated University</div>
+    <div class="display-field" style="width: 50%;">
+        @if (Model.jntuh_university.universityName.Equals("Other"))
+        {
+            @Html.DisplayFor(model => model.otherUniversityName)
+        }
+        else
+        {
+            @Html.DisplayFor(model => model.jntuh_university.universityName)
+        }
+    </div>
+</div>

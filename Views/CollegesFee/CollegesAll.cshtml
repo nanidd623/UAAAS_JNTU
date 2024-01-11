@@ -1,0 +1,235 @@
+﻿@using UAAAS.Models;
+@{
+    ViewBag.Title = "CollegesAll";
+    int count = 1;  
+}
+
+<div>
+    <div style="float:left;">
+        <h2>All Colleges</h2>
+    </div>
+    <div style="float:right;">
+        <a href="/CollegesFee/FourYearsAffiliationFeeDues" target=" _blank" class="create_button" id="OpenDialog"> Affiliation Fee Dues Report</a>
+    </div>
+</div>
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $("#OpenDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            var $myDialog = $("#dialog-open").dialog({
+                title: 'Download Report',
+                autoOpen: false,
+                resizable: false,
+                height: 200,
+                width: 580,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    $(this).dialog("close");
+                }
+            });
+
+            $("#dialog-open").dialog('open');
+            return false;
+        });
+
+        $("#edit_dialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            var $myDialog =  $("#dialog-add").dialog({
+                title: 'Edit AFRC Fee',
+                autoOpen: false,
+                resizable: false,
+                height: 250,
+                width: 580,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    $(this).dialog("close");
+                }
+            });
+
+            $("#dialog-add").dialog('open');
+            return false;
+        });
+
+        $("#affiliation_dialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            var $myDialog =  $("#affiliation_add").dialog({
+                title: 'Edit Previous Year Affiliation Fee',
+                autoOpen: false,
+                resizable: false,
+                height: 250,
+                width: 580,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    $(this).dialog("close");
+                }
+            });
+
+            $("#affiliation_add").dialog('open');
+            return false;
+        });
+
+    });
+</script>
+<div>
+    @if (TempData["Success"] != null)
+    {
+        <div class="success" style="background-color: gold; border: 1px solid #f49820;height:12px;">
+            <p style="text-align: center;font-weight: bold;margin-top:-3px;"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+        </div>
+    }
+    else if (TempData["Error"] != null)
+    {
+        <div class="error" style="background-color: red; border: 1px solid #f49820;height:12px;">
+            <p style="text-align: center;font-weight: bold;color:white;margin-top:-3px;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+        </div>
+    }
+</div>
+<br />
+
+<div>
+    @if (ViewBag.Colleges != null)
+    {
+        <table id="example" class="display">
+            <thead>
+                <tr>
+                    <th class="">S.No</th>
+                    <th class="">Code</th>
+                    <th class="">College Name</th>
+                    <th class="">Status</th>
+                    <th>AFRC FEE</th>
+                    <th>Affiliation Pending Fee</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item2 in ViewBag.Colleges)
+                {
+                    <tr>
+                        <td class="" style="text-align: center">@(count++)</td>
+                        <td class="" style="text-align: center">@item2.collegeCode</td>
+                        <td class="" style="text-align: left">@item2.collegeName</td>
+                        <td class="" style="text-align: center">
+                            @if (item2.isActive == true)
+                            {
+                                <span>Active</span>
+                            }
+                            else
+                            {
+                                <span>In Active</span>
+                            }
+                        </td>
+                        <td style="text-align: center">
+                            <a href="/CollegesFee/EditCollegssAfrcFee?collegeId=@item2.id" target=" _blank" class="edit_button" id="edit_dialog"><span>Edit</span></a>
+                        </td>
+                        <td style="text-align: center">
+                            <a href="/CollegesFee/EditCollegssPendingFee?collegeId=@item2.id" target=" _blank" class="edit_button" id="affiliation_dialog"><span>Edit</span></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>
+                        <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-3" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-5" style="width: 90%; text-align: center" class="search_init">
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+
+    }
+</div>
+<div id="dialog-open" style="display: none">
+</div>
+<div id="dialog-add" style="display: none">
+</div>
+<div id="affiliation_add" style="display: none">
+</div>

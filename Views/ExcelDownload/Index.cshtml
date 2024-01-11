@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@{
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+         {
+             Text = "NBA Autonomous Colleges",
+             Value = "1"
+         });
+    listItems.Add(new SelectListItem
+         {
+             Text = "NBA Non-Autonomous Colleges",
+             Value = "2",
+         });
+    listItems.Add(new SelectListItem
+    {
+        Text = "NAAC Autonomous Colleges",
+        Value = "3",
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "NAAC Non-Autonomous Colleges",
+        Value = "4",
+    });
+}
+
+<html>
+<head>
+    <title>Index</title>
+
+    <link href="~/Scripts/Jquerydatatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Jquerydatatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/Jquerydatatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <script src="~/Scripts/RotateImage.js" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+</head>
+<body>
+    <h2>Download College Data</h2>
+    @using (Html.BeginForm("DownloadExcel", "ExcelDownload"))
+    {
+        <table style="width: 100%">
+            <tr>
+                <td class="col1"> College Type</td>
+                <td class="col2">
+                    @Html.DropDownList("CollegesType", listItems, "--Select--", new { @class = "required" })
+                </td>
+            </tr>
+            @*<tr>
+                <td class="col1"> College Type</td>
+                <td class="col2">
+                    @Html.DropDownList("CollegesType", listItems, "--Select--", new { @class = "required" })
+                </td>
+            </tr>*@
+            <tr>
+                <td class="col1"></td>
+                <td class="col2">
+                    <input type="submit" value="Export" />
+                </td>
+            </tr>
+        </table>
+    }
+</body>
+</html>

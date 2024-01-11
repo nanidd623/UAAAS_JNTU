@@ -1,0 +1,1099 @@
+﻿@model UAAAS.Models.FacultyRegistration
+@using UAAAS.Models;
+@{
+    ViewBag.Title = Model.RegistrationNumber + " - " + Model.FirstName + " " + Model.MiddleName + " " + Model.LastName;
+
+}
+<style type="text/css">
+    #PhotoPreview {
+        width: 200px;
+        height: 230px;
+        background-position: center center;
+        background-size: cover;
+        -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
+        display: inline-block;
+    }
+</style>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+        $(".approve_link").click(function(){
+            if(confirm("Are you sure, you want to approve the faculty?"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        });
+
+        $(".Terms").click(function(){
+            if($(this).val()=="True"){
+                $(".submitButton").show();
+                $(".rbtn").css("background-color", "#E8EFF3");
+            }
+            else{
+                $(".submitButton").hide();
+            }
+        });
+
+        var $myDialog = $("#dialog-edit11").dialog({
+
+            title: 'Add/Edit Department',
+            autoOpen: false,
+            resizable: false,
+            height: 500,
+            width: 600,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                //$(this).load(url);
+
+                //$(this).dialog("close");
+                $(this).load(url);
+                window.location.reload();
+                $(this).dialog('close');
+
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            url = $("#openDialog").attr('href');
+            debugger;
+            // e.preventDefault();
+            $("#dialog-edit11").dialog({
+                title: 'Not Approved Details'
+            });
+
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        if($(".ifNeworExist").is(':checked')) {
+
+            $(".ifNeworExist").prop("disabled",true);
+
+            var checkval=$(".ifNeworExist").prop("checked");
+
+            if (checkval==true) {
+
+                $('#divNewFaculty').show();
+                // $('#divOrganization').hide();
+                $('#divExistFaculty').show();
+            }
+            else {
+
+                $('#divNewFaculty').show();
+                $('#divOrganization').show();
+                // $('#divExistFaculty').hide();
+            }
+        }
+        else
+        {
+            $(".ifNeworExist").prop("disabled",false);
+
+
+            //$('#divNewFaculty').hide();
+            // $('#divOrganization').hide();
+            //$('#divExistFaculty').hide();
+        }
+
+        $(function () {
+
+            $("#PhotoPreview").css("display", "none");
+
+            $("#Photo").change(function (e) {
+
+                if(this.disabled) return alert('File upload not supported!');
+                var F = this.files;
+                if(F && F[0]) for(var i=0; i<F.length; i++) readPhoto( F[i] );
+            });
+
+
+            $(".panfile").change(function (e) {
+
+                if(this.disabled) return alert('File upload not supported!');
+                var F = this.files;
+                if(F && F[0]) for(var i=0; i<F.length; i++) readDocument( F[i], '300x250', '100', 'PAN Card Document');
+
+            });
+            $(".aadhaarfile").change(function (e) {
+
+                if(this.disabled) return alert('File upload not supported!');
+                var F = this.files;
+                if(F && F[0]) for(var i=0; i<F.length; i++) readDocument( F[i], '200x200', '100', 'Aadhaar Card Document');
+
+            });
+            $(".SelectionCommitteeProceedingsDocument").change(function (e) {
+
+                if(this.disabled) return alert('File upload not supported!');
+                var F = this.files;
+                if(F && F[0]) for(var i=0; i<F.length; i++) readDocument( F[i], '600x800', '100', 'Proceedings Document');
+
+            });
+            $(".1-certificate").change(function (e) {
+
+                if(this.disabled) return alert('File upload not supported!');
+                var F = this.files;
+                if(F && F[0]) for(var i=0; i<F.length; i++) readDocument( F[i], '600x800', '100', '10th Or Equivalent Document');
+
+            });
+            $(".3-certificate").change(function (e) {
+
+                if(this.disabled) return alert('File upload not supported!');
+                var F = this.files;
+                if(F && F[0]) for(var i=0; i<F.length; i++) readDocument( F[i], '600x800', '100', 'UG Document');
+
+            });
+            $(".4-certificate").change(function (e) {
+
+                if(this.disabled) return alert('File upload not supported!');
+                var F = this.files;
+                if(F && F[0]) for(var i=0; i<F.length; i++) readDocument( F[i], '600x800', '100', 'PG Document');
+
+            });
+            $(".5-certificate").change(function (e) {
+
+                if(this.disabled) return alert('File upload not supported!');
+                var F = this.files;
+                if(F && F[0]) for(var i=0; i<F.length; i++) readDocument( F[i], '600x800', '100', 'M.Phil Document');
+
+            });
+            $(".6-certificate").change(function (e) {
+
+                if(this.disabled) return alert('File upload not supported!');
+                var F = this.files;
+                if(F && F[0]) for(var i=0; i<F.length; i++) readDocument( F[i], '600x800', '100', 'Ph.D Document');
+
+            });
+
+
+
+        });
+
+    });
+
+    function printdiv(printpage) {
+        //$(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        //$(".view_hide").show();
+        return false;
+    }
+
+    function demoFromHTML() {
+        debugger;
+        var pdf = new jsPDF('p', 'pt', 'letter')
+
+        // source can be HTML-formatted string, or a reference
+        // to an actual DOM element from which the text will be scraped.
+        , source = $('#div_print')[0]
+
+        // we support special element handlers. Register them with jQuery-style
+        // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
+        // There is no support for any other type of selectors
+        // (class, of compound) at this time.
+        , specialElementHandlers = {
+            // element with id of "bypass" - jQuery style selector
+            '#bypassme': function(element, renderer){
+                // true = "handled elsewhere, bypass text extraction"
+                return true
+            }
+        }
+
+        margins = {
+            top: 80,
+            bottom: 60,
+            left: 40,
+            width: 522
+        };
+        // all coords and widths are in jsPDF instance's declared units
+        // 'inches' in this case
+        pdf.fromHTML(
+            source // HTML string or DOM elem ref.
+            , margins.left // x coord
+            , margins.top // y coord
+            , {
+                'width': margins.width // max width of content on PDF
+                , 'elementHandlers': specialElementHandlers
+            },
+            function (dispose) {
+                // dispose: object with X, Y of the last line add to the PDF
+                //          this allow the insertion of new lines after html
+                pdf.save('Test.pdf');
+            },
+            margins
+        )
+    }
+    var doc = new jsPDF();
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
+    function HTML2PDF() {
+        debugger;
+        doc.fromHTML($('#div_print').html(), 15, 15, {'width': 170,'elementHandlers': specialElementHandlers});
+        doc.save('sample-file.pdf');
+    }
+
+</script>
+
+<div id="div_print">
+
+    @using (Html.BeginForm("", "", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+
+        @Html.HiddenFor(model => model.id)
+        @Html.HiddenFor(model => model.createdBy)
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.isActive)
+        @Html.HiddenFor(model => model.Type)
+        @Html.HiddenFor(model => model.UserName)
+        @Html.HiddenFor(model => model.NewPassword)
+        @Html.HiddenFor(model => model.ConfirmPassword)
+        @Html.HiddenFor(model => model.RegistrationNumber)
+        @Html.HiddenFor(model => model.UniqueID)
+        @Html.HiddenFor(model => model.UniqueID)
+        @Html.HiddenFor(model => model.isApproved)
+
+        if (Model.id > 0)
+        {
+            <div class="create_link_right">
+
+                @* @if (@ViewBag.HideVerifyLink == false && Model.isApproved == null)
+                    {
+                       @Html.ActionLink("APPROVE", "Approve", "FacultyVerification", new { fid = UAAAS.Models.Utilities.EncryptString(Model.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"], pan = true }, new { @class = "create_button approve_link" })
+                       <span>&nbsp;&nbsp;</span>
+                        @Html.ActionLink("NOT APPROVED", "PrincipleVerificationEdit", "PrincipalDirector", new { fid = UAAAS.Models.Utilities.EncryptString(Model.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"], pan = false }, new { @id = "openDialog", @class = "create_button" })
+                    }
+                    else if (Model.isApproved == false)
+                    {
+                        <div class="col1" style="width: 99%;">
+                            FacultyVerificationStatus
+                            <span style="color: red; font-weight: bold; font-style: italic">FACULTY IS DEACTIVATED</span><br />
+
+                            <b><i>Reason for Deactivation</i></b>: " @Model.DeactivationReason "
+                        </div>
+
+                        <br />
+                    }*@
+
+                @*@if (Model.FacultyVerificationStatus != true)
+                    {*@
+                @Html.ActionLink("APPROVED", "MinorityPrincipalVerificationApprove", "PrincipalDirector", new { fid = UAAAS.Models.Utilities.EncryptString(Model.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"], pan = false }, new { @class = "create_button" })<span>&nbsp;&nbsp;</span>
+                @Html.ActionLink("NOT APPROVED", "MinorityPrincipalVerificationEdit", "PrincipalDirector", new { fid = UAAAS.Models.Utilities.EncryptString(Model.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"], pan = false }, new { @id = "openDialog", @class = "create_button" })
+                @*  }*@
+
+
+
+
+
+            </div>
+        }
+
+        <table class="faculty_table" style="text-align: center; width: 100%">
+            <tr>
+                <td class="col1" style="font-weight: bold; width: 15%;">
+                    <span>Faculty Type</span>
+                </td>
+                <td class="col2" style="width: 85%;">
+                    <label title="Presently WORKING in any of the Technical Colleges affiliated to JNTUH">@Html.RadioButtonFor(model => model.Type, "ExistFaculty", new { @name = "fType", @class = "ifNeworExist ifExist" }) Existing Faculty</label>
+                    - (Working in any Affiliated College of JNTUH)
+                    <br />
+                    <label title="Presently NOT WORKING in any of the Technical Colleges affiliated to JNTUH but wish to work in future">@Html.RadioButtonFor(model => model.Type, "NewFaculty", new { @name = "fType", @class = "ifNeworExist ifNew" }) New Faculty </label>
+                    - (Not working with any College but wish to apply for in future)
+                </td>
+
+            </tr>
+        </table>
+
+        <br />
+
+        <div id="divNewFaculty">
+            <table class="faculty_table">
+
+                <tr>
+                    <td class="col1" colspan="2">
+                        <b>Registration Information</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;">
+                        @Html.LabelFor(model => model.RegistrationNumber)
+                    </td>
+                    <td class="col2">
+                        <span style="text-transform: uppercase; font-weight: bold;">@Html.DisplayFor(model => model.RegistrationNumber)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="width: 10% !important; vertical-align: top;">
+                        @Html.LabelFor(model => model.Email)
+                        <span style="color: blue;">(Login ID)</span> <span class="mandatory">*</span>
+                    </td>
+                    <td class="col2 focus" style="width: 90% !important; vertical-align: top;">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.Email)
+                            @Html.HiddenFor(model => model.Email)
+                        }
+
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table class="faculty_table">
+                <tr>
+                    <td class="col1" colspan="4">
+                        <b>Faculty Information</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.FirstName) <span class="mandatory">*</span><br />
+                        <span style="color: blue;">(As Per SSC Certificate)</span>
+                    </td>
+                    <td class="col2">
+
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.FirstName)
+                            @Html.HiddenFor(model => model.FirstName)
+                        }
+                    </td>
+                    <td class="col3">
+                        @Html.LabelFor(model => model.MiddleName)<br />
+                        <span style="color: blue;">(As Per SSC Certificate)</span>
+                    </td>
+                    <td class="col4">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.MiddleName)
+                            @Html.HiddenFor(model => model.MiddleName)
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.LastName) <span class="mandatory">*</span><br />
+                        <span style="color: blue;">(As Per SSC Certificate)</span>
+                    </td>
+                    <td class="col2">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.LastName)
+                            @Html.HiddenFor(model => model.LastName)
+                        }
+                    </td>
+                    <td class="col3">
+                        <span>Father's Name / Husband's Name</span> <span class="mandatory">*</span>
+                    </td>
+                    <td class="col4">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.FatherOrhusbandName)
+                            @Html.HiddenFor(model => model.FatherOrhusbandName)
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.MotherName) <span class="mandatory">*</span>
+                    </td>
+                    <td class="col2">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.MotherName)
+                            @Html.HiddenFor(model => model.MotherName)
+                        }
+                    </td>
+                    <td class="col3"></td>
+                    <td class="col4"></td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.GenderId) <span class="mandatory">*</span>
+                    </td>
+                    <td class="col2">
+                        @if (@Model.isView != null)
+                        {
+                            if (@Model.GenderId == 1)
+                            {
+                                <span>Male</span>
+                            }
+                            else if (@Model.GenderId == 0)
+                            {
+                                <span>Female</span>
+                            }
+                            @Html.HiddenFor(model => model.GenderId)
+
+                        }
+                    </td>
+                    <td class="col3">
+                        @Html.LabelFor(model => model.DateOfBirth) <span class="mandatory">*</span><br />
+                        <span style="color: blue;">(As Per SSC Certificate)</span>
+                    </td>
+                    <td class="col4">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.facultyDateOfBirth)
+                            @Html.HiddenFor(model => model.facultyDateOfBirth)
+
+                        }
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col1" style="vertical-align: top;">
+                        @Html.LabelFor(model => model.Mobile) <span class="mandatory">*</span>
+                    </td>
+                    <td class="col2" style="vertical-align: top;">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.Mobile)
+                            @Html.HiddenFor(model => model.Mobile)
+
+                        }
+                    </td>
+                    <td class="col3" style="vertical-align: top;">
+                        <span>Photo</span> <span class="mandatory">*</span>
+                        <br />
+                        <span style="color: blue;">
+                            (Latest self colour photo with Minimum - 150x150 pixels, Maximum - 200x230 pixels
+                            <br />
+                            and less than 50 KB size)
+                        </span>
+                    </td>
+                    <td class="col4 files" style="vertical-align: top;">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.HiddenFor(model => model.Photo, new { @Value = Model.Photo })
+
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.Photo, new { type = "file", @class = "file required" })<br />
+                        }
+
+                        @if (@Model.facultyPhoto != null)
+                        {
+                            <a href="../Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" target="_blank">
+                                <img src="../Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" style="height: 60px;" />
+                            </a>
+
+                        }
+                        @Html.HiddenFor(model => model.facultyPhoto)
+                        <div id="PhotoPreview"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.PANNumber) <span class="mandatory">*</span>
+                    </td>
+                    <td class="col2">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.PANNumber)
+                            @Html.HiddenFor(model => model.PANNumber)
+
+                        }
+                    </td>
+                    <td class="col3">
+                        @Html.LabelFor(model => model.AadhaarNumber)
+                    </td>
+                    <td class="col4">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.AadhaarNumber)
+                            @Html.HiddenFor(model => model.AadhaarNumber)
+
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="vertical-align: top;">
+                        <span>PAN Card Document</span> <span class="mandatory">*</span>
+                        <br />
+                        <span style="color: blue;">
+                            (Minimum 300x250 pixels
+                            <br />
+                            and less than 100 KB size)
+                        </span>
+                    </td>
+                    <td class="col2 panfiles" style="vertical-align: top;">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.HiddenFor(model => model.PANCardDocument)
+
+                        }
+
+                        @if (@Model.facultyPANCardDocument != null)
+                        {
+                            <a href="../Content/Upload/Faculty/PANCARDS/@Model.facultyPANCardDocument.Replace("~", "")" target="_blank">
+                                <img src="../Content/Upload/Faculty/PANCARDS/@Model.facultyPANCardDocument.Replace("~", "")" style="height: 60px;" />
+                            </a>
+
+                        }
+                        @Html.HiddenFor(model => model.facultyPANCardDocument)
+                    </td>
+                    <td class="col3" style="vertical-align: top;">
+                        <span>Aadhaar Card Document </span>
+                        <br />
+                        <span style="color: blue;">
+                            (Minimum 200x200 pixels
+                            <br />
+                            and less than 100 KB size)
+                        </span>
+                    </td>
+                    <td class="col4 aadhaarfiles" style="vertical-align: top;">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.HiddenFor(model => model.AadhaarCardDocument)
+
+                        }
+
+                        @if (@Model.facultyAadhaarCardDocument != null)
+                        {
+                            <a href="../Content/Upload/Faculty/AADHAARCARDS/@Model.facultyAadhaarCardDocument.Replace("~", "")" target="_blank">
+                                <img src="../Content/Upload/Faculty/AADHAARCARDS/@Model.facultyAadhaarCardDocument.Replace("~", "")" style="height: 60px;" />
+                            </a>
+                        }
+                        @Html.HiddenFor(model => model.facultyAadhaarCardDocument)
+                    </td>
+                </tr>
+            </table>
+
+            <div id="divOrganization" style="width: 100%">
+                <table class="faculty_table" style="width: 100%">
+                    <tr>
+                        <td class="col1" style="vertical-align: top; width: 15%;">
+                            <div class="working">
+                                @Html.Label("Organization Name")
+                            </div>
+                        </td>
+                        <td class="col2" style="vertical-align: top; width: 85%;">
+                            @if (@Model.isView != null)
+                            {
+                                @Html.DisplayFor(model => model.OrganizationName)
+                                @Html.HiddenFor(model => model.OrganizationName)
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="divExistFaculty" style="width: 100%">
+                <table class="faculty_table" style="width: 100%">
+                    <tr>
+                        <td class="col1" style="vertical-align: top;">
+                            @Html.LabelFor(model => model.WorkingStatus)
+                        </td>
+
+                        <td class="col2" style="vertical-align: top;">
+
+                            @if (@Model.isView != null && @Model.WorkingStatus == true)
+                            {
+                                if (@Model.WorkingStatus == true)
+                                {
+                                    <span>Yes</span>
+                                }
+                                else
+                                {
+                                    <span>No</span>
+                                }
+                                @Html.HiddenFor(model => model.WorkingStatus)
+
+                            }
+                            else
+                            {
+                                <label>@Html.RadioButtonFor(model => model.WorkingStatus, true, new { @class = "required WorkingStatus ifWorking", @disabled = "disabled" }) Yes </label>
+                                <label>@Html.RadioButtonFor(model => model.WorkingStatus, false, new { @class = " required WorkingStatus ifNotWorking", @disabled = "disabled" }) No</label>
+                                @Html.HiddenFor(model => model.WorkingStatus)
+                                @Html.ValidationMessageFor(model => model.WorkingStatus)
+                            }
+
+                        </td>
+                        <td class="col3">@Html.LabelFor(model => model.TotalExperience) (years)</td>
+                        <td class="col4">
+                            @if (@Model.isView != null)
+                            {
+                                @Html.DisplayFor(model => model.TotalExperience.Value)
+                                @Html.HiddenFor(model => model.TotalExperience)
+                            }
+                        </td>
+                    </tr>
+                </table>
+
+                <div id="divWorking">
+                    <table style="width: 100%">
+
+                        <tr>
+
+                            <td class="col1" style="vertical-align: top;">
+                                <div class="working">
+                                    @Html.Label("Name of the Institution presently working in") <span class="mandatory">*</span>
+                                </div>
+                            </td>
+                            <td class="col2" style="vertical-align: top;" colspan="3">
+                                @if (@Model.isView != null)
+                                {
+                                    @Html.DisplayFor(model => model.CollegeName)
+                                    @Html.HiddenFor(model => model.CollegeId, new { @Value = Model.CollegeId })
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col1">
+                                @Html.LabelFor(model => model.DepartmentId) <span class="mandatory">*</span>
+                            </td>
+                            <td class="col2">
+                                @if (@Model.isView != null)
+                                {
+                                    @Html.DisplayFor(model => model.department)
+                                    @Html.HiddenFor(model => model.DepartmentId)
+
+                                    if (Model.department == "Others")
+                                    {
+                                        <br />
+                                        @Html.DisplayFor(model => model.OtherDepartment)
+                                        @Html.HiddenFor(model => model.OtherDepartment)
+
+                                    }
+                                }
+                            </td>
+                            <td class="col3">
+                                @Html.LabelFor(model => model.DesignationId) <span class="mandatory">*</span>
+                            </td>
+                            <td class="col4">
+
+                                @if (@Model.isView != null)
+                                {
+                                    @Html.DisplayFor(model => model.designation)
+                                    @Html.HiddenFor(model => model.DesignationId)
+
+                                    if (Model.designation == "Others")
+                                    {
+                                        <br />@Html.DisplayFor(model => model.OtherDesignation)
+                                        @Html.HiddenFor(model => model.OtherDesignation)
+
+                                    }
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col1">
+                                @Html.LabelFor(model => model.DateOfAppointment) <span>in the present Institution</span> <span class="mandatory">*</span>
+                            </td>
+                            <td class="col2">
+                                @if (@Model.isView != null)
+                                {
+                                    @Html.DisplayFor(model => model.facultyDateOfAppointment)
+                                    @Html.HiddenFor(model => model.facultyDateOfAppointment)
+                                }
+                            </td>
+                            <td class="col3">Experience in the present Institution (years) <span class="mandatory">*</span></td>
+                            <td class="col4">
+                                @if (@Model.isView != null && @Model.TotalExperiencePresentCollege != null)
+                                {
+                                    @Html.DisplayFor(model => model.TotalExperiencePresentCollege)
+                                    @Html.HiddenFor(model => model.TotalExperiencePresentCollege)
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col1">
+                                @Html.LabelFor(model => model.isFacultyRatifiedByJNTU) <span class="mandatory">*</span>
+                                <br />
+                                <br />
+                                <div class="ratifed" id="divDOR">
+                                    @Html.LabelFor(model => model.facultyDateOfRatification) <span class="mandatory">*</span>
+                                </div>
+                            </td>
+                            <td class="col2">
+                                @if (@Model.isView != null)
+                                {
+                                    <label>@Html.RadioButtonFor(model => model.isFacultyRatifiedByJNTU, true, new { @id = "ifRatified", @class = "required FacultyRatifiedByJNTU", @disabled = "disabled" }) Yes </label>
+                                    <label>@Html.RadioButtonFor(model => model.isFacultyRatifiedByJNTU, false, new { @id = "ifNotRatified", @class = "required FacultyRatifiedByJNTU", @disabled = "disabled" }) No</label>
+                                    @Html.HiddenFor(model => model.isFacultyRatifiedByJNTU)
+                                    <br />
+                                    <br />
+                                    @Html.DisplayFor(model => model.facultyDateOfRatification)
+                                    @Html.HiddenFor(model => model.facultyDateOfRatification)
+                                }
+                                else
+                                {
+                                    <label>@Html.RadioButtonFor(model => model.isFacultyRatifiedByJNTU, true, new { @id = "ifRatified", @class = "required FacultyRatifiedByJNTU" }) Yes </label>
+                                    <label>@Html.RadioButtonFor(model => model.isFacultyRatifiedByJNTU, false, new { @id = "ifNotRatified", @class = "required FacultyRatifiedByJNTU" }) No</label>
+                                    @Html.ValidationMessageFor(model => model.isFacultyRatifiedByJNTU)
+                                    <br />
+                                    <br />
+                                    <div id="divRatified">
+                                        @if (@Model.isView != null)
+                                        {
+                                            @Html.DisplayFor(model => model.facultyDateOfRatification)
+                                            @Html.HiddenFor(model => model.facultyDateOfRatification)
+
+                                        }
+                                    </div>
+                                }
+                            </td>
+                            <td class="col3">
+                                <div class="ratifed">
+                                    @*@Html.LabelFor(model => model.ProceedingsNo)*@
+                                    College Selection Committee Proceedings Number
+                                    <br />
+                                    <br />
+                                    @Html.Label("Document")
+                                    <span style="color: blue;">(Minimum 600x800 pixels and less than 100 KB size)</span>
+                                </div>
+                            </td>
+                            <td class="col4">
+                                <div class="ratifed">
+                                    @if (@Model.isView != null)
+                                    {
+                                        @Html.DisplayFor(model => model.ProceedingsNo)
+                                        @Html.HiddenFor(model => model.ProceedingsNo)
+                                    }
+                                </div>
+                                <br />
+                                <br />
+                                @if (@Model.isView != null)
+                                {
+                                    @Html.HiddenFor(model => model.SelectionCommitteeProceedingsDocument)
+                                }
+
+                                @if (@Model.SelectionCommitteeProcedings != null)
+                                {
+                                    <a href="../Content/Upload/Faculty/PROCEEDINGS/@Model.SelectionCommitteeProcedings.Replace("~", "")" target="_blank">
+                                        <img src="../Content/Upload/Faculty/PROCEEDINGS/@Model.SelectionCommitteeProcedings.Replace("~", "")" style="height: 60px;" />
+                                    </a>
+                                }
+                                @Html.HiddenFor(model => model.SelectionCommitteeProcedings)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="col1">
+                                <div class="ratifed">
+                                    @Html.LabelFor(model => model.AICTEFacultyId)
+                                </div>
+                            </td>
+                            <td class="col2">
+                                <div class="ratifed">
+                                    @if (@Model.isView != null)
+                                    {
+                                        @Html.DisplayFor(model => model.AICTEFacultyId)
+                                        @Html.HiddenFor(model => model.AICTEFacultyId)
+                                    }
+                                </div>
+                            </td>
+                            <td class="col3">Gross Salary Last Drawn</td>
+                            <td class="col4">
+
+                                @if (@Model.isView != null)
+                                {
+                                    @Html.DisplayFor(model => model.GrossSalary)
+                                    @Html.HiddenFor(model => model.GrossSalary)
+                                }
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <br />
+
+            <table class="faculty_table education" id="tblQualification" style="border: solid 1px #ccc;">
+                <thead>
+                    <tr>
+                        <td class="row" colspan="9">
+                            <b>Educational Qualifications</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row" style="text-align: center; width: 100px;"></td>
+                        <td class="row" style="text-align: center; width: 125px;">Course Studied</td>
+                        <td class="row" style="text-align: center; width: 125px;">Branch / Specialization</td>
+                        <td class="row" style="text-align: center; width: 100px;">Year of Passing (YYYY)</td>
+                        <td class="row" style="text-align: center; width: 80px;">
+                            % of
+                            <br />
+                            Marks / CGPA
+                        </td>
+                        <td class="row" style="text-align: center; width: 80px;">Division</td>
+                        <td class="row" style="text-align: center;">Board/University</td>
+                        <td class="row" style="text-align: center; width: 180px;">Place</td>
+                        <td class="row" style="text-align: center; width: 200px !important;">
+                            Scanned Certificate<br />
+                            <span style="color: blue;">
+                                (Minimum 600x800 pixels
+                                <br />
+                                and less than 100 KB size)
+                            </span>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.FacultyEducation.Count(); i++)
+                    {
+                        var style = "alt_row";
+                        var year = "yr_" + i;
+                        var divs = "division_" + i;
+
+                        <tr>
+
+                            <td class="@style" style="text-align: left; vertical-align: top;">
+                                @if (@Model.isView != null)
+                                {
+                                    @Html.DisplayFor(model => model.FacultyEducation[i].educationName)
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(model => model.FacultyEducation[i].educationName)
+                                }
+                                @Html.HiddenFor(model => model.FacultyEducation[i].educationName)
+                                @Html.HiddenFor(model => model.FacultyEducation[i].educationId)
+                            </td>
+                            <td class="@style" style="text-align: center; vertical-align: top;">
+                                @if (@Model.isView != null)
+                                {
+
+                                    if (i == 0)
+                                    {
+                                        <span>-</span>
+                                        @Html.HiddenFor(model => model.FacultyEducation[i].studiedEducation, new { @Value = "SSC" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(model => model.FacultyEducation[i].studiedEducation)
+                                        @Html.HiddenFor(model => model.FacultyEducation[i].studiedEducation)
+                                    }
+
+                                }
+                            </td>
+                            <td class="@style" style="text-align: center; vertical-align: top;">
+                                @if (@Model.isView != null)
+                                {
+                                    if (i == 0)
+                                    {
+                                        <span>-</span>
+                                        @Html.HiddenFor(model => model.FacultyEducation[i].specialization, new { @Value = "SSC" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(model => model.FacultyEducation[i].specialization)
+                                        @Html.HiddenFor(model => model.FacultyEducation[i].specialization)
+                                    }
+                                }
+                                else
+                                {
+                                    if (i < 2)
+                                    {
+                                        if (i == 0)
+                                        {
+                                            @Html.HiddenFor(model => model.FacultyEducation[i].specialization, new { @Value = "SSC" })
+                                        }
+                                    }
+                                }
+                            </td>
+                            <td class="@style" style="text-align: center; vertical-align: top;">
+                                @if (@Model.isView != null)
+                                {
+                                    if (@Model.FacultyEducation[i].passedYear != null && @Model.FacultyEducation[i].passedYear.Value != 0)
+                                    {
+                                        @Html.DisplayFor(model => model.FacultyEducation[i].passedYear.Value)
+                                    }
+                                    @Html.HiddenFor(model => model.FacultyEducation[i].passedYear)
+
+                                }
+                            </td>
+                            <td class="@style" style="text-align: center; vertical-align: top;">
+                                @if (@Model.isView != null)
+                                {
+                                    @Html.DisplayFor(model => model.FacultyEducation[i].percentage)
+                                    @Html.HiddenFor(model => model.FacultyEducation[i].percentage)
+
+                                }
+                            </td>
+                            <td class="@style" style="text-align: center; vertical-align: top;">
+                                @if (@Model.isView != null)
+                                {
+                                    if (@Model.FacultyEducation[i].division != null && @Model.FacultyEducation[i].division.Value != 0)
+                                    {
+                                        @Html.DisplayFor(model => model.FacultyEducation[i].division.Value)
+                                    }
+                                    @Html.HiddenFor(model => model.FacultyEducation[i].division)
+                                }
+                            </td>
+                            <td class="@style" style="text-align: center; vertical-align: top;">
+                                @if (@Model.isView != null)
+                                {
+                                    @Html.DisplayFor(model => model.FacultyEducation[i].university)
+                                    @Html.HiddenFor(model => model.FacultyEducation[i].university)
+
+                                }
+                            </td>
+                            <td class="@style" style="text-align: center; vertical-align: top;">
+                                @if (@Model.isView != null)
+                                {
+                                    @Html.DisplayFor(model => model.FacultyEducation[i].place)
+                                    @Html.HiddenFor(model => model.FacultyEducation[i].place)
+
+                                }
+                            </td>
+                            <td class="@style certificates" style="text-align: center; vertical-align: top;">
+                                @if (!string.IsNullOrEmpty(@Model.FacultyEducation[i].facultyCertificate))
+                                {
+                                    <a href="../Content/Upload/Faculty/Certificates/@Model.FacultyEducation[i].facultyCertificate" target="_blank">
+                                        <img src="../Content/Upload/Faculty/Certificates/@Model.FacultyEducation[i].facultyCertificate" style="height: 60px;" />
+                                    </a>
+                                }
+
+                                @if (@Model.isView != null)
+                                {
+                                    @Html.HiddenFor(model => model.FacultyEducation[i].certificate)
+
+                                }
+                                @Html.HiddenFor(model => model.FacultyEducation[i].facultyCertificate)
+                            </td>
+                        </tr>
+
+                        <script type="text/javascript">
+
+                            $(document).ready(function() {
+                                if (@ViewBag.FacultyID > 0) {
+                                    if (@Model.FacultyEducation[i].passedYear > 0) {
+                                        $("#@year").val(@Model.FacultyEducation[i].passedYear);
+                                    }
+
+                                    if (@Model.FacultyEducation[i].division != null) {
+                                        if (@Model.FacultyEducation[i].division > 0) {
+                                            $("#@divs").val(@Model.FacultyEducation[i].division);
+                                        }
+                                    }
+                                }
+
+                            });
+
+                        </script>
+                    }
+                </tbody>
+            </table>
+            <br />
+
+            <table class="faculty_table">
+                <tr>
+                    <td class="col1" colspan="2">
+                        <b>Publications</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="width: 10% !important; vertical-align: top;">
+                        @Html.LabelFor(model => model.National)
+                    </td>
+                    <td class="col2" style="width: 90% !important; vertical-align: top;">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.National)
+                            @Html.HiddenFor(model => model.National)
+
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="vertical-align: top;">
+                        @Html.LabelFor(model => model.InterNational)
+                    </td>
+                    <td class="col2" style="vertical-align: top;">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.InterNational)
+                            @Html.HiddenFor(model => model.InterNational)
+
+                        }
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col1" style="vertical-align: top;">
+                        @Html.LabelFor(model => model.Citation)
+                    </td>
+                    <td class="col2" style="vertical-align: top;">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.Citation)
+                            @Html.HiddenFor(model => model.Citation)
+
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="vertical-align: top;">
+                        @Html.LabelFor(model => model.Awards)
+                    </td>
+                    <td class="col2" style="vertical-align: top;">
+                        @if (@Model.isView != null)
+                        {
+                            @Html.DisplayFor(model => model.Awards)
+                            @Html.HiddenFor(model => model.Awards)
+
+                        }
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <div style="line-height: 1.2rem;" class="right_buttons submitButton">
+                @if (Model.id > 0)
+                {
+                    @*if ((@Model.isView != null && Roles.IsUserInRole("Admin")) || (@Model.isView == null))
+                        {
+                        <input type="submit" value="Update" class="submit" />
+                        }*@
+                }
+            </div>
+        </div>
+    }
+</div>
+<div id="dialog-edit11" style="display: none">
+
+</div>
+
+
+
+

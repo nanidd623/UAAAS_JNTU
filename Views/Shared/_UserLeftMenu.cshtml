@@ -1,0 +1,43 @@
+﻿<div class="menu_title">
+    College Menu
+</div>
+<div class="menu_items" style="min-height: 300px;">
+    <ul>
+        <li>@Html.ActionLink("College Information", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeInformation")</li>
+        <li>@Html.ActionLink("Educational Society", "UserView/" + @ViewContext.RouteData.Values["id"], "SocietyInformation")</li>
+        <li>@Html.ActionLink("Principal / Director", "UserView/" + @ViewContext.RouteData.Values["id"], "PrincipalDirector")</li>
+        <li>@Html.ActionLink("Chairperson", "UserView/" + @ViewContext.RouteData.Values["id"], "Chairperson")</li>
+        <li>@Html.ActionLink("Other Colleges & Other Courses", "UserView/" + @ViewContext.RouteData.Values["id"], "OtherColleges")</li>
+        <li>@Html.ActionLink("Land Information", "UserView/" + @ViewContext.RouteData.Values["id"], "LandInformation")</li>
+        <li>@Html.ActionLink("Administrative Land", "UserView/" + @ViewContext.RouteData.Values["id"], "AdministrativeLand")</li>
+        <li>@Html.ActionLink("Instructional Land", "UserView/" + @ViewContext.RouteData.Values["id"], "InstructionalLand")</li>
+        <li>@Html.ActionLink("Existing Intake", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeIntakeExisting")</li>
+        <li>@Html.ActionLink("Proposed Intake", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeIntakeProposed")</li>
+        <li>@Html.ActionLink("College Overall Faculty Student Ratio", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeOverallFacultyStudentRatio")<img src="/Content/images/latest.gif" alt="latest" /></li>
+        <li>@Html.ActionLink("Academic Performance", "UserView/" + @ViewContext.RouteData.Values["id"], "AcademicPerformance")</li>
+        <li>@Html.ActionLink("Teaching Faculty", "UserViewTeaching/" + @ViewContext.RouteData.Values["id"], "Faculty")</li>
+        <li>@Html.ActionLink("Non-Teaching Staff", "UserViewNonTeaching/" + @ViewContext.RouteData.Values["id"], "Faculty")</li>
+        <li>@Html.ActionLink("Technical Staff", "UserViewTechnical/" + @ViewContext.RouteData.Values["id"], "Faculty")</li>
+        <li>@Html.ActionLink("Teaching Faculty Position (Department-wise)", "UserTeachingFacultyPositionView/" + @ViewContext.RouteData.Values["id"], "TeachingFacultyPosition")</li>
+        <li>@Html.ActionLink("Overall Faculty Student Ratio", "UserFacultyStudentRatioView/" + @ViewContext.RouteData.Values["id"], "FacultyStudentRatio")</li>
+        <li>@Html.ActionLink("Labs", "UserView/" + @ViewContext.RouteData.Values["id"], "Laboratories")</li>
+        <li>@Html.ActionLink("Library Information", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeLibrary")</li>
+        <li>@Html.ActionLink("Library Books (Course Wise)", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeLibraryDetails")</li>
+        <li>@Html.ActionLink("Computers - Students Ratio", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeComputerStudentRatio")</li>
+        <li>@Html.ActionLink("Internet Bandwidth", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeInternetBandwidth")</li>
+        <li>@Html.ActionLink("Legal Software", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeLegalSoftwar")</li>
+        <li>@Html.ActionLink("Printers", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegePrinters")</li>
+        <li>@Html.ActionLink("Examination Branch", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeExaminationBranch")</li>
+        <li>@Html.ActionLink("EDEP Equipment", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeExaminationEDEPEquipment")</li>
+        <li>@Html.ActionLink("Fee Reimbursement", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeFeeReimbursement")</li>
+        <li>@Html.ActionLink("Grievance Redressal", "UserView/" + @ViewContext.RouteData.Values["id"], "GrievanceRedressalCommittee")</li>
+        <li>@Html.ActionLink("Anti-Ragging", "userView/" + @ViewContext.RouteData.Values["id"], "AntiRaggingCommittee")</li>
+        <li>@Html.ActionLink("Women Protection Cell", "UserView/" + @ViewContext.RouteData.Values["id"], "WomenProtectionCell")</li>
+        <li>@Html.ActionLink("RTI Details", "UserView/" + @ViewContext.RouteData.Values["id"], "RTIDetails")</li>
+        <li>@Html.ActionLink("Sports & Games", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeSports")</li>
+        <li>@Html.ActionLink("Desirable Requirements", "UserView/" + @ViewContext.RouteData.Values["id"], "OtherDesirables")</li>
+        <li>@Html.ActionLink("Campus Hostel", "UserView/" + @ViewContext.RouteData.Values["id"], "CampusHostel")</li>
+        <li>@Html.ActionLink("Placement Cell", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegePlacement")</li>
+        <li>@Html.ActionLink("College Photos", "UserView/" + @ViewContext.RouteData.Values["id"], "CollegeDocuments")</li>
+    </ul>
+</div>

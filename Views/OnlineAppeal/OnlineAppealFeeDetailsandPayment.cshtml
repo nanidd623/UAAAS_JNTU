@@ -1,0 +1,174 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeIntakeExisting>
+
+@{
+    ViewBag.Title = "OnlineAppealFeeDetailsandPayment";
+}
+
+<h2>OnlineAppealFeeDetailsandPayment</h2>
+
+<style>
+    .not-active {
+        pointer-events: none;
+        cursor: default;
+    }
+</style>
+
+<table class="full_table" style="width: 100%; font-size: 0.7rem;">
+    <tr>
+
+        <th style="text-align: center;" rowspan="3">
+            Appeal Processing Fee
+        </th>
+
+        <th style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">
+            Total Fee
+            <br />
+
+        </th>
+        <th style="text-align: center;" rowspan="3">
+            Payment
+        </th>
+    </tr>
+    <tr></tr>
+    <tr></tr>
+    <tr>
+
+        <td style="text-align: center;" colspan="1"><label>Rs</label> @ViewBag.lateFee </td>
+
+        <td style="width: 60px; text-align: center; background-color: lightgreen; font-weight: bold;">
+            <label>Rs</label> @ViewBag.totalFee
+        </td>
+
+        <td class="create_link_right" style="text-align:center;">
+
+            <html>
+            <body>
+                <form method="post" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment">
+                    <input name="msg" type="hidden" value=@ViewBag.msg>
+
+                    <form method="post" id="paymentform" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment">
+                        <input name="msg" type="hidden" value=@ViewBag.msg>
+
+
+
+                        @if (ViewBag.IsLatePaymentDone)
+                        {
+                            <input type="submit" value="Paid" id="pay" class="create_button not-active ">
+                        }
+                        else
+                        {
+                            if (ViewBag.NotUpload == true && Roles.IsUserInRole("College"))
+                            {
+                                <input type="checkbox" id="continuePayment" /><span>I Agree</span><br /><text>Once payment is done colleges can not add<br /> new courses please confirm before making payment</text>
+                                <input type="submit" value="Pay" id="pay" class="create_button not-active">
+                            }
+
+                        }
+
+                        @*<input type="checkbox" id="continuePayment" /><span>I Agree</span><br /><text>Once payment is done colleges can not add<br /> new courses please confirm before making payment</text>
+                            <input type="submit" value="Pay" id="pay" class="create_button not-active">*@
+                    </form>
+            </body>
+        </html>
+</tr>
+</table>
+
+
+@if (ViewBag.Payments.Count != 0)
+{
+    <div style="margin-top:50px;">
+        <h2>Payment History</h2>
+        <table class="webGrid">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>Challan Number</th>
+                    <th>Txn Reference No.</th>
+                    <th>Txn Amount.</th>
+                    @*<th>Payment Type.</th>*@
+                    <th>Payment Status</th>
+                    <th>Payment Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in ((List<UAAAS.Models.jntuh_paymentresponse>)ViewBag.Payments).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr>
+                        <td>@pay.i </td>
+                        <td>@pay.value.CustomerID</td>
+                        <td>@pay.value.TxnReferenceNo</td>
+                        <td>@pay.value.TxnAmount</td>
+                        @*<td>@pay.value.p</td>*@
+                        <td>@pay.value.AuthStatus</td>
+                        <td>@pay.value.ErrorDescription </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+        $.ajaxSetup({ cache: false });
+
+        $("#openDialog").live("click", function (e) {
+            //e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Pay',
+                height: 300,
+                width: 650
+            });
+            url = $("#openDialog").attr('href');
+            return false;
+        });
+        $('#pay').click(function (e) {
+            var data = "challanNumber=@ViewBag.challnNumber&txnAmount=@ViewBag.totalFee&collegeCode=@ViewBag.collegeCode";
+            //alert(data);
+            //e.preventDefault();
+            $.ajax({
+                url: "/OnlineAppeal/SavePaymentRequest",
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                data: data,
+                success: function (data) {
+                    //$('#paymentform').submit();
+                },
+                error: function (event) {
+                    // $(this).prop("checked", false);
+                }
+            });
+        });
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+    });
+</script>
+
+<script>
+    function DisplayMessage(e) {
+        var retVal = confirm("Do you want to continue ?");
+        if (!retVal) {
+            e.preventDefault();
+        }
+        else {
+            alert('payment');
+            $('#paymentform').submit();
+        }
+
+    }
+    $(document).ready(function () {
+        $('#continuePayment').click(function () {
+            if ($(this).attr("checked")) {
+                $('#pay').removeClass('not-active');
+            }
+            else $('#pay').addClass('not-active');
+            //if ($(this).is(":checked")) {
+            //    alert($(this.val()));
+            //}
+        });
+    })
+</script>

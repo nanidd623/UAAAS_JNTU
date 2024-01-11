@@ -1,0 +1,51 @@
+﻿@model UAAAS.Controllers.AdminDashbordController.Customdates
+
+@{
+    ViewBag.Title = "Download_Excel";
+    var exdate = string.Empty;
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#myselect').change(function () {
+            // if changed to, for example, the last option, then
+            // $(this).find('option:selected').text() == D
+            // $(this).val() == 4
+            // get whatever value you want into a variable
+            var x = $(this).val();
+            // and update the hidden input's value
+            $('#myhidden').val(x);
+            //alert($('#myhidden').val());
+        });
+    });
+    $("#functionId").live("click", function (e) {
+        var dropdownvalue = $('#myselect').val();
+        if (dropdownvalue != null && dropdownvalue !== "") {
+            window.location.href = "/AdminDashbord/ExportFunctioningColleges?date=" + $('#myhidden').val();
+        } else {
+            alert("Please Select Date");
+        }
+        
+    });
+</script>
+<h2>Download Covid-19 Date Wise</h2>
+
+@using (Html.BeginForm())
+{
+    <table style="width: 100%">
+        <tr>
+            <td class="col1" style="width: 10%;">Select Date</td>
+            <td class="col2">
+                @Html.DropDownListFor(m => m.Id, new SelectList(ViewBag.dates as System.Collections.IEnumerable, "Id", "Date"), "--Select Date--", new { @class = "required", @style = "width:250px;", @id = "myselect" })
+                @Html.HiddenFor(m => m.Date)
+                <input type="submit" value="Export" />
+
+                <input type='hidden' id='myhidden' value=''>
+                <input type="button" id="functionId" value="Export Functioning Colleges" class="create_button"/>
+                @*@Html.ActionLink("Export Functioning Colleges", , new { @date = exdate }, new { @id = "functionId", @class = "create_button" })*@
+            </td>
+        </tr>
+    </table>
+}

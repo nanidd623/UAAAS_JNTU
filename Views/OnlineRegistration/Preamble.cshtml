@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "WELCOME TO ONLINE AFFILIATION APPLICATION SUBMISSION FOR AY 2023-24 (A-123)";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+
+<h2>INSTRUCTIONS FOR FILLING THE A-123 FORM FOR THE ACADEMIC YEAR @ViewBag.NextacademicYear</h2>
+<br />
+<div class="col1" style="width: 99%; line-height: 28px;border-radius: 15px">
+    @*Educational Societies and Managements of Technical Institutions desirous of filing appeal for consideration of their compliance to the deficiencies pointed out/or re-verification of the deficiencies pointed out 
+                 based on the deficiencies pointed out in the DEFICIENCY  REPORT  of JNTUH, Hyderabad for the Academic year 2016-17  are hereby informed that the submission of online appeal   is available.*@
+    <p>Educational Societies and Managements of Technical Institutions desirous of seeking Affiliation of JNTUH, Hyderabad for the Academic year @ViewBag.NextacademicYear under the categories  of Existing Engineering / Pharmacy / Integrated Campus / Technical Campus / Standalone MBA / MCA Institutions in the State of Telangana and coming under ambit of JNTU Hyderabad are hereby informed that the submission of online applications (format A-123) is available. Once the College is issued NOC by the University for Closure of any Course (s) / College, then in the online application the course status must be chosen as Closure only.</p>
+     <br />
+    @*<p><b>The Affiliation process for the A.Y. @ViewBag.NextacademicYear is pictorially shown as given below:</b></p>
+    <br/>
+    <p style="text-align: center;background:white">
+        <img src="../Content/images/instrucations1.png" alt="latest" style="width: 20%" />
+    </p>
+    <br/>*@
+    <h3>The following instructions have to be strictly followed:</h3>
+    <ol style="margin-left: 20px;">
+        <li>The static data submitted by the institutions in the previous year is populated for the current academic year and edit option is provided for only those columns which are dynamic and/or dependant on the academic year.</li>
+        @*<li>In case of any changes in the static data submitted by the institutions, the request for edit option may be made to the University along with the column number and justification.</li>*@
+        <li>In case of any changes in the static data submitted by the institutions, the request for edit option may be made to the University along with the column number and justification at item No.41. - "DATA MODIFICATIONS".</li>
+        <li>The last date for online submission of application form is <b> 15/04/2023 </b></li>
+        <li>In the Existing/ Proposed Intake (Item No: 09) mention the “Course Status” as New Course/Increase in Intake/ Decrease in Intake/ No Change/ Closure.</li>
+        <li>The Application fee & Inspection fee for Academic Year @ViewBag.NextacademicYear will be collected through Online PAYMENT mode only. Demand Drafts are not entertained (Note: Online Payment will take two working days to get update in the portal).</li>
+        <li>While uploading the Faculty details, Colleges have to be careful as they have to clearly mention the details like the Department, Specialization, Appointment Date, Appointment order along with joining letter, SCM (if any), Relieving date & Relieving letter of the Faculty. Further, the Faculty identified for UG or PG streams have to be clearly demarcated.</li>
+        <li>Pdf documents of AICTE Application Report (2023-24) and AICTE Deficiency Report (2023-24) along with all the enclosures have to be uploaded in the College Enclosures soft copy page (Item No: 36).  AICTE Application Report (2023-24) and AICTE Deficiency Report (2023-24) forms should be in full shape. Later upon verification, if found that it is blank or missing Data, application will be treated as invalid.</li>
+        <li>Whatever faculty details uploaded to AICTE, the same data is required to be uploaded to the University.</li>
+        <li>The photograph of equipment pertaining to each experiment in a lab has to be uploaded as per the prescribed file size and file format (Min. 50kb to Max. 300kb in jpg/png).</li>
+        <li>The List of titles (pdf documents) available in the Library has to be uploaded in the Library Books page (Item No: 17). Further, the list of books added to the Library during the last three years have to be submitted in a single excel sheet (as per the excel format provided).</li>
+        <li>The MAC addresses of the Computers available in the College have to be given in a “single excel sheet” room-wise (as per the excel format provided).</li>
+        <li>A-123 form and its enclosures have to be submitted through ONLINE mode only. No Hard copies will be entertained.</li>
+        <li>Blank papers/irrelevant material uploaded will not be accepted.</li>
+        <li>While entering the details of labs, you are informed that you are facilitated with a summary of lab equipments count <b>(“Uploaded Equipments count”)</b> button.</li>
+        <li>The College has to give the <b>“Number of Additional Labs”</b> (other than main lab) – (Item No: 15) per course based on intake. (If the number of students using any laboratory in a particular semester exceeds 300 (as per University sanctioned intake) then the College / Institution shall provide separate laboratory for every 300 additional students and part thereof).</li>
+        <li style="text-align: center; list-style-type: none">*****</li>
+    </ol>
+    @*<span style="width: 33%; background-color: aquamarine; padding: 5px; font-size: 12px; font-family: sans-serif; font-weight: bold" class="rounded_corners_box">NOTE: BETA testing phase is only for testing purpose.  All the Colleges are hereby informed that the data that is uploaded during the BETA testing period by the Colleges shall not be considered for the actual A-117 form. The data related to the College in your respective portal that was available prior to BETA testing will be same after the BETA testing period. Further, it is informed that the data that is uploaded by the College during the BETA testing period will be null and void after the BETA testing.</span>*@
+</div>
+
+
+
+
+
+
+
+<br />
+<div style="text-align: right; font-weight: bold;">
+    @Html.ActionLink("Proceed to Affiliation Application", "Create", "CollegeInformation", null, new {@class = "create_button"})
+</div>
+

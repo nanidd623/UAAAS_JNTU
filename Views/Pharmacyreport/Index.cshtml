@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Pharmacy Reports Dashboard</h2>
+
+<br/><br/>
+<div style="margin:auto;text-align:center;">
+    <div>
+        <h3>Data Entry Screen for Pharmacy Colleges</h3><br />
+        <div>
+            <a href="/Pharmacyreport/PharmacyFacultyGroupingbasedonColleges" class="create_button" target="_blank">Pharmacy Data Entry</a>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div> 
+    <br />
+    <h3>Pharmacy Colleges Counselling Reports</h3><br />
+    <div style="display:inline-flex;">
+        <div>
+            <a href="/Pharmacyreport/BPharmacyCounsellingReport" class="create_button" target="_blank">B.Pharmacy</a>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div>
+            <a href="/Pharmacyreport/MPharmacyCounsellingReport?Type=NoDeficiency" class="create_button" target="_blank">M.Pharmacy</a>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <br /><br />
+    <h3>Pharmacy Colleges Excel Reports For Deficiency and Counselling Reports.</h3><br />
+    <div style="display:inline-flex;">
+        <div>
+            <a href="/Pharmacyreport/GroupWiseAddedFaculty" class="create_button" target="_blank">Group Wise AddedFaculty</a>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div>
+            <a href="/Pharmacyreport/MPharmacyCounsellingReport?Type=AllData" class="create_button" target="_blank">M.Pharmacy Courses Added Data</a>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div>
+            <a href="/Pharmacyreport/MPharmacyCounsellingReport?Type=GroupCount" class="create_button" target="_blank">M.Pharmacy Courses Count</a>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+</div>

@@ -1,0 +1,288 @@
+﻿@using System.Web.Configuration
+@model IEnumerable<UAAAS.Models.CollegeIntakeExisting>
+@{
+
+    //if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    //{
+    //    Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    //}
+    ViewBag.Title = "New Course(s) / Program(s) / Increase in Intake(s) / Reduction in Intake(s)";
+    int num = 1;
+    string AICTEApprovalLettr = string.Empty;
+}
+<style>
+    .not-active {
+        pointer-events: none;
+        cursor: default;
+    }
+</style>
+<h2>New Course(s) / Program(s) / Increase in Intake(s) / Reduction in Intake(s)</h2>
+<br />
+<p style="display:none;">
+    <b style="color:red;font-size:12px;">*Note: </b><span style="font-weight:bold;color:red;font-size:12px;">It is to inform that the all the Affiliated  Colleges are required to obtained prior permission from the University before applying for NOC for the following courses:</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <table style="width: 80%; font-weight:bold; color:red;font-size:12px;float:right;display:none;" border="1">
+        <tr><td>Aerospace Engineering</td><td>Aerospace</td></tr>
+        <tr><td>Artificial Intelligence</td><td>Power System Control & Automation</td></tr>
+        <tr><td>Automobile</td><td>Civil Engineering (Computer Aided Structural Engineering)</td></tr>
+        <tr><td>Bio-Medical</td><td>Mining Engineering</td></tr>
+        <tr><td>Chemical</td><td>Power System Control & Automation</td></tr>
+        <tr><td>Pharmaceutical Engineering</td><td>Power Systems</td></tr>
+        <tr><td>Computer Science & Technology</td><td>Embedded System and VLSI</td></tr>
+        <tr><td></td><td>Civil Engineering (Computer Aided Structural Engineering)</td></tr>
+        <tr><td></td><td>Power Electronics & Power Systems</td></tr>
+    </table>
+</p>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+
+        $('.subtUpload').click(function () {
+
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+
+        });
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'New Course/Increase in Intake',
+            autoOpen: false,
+            resizable: false,
+            height: 500,
+            //height: 550,
+            //width: 820,
+            width: 720,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add New Course'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('.full_table').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Increase in Intake'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 600,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+</script>
+@if (ViewBag.NotUpload == true)
+{
+
+    <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+}
+else
+{
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <br />
+    using (Html.BeginForm("FileUpload", "CollegeIntakeExisting", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table style="width: 100%">
+            <tr>
+                <td></td>
+                <td class="create_link_right">
+
+                    @Html.ActionLink("Add New Course", "AddEditRecord", "CollegeNOC", new { collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })
+
+                    @Html.ActionLink("Pay", "IntakeFreeDetails", "CollegeNOC", new { collegeId = UAAAS.Models.Utilities.EncryptString(@ViewBag.collegeId, WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "create_button" })
+
+                </td>
+
+            </tr>
+        </table>
+
+
+        <table class="full_table" style="width: 100%; font-size: 0.9rem;">
+            <tr>
+                <th style="text-align: center;">
+                    S.No
+                </th>
+                <th>
+                    Degree
+                </th>
+                <th style="text-align: center;">
+                    Dept.
+                </th>
+                <th style="text-align: center;">
+                    Specialization
+                </th>
+                @*<th style="text-align: center;">
+                        Shift
+                    </th>*@
+                <th style="text-align: center;">
+                    Approved Intake 2023-24
+                </th>
+                <th style="text-align: center;">
+                    Proposed Increase in Intake 2024-25
+                </th>
+                <th style="text-align: center;">
+                    Status
+                </th>
+                <th style="text-align: center;">
+
+                </th>
+                @*<th style="text-align: center;">
+
+                    </th>*@
+            </tr>
+
+
+            @foreach (var item in ViewBag.ExistingIntake as List<UAAAS.Models.CollegeIntakeExisting>)
+            {
+                string closedcolor = string.Empty;
+                if (item.isClosed == true)
+                {
+                    closedcolor = "red";
+                }
+
+                <tr style="background-color: @closedcolor">
+                    <td style="width: 30px; text-align: center; background-color: @closedcolor">
+                        @(num++)
+                    </td>
+                    <td style="width: 60px;">@item.Degree</td>
+                    <td style="width: 50px;">@item.Department</td>
+                    <td>@item.Specialization</td>
+                    @*<td style="width: 30px; text-align: center;">@item.Shift</td>*@
+
+                    <td style="width: 30px; text-align: center;">@item.ApprovedIntake</td>
+                    <td style="width: 30px; text-align: center;">@item.ProposedIntake</td>
+                    <td style="width: 30px; text-align: center;">@item.courseStatus</td>
+                    <td style="width: 20px; text-align: center;">
+                        @if (item.isClosed != true)
+                        {
+                        @Html.ActionLink("Edit", "AddEditRecord", "CollegeNOC", new { id = item.id, nocid = item.nocid }, new { @class = "editDialog edit_button" })
+                        }
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        if (ViewBag.Count == 0)
+        {
+            <div class="warning" style="width: 200px; margin: 0 auto;">
+                <p>No records found</p>
+            </div>
+        }
+    }
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+}

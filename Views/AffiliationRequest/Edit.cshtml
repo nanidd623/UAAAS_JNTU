@@ -1,0 +1,203 @@
+﻿@model UAAAS.Models.jntuh_affiliation_requests
+@{
+    ViewBag.Title = "Edit Affiliation Request";
+}
+
+<h2>Edit Affiliation Request</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    
+    @Html.HiddenFor(model => model.id)
+    <div class="affiliation_request">
+        <div class="editor-label">
+            @Html.LabelFor(model => model.collegeName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.collegeName, new { @class = "long_text_box" })
+            @Html.ValidationMessageFor(model => model.collegeName)
+        </div>
+         <div class="editor-label">
+            @Html.LabelFor(model => model.societyName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.societyName, new { @class = "long_text_box" })          
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.collegeAddress)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.collegeAddress)
+            @Html.ValidationMessageFor(model => model.collegeAddress)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.townOrCity)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.townOrCity)
+            @Html.ValidationMessageFor(model => model.townOrCity)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.stateId)
+        </div>
+        <div class="editor-field">
+            @*@Html.DropDownList("State", String.Empty)*@
+            @Html.DropDownListFor(model => model.stateId,
+            new SelectList(ViewBag.State as System.Collections.IEnumerable, "id", "stateName"),
+            "-- Select --", new { id = "state" })
+            @Html.ValidationMessageFor(model => model.stateId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.districtId)
+        </div>
+        <div class="editor-field">
+            @*@Html.DropDownList("District", String.Empty)*@
+            @Html.DropDownListFor(model => model.districtId,
+            new SelectList(ViewBag.District as System.Collections.IEnumerable, "id", "districtName"),
+            "-- Select --", new { id = "district" })
+            @Html.ValidationMessageFor(model => model.districtId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.mandal)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.mandal)
+            @Html.ValidationMessageFor(model => model.mandal)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.pincode)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.pincode)
+            @Html.ValidationMessageFor(model => model.pincode)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.fax)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.fax)
+            @Html.ValidationMessageFor(model => model.fax)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.landline)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.landline)
+            @Html.ValidationMessageFor(model => model.landline)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.mobile)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.mobile)
+            @Html.ValidationMessageFor(model => model.mobile)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.email)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.email)
+            @Html.ValidationMessageFor(model => model.email)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.website)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.website)
+            @Html.ValidationMessageFor(model => model.website)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.collegeTypeId)
+        </div>
+        <div class="editor-field">
+            @*@Html.DropDownList("CollegeType", String.Empty)*@
+            @Html.DropDownListFor(model => model.collegeTypeId,
+            new SelectList(ViewBag.CollegeType as System.Collections.IEnumerable, "id", "collegeType"),
+            "-- Select --", new { id = "CollegeType" })
+            @Html.ValidationMessageFor(model => model.collegeTypeId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.collegeStatusId)
+        </div>
+        <div class="editor-field">
+            @*@Html.DropDownList("CollegeStatus", String.Empty)*@
+            @Html.DropDownListFor(model => model.collegeStatusId,
+            new SelectList(ViewBag.CollegeStatus as System.Collections.IEnumerable, "id", "collegeStatus"),
+            "-- Select --", new { id = "CollegeStatus" })
+            @Html.ValidationMessageFor(model => model.collegeStatusId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.isAccreditedByNAAC)
+        </div>
+        <div class="editor-field">
+            @*@Html.EditorFor(model => model.isAccreditedByNAAC)*@
+            <label>@Html.RadioButtonFor(model => model.isAccreditedByNAAC, true) Yes</label>
+            <label>@Html.RadioButtonFor(model => model.isAccreditedByNAAC, false) No</label>
+            @Html.ValidationMessageFor(model => model.isAccreditedByNAAC)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.presentAffiliatedUniversity)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.presentAffiliatedUniversity)
+            @Html.ValidationMessageFor(model => model.presentAffiliatedUniversity)
+        </div>
+
+        
+         <div class="display-label">Status</div>
+         <div class="editor-field">
+         
+            <label>@Html.RadioButtonFor(model => model.isActive, true) Active</label>
+            <label>@Html.RadioButtonFor(model => model.isActive, false) Inactive</label>
+             @Html.HiddenFor(model => model.isApproved)
+            
+        </div>   
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.comments)
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.comments)
+            @Html.ValidationMessageFor(model => model.comments)
+        </div>
+
+          @Html.HiddenFor(model => model.createdOn)
+
+        @Html.HiddenFor(model => model.createdBy)
+
+        @Html.HiddenFor(model => model.updatedOn)
+
+        @Html.HiddenFor(model => model.updatedBy)  
+        
+        <div class="editor-label last-row">
+            &nbsp;
+        </div>
+        <div class="editor-field last-row">
+            <p>
+                @Html.ActionLink("Back", "Index", "LogOnModel", new { @class = "back_button" })
+                <input type="submit" value="Submit" />
+                @*@Html.ActionLink("Back to List", "Index", null, new { @class = "back_button" })*@
+            </p>
+        </div>
+        <div class="clear"></div>
+    </div>
+}
+

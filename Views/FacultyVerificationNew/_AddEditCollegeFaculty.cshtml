@@ -1,0 +1,115 @@
+﻿@model UAAAS.Models.CollegeFaculty
+@{
+    ViewBag.Title = "Verify Faculty";   
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".IdentifiedFor").click(function () {
+            var selectedValue = $(this).val();
+
+            if (selectedValue != "UG") { $(".specialization").css("display", "block"); }
+            else { $(".specialization").css("display", "none"); }
+        });
+        $('#btnsend').click(function () {
+            var selectedVal = "";
+            var selected = $(".Identified input[type='radio']:checked");
+            
+            if (selected.length > 0) {
+                selectedVal = selected.val();
+                if (selectedVal != "UG") {
+                    $("#Specialization").addClass('required');
+                }
+                else {
+                    $("#Specialization").removeClass('required');
+                }
+            }
+
+            if ($('FacultyRegistrationNumber').val() == '') {
+                $('FacultyRegistrationNumber').addClass('required');
+            }
+            else {
+                $('FacultyRegistrationNumber').removeClass('required');
+            }
+            //return false;
+
+            
+        });
+    });
+</script>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)   
+    
+    @Html.HiddenFor(model => model.collegeId, new {@Value = Model.collegeId })
+    @Html.HiddenFor(model => model.id, new { @Value = Model.id })
+
+    <fieldset>
+        <legend></legend>
+
+        @if (Model.id > 0)
+        {
+            <div class="editor-label" style="width: 200px;">
+                @Html.Label("Faculty Name")
+            </div>
+            <div class="editor-field" style="width: 380px;">
+                @Html.DisplayFor(model => model.facultyFirstName)
+                @Html.DisplayFor(model => model.facultyLastName)
+                @Html.DisplayFor(model => model.facultySurname)
+            </div>
+            <div class="editor-label" style="width: 200px;">
+                <span>Designation</span>
+            </div>
+            <div class="editor-field" style="width: 380px;">
+                @Html.DisplayFor(model => model.designation)
+                @if (Model.facultyOtherDesignation != null)
+                { <span>, @Model.facultyOtherDesignation</span>}
+            </div>
+
+            <div class="editor-label" style="width: 200px;">
+                <span>Department</span>
+            </div>
+            <div class="editor-field" style="width: 380px;">
+                @Html.DisplayFor(model => model.department)
+            </div>
+        }
+
+        <div class="editor-label" style="width: 200px;">
+            <span>Registration Number</span>
+        </div>
+        <div class="editor-field" style="width: 380px;">
+            @Html.TextBoxFor(model => model.FacultyRegistrationNumber, new { @class = "required", @maxlength = "25", @placeholder = "Enter Faculty Registration Number", style = "width: 200px;" })
+            @Html.ValidationMessageFor(model=>model.FacultyRegistrationNumber)
+        </div>
+
+        <div class="editor-label" style="width: 200px;">
+            <span>Identified For</span>
+        </div>
+        <div class="editor-field Identified" style="width: 380px;">
+            @Html.RadioButtonFor(model => model.facultyRecruitedFor, "UG", new { id = "UG", @class = "IdentifiedFor required" }) UG &nbsp;&nbsp; 
+            @Html.RadioButtonFor(model => model.facultyRecruitedFor, "PG", new { id = "PG", @class = "IdentifiedFor required" }) PG &nbsp;&nbsp; 
+            @Html.RadioButtonFor(model => model.facultyRecruitedFor, "UG&PG", new { id = "UGPG", @class = "IdentifiedFor required" }) UG & PG  
+            @Html.ValidationMessageFor(model=>model.facultyRecruitedFor)         
+        </div>
+
+        <div class="specialization" style="display: none;">
+            <div class="editor-label" style="width: 200px;">
+                <span>PG Specialization</span>
+            </div>
+            <div class="editor-field" style="width: 380px;">
+                @Html.DropDownListFor(model => model.SpecializationId,
+            new SelectList(ViewBag.PGSpecializations as System.Collections.IEnumerable, "id", "spec"),
+            "-- Select --", new { id = "Specialization", @class = "width" })
+            </div>
+        </div>
+
+        <div style="text-align: center">
+            <p>
+                <input type="submit" value="Submit" id="btnsend" name="cmd" />
+                @Html.ActionLink("Cancel", "CollegeRegisteredFaculty", "FacultyVerification", new { collegeId = Request.Params["collegeId"] }, new { @class = "create_button" })
+            </p>
+        </div>
+    </fieldset>
+}

@@ -1,0 +1,189 @@
+﻿@model List<UAAAS.Models.jntuh_college>
+@using UAAAS.Models;
+
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "Affiliation Letters";
+    //string[] courtColleges = new string[] { };
+    string[] courtColleges = new string[] { "DT","S3","62","D9","84","87","01","D0","BH","W7","7W","H2","K8","U7","U7",
+                                            "9L","H1","87","QM","RE","W4","9R","7E","PR","AU","BA","P8","X8","K3","WJ","6F",
+                                            "D2","R3","UC","6H","29","XG","WF","GM","UU","BK","5E","UG","RQ","R3"
+                                          };
+    string[] courtCollegesNew = new string[] { "DT","S3","62","7W","W7","D0","BH","H1","K8","U7","9L","87","RE","W4","9R","PR","AU","BA","P8","X8",
+                                                "K3","WJ","6F","D2","9M","UC","6H","XG","WF","GM","UU","BU","79","BK","UG","RQ","R3","32",
+                                               "K0","6E","40","M6","U6","84","CG","D9","D5","6A","8X","N6","U5", "U0","TA","N7","80","67","QJ",
+                                               "GE","S9","E0","T8","6Y","CU","5D","7Q","5U","D4","TU","E3","VH","8P","EE","QA","26","8B","K4","E6",
+                                               "QE","C7","1D","6Z","1J","7B","C9","X0","63","FT","68","X3","D3","C3","VP","VN","K7","H3","H2","J7","DE"
+                                          };
+}
+
+<h2>Affiliation Letters</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        $('#DistrictId').removeClass('input-validation-error');
+        $('#DegreeId').removeClass('input-validation-error');
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+@using (Html.BeginForm())
+{
+    int count = 1;
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">
+                    S.No
+                </th>
+                <th style="width: 50px; text-align: center;">
+                    Code
+                </th>
+                <th style="text-align: left;">
+                    College Name
+                </th>
+                <th style="width: 100px; text-align: center;">
+                    Year of Establishment
+                </th>
+                <th style="width: 250px; text-align: center;"></th>
+                <th style="width: 80px; text-align: center;">
+                    Affiliation Letter
+                </th>
+                <th style="width: 80px; text-align: center;">
+                    Faculty
+                </th>
+                <th style="width: 100px; text-align: center;">
+                    Infrastructure Information
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+                    string year = db.jntuh_college_establishment.Where(e => e.collegeId == item.id).Select(e => e.instituteEstablishedYear).FirstOrDefault().ToString();
+                    string randomCode = db.jntuh_college_randamcodes.Where(e => e.CollegeId == item.id).Select(e => e.RandamCode).FirstOrDefault().ToString();
+                    var news = db.jntuh_college_news.Where(e => e.collegeId == item.id && e.title.Contains("Letter. of Grant")).Select(e => e).FirstOrDefault();
+
+                    <tr>
+                        <td style="width: 50px; text-align: center;">
+                            @(count++)
+                        </td>
+                        <td style="width: 50px; text-align: center; text-transform: uppercase;">
+                            @item.collegeCode
+                        </td>
+                        <td style="text-align: left;">
+                            @item.collegeName
+                        </td>
+                        <td style="text-align: center;">@year</td>
+                        <td>
+                            @if (courtCollegesNew.Contains(item.collegeCode.ToUpper()))
+                            {
+                                <span style="color:red; font-weight: bold;">THE AFFILIATION ISSUE IS PENDING IN THE HONORABLE HIGH COURT</span>
+                            }
+                        </td>
+                        <td style="text-align: center;">
+                            @if (news != null && news.navigateURL != null)
+                            {
+                                <a href="~/Content/Upload/CollegeNews/@item.collegeCode-@randomCode-AffiliationProceedings-20150630.pdf" target="_blank">Download</a>
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Download", "AffiliationLetter", "AffiliationProceedingsNewReport", new { cid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), type = "AllClear" }, new { target = "_blank" })
+                            }
+                        </td>
+                        <td style="text-align: center;">
+                            @Html.ActionLink("View", "TeachingFaculty", new { collegeId = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { target = "_blank" })
+                        </td>
+                        <td style="text-align: center;">
+                            @*@Html.ActionLink("View", "CollegeInformation", new { id = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { target = "_blank" })*@
+                            <a href='@Url.Action("CollegeInformation", new { id = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) })' target="_blank">
+                                <img src='@Url.Content("~/Content/Images/thumbnail.png")' style="vertical-align: middle;" height="24" />
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    @*<input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">*@
+                </th>
+                <th>
+                    @*<input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">*@
+                </th>
+                <th>
+                    @*<input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">*@
+                </th>
+                <th>
+                    @*<input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">*@
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+}
+

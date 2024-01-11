@@ -1,0 +1,141 @@
+﻿@model List<UAAAS.Controllers.BASFlagDeficiencyFacultyController.BasFlagClass>
+@{
+    ViewBag.Title = "AllCollegesBASFlagNotClearedFacultyList";
+    int index =1;
+}
+
+<h2>AllCollegesBASFlagNotClearedFacultyList</h2>
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $('#example').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $("#Export").click(function () {
+            debugger;
+            var collegeid = $("#collegeId").val();
+            var command = $(this).val();
+            if (collegeid != null && collegeid != " ") {
+                window.location = '/BASFlagDeficiencyFaculty/AllCollegesBASFlagNotClearedFacultyList?command=' + command;
+
+            }
+            else {
+                window.location = '/BASFlagDeficiencyFaculty/AllCollegesBASFlagNotClearedFacultyList';
+            }
+
+        })
+
+    });
+</script>
+<div style="float:right;">
+    <input type="button" value="Print" id="Export" style="padding: 4px 15px; font-size: 15px;background-color:#024b74;color:white" name="command" />
+</div>
+<br/>
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th>S.No</th>
+            <th>CollegeCode</th>
+            <th>CollegeName</th>
+            <th>TotalCollegeFaculty</th>
+            <th>BAS Flag Faculty Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">
+                        @(index++)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        @item.CollegeCode
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">@item.CollegeName</td>
+                    <td style="text-align: center; vertical-align: middle;">@item.TotalTeachingFaculty</td>
+                    <td style="text-align: center; vertical-align: middle;">@item.BasFlagFacultyCount</td>
+                </tr>
+            }
+        }
+       
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>
+                <input type="text" id="i-0" style="width: 50%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+            </th>
+        </tr>
+    </tfoot>
+</table>

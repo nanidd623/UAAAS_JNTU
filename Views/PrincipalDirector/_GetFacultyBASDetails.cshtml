@@ -1,0 +1,158 @@
+﻿@model UAAAS.Controllers.PrincipalDirectorController.GetFacultyBASDetails
+   
+       
+
+<table>
+    <tr>
+        <td class="col1">RegistrationNumber</td>
+        <td class="col2">
+            @Model.RegistarationNumber
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">JoiningDate</td>
+        <td class="col2">
+            @Model.BasJoiningDate
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">Total Working Days</td>
+        <td class="col2">
+            @Model.TotalWorkingDays
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">Number of Days Present</td>
+        <td class="col2">
+            @Model.TotalPresentDays
+        </td>
+    </tr>
+</table>
+<table style="text-align:center;">
+    <tr style="background-color:#cccccc;">
+        <td class="">Months</td>
+        <td>Total WorkingDays</td>
+        <td>Number of Days Present</td>
+       
+    </tr>
+    @if (Model.JulyTotalDays != null && Model.JulyTotalDays != 0)
+    {
+        <tr style="text-align:center;">
+            <td class="col1" style="text-align:center;">July</td>
+            <td class="col2" style="text-align:center;">
+                @Model.JulyTotalDays
+            </td>
+            <td class="col2" style="text-align:center;">
+                @Model.JulyPresentDays
+            </td>
+        </tr>
+    }
+   @if (Model.AugustTotalDays != null && Model.AugustTotalDays != 0)
+    {
+        <tr style="text-align:center;">
+            <td class="col1" style="text-align:center;">August</td>
+            <td class="col2" style="text-align:center;">
+                @Model.AugustTotalDays
+            </td>
+            <td class="col2" style="text-align:center;">
+                @Model.AugustPresentDays
+            </td>
+        </tr>
+   }
+   @if (Model.SeptemberTotalDays != null && Model.SeptemberTotalDays != 0)
+   {
+        <tr style="text-align:center;">
+            <td class="col1" style="text-align:center;">September</td>
+            <td class="col2" style="text-align:center;">
+                @Model.SeptemberTotalDays
+            </td>
+            <td class="col2" style="text-align:center;">
+                @Model.SeptemberPresentDays
+            </td>
+        </tr>
+   }
+   @if (Model.OctoberTotalDays != null && Model.OctoberTotalDays != 0)
+   {
+        <tr style="text-align:center;">
+            <td class="col1" style="text-align:center;">October</td>
+            <td class="col2" style="text-align:center;">
+                @Model.OctoberTotalDays
+            </td>
+            <td class="col2" style="text-align:center;">
+                @Model.OctoberPresentDays
+            </td>
+        </tr>
+   }
+    @if (Model.NovemberTotalDays != null && Model.NovemberTotalDays != 0)
+    {
+        <tr style="text-align:center;">
+            <td class="col1" style="text-align:center;">November</td>
+            <td class="col2" style="text-align:center;">
+                @Model.NovemberTotalDays
+            </td>
+            <td class="col2" style="text-align:center;">
+                @Model.NovemberPresentDays
+            </td>
+        </tr>
+    }
+  @if (Model.DecemberTotalDays != null && Model.DecemberTotalDays != 0)
+  {
+        <tr style="text-align:center;">
+            <td class="col1" style="text-align:center;">December</td>
+            <td class="col2" style="text-align:center;">
+                @Model.DecemberTotalDays
+            </td>
+            <td class="col2" style="text-align:center;">
+                @Model.DecemberPresentDays
+            </td>
+        </tr>
+  }
+  @if (Model.JanuaryTotalDays != null && Model.JanuaryTotalDays != 0)
+  {
+        <tr>
+            <td class="col1" style="text-align:center;">January</td>
+            <td class="col2" style="text-align:center;">
+                @Model.JanuaryTotalDays
+            </td>
+            <td class="col2" style="text-align:center;">
+                @Model.JanuaryPresentDays
+            </td>
+        </tr>
+  }
+   @if (Model.FebruaryTotalDays != null && Model.FebruaryTotalDays != 0)
+   {
+        <tr style="text-align:center;">
+            <td class="col1" style="text-align:center;">February</td>
+            <td class="col2" style="text-align:center;">
+                @Model.FebruaryTotalDays
+            </td>
+            <td class="col2" style="text-align:center;">
+                @Model.FebruaryPresentDays
+            </td>
+        </tr>
+   }
+   @if (Model.MarchTotalDays != null && Model.MarchTotalDays != 0)
+   {
+        <tr style="text-align:center;">
+            <td class="col1" style="text-align:center;">March</td>
+            <td class="col2" style="text-align:center;">
+                @Model.MarchTotalDays
+            </td>
+            <td class="col2" style="text-align:center;">
+                @Model.MarchPresentDays
+            </td>
+        </tr>
+   }
+    @if (Model.AprilTotalDays != null && Model.AprilTotalDays != 0)
+    {
+        <tr style="text-align:center;">
+            <td class="col1" style="text-align:center;">April</td>
+            <td class="col2" style="text-align:center;">
+                @Model.AprilTotalDays
+            </td>
+            <td class="col2" style="text-align:center;">
+                @Model.AprilPresentDays
+            </td>
+        </tr>
+    }
+</table>

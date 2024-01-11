@@ -1,0 +1,259 @@
+﻿@model UAAAS.Models.jntuh_affiliation_requests
+@{
+    ViewBag.Title = "Affiliation Request";
+}
+
+<h2>Affiliation Request</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/MicrosoftAjax.js")"></script>
+<script src="@Url.Content("~/Scripts/MicrosoftMvcAjax.js")"></script>
+<script src="@Url.Content("~/Scripts/MicrosoftMvcValidation.js")"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#state").change(function () {
+            var stateID = $(this).val();          
+            $.getJSON("GetDistrictList", { id: stateID },
+               function (myData) {
+                   var select = $("#district");
+                   select.empty();
+                   select.append($('<option/>', {
+                       value: '',
+                       text: '-- Select --'
+                   }));
+                   $.each(myData, function (index, itemData) {
+                       select.append($('<option/>', {
+                           value: itemData.Value,
+                           text: itemData.Text
+                       }));
+                   });
+               });
+        });
+
+        $('#btnSubmit').click(function () {      
+            var captchaValue = $('#txtCaptcha').val();
+            if (captchaValue == '') {
+                $('#txtCaptcha').focus();
+                alert("Image Text is Required");                                
+                return false;
+            }
+            else {              
+                @* var captchaValue = $('#txtCaptcha').val();
+                var v = '@ViewBag.captcha';
+                var someSessionVariable = '@Session["Captcha"]';*@              
+                @*alert(@ViewBag.captcha);*@
+                return true;
+            }            
+        });
+    });  
+
+</script>     
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    
+    <div class="affiliation_request">
+        <div class="editor-label">
+            @Html.LabelFor(model => model.collegeName)
+        </div>
+        <div class="editor-field focus">
+            @Html.TextBoxFor(model => model.collegeName)
+            @Html.ValidationMessageFor(model => model.collegeName)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.societyName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.societyName)
+            @* @Html.ValidationMessageFor(model => model.collegeName)*@
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.collegeAddress)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.collegeAddress)
+            @Html.ValidationMessageFor(model => model.collegeAddress)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.townOrCity)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.townOrCity)
+            @Html.ValidationMessageFor(model => model.townOrCity)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.stateId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.stateId,
+            new SelectList(ViewBag.State as System.Collections.IEnumerable, "id", "stateName"),
+            "-- Select --", new { id = "state" })
+            @Html.ValidationMessageFor(model => model.stateId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.districtId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.districtId,
+            new SelectList(ViewBag.District as System.Collections.IEnumerable, "id", "districtName"),
+            "-- Select --", new { id = "district" })
+            @Html.ValidationMessageFor(model => model.districtId)
+         @*   @Html.DropDownListFor(model => model.districtId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "districtName"),
+            "-- Select --", new { id = "district" })
+            @Html.ValidationMessageFor(model => model.districtId)*@
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.mandal)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.mandal)
+            @Html.ValidationMessageFor(model => model.mandal)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.pincode)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.pincode)
+            @Html.ValidationMessageFor(model => model.pincode)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.fax)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.fax)
+            @Html.ValidationMessageFor(model => model.fax)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.landline)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.landline)
+            @Html.ValidationMessageFor(model => model.landline)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.mobile)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.mobile)
+            @Html.ValidationMessageFor(model => model.mobile)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.email)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.email)
+            @Html.ValidationMessageFor(model => model.email)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.website)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.website)
+            @Html.ValidationMessageFor(model => model.website)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.collegeTypeId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.collegeTypeId,
+            new SelectList(ViewBag.CollegeType as System.Collections.IEnumerable, "id", "collegeType"),
+            "-- Select --", new { id = "CollegeType" })
+            @Html.ValidationMessageFor(model => model.collegeTypeId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.collegeStatusId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.collegeStatusId,
+            new SelectList(ViewBag.CollegeStatus as System.Collections.IEnumerable, "id", "collegeStatus"),
+            "-- Select --", new { id = "CollegeStatus" })
+            @Html.ValidationMessageFor(model => model.collegeStatusId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.isAccreditedByNAAC)
+        </div>
+        <div class="editor-field">
+            <label>@Html.RadioButtonFor(model => model.isAccreditedByNAAC, true) Yes</label>
+            <label>@Html.RadioButtonFor(model => model.isAccreditedByNAAC, false) No</label>
+            @Html.ValidationMessageFor(model => model.isAccreditedByNAAC)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.presentAffiliatedUniversity)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.presentAffiliatedUniversity)
+            @Html.ValidationMessageFor(model => model.presentAffiliatedUniversity)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.comments)
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.comments)
+            @Html.ValidationMessageFor(model => model.comments)
+        </div>
+
+        <div class="editor-label">
+            <span>Image</span>
+        </div>
+        <div class="editor-field" id="divCaptchaImage">
+            <a href="@Url.Action("Create")">
+                <img alt="Captcha" src="@Url.Action("CaptchaImage")" style="" /></a>
+                       
+           @* @using(Html.BeginForm("Create", "AffiliationRequest", FormMethod.Post))
+            {
+                @Html.ActionLink("Refresh", "Create")
+            }*@
+        </div>
+        <div class="editor-label">
+            <span>Image Text</span>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Captcha, new { @id = "txtCaptcha" })
+        </div>
+
+
+        @Html.HiddenFor(model => model.createdOn, new { Value = DateTime.Now })
+        <div class="editor-label last-row">
+            &nbsp;
+        </div>
+        <div class="editor-field last-row">
+            <p>
+                @Html.ActionLink("Back to Home Page", "Index", "Home", null, new { @class = "back_button" })
+                <input type="submit" value="Submit" id="btnSubmit" />
+            </p>
+        </div>
+        <div class="clear"></div>
+    </div>
+}

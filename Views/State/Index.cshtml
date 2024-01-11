@@ -1,0 +1,94 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_state>
+@{
+    ViewBag.Title = "States";
+}
+
+<h2>States</h2>
+
+<p class="create_link_right">
+    @Html.ActionLink("Add State", "Create", null, new { @class = "create_button" })
+</p>
+@*<table class="grid">
+    <tr>
+        <th style="width: 50px; text-align: center;">S.No
+        </th>
+        <th>State Name
+        </th>
+        <th style="width: 100px; text-align: center;">Status
+        </th>*@
+@* <th>
+            createdOn
+        </th>
+        <th>
+            my_aspnet_users
+        </th>
+        <th>
+            updatedOn
+        </th>
+        <th>
+            my_aspnet_users1
+        </th>*@
+@* <th style="width: 50px; text-align: center;">Delete</th>*@
+@*<th style="width: 50px; text-align: center;">Edit</th>
+        <th style="width: 50px; text-align: center;">View</th>
+    </tr>
+
+    @foreach (var item in Model.Select((x, i) => new { Data = x, Index = i }))
+    {
+        <tr>
+            <td style="text-align: center;">@string.Format("{0}", item.Index + 1)</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Data.stateName)
+            </td>
+            <td style="text-align: center;">
+                @if (item.Data.isActive == true)
+                { <img src="@Url.Content("~/Content/images/active.png")" alt="JNTU Hyderabad Logo" />}
+                else
+                {<img src="@Url.Content("~/Content/images/inactive.png")" alt="JNTU Hyderabad Logo" />}
+            </td>*@
+@* <td>
+            @Html.DisplayFor(modelItem => item.item.createdOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.item.my_aspnet_users.name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.item.updatedOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.item.my_aspnet_users1.name)
+        </td>*@
+@*<td style="width: 50px; text-align: center; vertical-align: middle;">@Html.ActionLink("Delete", "Delete", new { id = item.item.id }, new { @class = "delete_button" })</td>*@
+@*<td style="width: 50px; text-align: center; vertical-align: middle;">@Html.ActionLink("Edit", "Edit", new { id = item.Data.id }, new { @class = "edit_button" })</td>
+            <td style="width: 50px; text-align: center; vertical-align: middle;">@Html.ActionLink("Details", "Details", new { id = item.Data.id }, new { @class = "view_button" })</td>
+        </tr>
+    }
+
+</table>
+<br />*@
+
+@{
+    var grid = new WebGrid(Model.Select((element, index) => new { Data = element, Index = index }),
+        canPage: true,
+        rowsPerPage: 10,
+        selectionFieldName: "selectedRow",
+        ajaxUpdateContainerId: "gridContent"
+        );
+    grid.Pager(WebGridPagerModes.NextPrevious);
+}
+<div id="gridContent">
+    @grid.GetHtml(tableStyle: "webGrid",
+                headerStyle: "gridHeader",
+                alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: grid.Columns(
+                grid.Column("ID", "S.No.", format: item => item.Index + 1, style: "row_number", canSort: true),
+                grid.Column("Data.stateName", "State Name", null, style: "align_left", canSort: true),
+                grid.Column("Data.isActive", "Status", format: @<text>@if (item.Data.isActive == true)
+                                                                      { <img src="@Url.Content("~/Content/images/active.png")" alt="JNTU Hyderabad Logo" />}
+                                                                      else
+                                                                      {<img src="@Url.Content("~/Content/images/inactive.png")" alt="JNTU Hyderabad Logo" />}</text>, style: "status", canSort: true),
+                grid.Column("Edit", "Edit", format: @<text>@Html.ActionLink("Edit", "Edit", new { id = item.Data.id }, new { @class = "edit_button" }) </text>, style: "edit", canSort: true),
+                grid.Column("Detail", format: @<text>@Html.ActionLink("Details", "Details", new { id = item.Data.id }, new { @class = "view_button" }) </text>, style: "view", canSort: true)
+         ))
+</div>

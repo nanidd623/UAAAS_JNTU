@@ -1,0 +1,154 @@
+﻿@using System.Collections.Concurrent
+
+@model UAAAS.Controllers.College.ScmProceedingsRequest
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "SCM Proceedings Request";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function () {
+
+
+        //get pdf file size
+        function GetNotificationFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#ScmNotificationSupportDoc")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+
+        //change function for pdf doc
+        $(function () {
+            $(".scmnotificationsupportdocfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".scmnotificationsupportdocfiles > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".scmnotificationsupportdocfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $(".scmnotificationsupportdocfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+    });
+</script>
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+@if (ViewBag.collegescmrequestslist.Count != 0)
+{
+    <div>
+        <h2>SCM Requests</h2><br />
+        <table class="webGrid">
+            <thead>
+                <tr>
+                    <th style="text-align: center;">S.No.</th>
+                    <th>College</th>
+                    <th>Specialization</th>
+                    <th style="text-align: center;">Professors </th>
+                    <th style="text-align: center;">Associate Professors</th>
+                    <th style="text-align: center;">Assistant Professors</th>
+                    <th style="text-align: center;">Notification</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in ((List<UAAAS.Controllers.College.ScmProceedingsRequest>)ViewBag.collegescmrequestslist).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr>
+                        <td style="text-align: center;">@pay.i </td>
+                        <td>@pay.value.CollegeName</td>
+                        <td>@pay.value.SpecializationName</td>
+                        <td style="text-align: center;">@pay.value.ProfessorVacancies</td>
+                        <td style="text-align: center;">@pay.value.AssociateProfessorVacancies </td>
+                        <td style="text-align: center;">@pay.value.AssistantProfessorVacancies </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @if (!string.IsNullOrEmpty(pay.value.ScmNotificationpath))
+                            {
+                                <span><a href="~/Content/Upload/SCMPROCEEDINGSREQUEST/ScmNotificationDocuments/@pay.value.ScmNotificationpath" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

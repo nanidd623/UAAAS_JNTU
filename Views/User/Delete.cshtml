@@ -1,0 +1,38 @@
+﻿@model UAAAS.Models.my_aspnet_users
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>my_aspnet_users</legend>
+
+    <div class="display-label">applicationId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.applicationId)
+    </div>
+
+    <div class="display-label">name</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.name)
+    </div>
+
+    <div class="display-label">isAnonymous</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.isAnonymous)
+    </div>
+
+    <div class="display-label">lastActivityDate</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.lastActivityDate)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

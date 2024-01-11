@@ -1,0 +1,561 @@
+﻿
+@model IList<UAAAS.Controllers.FacultyVerificationController.CollegeFacultyWithIntakeReport>
+
+@using UAAAS.Models;
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "SUBMISSION OF ONLINE APPEAL";
+    int sno = 1;
+    int num = 1;
+    int intakenum = 1;
+    int Labscount = 0;
+    int collegeid = 0;
+    string Reveficationscreenshot = string.Empty;
+    string SCMApprovalLetter = string.Empty;
+    string Form16ApprovalLetter = string.Empty;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake';
+            }
+        });
+
+        //For collegeintake scripts
+
+        $('.subtUpload').click(function () {
+
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+
+        });
+
+
+        var $myIntakeDialog = $("#dialog-appeal-edit").dialog({
+            title: 'Add/Edit Existing Intake',
+            autoOpen: false,
+            resizable: false,
+            height: 610,
+            width: 800,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+
+        $('.full_table').find('tr').click(function () {
+            url = $(this).find(".editintakeDialog").attr('href');
+        });
+
+        $(".editintakeDialog" +
+            "").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-appeal-edit").dialog({
+                title: 'Intake Verification'
+            });
+
+            $myIntakeDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmIntakeDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-appeal-edit").dialog("close");
+        });
+
+        $($myIntakeDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        //$("#tabla").find('tfoot').append($('<td><b>Total</b></td><td>a</td><td>b</td>'));
+
+    });
+
+    var mainUrl = window.location;
+
+    $('.webGrid').find('tr').click(function () {
+        //url = $(this).find(".editDialog").attr("typei");
+        url = "/FacultyVerification/FacultyRegistrationNumber" ;
+        alert(url);
+    });
+
+    $(".editDialog").live("click", function (e) {
+        e.preventDefault();
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/FacultyRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Faculty Appeal For Compliance',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editdefDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        $("#dialog-edit").dialog({
+            title: 'Appeal for Reverification ',
+            resizable: false,
+            height: 150,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+
+    $(".editreverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        var CollegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverificationFaculty?collegeId=" + CollegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        window.open(url);
+        //$("#dialog-edit").dialog({
+        //    title: 'Appeal for Reverification ',
+        //    resizable: false,
+        //    height: 150,
+        //    width: 850,
+        //    show: { effect: 'drop', direction: "up" },
+        //    modal: true,
+        //    draggable: true,
+        //    closeOnEscape: true,
+        //    open: function (event, ui) {
+        //        $(this).load(url);
+        //    },
+        //    close: function (event, ui) {
+        //        $(this).dialog("close");
+        //    }
+        //});
+        //$myDialog.dialog('open');
+        //return false;
+    });
+
+
+    $(".editlabDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecord?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#dialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+    $(".editAppcmpDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecordReverification?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#Appealcpldialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+    $(".editprinpalcomplicanceDialog").live("click", function (e) {
+        e.preventDefault();
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/PrincipalFacultyRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal For Complicance',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editprincipalverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var registrationnumber=  '@ViewBag.PrincipalRegno';
+        var url = "/FacultyVerification/PrincipalAppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&registrationnumber=" + registrationnumber;
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal for Reverification ',
+            resizable: false,
+            height: 200,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    var $myDialog = $("#dialog-edit").dialog({
+        title: 'Add/Edit Lab',
+        autoOpen: false,
+        resizable: false,
+        height: 700,
+        width: 720,
+        show: { effect: 'drop', direction: "up" },
+        modal: true,
+        draggable: true,
+        closeOnEscape: true,
+        open: function (event, ui) {
+            debugger;
+            $(this).load(url);
+        },
+        close: function (event, ui) {
+            $(this).dialog("close");
+
+        }
+    });
+
+    $($myDialog).bind("dialogclose", function () {
+        window.location = mainUrl;
+    });
+
+
+
+</script>
+<h2 style="text-align: center"><b>SUBMISSION OF ONLINE APPEAL (INTAKE VERIFICATION - step 2/4)</b></h2><br />
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+
+
+
+
+<h2>EXISTING & PROPOSED INTAKE</h2>
+
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { }))
+{
+    <table style="width: 100%; border: 1px; border-color: red" class="full_table">
+        @*<tr>
+            <th class="col1" colspan="25" style="text-align: center; font-weight: bold;">EXISTING & PROPOSED INTAKE</th>
+        </tr>*@
+        <tr>
+            <th class="col1" style="text-align: center;" rowspan="3">S.No</th>
+            <th class="col1" rowspan="3">Degree</th>
+            <th class="col1" style="text-align: center;" rowspan="3">Department</th>
+            <th class="col1" style="text-align: center;" rowspan="3">Specialization</th>
+            <th class="col1" style="text-align: center;" rowspan="3">Shift</th>
+            <th class="col1" style="text-align: center;" colspan="10">Approved & Actual Admitted Intake as per Academic Year</th>
+            @*<th style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">Approved Intake for the A.Y.
+                    <br />
+                    2015-16 (as per AICTE)
+                </th>*@
+            <th class="col1" style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">
+                Proposed Intake for the A.Y.<br />
+                2018-19 (as submitted to AICTE)
+            </th>
+            <th class="col1" style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">Course Status</th>
+            <th class="col1" style="text-align: center;" colspan="2">NBA Accreditation Period (if exists)</th>
+            <th class="col1" colspan="2" style="text-align: center;" rowspan="3"></th>
+        </tr>
+        <tr>
+            <th class="col1" style="text-align: center;" colspan="2">@ViewBag.FifthYear</th>
+            <th class="col1" style="text-align: center;" colspan="2">@ViewBag.FourthYear</th>
+            <th class="col1" style="text-align: center;" colspan="2">@ViewBag.ThirdYear</th>
+            <th class="col1" style="text-align: center;" colspan="2">@ViewBag.SecondYear</th>
+            <th class="col1" style="text-align: center;" colspan="2">@ViewBag.FirstYear</th>
+            <th class="col1" style="text-align: center;" colspan="2">(DD/MM/YYYY)</th>
+        </tr>
+        <tr style="">
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                From
+            </th>
+            <th class="col1" style="text-align: center;">
+                To
+            </th>
+        </tr>
+
+        @foreach (var item in Model.FirstOrDefault().CollegeIntakeExistings)
+        {
+            <tr>
+                <td class="col2" style="width: 30px; text-align: center;">
+                    @(num++)
+                </td>
+                <td class="col2" style="width: 60px;">@item.Degree</td>
+                <td class="col2" style="width: 50px;">@item.Department</td>
+                <td class="col2">@item.Specialization</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.Shift</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake5</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake5</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake4</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake4</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake3</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake3</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake2</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake2</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake1</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake1</td>
+                @*<td style="width: 30px; text-align: center; background-color: lightgreen; font-weight: bold;">
+                        @if (item.ApprovedIntake == 0)
+                        { }
+                        else
+                        {
+                            @item.ApprovedIntake
+                        }
+                    </td>*@
+                <td class="col2" style="width: 30px; text-align: center; background-color: lightgreen; font-weight: bold;">
+                    @if (item.ProposedIntake == 0)
+                    {
+                    }
+                    else
+                    {
+                        @item.ProposedIntake
+                    }
+                </td>
+                <td class="col2" style="width: 65px; text-align: center; background-color: lightgreen; font-weight: bold;">@item.courseStatus</td>
+                <td class="col2" style="width: 65px; text-align: center;">
+                    @if (item.nbaFrom != null)
+                    {
+                        @item.nbaFromDate.ToString().Split(' ')[0]
+                    }
+                </td>
+
+                <td class="col2" style="width: 65px; text-align: center;">
+                    @if (item.nbaTo != null)
+                    {
+                        @item.nbaToDate.ToString().Split(' ')[0]
+                    }
+                </td>
+
+                <td class="col2" style="width: 20px; text-align: center;">
+                @if (item.isintakeediable == true)
+                {
+                    @Html.ActionLink("Edit", "AppealAddEditCollegeIntake", "FacultyVerification", new {id = item.id, collegeId = item.collegeId}, new {@class = "editintakeDialog edit_button"})
+                }
+                    
+                </td>
+                @*<td class="col2" style="width: 20px; text-align: center;">
+                        @Html.ActionLink("Delete", "AppealDeleteCollegeIntake", new {id = item.id}, new {@class = "confirmIntakeDialog delete_button"})
+                    </td>*@
+                <td hidden="hidden">@item.createdBy</td>
+                <td hidden="hidden">@item.createdOn</td>
+            </tr>
+        }
+    </table>
+}
+
+<br />
+<p style="text-align:right">
+    @Html.ActionLink("GoTo Next Step", "ALLCollegeFacultyWithIntakeFaculty", null, new { @class = "create_button" })
+</p>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+<div id="dialog-appeal-edit" style="display: none">
+</div>
+<div id="Appealcpldialog-edit" style="display: none">
+</div>

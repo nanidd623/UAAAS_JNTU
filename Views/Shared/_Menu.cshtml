@@ -1,0 +1,10 @@
+﻿@using UAAAS.Models
+<div class="top_menu">
+    <div class="top_menu_left">
+        <nav>@Html.SiteMenuAsUnorderedList(ViewBag.SiteLinks as List<ISiteLink>)</nav>
+    </div>
+    <div class="top_menu_right">
+        @Html.Partial("_LogOnPartial")
+    </div>
+    <div class="clear"></div>
+</div>

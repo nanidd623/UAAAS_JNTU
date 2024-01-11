@@ -1,0 +1,225 @@
+﻿@model UAAAS.Models.MobilityRequest
+@{
+    ViewBag.Title = "MobilityRequest";
+}
+
+<h2> Mobility Request</h2>
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+@using (Html.BeginForm())
+{
+ 
+
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <div>
+        <table class="faculty_table">
+            <tr>
+                <th class="col1">
+                    <b>Reason for Mobility Request</b>
+                </th>
+                <td class="col2">
+                    @Html.DropDownList("requesatreason", new List<SelectListItem>()
+                   {
+                       new SelectListItem(){Value = "1",Text = "Better opperatunity"},
+                        new SelectListItem(){Value = "2",Text = "Not issueing Releaving Order"}
+                   }, "---Select---")
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br/>
+    <div>
+        <table class="faculty_table">
+            <tr>
+                <th class="col1">
+                    @Html.LabelFor(m => m.FacultyName)
+                </th>
+                <td class="col2">
+                    @Html.DisplayFor(m => m.FacultyName)
+                    @Html.HiddenFor(m => m.FacultyName)
+                </td>
+
+                <th class="col1">
+                    @Html.LabelFor(m => m.DepartmentName)
+                </th>
+                <td class="col2">
+                    @Html.DisplayFor(m => m.DepartmentName)
+                    @Html.HiddenFor(m => m.DeptId)
+                </td>
+
+
+                
+            </tr>
+            <tr>
+                <th class="col1">
+                    @Html.LabelFor(m => m.PresentWorkingCollege)
+                </th>
+                <td class="col2" colspan="3">
+                    @Html.DisplayFor(m => m.PresentWorkingCollege)
+                    @Html.HiddenFor(m => m.PresentWorkingCollegeId)
+                </td>
+            </tr>
+            <tr>
+                
+                <th class="col1">
+                    @Html.LabelFor(m => m.PreviousDateofappointment)
+                </th>
+                <td class="col2">
+                    @Html.TextBoxFor(m => m.PreviousDateofappointment, new {@class = "calendar"})
+                    @Html.HiddenFor(m => m.PreviousDateofappointment)
+                </td>
+                <th class="col1">
+                    @Html.LabelFor(m => m.PreviousDateofReleving)
+                </th>
+                <td class="col2">
+                    @Html.TextBoxFor(m => m.PreviousDateofReleving, new { @class = "calendar" })
+                    @Html.HiddenFor(m => m.PreviousDateofReleving)
+                </td>
+
+            </tr>
+
+            <tr>
+                
+                <th class="col1">
+                    @Html.LabelFor(m => m.AppointmentOrder)
+                </th>
+                <td class="col2 AppointmentOrders">
+                    @Html.TextBoxFor(m => m.AppointmentOrder, new { @type = "file" })
+                    @Html.ValidationMessageFor(m => m.AppointmentOrder)
+                </td>
+
+                <th class="col1">
+                    @Html.LabelFor(m => m.RelevingOrder)
+                </th>
+                <td class="col2 RelevingOrders">
+                    @Html.TextBoxFor(m => m.RelevingOrder, new { @type = "file" })
+                    @Html.ValidationMessageFor(m => m.RelevingOrder)
+                </td>
+            </tr>
+
+            <tr>
+                
+                <th class="col1">
+                    @Html.LabelFor(m => m.SalaryStatement)
+                </th>
+                <td class="col2 SalaryStatements" colspan="3">
+                    @Html.TextBoxFor(m => m.SalaryStatement, new { @type = "file" })
+                    @Html.ValidationMessageFor(m => m.SalaryStatement)
+                </td>
+            </tr>
+
+            <tr>
+                <th class="col1">
+                    @Html.LabelFor(m => m.IsPresentlyWorking)
+                </th>
+                <td class="col2" colspan="3">
+                    @Html.RadioButtonFor(m => m.IsPresentlyWorking, true) &nbsp;&nbsp; <span><b>Yes</b></span>
+                    @Html.RadioButtonFor(m => m.IsPresentlyWorking, false) &nbsp;&nbsp; <span><b>No</b></span>
+                </td>
+            </tr>
+           
+            <tr id="currentworkingcollege">
+                <th class="col1">
+                    @Html.LabelFor(m => m.CollegeId)
+                </th>
+                <td class="col2" colspan="3">
+                    @Html.DropDownListFor(m => m.CollegeId, new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "Id", "CollegeName"), "-- Select --", new { id = "Colleges" })
+                    @Html.ValidationMessageFor(m => m.CollegeId)
+                </td>
+
+            </tr>
+
+            <tr id="currentworkingappoint">
+                <th class="col1">
+                    @Html.LabelFor(m => m.Dateofappointment)
+                </th>
+                <td class="col2">
+                    @Html.TextBoxFor(m => m.Dateofappointment, new {@class = "calendar"})
+                    @Html.HiddenFor(m => m.Dateofappointment)
+                </td>
+                <th class="col1">
+                    @Html.LabelFor(m => m.NewAppointmentOrder)
+                </th>
+                <td class="col2 NewAppointmentOrders">
+                    @Html.TextBoxFor(m => m.NewAppointmentOrder, new { @type = "file" })
+                    @Html.ValidationMessageFor(m => m.NewAppointmentOrder)
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center">
+                    <input type="submit" value="Submit"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    
+
+   
+}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+
+
+        $("#PreviousDateofReleving").addClass("required");
+        $("#AppointmentOrder").addClass("required");
+        $("#RelevingOrder").addClass("required");
+        $("#SalaryStatement").addClass("required");
+
+
+
+        var ispresentlyworking = $("input[type=radio]:checked").val();
+        debugger;
+        if (ispresentlyworking == "True") {
+            $("#currentworkingcollege").show();
+            $("#currentworkingappoint").show();
+           $("#Colleges").addClass("required");
+           $("#Dateofappointment").addClass("required");
+           $("#NewAppointmentOrder").addClass("required");
+        } else {
+            $("#currentworkingcollege").hide();
+            $("#currentworkingappoint").hide();
+
+            $("#Colleges").removeClass("required");
+            $("#Dateofappointment").removeClass("required");
+            $("#NewAppointmentOrder").removeClass("required");
+        }
+
+    });
+
+
+    $("input[name=IsPresentlyWorking]").change(function() {
+        var ispresentlyworking = $(this).val();
+
+        if (ispresentlyworking == "True") {
+            $("#currentworkingcollege").show();
+            $("#currentworkingappoint").show();
+            $("#Colleges").addClass("required");
+            $("#Dateofappointment").addClass("required");
+            $("#NewAppointmentOrder").addClass("required");
+        } else {
+            $("#currentworkingcollege").hide();
+            $("#currentworkingappoint").hide();
+            $("#Colleges").removeClass("required");
+            $("#Dateofappointment").removeClass("required");
+            $("#NewAppointmentOrder").removeClass("required");
+        }
+    });
+</script>

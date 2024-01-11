@@ -1,0 +1,85 @@
+﻿@model UAAAS.Models.FacultyRegistration
+
+@{
+    ViewBag.Title = "AddDeleteFaculty";
+    int count = 1;
+}
+
+<h2>Add Faculty Details</h2>
+@if (ViewBag.Error != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @ViewBag.Error.ToString()</p>
+    </div>
+}
+@if (ViewBag.Success != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @ViewBag.Success.ToString()</p>
+    </div>
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="details_table">
+
+        <div class="editor-label">
+            @Html.LabelFor(m => m.RegistrationNumber)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.RegistrationNumber, new {@required = "required"})
+            @Html.ValidationMessageFor(m => m.RegistrationNumber)
+        </div>
+        <div class="display-label last-row">
+            &nbsp;
+        </div>
+        <div class="display-field last-row">
+            <p>
+                <input type="submit" value="Submit"/>
+            </p>
+        </div>
+        <div class="clear"></div>
+    </div>
+    
+    <table style="width:95%">
+            <thead style="background: #E8EFF3">
+                <tr>
+                    <th style="text-align:center;">S.No</th>
+                    <th style="text-align: center;">Registration Number</th>
+                    <th style="text-align:center;">Name</th>
+                    <th style="text-align: center;">PANnumber</th>
+                    <th style="text-align: center;">View</th>
+                    <th style="text-align: center;">Delete</th>
+                </tr>
+            </thead>
+            <tbody style="background: #FCF1D1">
+                @if (ViewBag.GetfacultyDetails.Count != 0)
+                {
+                    foreach (var item in ViewBag.GetfacultyDetails)
+                    {
+                        <tr>
+                            <td width="50px;" style="text-align:center;">@(count++)</td>
+                            <td width="220px;" style="text-align: center;">@item.RegistrationNumber</td>
+                            <td width="220px;" style="text-align: center;">@item.FirstName @item.MiddleName @item.LastName</td>
+                            <td width="220px;" style="text-align: center;">@item.PANNumber</td>
+                            <td width="120px;" style="text-align: center;">
+                                @Html.ActionLink("View", "FacultyVerification", "FacultyVerification", new {fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"])}, new {@class = "view_button", target = "_blank"})
+                            </td>
+                            <td width="120px;" style="text-align:center;">
+                                @Html.ActionLink("Delete", "DeleteCollgeRegistredFaculty", "Account", new { fregno = @TempData["Registration"] }, new { @class = "delete_button confirrm", target = "_blank" })
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr colspan="3" style="text-align:center">
+                        <td>No Data Available</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    
+}

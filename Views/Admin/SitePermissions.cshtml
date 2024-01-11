@@ -1,0 +1,798 @@
+﻿@model UAAAS.Models.SiteMenu
+@{
+    ViewBag.Title = "Menu";
+    var index = 1;
+}
+
+<h2>Menu</h2>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "submitquestion" }))
+{
+    if (TempData["Success"] != null)
+    {
+    <div class="success" style="margin-left: 435px">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    if (TempData["Error"] != null)
+    {
+    <div class="error" style="margin-left: 280px">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }    
+    <div style="text-align: center">
+        <label>@Html.RadioButtonFor(model => model.CheckedMenu, "ParentMenu", new { @Id = "ParentMenu" }) Parent Menu</label>
+        <label>@Html.RadioButtonFor(model => model.CheckedMenu, "SubMenu", new { @Id = "SubMenu" }) Sub Menu</label>
+    </div>
+    <br />     
+    <table class="four_columns" style="width: 40%; margin-left: auto; margin-right: auto">
+        @if (ViewBag.SubMenu == true)
+        {
+            <tr>
+                <td class="col1">Role Name
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.DropDownListFor(model => model.Roles,
+                new SelectList(ViewBag.Roles as System.Collections.IEnumerable, "ID", "Name"),
+               "-- Select --", new { id = "SubMenuRoleName", @style = "width:98%" })
+                    @Html.HiddenFor(model => model.Roles)
+                </td>
+            </tr>
+            if (ViewBag.Edit == false)
+            {
+            <tr>
+                <td class="col1">Parent Menu
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.DropDownListFor(model => model.MenuParentID,
+                    new SelectList(Enumerable.Empty<SelectListItem>(), "ID", "Name"),
+                    "-- Select --", new { id = "ParentMenuName", @style = "width:98%" })
+                    @*@Html.HiddenFor(model=> model.MenuParentID)*@
+                </td>
+            </tr>
+            }
+            <tr id="TrLevel1">
+                <td class="col1">Level 1
+                </td>
+                <td class="col2" colspan="4">
+                    @Html.DropDownListFor(model => model.subMenuID1,
+               new SelectList(Enumerable.Empty<SelectListItem>()),
+               "-- Select Level 1 --", new { id = "Level1", @style = "width:98%" })
+                    @Html.HiddenFor(model => model.subMenuID1)
+                </td>
+            </tr>
+            <tr id="TrLevel2">
+                <td class="col1">Level 2
+                </td>
+                <td class="col2" colspan="4">
+                    @Html.DropDownListFor(model => model.subMenuID2,
+               new SelectList(Enumerable.Empty<SelectListItem>()),
+               "-- Select Level 2 --", new { id = "Level2", @style = "width:98%" })
+                    @Html.HiddenFor(model => model.subMenuID2)
+                </td>
+            </tr>
+            <tr id="TrLevel3">
+                <td class="col1">Level 3
+                </td>
+                <td class="col2" colspan="4">
+                    @Html.DropDownListFor(model => model.subMenuID3,
+               new SelectList(Enumerable.Empty<SelectListItem>()),
+               "-- Select Level 3 --", new { id = "Level3", @style = "width:98%" })
+                    @Html.HiddenFor(model => model.subMenuID3)
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="col1">
+                @if (ViewBag.SubMenu == true)
+                {
+                    <label>Sub Menu Title</label>
+                }
+                else
+                {
+                    <label>Parent Menu Title</label>
+                }
+            </td>
+            <td class="col2" colspan="3">
+                @Html.TextBoxFor(model => model.MenuName, new { @class = "focus", @style = "width:96%" })
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">Controller Name
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DropDownListFor(model => model.MenuControllerName,
+               new SelectList(ViewBag.Controllers as System.Collections.IEnumerable),
+               "-- Select --", new { id = "ControllerName", @style = "width:98%" })
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">Action Name
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DropDownListFor(model => model.MenuActionName,
+               new SelectList(Enumerable.Empty<SelectListItem>()),
+               "-- Select --", new { id = "ActionName", @style = "width:98%" })
+            </td>
+        </tr>
+        @if (ViewBag.ParentMenu == true)
+        {
+            <tr>
+                <td class="col1" style="vertical-align: top">Role Name
+                </td>
+                <td class="col2" colspan="3">
+
+                    @Html.DropDownListFor(model => model.Roles,
+                new SelectList(ViewBag.Roles as System.Collections.IEnumerable, "ID", "Name"),
+               "-- Select --", new { id = "RoleName", @style = "width:98%" })
+                    @Html.Hidden("NewRoleName", Model.Roles)
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="col1">Menu Sort Order
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DropDownListFor(model => model.MenuOrder,
+               new SelectList(Enumerable.Empty<SelectListItem>()),
+               "-- Select --", new { id = "MenuOrder", @style = "width:98%" })
+                @Html.Hidden("NewMenuOrder", Model.MenuOrder)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">Status
+            </td>
+            <td class="col2" colspan="3">
+                <label>@Html.RadioButtonFor(model => model.IsActive, true) Active </label>
+                <label>@Html.RadioButtonFor(model => model.IsActive, false) Inactive </label>
+            </td>
+        </tr>
+    </table>      
+    <div style="text-align: center">
+        <p>
+            <input type="submit" id="submit" value="Save" />
+        </p>
+    </div> 
+    <div id="MenuDiv" style="width: 100%;">
+        <table id="SiteMenu" class="display" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th style="text-align: center">S.No
+                    </th>
+
+                    @if (ViewBag.SubMenu == true)
+                    {
+                        if (ViewBag.Parent == true)
+                        {
+                        <th style="display: none;">Parent Menu Name
+                        </th>
+                        }
+                        if (ViewBag.Level1 == true)
+                        {
+                        <th style="display: none;">Sub Menu (Level 1)
+                        </th>
+                        }
+                        if (ViewBag.Level2 == true)
+                        {
+                        <th style="display: none;">Sub Menu (Level 2)
+                        </th>
+                        }
+                        if (ViewBag.Level3 == true)
+                        {
+                        <th style="display: none;">Sub Menu (Level 3)
+                        </th>
+                        }
+                    }
+
+                    <th>Menu Name
+                    </th>
+                    <th style="">Controller Name
+                    </th>
+                    <th style="" class="ui-state-default">Action Name
+                    </th>
+                    <th style="" class="ui-state-default">Roles
+                    </th>
+                    <th class="ui-state-default" style="text-align: center">Status
+                    </th>
+                    <th class="ui-state-default" colspan="2" style="text-align: center"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.MenuItems)
+                {
+                    <tr>
+                        <td style="text-align: center">
+                            @(index++)
+                        </td>
+                        @if (ViewBag.SubMenu == true)
+                        {
+                            if (ViewBag.Parent == true)
+                            {
+                            <td style="display: none;">
+                                @item.menuParentName
+                            </td>
+                            }
+                            if (ViewBag.Level1 == true)
+                            {
+                            <td style="display: none;">
+                                @item.SubMenuLevel1
+                            </td>
+                            }
+                            if (ViewBag.Level2 == true)
+                            {
+                            <td style="display: none;">
+                                @item.SubMenuLevel2
+                            </td>
+                            }
+                            if (ViewBag.Level3 == true)
+                            {
+                            <td style="display: none;">
+                                @item.SubMenuLevel3
+                            </td>
+                            }
+                        }
+                        <td>
+                            @item.MenuName
+                        </td>
+                        <td>
+                            @item.MenuControllerName
+                        </td>
+                        <td>
+                            @item.MenuActionName
+                        </td>
+                        <td>
+                            @item.Roles
+                        </td>
+                        <td style="text-align: center">
+                            @if (item.IsActive == true)
+                            {
+                                <img src="@Url.Content("~/Content/images/active.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/inactive.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                        @if (ViewBag.SubMenu == true)
+                        {
+                            <td style="text-align: center; font-weight: normal;">
+                                @Html.ActionLink("Edit", "EditSubMenu", "SitePermissions", new { id = item.Id, Type = Model.Type }, new { @class = "edit_button" })
+                            </td>                        
+                        }
+                        else
+                        {
+                            <td style="text-align: center; font-weight: normal;">
+                                @Html.ActionLink("Edit", "EditParentMenu", new { id = item.Id }, new { @class = "edit_button" })
+                            </td>
+                        }
+                        <td style="text-align: center; font-weight: normal;">
+                            @Html.ActionLink("Delete", "DeleteMenu", new { id = item.Id }, new { @class = "delete_button" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>
+                        <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    @if (ViewBag.SubMenu == true)
+                    {
+                        if (ViewBag.Parent == true)
+                        {
+                        <th style="display: none;">
+                            <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                        }
+                        if (ViewBag.Level1 == true)
+                        {
+                        <th style="display: none;">
+                            <input type="text" id="i-8" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                        }
+                        if (ViewBag.Level2 == true)
+                        {
+                        <th style="display: none;">
+                            <input type="text" id="i-9" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                        }
+                        if (ViewBag.Level3 == true)
+                        {
+                        <th style="display: none;">
+                            <input type="text" id="i-10" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                        }
+                    }
+                    <th>
+                        <input type="text" id="i-1" style="width: 92%; text-align: left;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init">
+                    </th>
+                    <th class="ui-state-default">
+                        <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+                    </th>
+                    <th class="ui-state-default">
+                        <input type="text" id="i-6" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    <th colspan="2" class=" ui-state-default">
+                        <input type="text" id="i-7" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    @Html.Hidden("NewId", Model.Id)
+    @Html.Hidden("NewRole", Model.Roles)
+    @Html.Hidden("MenuParentID", Model.MenuParentID)
+    @Html.Hidden("NewsubMenuID1", Model.subMenuID1)
+    @Html.Hidden("NewsubMenuID2", Model.subMenuID2)
+    @Html.Hidden("NewsubMenuID3", Model.subMenuID3)
+    @Html.HiddenFor(model => model.Type)
+}
+<script type="text/javascript">
+    var asInitVals = new Array();
+    var MenuActionName = @Html.Raw(Json.Encode(Model.MenuActionName))
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#SiteMenu').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#SiteMenu').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $('#TrLevel1').hide();
+        $('#TrLevel2').hide();
+        $('#TrLevel3').hide();
+
+        var FormType = $('#Type').val();
+        var ExistId = $('#NewId').val();
+        var MenuControllerName = $('#ControllerName').val();
+        var MenuSortOrderName = $('#NewMenuOrder').val();
+        if ($('#NewRole').val() != '') {
+            $('#SubMenuRoleName').val($('#NewRole').val());
+            GetParentMenuId($('#NewRole').val());
+            var ths = $('#SiteMenu');
+            var element = ths[0];
+            element.style.width = '100%';
+        }
+        if (FormType == 'Roles') {
+            $('#MenuParentID').val('');
+            $('#NewsubMenuID1').val(0)
+            $('#NewsubMenuID2').val(0)
+            $('#NewsubMenuID3').val(0)
+        }
+        else if (FormType == 'Parent') {
+            GetMenuSortOrder($('#SubMenuRoleName').val(), ExistId, $('#MenuParentID').val());
+            $('#NewsubMenuID1').val(0)
+            $('#NewsubMenuID2').val(0)
+            $('#NewsubMenuID3').val(0)
+        }
+        else if (FormType == 'Level1') {
+            GetMenuSortOrder($('#SubMenuRoleName').val(), ExistId, $('#NewsubMenuID1').val());
+            $('#NewsubMenuID2').val(0)
+            $('#NewsubMenuID3').val(0)
+        }
+        else if (FormType == 'Level2') {
+            GetMenuSortOrder($('#SubMenuRoleName').val(), ExistId, $('#NewsubMenuID2').val());
+            $('#NewsubMenuID3').val(0)
+        }
+        else if (FormType == 'Level3') {
+            GetMenuSortOrder($('#SubMenuRoleName').val(), ExistId, $('#NewsubMenuID3').val());
+        }
+        if ($('#MenuParentID').val() != '') {
+            GetLevel1Menu($('#MenuParentID').val());
+            var ths = $('#SiteMenu');
+            var element = ths[0];
+            element.style.width = '100%';
+        }
+
+        if ($('#NewsubMenuID1').val() != 0) {
+            var ths = $('#SiteMenu');
+            var element = ths[0];
+            element.style.width = '100%';
+            GetLevel2Menu($('#NewsubMenuID1').val());
+        }
+
+        if ($('#NewsubMenuID2').val() != 0) {
+            var ths = $('#SiteMenu');
+            var element = ths[0];
+            element.style.width = '100%';
+            GetLevel3Menu($('#NewsubMenuID2').val());
+        }
+
+        if ($('#NewsubMenuID3').val() != 0) {
+            var ths = $('#SiteMenu');
+            var element = ths[0];
+            element.style.width = '100%';
+        }
+
+        $('.delete_button').click(function () {
+            if (confirm("Are you sure to delete ?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+
+        $("#ParentMenu").click(function () {
+            document.location = '@Url.Action("Menu", "SitePermissions")';
+        });
+
+        $("#SubMenu").click(function () {
+            document.location = '@Url.Action("SubMenu", "SitePermissions")';
+        });
+
+        $(document).on('change', "#SubMenuRoleName", function (event) {
+            $('#Type').val('Roles');
+            if ($(this).val() == '') {
+                var form = $('#submitquestion').serialize();
+                window.location = '/SitePermissions/SubMenu';
+            }
+            else {
+                var form = $('#submitquestion').serialize();
+                window.location = '/SitePermissions/SubMenuDetails?' + form;
+            }
+        });
+
+        $('#ParentMenuName').change(function () {
+            if ($(this).val() == '') {
+                $('#Type').val('Roles');
+                var form = $('#submitquestion').serialize();
+                window.location = '/SitePermissions/SubMenuDetails?' + form;
+            }
+            else {
+                $('#Type').val('Parent');
+                var form = $('#submitquestion').serialize();
+                window.location = '/SitePermissions/SubMenuDetails?' + form;
+            }
+        });
+
+        $('#Level1').change(function () {
+            if ($(this).val() == '') {
+                $('#Type').val('Parent');
+                var form = $('#submitquestion').serialize();
+                window.location = '/SitePermissions/SubMenuDetails?' + form;
+            }
+            else {
+                $('#Type').val('Level1');
+                var form = $('#submitquestion').serialize();
+                window.location = '/SitePermissions/SubMenuDetails?' + form;
+            }
+        });
+
+        $('#Level2').change(function () {
+            if ($(this).val() == '') {
+                $('#Type').val('Level1');
+                var form = $('#submitquestion').serialize();
+                window.location = '/SitePermissions/SubMenuDetails?' + form;
+            }
+            else {
+                $('#Type').val('Level2');
+                var form = $('#submitquestion').serialize();
+                window.location = '/SitePermissions/SubMenuDetails?' + form;
+            }
+        });
+
+        $('#Level3').change(function () {
+            if ($(this).val() == '') {
+                $('#Type').val('Level2');
+                var form = $('#submitquestion').serialize();
+                window.location = '/SitePermissions/SubMenuDetails?' + form;
+            }
+            else {
+                $('#Type').val('Level3');
+                var form = $('#submitquestion').serialize();
+                window.location = '/SitePermissions/SubMenuDetails?' + form;
+            }
+        });
+
+        $("#ControllerName").change(function () {
+            if ($(this).val() != '') {
+                GetActions($(this).val());
+            }
+            else {
+                $('#ActionName').val('');
+                $('#RoleName').val('');
+                $('#MenuOrder').val('');
+            }
+        });
+
+        $('#ActionName').change(function () {
+            if ($(this).val() == '') {
+                $('#RoleName').val('');
+                $('#MenuOrder').val('');
+            }
+        });
+
+        $('#RoleName').change(function () {
+            if ($(this).val() == '') {
+                $('#MenuOrder').val('');
+            }
+            else {
+                GetMenuSortOrder($(this).val(), ExistId, 0);
+            }
+        });
+
+        if (MenuControllerName != '') {
+            GetActions(MenuControllerName);
+        }
+        if ($('#NewRoleName').val() != '' && $('#NewRoleName').val() != undefined) {
+            $('#RoleName').val($('#NewRoleName').val());
+            if ($('#RoleName').val() != '') {
+                GetMenuSortOrder($('#RoleName').val(), ExistId, 0);
+            }
+        }
+
+        if ($('#NewRole').val() != '' && $('#MenuParentID').val() == '') {
+            GetMenuSortOrder($('#NewRole').val(), ExistId, 0);
+        }
+        $('#submit').click(function () {
+            var IsValidMenuTitle = true;
+            var IsValidMenuSortOrder = true;
+            var IsValidRoles = true;
+            var IsValiParentId = true;
+            var IsValidSubMenuRoleName = true;
+
+            if ($('#SubMenuRoleName').val() == '') {
+                $('#SubMenuRoleName').css({
+                    "border-color": "#FC6A6C",
+                });
+                IsValidSubMenuRoleName = false;
+            }
+            else {
+                $('#SubMenuRoleName').css({
+                    "border-color": "#ccc",
+                });
+            }
+            if ($('#ParentMenuName').val() == '') {
+                $('#ParentMenuName').css({
+                    "border-color": "#FC6A6C",
+                });
+                IsValiParentId = false;
+            }
+            else {
+                $('#ParentMenuName').css({
+                    "border-color": "#ccc",
+                });
+            }
+            if ($('#MenuName').val() == '') {
+                $('#MenuName').css({
+                    "border-color": "#FC6A6C",
+                });
+                IsValidMenuTitle = false;
+            }
+            else {
+                $('#MenuName').css({
+                    "border-color": "#ccc",
+                });
+            }
+            if ($('#MenuOrder').val() == '') {
+                $('#MenuOrder').css({
+                    "border-color": "#FC6A6C",
+                });
+                IsValidMenuSortOrder = false;
+            }
+            else {
+                $('#MenuOrder').css({
+                    "border-color": "#ccc",
+                });
+            }
+            if ($('#RoleName').val() == '') {
+                $('#RoleName').css({
+                    "border-color": "#FC6A6C",
+                });
+                IsValidRoles = false;
+            }
+            else {
+                $('#RoleName').css({
+                    "border-color": "#ccc",
+                });
+            }
+            if (IsValidMenuTitle == true && IsValidMenuSortOrder == true && IsValidRoles == true && IsValiParentId == true && IsValidSubMenuRoleName == true) {
+                $('#lblMessage').text('');
+            }
+            else {
+                $('#lblMessage').text('Please enter all details');
+            }
+            return IsValidMenuTitle && IsValidMenuSortOrder && IsValidRoles && IsValiParentId && IsValidSubMenuRoleName;
+        });
+
+        function GetActions(ControllerName) {
+            $.getJSON("/SitePermissions/GetActions", { ControllerName: ControllerName },
+                   function (myData) {
+                       var select = $("#ActionName");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: '',
+                           text: '-- Select --'
+                       }));
+                       $.each(myData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text,
+                               selected: (itemData.Value == MenuActionName ? true : false)
+                           }));
+                       });
+                   });
+        }
+
+        function GetLevel1Menu(ParentId) {
+            $.getJSON("/SitePermissions/GetLevelMenu", { ParentId: ParentId },
+                   function (myData) {
+                       var select = $("#Level1");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: '',
+                           text: '-- Select Level1 -- '
+                       }));
+                       $.each(myData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text,
+                               selected: (itemData.Value == $('#NewsubMenuID1').val() ? true : false)
+                           }));
+                       });
+                       if (myData.length > 0) {
+                           $('#TrLevel1').show();
+                           if (ExistId != 0 && (FormType == 'Parent')) {
+                               $('#ParentMenuName').prop("disabled", true);
+                               $('#SubMenuRoleName').prop("disabled", true);
+                               $('#TrLevel1').hide();
+                           }
+                       }
+                   });
+        }
+
+        function GetLevel2Menu(ParentId) {
+            $.getJSON("/SitePermissions/GetLevelMenu", { ParentId: ParentId },
+                   function (myData) {
+                       var select = $("#Level2");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: '',
+                           text: '-- Select Level2 -- '
+                       }));
+                       $.each(myData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text,
+                               selected: (itemData.Value == $('#NewsubMenuID2').val() ? true : false)
+                           }));
+                       });
+                       if (myData.length > 0) {
+                           $('#TrLevel2').show();
+                           if (ExistId != 0 && (FormType == 'Level1')) {
+                               $('#ParentMenuName').prop("disabled", true);
+                               $('#SubMenuRoleName').prop("disabled", true);
+                               $('#Level1').prop("disabled", true);
+                               $('#TrLevel2').hide();
+                           }
+                       }
+                   });
+        }
+
+        function GetLevel3Menu(ParentId) {
+            $.getJSON("/SitePermissions/GetLevelMenu", { ParentId: ParentId },
+                   function (myData) {
+                       var select = $("#Level3");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: '',
+                           text: '-- Select Level3 -- '
+                       }));
+                       $.each(myData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text,
+                               selected: (itemData.Value == $('#NewsubMenuID3').val() ? true : false)
+                           }));
+                       });
+                       if (myData.length > 0) {
+                           $('#TrLevel3').show();
+                           if (ExistId != 0 && (FormType == 'Level2')) {
+                               $('#ParentMenuName').prop("disabled", true);
+                               $('#SubMenuRoleName').prop("disabled", true);
+                               $('#Level1').prop("disabled", true);
+                               $('#Level2').prop("disabled", true);
+                               $('#TrLevel3').hide();
+                           }
+                       }
+                   });
+        }
+
+        function GetMenuSortOrder(RoleName, ExistId, SubMenuParentId) {
+            $.getJSON("/SitePermissions/GetMenuSortOrder", { RoleName: RoleName, ExistId: ExistId, SubMenuParentId: SubMenuParentId },
+                   function (myData) {
+                       var select = $("#MenuOrder");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: '',
+                           text: '-- Select --'
+                       }));
+                       $.each(myData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text,
+                               selected: (itemData.Value == MenuSortOrderName ? true : false)
+                           }));
+                       });
+                   });
+        }
+
+        function GetParentMenuId(ParentRoleId) {
+            $.getJSON("/SitePermissions/GetParentMenuId", { ParentRoleId: ParentRoleId },
+                   function (myData) {
+                       var select = $("#ParentMenuName");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: '',
+                           text: '-- Select --'
+                       }));
+                       $.each(myData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text,
+                               selected: (itemData.Value == $('#MenuParentID').val() ? true : false)
+                           }));
+                       });
+                   });
+        }
+
+        if (ExistId != 0 && (FormType == 'Level3')) {
+            $('#ParentMenuName').prop("disabled", true);
+            $('#SubMenuRoleName').prop("disabled", true);
+            $('#Level1').prop("disabled", true);
+            $('#Level2').prop("disabled", true);
+            $('#Level3').prop("disabled", true);
+        }
+    });
+</script>

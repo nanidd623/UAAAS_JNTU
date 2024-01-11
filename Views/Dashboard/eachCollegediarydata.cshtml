@@ -1,0 +1,164 @@
+﻿@model UAAAS.Controllers.DiaryDetails
+@{
+    ViewBag.Title = "eachCollegediarydata";
+    Layout = null;
+}
+@using (Html.BeginForm("UpdateCollegeDiary", "Dashboard"))
+{
+    <div id="">
+        <div id="ClassDetails">
+            @Html.HiddenFor(model => model.collegeId)
+            <span>
+                <b><u>College</u> : @Model.CollegeName (@Model.CollegeCode) </b><br/><br />
+                <b><u>Address</u> : @Model.CollegeAddress</b>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><br /><br />
+            <table width="100%">
+                <thead style="background-color:brown;color:white;font-weight:bold;">
+                    <tr>
+                        <td style="text-align:center;">Designation</td>
+                        <td style="text-align:center;">Name</td>
+                        <td colspan="2" style="text-align:center;">Contact Details (Mobile/ Land line)</td>
+                        <td style="text-align:center;">EmailID</td>                       
+                    </tr>
+                </thead>
+                <tr>
+                    <td>
+                        <div class="editor-label" style="width: 100px;">
+                            <span>Chairman</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 250px;">
+                            @Html.DisplayFor(model => model.Chairman, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 100px;">
+                            @Html.DisplayFor(model => model.SecretaryMobile, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 100px;">
+                            @Html.DisplayFor(model => model.SecretaryPhoneNo, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 250px;">
+                            @Html.DisplayFor(model => model.SecretaryEmail, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="editor-label" style="width: 100px;">
+                            <span>Society</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 250px;">
+                            @Html.DisplayFor(model => model.SocietyName, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 100px;">
+                            @Html.DisplayFor(model => model.SocietyMobile, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 100px;">
+                            @Html.DisplayFor(model => model.SocietyPhoneNo, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 250px;">
+                            @Html.DisplayFor(model => model.SocietyEmail, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="editor-label" style="width: 100px;">
+                            <span>Director</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 250px;">
+                            @Html.DisplayFor(model => model.Director, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 100px;">
+                            @Html.DisplayFor(model => model.DirectorMobile, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 100px;">
+                            @Html.DisplayFor(model => model.DirectorPhoneNo, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 250px;">
+                            @Html.DisplayFor(model => model.DirectorEmail, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="editor-label" style="width: 100px;">
+                            <span>College</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 250px;">
+                            @Html.DisplayFor(model => model.CollegeName, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 100px;">
+                            @Html.DisplayFor(model => model.CollegeMobile, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 100px;">
+                            @Html.DisplayFor(model => model.CollegePhoneNo, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 250px;">
+                            @Html.DisplayFor(model => model.CollegeEmail, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="editor-label" style="width: 100px;">
+                            <span>Principal</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 250px;">
+                            @Html.DisplayFor(model => model.Principal, new { @class = "txtbox" })
+                            <br /><span>(@Html.DisplayFor(model => model.PrincipalRegNo)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 100px;">
+                            @Html.DisplayFor(model => model.PrincipalMobile, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 100px;">
+                            @Html.DisplayFor(model => model.PrincipalMobile, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field" style="width: 250px;">
+                            @Html.DisplayFor(model => model.PrincipalEmail, new { @class = "txtbox" })
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}

@@ -1,0 +1,125 @@
+﻿@model UAAAS.Models.AICTEFacultyClass
+ @using UAAAS.Models;
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "ViewAICTEFaculty";
+    Layout = null;
+    string CourseNew = string.Empty;
+    var dept = db.jntuh_department.Where(s => s.isActive == true).Select(s => s).ToList();
+}
+
+<h2>View AICTE Faculty</h2>
+
+@using (Html.BeginForm())
+{
+    <table>
+        <tr>
+            <td class="col1">
+                <div>
+                    @Html.LabelFor(model => model.FacultyId)
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.DisplayFor(model => model.FacultyId)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                <div>
+                    @Html.LabelFor(model => model.RegistrationNumber)
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.DisplayFor(model => model.RegistrationNumber)
+                </div>
+            </td>
+
+        </tr>
+        <tr>
+            <td class="col1">
+                <div>
+                    @Html.LabelFor(model => model.FirstName)
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.DisplayFor(model => model.FirstName)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                <div>
+                    @Html.LabelFor(model => model.SurName)
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.DisplayFor(model => model.SurName)
+                </div>
+            </td>
+
+        </tr>
+        <tr>
+            <td class="col1">
+                <div>
+                    @Html.LabelFor(model => model.PanNumber)
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.DisplayFor(model => model.PanNumber)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                <div>
+                    @Html.LabelFor(model => model.AadhaarNumber)
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.DisplayFor(model => model.AadhaarNumber)
+                </div>
+            </td>
+
+        </tr>
+        <tr>
+            <td class="col1">
+                <div>
+                    @Html.LabelFor(model => model.Programme)
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @Html.DisplayFor(model => model.Programme)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                <div>
+                    @Html.LabelFor(model => model.Course)
+                </div>
+            </td>
+            <td class="col2">
+                <div>
+                    @{
+                        int deptid=Convert.ToInt32(Model.Course);
+                        CourseNew = dept.Where(s => s.id == deptid).Select(s => s.departmentName).FirstOrDefault();
+                    }
+                   <span>@CourseNew</span>
+                </div>
+            </td>
+
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+    </table>
+
+}

@@ -1,0 +1,907 @@
+﻿@using UAAAS.Models;
+@model IList<UAAAS.Controllers.FacultyVerificationController.PharmacyAppeal>
+@{
+    ViewBag.Title = "CollegeFacultyWithIntakeFacultyPharmacy";
+    var index = 1;
+    int loop = 0;
+    uaaasDBContext db = new uaaasDBContext();
+}
+
+@{
+    int[] DegreetIds = new int[] { 2, 5, 9, 10 };
+    var jntuh_departments = db.jntuh_department.Where(D => DegreetIds.Contains(D.degreeId)).Select(D => D).ToList();
+    int[] jntuh_departmentIds = jntuh_departments.Select(D => D.id).ToArray();
+    var jntuh_specializations = db.jntuh_specialization.Select(S => S).ToList();
+    int ii = 0;
+    string BpharmacyStatus = "";
+    int Collegeid=ViewBag.collegeId;
+    int BPharmacyFaculty = db.jntuh_appeal_faculty_registered.Count(c => c.collegeId == Collegeid && (c.DepartmentId == 26 || c.DepartmentId == 36) && c.AppealReverificationSupportingDocument == null);
+   // int MPharmacyFaculty = db.jntuh_appeal_faculty_registered.Count(c => c.collegeId == Collegeid && c.DepartmentId == 36 && c.AppealReverificationSupportingDocument == null);
+
+    //int BPharmacyFaculty = ViewBag.collegeId;
+    //int MPharmacyFaculty = 0;
+}
+
+<h2>CollegeFacultyWithIntakeFacultyPharmacy</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake';
+            }
+        });
+
+        //For collegeintake scripts
+
+        $('.subtUpload').click(function () {
+
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+
+        });
+
+
+        var $myIntakeDialog = $("#dialog-appeal-edit").dialog({
+            title: 'Add/Edit Existing Intake',
+            autoOpen: false,
+            resizable: false,
+            height: 610,
+            width: 800,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+
+        $('.full_table').find('tr').click(function () {
+            url = $(this).find(".editintakeDialog").attr('href');
+        });
+
+        $(".editintakeDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-appeal-edit").dialog({
+                title: 'Edit Existing Intake'
+            });
+
+            $myIntakeDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmIntakeDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-appeal-edit").dialog("close");
+        });
+
+        $($myIntakeDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        //$("#tabla").find('tfoot').append($('<td><b>Total</b></td><td>a</td><td>b</td>'));
+
+        //For appeal SCM DOCS
+
+        function GetAppealSCMApprovalLetterfileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#SCMApprovalLetter")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+
+        $(function () {
+            $(".AppealSCMApprovalLetterfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    //$(".AppealSCMApprovalLetterfiles > span").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetAppealSCMApprovalLetterfileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".AppealSCMApprovalLetterfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".AppealSCMApprovalLetterfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+        //For appeal SCM DOCS
+
+        function GetAppealForm16ApprovalLetterfileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#Form16ApprovalLetter")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        $(function () {
+            $(".AppealForm16ApprovalLetterfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    //$(".AppealForm16ApprovalLetterfiles > span").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetAppealForm16ApprovalLetterfileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".AppealForm16ApprovalLetterfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".AppealForm16ApprovalLetterfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+    });
+
+    var mainUrl = window.location;
+
+    $('.webGrid').find('tr').click(function () {
+        //url = $(this).find(".editDialog").attr("typei");
+        url = "/FacultyVerification/FacultyRegistrationNumber";
+        alert(url);
+    });
+
+    $(".editDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/FacultyRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Add New Faculty Appointed',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editdefDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        $("#dialog-edit").dialog({
+            title: 'Appeal for Reverification ',
+            resizable: false,
+            height: 150,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+
+    $(".editreverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        
+        var CollegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverificationFaculty?collegeId=" + CollegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        window.open(url);
+        //$("#dialog-edit").dialog({
+        //    title: 'Appeal for Reverification ',
+        //    resizable: false,
+        //    height: 150,
+        //    width: 850,
+        //    show: { effect: 'drop', direction: "up" },
+        //    modal: true,
+        //    draggable: true,
+        //    closeOnEscape: true,
+        //    open: function (event, ui) {
+        //        $(this).load(url);
+        //    },
+        //    close: function (event, ui) {
+        //        $(this).dialog("close");
+        //    }
+        //});
+        //$myDialog.dialog('open');
+        //return false;
+    });
+
+
+    $(".editlabDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecord?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#dialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+    $(".editAppcmpDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecordReverification?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#Appealcpldialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+    $(".editprinpalcomplicanceDialog").live("click", function (e) {
+        e.preventDefault();
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/PrincipalFacultyRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal For Complicance',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editprincipalverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var registrationnumber = '@ViewBag.PrincipalRegno';
+        var url = "/FacultyVerification/PrincipalAppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&registrationnumber=" + registrationnumber;
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal for Reverification ',
+            resizable: false,
+            height: 200,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    var $myDialog = $("#dialog-edit").dialog({
+        title: 'Add/Edit Lab',
+        autoOpen: false,
+        resizable: false,
+        height: 700,
+        width: 720,
+        show: { effect: 'drop', direction: "up" },
+        modal: true,
+        draggable: true,
+        closeOnEscape: true,
+        open: function (event, ui) {
+            debugger;
+            $(this).load(url);
+        },
+        close: function (event, ui) {
+            $(this).dialog("close");
+
+        }
+    });
+
+    $($myDialog).bind("dialogclose", function () {
+        window.location = mainUrl;
+    });
+
+
+
+</script>
+<p style="text-align:right">
+    @Html.ActionLink("View Added Faculty", "CollegeFacultyAddedDetails", "FacultyVerification", new { @class = "create_button", @target = "_blank" })
+</p>
+<br>
+@using (Html.BeginForm())
+{
+    <table style="width: 100%; border: 1px; border-color: red" class="faculty_table">
+        <thead>
+            <tr>
+                <th class="col2" style="width: 50px; text-align: center;">
+                    S.No
+                </th>
+
+                <th class="col2" style="width: 100px; text-align: center;">
+                    Department
+                </th>
+                <th class="col2" style="width: 100px; text-align: center;">
+                    Degree
+                </th>
+                <th class="col2" style="text-align: left;">
+                    Specialization
+                </th>
+                <th class="col2" style="width: 120px; text-align: center;">
+                    Total Intake
+                </th>
+                <th class="col2" style="width: 120px; text-align: center;">
+                    Proposed Intake
+                </th>
+                <th class="col2" style="width: 120px; text-align: center;">
+                    No.of Faculty Required
+                </th>
+                <th class="col2" style="width: 120px; text-align: center;">
+                    No.of Faculty Available
+                </th>
+                <th class="col2" style="width: 150px; text-align: center;">
+                    Pharmacy Specializations
+                </th>
+                <th class="col2" style="width: 80px; text-align: center;">
+                    Specialization Wise Faculty Required
+                </th>
+                <th class="col2" style="width: 80px; text-align: center;">
+                    Specialization Wise Faculty Available
+                </th>
+                <th class="col2" style="width: 80px; text-align: center;">
+                    Deficiency
+                </th>
+                <th class="col2" style="width: 80px; text-align: center;">
+                    No. of Ph.D faculty
+                </th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                
+               
+                <tr>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @(index++)
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        <span>Pharmacy</span>
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.Department
+
+                    </td>
+                    @*@if (item.Department == "Pharmacy" && loop==0)
+                          {
+                            <td rowspan="4" class="col1" style="text-align: left; vertical-align: top;">
+                               @item.Degree
+
+
+                            </td>
+                          }
+                          else
+                          {
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @item.Department
+                        </td>
+                            }*@
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.Specialization
+                    </td>
+                    @*@if (item.Department == "Pharmacy")
+                        {
+                            <td rowspan="4" style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                                @item.Specialization
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                                @item.Specialization
+                            </td>
+                        }*@
+
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.TotalIntake
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @if (item.ProposedIntake > 100)
+                        {
+                            <span>100</span>
+                        }
+                        else
+                        {
+                            if (item.Department == "M.Pharmacy")
+                            {
+                                <span>15</span>
+                            }
+                            else
+                            {
+                                @item.ProposedIntake
+                            }
+
+
+                        }
+                    </td>
+
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.NoOfFacultyRequired
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @if (item.NoOfAvilableFaculty > item.NoOfFacultyRequired)
+                        {
+                            @item.NoOfFacultyRequired
+                        }
+                        else
+                        {
+                            @item.NoOfAvilableFaculty
+                        }
+
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.PharmacySpecialization
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+
+
+                        @if (item.Department != "M.Pharmacy")
+                        {
+                            @item.SpecializationwiseRequiredFaculty
+                        }
+
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @if (item.SpecializationwiseAvilableFaculty > item.SpecializationwiseRequiredFaculty)
+                        {
+                            @item.SpecializationwiseRequiredFaculty
+                        }
+                        else
+                        {
+                            @item.SpecializationwiseAvilableFaculty
+                        }
+                        @*@item.SpecializationwiseAvilableFaculty*@
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                       
+                        @item.Deficiency
+                      
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.PHdFaculty
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+
+    </table>
+    <br />
+    <h2>Appeal for faculty deficiency (Department / Specialization Wise)</h2> <br />
+    <table style="width: 100%; border: 1px; border-color: red" class="webGrid">
+        <thead>
+            <tr>
+                <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Department</th>
+                <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Degree</th>
+                <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Specialization</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency of faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency of Ph.D faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Appointed New Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Faculty Existing-Reverify </th>
+            </tr>
+        </thead>
+            @foreach (var items in Model)
+            {
+                <tr>
+
+                    @if (items.ProposedIntake != null)
+                    {
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            Pharmacy
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @items.Department
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @items.Specialization
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @items.Deficiency
+                        </td>
+
+                        if (items.Deficiency == "Deficiency" || items.Deficiency == "No Deficiency")
+                        {
+
+                            if ((@items.NoOfFacultyRequired - @items.NoOfAvilableFaculty) > 0)
+                            {
+                                var Deffaculty = @items.NoOfFacultyRequired - @items.NoOfAvilableFaculty;
+                                <td class="col1" style="text-align: left; vertical-align: top;"><span>@Deffaculty</span></td>
+                            }
+                            else
+                            {
+                                <td class="col1" style="text-align: left; vertical-align: top;"><span>0</span></td>
+                            }
+
+                            @*@if (@Deffaculty > 0)
+                            {
+                                <td class="col1" style="text-align: left; vertical-align: top;"><span>0</span></td>
+                            }*@
+                            @*else
+                            {
+                                <td class="col1" style="text-align: left; vertical-align: top;">@Deffaculty>0?@Deffaculty:0</td>
+                            }*@
+
+
+                        }
+                        else
+                        {
+                            <td class="col1" style="text-align: left; vertical-align: top;"><span>0</span></td>
+                        }
+
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @if (items.Deficiency == "Deficiency" && items.Department == "M.Pharmacy")
+                            {
+                                if (items.PHdFaculty > 0 && items.Department == "M.Pharmacy")
+                                {
+                                    <span>0</span>
+                                }
+                                else
+                                {
+                                    <span>1</span>
+                                }
+
+                            }
+                            else if (items.PHdFaculty > 0 && items.Department == "M.Pharmacy")
+                            {
+                                <span>0</span>
+                            }
+                            else
+                            {
+                                @items.PHdFaculty
+                            }
+
+                        </td>
+                        @*@if (items.Deficiency=="Deficiency" && items.Department=="M.Pharmacy")
+                        {
+                            <td class="col1" style="text-align: left; vertical-align: top;">1</td>
+                        }
+                        else if(items.PHdFaculty>0 && items.Department=="M.Pharmacy")
+                        {
+                            <td class="col1" style="text-align: left; vertical-align: top;">1</td>
+                        }
+                        else
+                        {
+                            @items.PHdFaculty
+                        }*@
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @if (items.Deficiency == "Deficiency" || items.Deficiency == "No Deficiency")
+                            {
+
+                                //int SpecializationId=2;
+                                if (items.Department == "B.Pharmacy") //|| items.Department == "Pharm.D" || items.Department == "Pharm.D PB"
+                                {
+                                    if (items.Department == "B.Pharmacy")
+                                    {
+                                        items.Specialization = "B.Pharmacy";
+                                    }
+
+                                    //if (@ViewBag.BpharmacyMeet == "No")
+                                    if (items.Deficiency == "Deficiency" && BPharmacyFaculty < 6)
+                                    {
+                                        int DepartmentId = jntuh_departments.Where(D => D.departmentName == items.Department).Select(D => D.id).FirstOrDefault();
+                                        int SpecializationId = jntuh_specializations.Where(S => S.specializationName == items.Specialization).Select(S => S.id).FirstOrDefault();
+                                        @Html.CheckBox("Compliance", false, new { collegeId = ViewBag.collegeId, deficencycount = 1, degree = items.Department, departmentid = DepartmentId, specializationid = SpecializationId, @class = "editDialog" });
+                                    }
+                                   // else if (ViewBag.BpharmacyMeet == "Yes")
+                                    else if (items.Deficiency == "No Deficiency")
+                                    {
+                                        <span>No Deficiency.</span>
+                                    }
+                                    else if (BPharmacyFaculty >= 6)
+                                    {
+                                        <span>Compliance faculty limit exceeded.</span>
+                                    }
+                                }
+                                if (items.Department == "M.Pharmacy")
+                                {
+                                    if (items.Deficiency == "Deficiency" && BPharmacyFaculty < 6)
+                                    {
+                                        int DepartmentId = jntuh_departments.Where(D => D.departmentName == items.Department).Select(D => D.id).FirstOrDefault();
+                                        int SpecializationId = jntuh_specializations.Where(S => S.specializationName == items.Specialization).Select(S => S.id).FirstOrDefault();
+                                        @Html.CheckBox("Compliance", false, new { collegeId = ViewBag.collegeId, deficencycount = 1, degree = items.Department, departmentid = DepartmentId, specializationid = SpecializationId, @class = "editDialog" });
+                                    }
+                                    else if (items.Deficiency == "No Deficiency")
+                                    {
+                                        <span>No Deficiency.</span>
+                                    }
+                                    else if (BPharmacyFaculty >= 6)
+                                    {
+                                        <span>Compliance faculty limit exceeded.</span>
+                                    }
+                                }
+
+                            }
+
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                          
+                            @if (items.Deficiency == "Deficiency" )
+                            {
+                                int DepartmentId = jntuh_departments.Where(D => D.departmentName == items.Department).Select(D => D.id).FirstOrDefault();
+                                int SpecializationId = jntuh_specializations.Where(S => S.specializationName == items.Specialization).Select(S => S.id).FirstOrDefault();
+                                if (items.Department == "B.Pharmacy" || items.Department == "M.Pharmacy")
+                                {
+                                    @Html.CheckBox("reverification", false, new { collegeId = ViewBag.collegeId, deficencycount = 1, degree = items.Department, departmentid = DepartmentId, specializationid = SpecializationId, @class = "editreverificationDialog" });
+                                }
+
+                            }
+
+
+                        </td>
+                    }
+                </tr>
+            }
+
+</table>
+}
+<div id="dialog-edit" style="display: none">
+</div>

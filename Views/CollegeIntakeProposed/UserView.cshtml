@@ -1,0 +1,43 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeIntakeProposed>
+@{
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    ViewBag.Title = "Proposed Intake";
+    int num = 1;
+}
+<h2>Proposed Intake</h2>
+@using (Html.BeginForm())
+{
+    <table class="four_columns" style="width: 100%;">
+        <tr style="font-weight: bold;">
+            <td style="text-align: center; width: 15px;" class="col11">S.No</td>
+            <td style="text-align: left; width: 70px;" class="col11">Degree</td>
+            <td style="text-align: left;width:100px" class="col11">Department</td>
+            <td style="text-align: left;width:150px" class="col11">Specialization</td>
+            <td style="text-align: left;width: 10px;" class="col11">Shift</td>
+            <td style="text-align: left;width: 40px;" class="col11">Course Status</td>
+            <td style="text-align: left;width: 50px;" class="col11">Approved Intake for the A.Y. @ViewBag.AcademicYear </td>
+            <td style="text-align: left;width: 50px;" class="col11">Proposed Intake for the A.Y. @ViewBag.NextAcademicYear</td>
+        </tr>
+        @foreach (var item in ViewBag.IntakeExisting as List<UAAAS.Models.CollegeIntakeProposed>)
+        {
+            <tr>
+                <td style="width: 15px; text-align: center;" class="col21">
+                    @(num++)
+                </td>
+                <td style="width: 70px;" class="col21">@item.Degree</td>
+                <td style="width: 100px;" class="col21">@item.Department</td>
+                <td style="width:150px" class="col21">@item.Specialization</td>
+                <td style="width: 10px;text-align:center" class="col21">@item.Shift</td>
+                <td style="width: 40px;text-align:center" class="col21">@item.CourseAffiliationStatusCode</td>
+                <td style="text-align:right" class="col21">@item.ExistingIntake</td>
+                <td style="text-align:right" class="col21">@item.proposedIntake</td>
+            </tr>
+        }
+    </table>
+}
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}

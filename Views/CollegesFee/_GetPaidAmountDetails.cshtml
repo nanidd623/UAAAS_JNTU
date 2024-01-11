@@ -1,0 +1,30 @@
+﻿@model List<UAAAS.Models.jntuh_college_dd_payments>
+@{
+    int index = 1;
+}
+<h2>Data Entry Details</h2>
+
+<table class="webGrid">
+    <thead>
+        <tr>
+            <th>S.No</th>
+            <th>Type</th>
+            <th>Payment Date</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@(index++)</td>
+                    <td>@item.jntuh_college_paymentoffee_type.FeeType</td>
+                    <td>@item.Payment_Date</td>
+                    <td>@item.PaidAmount</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

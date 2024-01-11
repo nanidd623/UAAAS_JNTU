@@ -1,0 +1,70 @@
+﻿@model UAAAS.Models.GrievanceRedressalComplaints
+@{
+    ViewBag.Title = "Women Protection Cell Complaints";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+}
+
+<h2>Index</h2>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>collegeId
+        </th>
+        <th>Complaint
+        </th>
+        <th>Action Taken
+        </th>
+        
+        <th>createdOn
+        </th>
+        <th>createdBy
+        </th>
+        <th>updatedOn
+        </th>
+        <th>updatedBy
+        </th>
+       
+        <th></th>
+    </tr>
+
+     @foreach (var item in ViewBag.Complaints as List<UAAAS.Models.WomenProtectionCellComplaints>)
+     {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.collegeId )
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.complaintReceived)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.actionsTaken)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.createdOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.createdBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.updatedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.updatedBy)
+            </td>
+            
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.id })
+            </td>
+        </tr>
+    }
+
+</table>

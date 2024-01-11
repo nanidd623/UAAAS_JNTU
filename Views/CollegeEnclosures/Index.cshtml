@@ -1,0 +1,269 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeEnclosures>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "College Enclosures";
+    int num = 1;
+}
+<h2>
+    College Enclosures
+</h2>
+<br />
+<h2>
+    <span style="color:blue; font-size:14px;">NOTE: Please upload 1)AICTE Application Report (2023-24) 2)AICTE Deficiency Report (2023-24)  3)All enclosures of AICTE</span><br />
+    <span style="color:red; font-size:14px; font-family:Calibri;">Note: AICTE Application Report (2023-24) & AICTE Deficiency Report (2023-24) forms should be in full shape. if upon later verification, found that it is empty or missing, application is treated as invalid.</span>
+</h2>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+        $.ajaxSetup({ cache: false });
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Enclosure',
+            autoOpen: false,
+            resizable: false,
+            height: 350,
+            width: 500,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Enclosure'
+            });
+            url = $("#openDialog").attr('href');
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('.full_table').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit Enclosure',
+                height: 200,
+                width: 750,
+            });
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Enclosure',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Enclosures',
+                autoOpen: false,
+                resizable: false,
+                height: 350,
+                width: 650,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+</script>
+@if (ViewBag.NotUpload == true)
+{
+    <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+}
+else
+{
+    if (TempData["FeeError"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["FeeError"].ToString()</p>
+        </div>
+    }
+    if (TempData["CollegesSuccess"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["CollegesSuccess"].ToString()</p>
+        </div>
+    }
+    <table style="width: 100%;">
+        <tr>
+            <td style="text-align: left; color: red; font-size: 14px; display: none;">
+                <i>If document size is greater than 300kb need not upload the document but you must submit the document along with the hard copy</i>
+            </td>
+            @*<td class="create_link_right" style="width: 200px;">
+                    @Html.ActionLink("Add Enclosure", "AddEditRecord", "CollegeEnclosures", new {collegeId = @ViewBag.collegeId}, new {@id = "openDialog", @class = "create_button"})
+                </td>*@
+        </tr>
+        <tr>
+            <td class="create_link_left" style="width: 200px;">
+                @Html.ActionLink("Previous Enclosures", "PreviousView", "CollegeEnclosures", new { target = "_blank", @class = "create_button" })
+
+            </td>
+            <td class="create_link_right" style="width: 200px;">
+                @*@Html.ActionLink("Add Enclosure", "AddEditRecord", "CollegeEnclosures", new { collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })*@
+            </td>
+        </tr>
+        <tr style="width: 200px"></tr>
+    </table>
+    if (TempData["PartA"] != null || TempData["PartB"] != null || TempData["AllEnclousres"] != null || TempData["AllEnclousres"] != null || TempData["Declaration"] != null)
+    {
+        <div class="success">
+            <p>
+                <strong>Message:</strong> Please Upload the following Documents in Colleges Enclosures Softcopy.
+            </p>
+        </div>
+
+    }
+    @*if (TempData["PartA"] != null)
+    {
+        <div class="error">
+            <p><strong>Message:</strong> @TempData["PartA"].ToString()</p>
+        </div>
+    }
+    if (TempData["PartB"] != null)
+    {
+        <div class="error">
+            <p><strong>Message:</strong> @TempData["PartB"].ToString()</p>
+        </div>
+    }
+    if (TempData["AllEnclousres"] != null)
+    {
+        <div class="error">
+            <p><strong>All Enclousres:</strong> @TempData["AllEnclousres"].ToString()</p>
+        </div>
+    }*@
+    if (TempData["Affidavit"] != null)
+    {
+        <div class="error">
+            <p><strong>Affidavit:</strong> @TempData["Affidavit"].ToString()</p>
+        </div>
+    }
+    if (TempData["Declaration"] != null)
+    {
+        <div class="error">
+            <p><strong>Declaration:</strong> @TempData["Declaration"].ToString()</p>
+        </div>
+    }
+    <br />
+    <table class="full_table" style="width: 100%;">
+        <tr>
+            <th style="text-align: center;">
+                S.No
+            </th>
+            <th>
+                Name of Enclosure
+            </th>
+            <th style="text-align: center;">
+                Document
+            </th>
+            <th colspan="2" style="text-align: center;"></th>
+        </tr>
+        @foreach (var item in ViewBag.CollegeEnclosures as List<UAAAS.Models.CollegeEnclosures>)
+        {
+            <tr>
+                <td style="width: 30px; text-align: center; vertical-align: top;">
+                    @(num++)
+                </td>
+                <td style="vertical-align: top;">@item.documentName</td>
+                <td style="width: 50px; vertical-align: top;">
+                    @if (item.path != null)
+                    {
+                        <a href="@item.path.Replace("~", "")" target="_blank" style="color:green;">Download</a>
+                    }
+                    else
+                    {
+                        <span style="color: red;">Required</span>
+                    }
+                </td>
+                <td style="width: 20px; text-align: center; vertical-align: top;">
+                    @Html.ActionLink("Edit", "AddEditRecord", new { id = item.id, msgstr = item.msgstr }, new { @class = "editDialog edit_button" })
+                </td>
+                @if (item.path != null)
+                {
+                    <td style="width: 20px; text-align: center; vertical-align: top;">
+                        @Html.ActionLink("Delete", "DeleteRecord", new { id = item.id }, new { @class = "confirmDialog delete_button" })
+                    </td>
+                }
+                else
+                {
+                    <td></td>
+                }
+            </tr>
+        }
+    </table>
+    if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;display:none;">
+            <p>No records found</p>
+        </div>
+    }
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+}

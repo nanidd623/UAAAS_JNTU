@@ -1,0 +1,388 @@
+﻿@model UAAAS.Models.CollegePaymentDetails
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Payment_DataEntry";
+    int count = 1;
+    string text = "";
+    string Datetext = "";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $("#FeeTypeId").change(function () {
+            var id = $(this).val();
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "/CollegesFee/Get_SubPurposes?FeeTypeId=" + id,
+                dataType: "Json",
+                success: function (Data) {
+
+                    if (Data != null) {
+                        // first remove the current options if any
+                        $("#Sub_PurposeId").find('option').remove();
+                        var item = "<option value=''>---Select---</option>";
+
+                        $.each(Data.Data, function (i, state) {
+
+                            item += "<option value=" + state.Sub_Id + " >" + state.Sub_type + "</option>";
+                        });
+                        $("#Sub_PurposeId").html(item).css('display', 'block');
+                    }
+                },
+                error: function ajaxError(response) {
+                    alert(response.status + ' ' + response.statusText);
+                }
+            });
+        });
+
+        $("#Sub_PurposeId").change(function () {
+            var FeeTypeId = $("#FeeTypeId").val();
+            var Sub_PurposeId = $(this).val();
+            if (FeeTypeId != null && Sub_PurposeId != null) {
+                if (FeeTypeId == "9" && Sub_PurposeId == "2") {
+                    $(".Depts").css({ "display": "block" });
+                    $(".Depthide").css({ "display": "block" });
+                }
+                else {
+                    $(".Depts").css({ "display": "none" });
+                    $(".Depthide").css({ "display": "none" });
+                }
+            }
+        });
+
+        $(".Depts").change(function () {
+            var item = $(this).val();
+            var savedItem = item;
+            $("#SelectedDepats").val(savedItem);
+        });
+
+        $("#TypeId").change(function () {
+            var Type = $(this).val();
+            if (Type != null) {
+                if (Type == "1") {
+                    $("#Trans_Number").css({ 'display': 'block', "height": "16px" });
+                }
+                else if (Type == "2") {
+                    $("#Trans_Number").css({ 'display': 'block', "height": "16px" });
+                }
+                else if (Type == "") {
+                    $("#Trans_Number").css({ 'display': 'none', "height": "16px" });
+                }
+            }
+        });
+
+        $("#CollegeId").change(function () {
+            var collegeId = $(this).val();
+            window.location.href = "/CollegesFee/Payment_DataEntry?collegeId=" + collegeId;
+        });
+
+        $("#BankId").change(function () {
+            debugger;
+            var bank = $(this).val();
+            if (bank == "36") {
+                $(".hide").css({ "display": "block" });
+            }
+            else {
+                $(".hide").css({ "display": "none" });
+            }
+        });
+
+        $("#EditPayment").click(function () {
+            debugger;
+            var collegeId = $("#CollegeId").val();
+
+            window.location.href = "/CollegesFee/Edit_DataEntry_Scenes?collegeId=" + collegeId;
+        })
+    });
+</script>
+<div>
+    @if (TempData["Success"] != null)
+    {
+        <div class="success" style="background-color: gold; border: 1px solid #f49820;height:12px;">
+            <p style="text-align: center;font-weight: bold;margin-top:-3px;"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+        </div>
+    }
+    else if (TempData["Error"] != null)
+    {
+        <div class="error" style="background-color: red; border: 1px solid #f49820;height:12px;">
+            <p style="text-align: center;font-weight: bold;color:white;margin-top:-3px;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+        </div>
+    }
+</div>
+@*<br />
+    <div>
+        <h2 style="float:left">Payment_DataEntry</h2>
+        @Html.ActionLink("Edit", "Edit_DataEntry_Scenes", "CollegesFee", new { id = Model.CollegeId }, new { @class = "create_button", @style = "float:right;" ,@target = "_blank" })
+    </div>*@
+<br /><br />
+@using (Html.BeginForm("Payment_DataEntry", "CollegesFee"))
+{
+    <div>
+        <div>
+            <div class="editor-label" style="width:151px;">
+                <span>Colleges</span>
+            </div>
+            <div class="editor-field" style="width:693px;">
+                @Html.DropDownListFor(model => model.CollegeId, new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "CollegeId", "CollegeName"), "---Select---", new { @style = "width:689px;" })
+            </div>
+        </div>
+        <div>
+            <div class="editor-label" style="width:190px;">
+                <span>Academic Years</span>
+            </div>
+            <div class="editor-field" style="width:241px;">
+                @Html.DropDownListFor(model => model.AcademicYearId, new SelectList(ViewBag.AcademicYears as System.Collections.IEnumerable, "AcademicYearId", "AcademicYear"), "---Select---", new { @style = "width:240px;" })
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <div>
+            <table width="75%" style="padding-left:175px;float:left" id="Test">
+                <tr>
+                    <td class="col1" width="12%;">
+                        <div>
+                            Payment Type
+                        </div>
+                    </td>
+                    <td class="col2">
+                        <div style="display:-webkit-box">
+                            @Html.DropDownListFor(model => model.TypeId, new SelectList(ViewBag.Types as System.Collections.IEnumerable, "Id", "payment_Type"), "---Select---", new { @style = "width:150px;" })
+                            <br />
+                            @Html.TextBoxFor(model => model.Trans_Number, new { @placeholder = "", @style = "display:none;" })
+                        </div>
+                    </td>
+
+                    <td class="col1">
+                        <div>
+                            <span>Payment Date</span>
+                            @*@Html.LabelFor(model => model.DD_Date)*@
+                        </div>
+                    </td>
+                    <td class="col2">
+                        <div>
+                            @Html.TextBoxFor(model => model.DD_Date, new { @class = "calendar", style = "", @placeholder = "Select Date of Payment" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <div>
+                            @Html.LabelFor(model => model.PaidAmount)
+                        </div>
+                    </td>
+                    <td class="col2">
+                        <div>
+                            @Html.TextBoxFor(model => model.PaidAmount, new { @placeholder = "Enter Paid Amount" })
+                            <span id="Paid"></span>
+                        </div>
+                    </td>
+                    <td class="col1">
+                        <div>
+                            Bank Name
+                        </div>
+                    </td>
+                    <td class="col2">
+                        <div>
+                            @Html.DropDownListFor(model => model.BankId, new SelectList(ViewBag.BankNames as System.Collections.IEnumerable, "BankId", "BankName"), "---Select---", new { @style = "width:270px;" })
+                            <br />
+                            <span class="hide" style="display:none;">
+                                <br />@Html.TextBox("OtherBank", null, new { @style = "display:block;" })
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <div>Purpose</div>
+                    </td>
+                    <td class="col2">
+                        <div>
+                            @Html.DropDownListFor(model => model.FeeTypeId, new SelectList(ViewBag.FeeTypes as System.Collections.IEnumerable, "FeeId", "FeeType"), "---Select---", new { @style = "width:270px;" })
+                        </div>
+                    </td>
+                    <td class="col1">
+                        <div>Sub_purpose</div>
+                    </td>
+                    <td class="col2">
+                        <div>
+                            @Html.DropDownListFor(model => model.Sub_PurposeId, new List<SelectListItem> { }, "---Select---", new { @class = "Sub_PurposeId", @style = "width:270px;" })
+
+                            <span class="Depthide" style="display:none;">
+                                <br />@Html.TextBox("SelectedDepats", null, new { @style = "display:block;" })
+                            </span>
+                        </div>
+                    </td>
+                    @*<td>
+                            @Html.ListBoxFor(model => model.DepartmentIds, new SelectList(Model.Departments, "Value", "Text"), new { @class = "Depts", @style = "display:none;" })
+                        </td>*@
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="float:right;">
+                        <div>
+                            <input type="submit" value="Add Payment" />
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="float:right;width:23%">
+                @Html.ListBoxFor(model => model.DepartmentIds, new SelectList(Model.Departments, "Value", "Text"), new { @class = "Depts", @style = "display:none;height:156px;width:299px;background-color:aliceblue;" })
+            </div>
+        </div>
+    </div>
+
+    if (ViewBag.Alldetails != null)
+    {
+
+        <table id="example" class="display">
+            <thead>
+                <tr>
+                    <th class="">S.No</th>
+                    <th class="">Academic year</th>
+                    <th class="">Nature of Payment</th>
+                    <th class="">Nature of Sub-Payment</th>
+                    <th class="">Bank</th>
+                    <th class="">Amount</th>
+                    <th class="">Payment Type</th>
+                    <th class="">Trans_Number</th>
+                    <th class="">Payment Date</th>
+                    <th class="">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item2 in ViewBag.Alldetails)
+                {
+                    <tr>
+
+                        <td class="">@(count++)</td>
+                        <td class="">@item2.AcademicYear</td>
+                        <td class="">@item2.FeeType</td>
+                        <td class="">@item2.Sub_Purpose</td>
+                        <td class="" id="@item2.BankId">@item2.Bank</td>
+                        @*<td class="tableborder">@item2.TotalAmount</td>*@
+                        <td class="" style="text-align:center;">@item2.PaidAmount</td>
+                        <td class="" style="text-align:center;">@item2.Type</td>
+                        <td class="" style="text-align:center;">@item2.Trans_Number</td>
+                        <td class="" style="text-align:center;">
+                            @if (item2.DDdate_New != null)
+                            {
+                                {
+
+                                    Datetext = item2.DDdate_New.ToString().Split(' ')[0];
+                                }
+                            }
+
+                            @Datetext
+                        </td>
+                        <td>
+                            @Html.ActionLink("Delete", "Delete_Payment", "CollegesFee", new { id = item2.Id }, new { @class = "create_button", @style = "float:center;" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>
+                        <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-3" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-5" style="width: 90%; text-align: center" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-6" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-7" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-8" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-8" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+
+    }
+}

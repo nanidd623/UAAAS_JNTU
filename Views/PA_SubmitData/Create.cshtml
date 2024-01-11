@@ -1,0 +1,376 @@
+﻿@model UAAAS.Models.SubmitData
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "Declaration & Data Submission";
+}
+
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+
+</script>
+@if (ViewBag.NotUpload == true && ViewBag.Issubmit == true)
+{
+    <p class="create_link_right">
+        @*<a href='@Url.Action("CollegeData", new { preview = 0, strcollegeId = ViewBag.CollegeId })' target="_blank" class="create_button">Final View
+            </a>*@
+        <span style="color: red; font-style: italic; font-weight: bold;">
+            <a href='@Url.Action("CollegeData2", "SubmitData", new { preview = 0, strcollegeId = UAAAS.Models.Utilities.EncryptString(Model.collegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) })' target="_blank" title="Click here for Acknowledgement">
+
+                <b>Acknowledgement</b>
+                <img src="@Url.Content("../../Content/images/pdf.png")" style="vertical-align: middle;" alt="A-115" height="18">
+            </a>
+        </span>
+    </p>
+}
+
+<div id="div_print">
+
+    <p class="create_link_right">
+        <span style="color: red; font-style: italic; font-weight: bold;">
+            <a href="../../Content/Declaration.doc">Download Declaration</a>
+        </span>
+    </p>
+    <h2>Declaration & Data Submission</h2>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        if (TempData["Error"] != null)
+        {
+            <div class="error">
+                <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+            </div>
+        }
+        if (TempData["Success"] != null)
+        {
+            <div class="success">
+                <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+            </div>
+
+        }
+        @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+        <br />
+        <p>
+            <ol style="margin-left: 20px;">
+                <li>Liabilities if any on this count shall be the sole responsibility of the applicant's Society / Trust and shall be settled as per the rules and regulations as applicable.</li>
+                <li>The Grant or Rejection of this affiliation application does not in any way absolve the Society / Institution from the final outcome of the Court cases pending in the High Court or any other court or any other action that may be initiated by the University or Government against the Management/Institution for the previous academic years.</li>
+                <li>The mere submission of this Application does not guarantee an Affiliation. (Affiliation is purely based on satisfaction of norms and criteria as laid down by AICTE/PCI/University from time to time.)</li>
+                <li>If any conditional affiliation is given to the Institution or College, then the University has absolute right to cancel the affiliation without prior notice if the Institution/ College does not comply with the conditions of affiliation within the time stipulated in the conditional affiliation order.</li>
+            </ol>
+            <br />
+            <br />
+            <b>Certified that</b><br />
+            <br />
+            <ul style="margin-left: 20px; list-style-type: lower-alpha;">
+                <li>The Institute is not offering any academic programme, which is not approved by JNTUH.</li>
+                <li>No other University has been approached for affiliation of the institute/courses mentioned in this application.</li>
+                <li>All Courses are conducted as per norms, standards and guidelines of the JNTUH and all the rules and regulations of the University are being followed as specified from time to time.</li>
+                <li>All the physical deficiencies stated in the last approval letter for UG & PG programmes have been rectified (for existing institutions).</li>
+                <li>The AICTE / PCI scales of pay and allowance have been granted to the teaching faculty and other staff.</li>
+                <li>The admissions are made on merit and as per JNTUH admission guidelines and capitation fee or donation of any kind has not been charged for admission.</li>
+                <li>The teaching faculty and staff have been recruited as per qualification and experience as laid down by the AICTE / PCI.</li>
+                <li>The tuition and the other fee are charged within the criteria prescribed by the Competent Authorities.</li>
+                <li>The accounts of the Institution are being maintained as per the provisions of relevant statutes and certified by a Chartered Accountant.</li>
+                <li>The intake in any of the JNTUH approved courses has not been increased beyond the sanctioned intake, without prior approval from the University.</li>
+                <li>The building and premises in which the institution is functioning is not being utilized for any other courses/ programmes which are not approved by the council</li>
+            </ul>
+            <br />
+            <b>
+                We solemnly declare that all the information provided in this application form is true and if any information is found to be incorrect or false, we are liable for rejection of the application and further prosecution and legal action by the University as per University regulations.
+            </b>
+            <br />
+            @*<br />*@
+            <br />
+            <table style="width: 100%">
+                <tr>
+                    <td>
+                        <b>Date:</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Place:</b>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <br />
+            <br />
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 50%; text-align: center;">
+                        <b>
+                            Name and Signature of the
+                            <br />
+                            Chairperson/Secretary of the Society
+                        </b>
+                    </td>
+                    <td style="text-align: center;">
+                        <b>
+                            Name and Signature of the<br />
+                            Head of the Institution
+                        </b>
+                    </td>
+                </tr>
+            </table>
+        </p>
+        <hr />
+        if (ViewBag.NotUpload == false && Roles.IsUserInRole("College"))
+        {
+            @Html.CheckBoxFor(model => model.IsCollegeEditable)
+            <span>I agree to the terms of JNTUH</span>
+            //if (TempData["MAC"] == null && TempData["PartA"] == null && TempData["PartB"] == null
+            //    && TempData["Affidavit"] == null && TempData["AllEnclousres"] == null
+            //    && TempData["Declaration"] == null && TempData["CollegeFee"] == null && TempData["LateFee"] == null && TempData["PharmDEnclousres"] == null
+            //    && TempData["PharPracticeEnclousres"] == null)
+            var clgencs = ViewBag.AllObjEnclosures as List<UAAAS.Models.CollegeEnclosures>;
+            if (clgencs != null && (TempData["MAC"] == null
+                                    && TempData["Affidavit"] == null
+                                    && TempData["Declaration"] == null && TempData["CollegeFee"] == null && TempData["LateFee"] == null && clgencs.Count == 0))
+            {
+                <p>
+
+                    @*Normal Submission Button*@
+                    <input id="submitData" type="submit" value="Submit" class="submit" name="cmd" />
+
+                    @*Late Fee Submission Button*@
+                    @*@if (ViewBag.IsLatePaymentDone)
+                        {
+                            <input id="submitData" type="submit" value="Submit" class="submit" name="cmd" />
+                        }
+                        else
+                        {
+                            <input id="paylateFee" type="submit" value="Submit" class="submit" name="cmd" />
+                        }*@
+                </p>
+            }
+            else
+            {
+                if (clgencs != null && clgencs.Count > 0)
+                {
+                    <div class="success">
+                        <p><strong>Message:</strong> Please Upload the following Documents in Colleges Enclosures Softcopy.</p>
+                    </div>
+                }
+            }
+            if (TempData["MAC"] != null)
+            {
+                <div class="error">
+                    <p><strong>MAC Address:</strong> @TempData["MAC"].ToString()</p>
+                </div>
+            }
+            foreach (var Encls in ViewBag.AllObjEnclosures)
+            {
+                <div class="error">
+                    <p><strong>Upload:</strong>  @Encls.documentName.ToString()</p>
+                </div>
+            }
+            @*if (TempData["PartA"] != null)
+                {
+                    <div class="error">
+                        <p><strong>PartA:</strong> @TempData["PartA"].ToString()</p>
+                    </div>
+                }
+                if (TempData["PartB"] != null)
+                {
+                    <div class="error">
+                        <p><strong>PartB:</strong> @TempData["PartB"].ToString()</p>
+                    </div>
+                }
+                if (TempData["AllEnclousres"] != null)
+                {
+                    <div class="error">
+                        <p><strong>All Enclosures:</strong> @TempData["AllEnclousres"].ToString()</p>
+                    </div>
+                }
+                if (TempData["PharmDEnclousres"] != null)
+                {
+                    <div class="error">
+                        <p><strong>Pharm.D Enclosure:</strong> @TempData["PharmDEnclousres"].ToString()</p>
+                    </div>
+                }
+                if (TempData["PharPracticeEnclousres"] != null)
+                {
+                    <div class="error">
+                        <p><strong>Pharmacy Practice Enclosure:</strong> @TempData["PharPracticeEnclousres"].ToString()</p>
+                    </div>
+                }*@
+            if (TempData["Affidavit"] != null)
+            {
+                <div class="error">
+                    <p><strong>Affidavit:</strong> @TempData["Affidavit"].ToString()</p>
+                </div>
+            }
+            if (TempData["Declaration"] != null)
+            {
+                <div class="error">
+                    <p><strong>Declaration:</strong> @TempData["Declaration"].ToString()</p>
+                </div>
+            }
+            if (TempData["CollegeFee"] != null)
+            {
+                <div class="error">
+                    <p><strong>CollegeFee:</strong> @TempData["CollegeFee"].ToString()</p>
+                </div>
+            }
+            if (TempData["LateFee"] != null)
+            {
+                <div class="error">
+                    <p><strong>LateFee:</strong> @TempData["LateFee"].ToString()</p>
+                </div>
+            }
+
+        }
+
+        @*if (TempData["PartA"] != null)
+            {
+                <div class="error">
+                    <p><strong>PartA:</strong> @TempData["PartA"].ToString()</p>
+                </div>
+            }
+            if (TempData["PartB"] != null)
+            {
+                <div class="error">
+                    <p><strong>PartB:</strong> @TempData["PartB"].ToString()</p>
+                </div>
+            }
+            if (TempData["AllEnclousres"] != null)
+            {
+                <div class="error">
+                    <p><strong>All Enclousres:</strong> @TempData["AllEnclousres"].ToString()</p>
+                </div>
+            }
+            if (TempData["Affidavit"] != null)
+            {
+                <div class="error">
+                    <p><strong>Affidavit:</strong> @TempData["Affidavit"].ToString()</p>
+                </div>
+            }
+            if (TempData["Declaration"] != null)
+            {
+                <div class="error">
+                    <p><strong>Declaration:</strong> @TempData["Declaration"].ToString()</p>
+                </div>
+            }
+            if (TempData["CollegeFee"] != null)
+            {
+                <div class="error">
+                    <p><strong>CollegeFee:</strong> @TempData["CollegeFee"].ToString()</p>
+                </div>
+            }
+            if (TempData["LateFee"] != null)
+            {
+                <div class="error">
+                    <p><strong>LateFee:</strong> @TempData["LateFee"].ToString()</p>
+                </div>
+            }*@
+
+
+        if (ViewBag.IsCompleted == true && Roles.IsUserInRole("DataEntry"))
+        {
+            <span>I agree to the terms of JNTUH</span>
+            <p>
+                <input type="submit" value="Data Entry Completed" class="submit1" name="cmd" />
+            </p>
+        }
+
+        if (ViewBag.IsVerified == true && Roles.IsUserInRole("Admin"))
+        {
+            <span>I agree to the terms of JNTUH</span>
+            <p>
+                <input type="submit" value="Data Entry Verified" class="submit1" name="cmd" />
+            </p>
+        }
+
+
+        <div class="details_table">
+
+            @*<div class="editor-label" style="width: 7%; height: 87px">
+                    @Html.LabelFor(model => model.collegeEditRemarks)
+                </div>
+                <div class="editor-field" style="width: 90%">
+                    @Html.HiddenFor(model => model.collegeEditRemarks)
+                    @Html.ValidationMessageFor(model => model.collegeEditRemarks)
+                </div>
+
+                <div class="editor-label" style="width: 7%; text-align: right">
+                    @Html.CheckBoxFor(model => model.IsCollegeEditable)
+                </div>
+                <div class="editor-field" style="width: 90%">
+                    @Html.LabelFor(model => model.IsCollegeEditable)
+                    @Html.ValidationMessageFor(model => model.IsCollegeEditable)
+                </div>*@
+
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#paylateFee').click(function (e) {
+            e.preventDefault();
+            var isChecked = $('#IsCollegeEditable').is(':checked');
+            if (!isChecked) {
+                alert("Please Select Agree");
+                return;
+            }
+            if (isChecked == true) {
+                var Confirm = confirm("Are you sure, you want to pay?");
+                if (Confirm) {
+                    window.location.href = 'LateFeeDetailsandPayment';
+                }
+                else {
+                    return;
+                }
+            }
+        });
+        $("#submitData").click(function () {
+            var IsConfirm = true;
+            var IsCollegeEditable = true;
+            var isChecked = $('#IsCollegeEditable').is(':checked');
+            if (isChecked == true) {
+                IsCollegeEditable = true;
+                var Confirm = confirm("Are you sure, you verified that the data uploaded is valid?");
+                if (Confirm == true) {
+                    IsConfirm = true;
+                }
+                else {
+                    IsConfirm = false;
+                }
+            }
+            else {
+                alert("Please Select Agree");
+                IsCollegeEditable = false;
+            }
+
+            return IsCollegeEditable && IsConfirm;
+
+        });
+    });
+</script>
+

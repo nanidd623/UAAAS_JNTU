@@ -1,0 +1,103 @@
+﻿@model IEnumerable<UAAAS.Models.Admin.FacultyNews>
+@using UAAAS.Models;
+@{
+    ViewBag.Title = "FacultyNewsIndex";
+    uaaasDBContext db = new uaaasDBContext();
+    int count = 1;
+}
+<h2>FacultyNewsIndex</h2>
+
+
+<p class="create_link_right">
+    @Html.ActionLink("Add News/Events", "FacultyNewsCreate", "NewOnlineRegistration", new { @class = "create_button" })
+</p>
+
+@section onReady{
+
+    /* Initialize table and make first column non-sortable*/
+    $('#example').dataTable({  "bPaginate": false,
+    "bLengthChange": false,
+    "bFilter": true,
+    "bSort": false,
+    "bInfo": true,
+    "bAutoWidth": false,
+    "bJQueryUI": true,
+    "iDisplayLength": 50,
+    "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ],
+    "sPaginationType": "full_numbers"
+    });
+}
+<div>
+    @if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+</div>
+
+<table id="example" class="display" style="width: 100%;">
+    <thead>
+        <tr class="gridHeader">
+            <th style="width: 50px; text-align: center;">
+                S.No
+            </th>
+            <th style="width: 300px; text-align: left;">
+                Registration Number
+            </th>
+            <th>
+                Title
+            </th>          
+            <th style="width: 50px; text-align: center;" class="ui-state-default">
+                Status
+            </th>
+            <th class="ui-state-default" style="width: 30px; text-align: center;">Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="col2">
+                <td style="width: 50px; text-align: center;">
+                    @(count++)
+                </td>
+                <td style="width: 300px; text-align: left;">
+                    <label>@item.RegistartionNumber</label>
+                </td>
+                <td style="text-align: justify;">
+                    @if (!string.IsNullOrWhiteSpace(item.navigateURL))
+                    {
+                        <a class="navigationurl" href="@item.navigateURL" target="_blank">@item.title</a>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.title)
+                    }
+                    @if (item.createdOn >= DateTime.Now.AddDays(-10))
+                    {
+                        <img src="../Content/images/latest.gif" alt="latest" />
+                    }
+                </td>            
+                <td style="width: 50px; text-align: center;">
+                    @if (item.isActive == true)
+                    {
+                        <img src="@Url.Content("~/Content/images/active.png")" alt="JNTU Hyderabad Logo" />
+                    }
+                    else
+                    {
+                        <img src="@Url.Content("~/Content/images/inactive.png")" alt="JNTU Hyderabad Logo" />
+                    }
+                </td>
+                <td style="width: 30px; text-align: center;">
+                    @Html.ActionLink("Edit", "FacultyNewsEdit", "NewOnlineRegistration", new { id = item.id }, new { @class = "editDialog edit_button" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

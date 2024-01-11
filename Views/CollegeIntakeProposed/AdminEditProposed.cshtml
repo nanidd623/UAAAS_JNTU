@@ -1,0 +1,185 @@
+﻿@model UAAAS.Models.CollegeIntakeProposed
+
+@{
+    ViewBag.Title = "Add College Intake Proposed";
+}
+
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<style type="text/css">
+    .width {
+        width: 150px;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetSpecialization(@Model.DepartmentID);
+        $(".calendar, .year").css("width", "75px");
+
+        if ($("#Degree").val() > 0) {
+            GetDepartments($("#Degree").val());
+        }
+        
+        
+        $("#Degree").change(function () {
+            var DegreeID = $(this).val();
+            GetDepartments(DegreeID);
+        });
+        if($("#Department").val() > 0)
+        {
+            GetSpecialization($("#Department").val());
+        }
+        $("#Department").change(function(){
+            var DepartmentID = $(this).val();
+            GetSpecialization(DepartmentID);
+        });
+
+        function GetDepartments(DegreeID){
+            $.getJSON("/CollegeIntakeProposed/GetDepartments",{ id : DegreeID},
+                function(DepartmentsData){
+                    var select = $("#Department");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(DepartmentsData,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.DepartmentID ? true : false)
+                        }));
+                    });
+                });
+            }
+
+        function GetSpecialization(DepartmantID){
+            $.getJSON("/CollegeIntakeProposed/GetSpecialization" ,{id : DepartmantID},
+                function(Specializationdata){
+                    var select = $("#Specialization");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(Specializationdata,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.specializationId ? true : false)
+                        }));
+                    });
+                });
+            }
+    });
+
+</script>
+@{
+    var adminId = ViewContext.RouteData.Values["adminId"];
+}
+@using (Ajax.BeginForm("AdminEditProposed", "CollegeIntakeProposed", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "CollegeIntakeDialog" }))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }    
+    <div class="details_table">
+        @Html.Hidden("adminId", ViewContext.RouteData.Values["adminId"])
+        @Html.HiddenFor(model => model.id, new { Value = @Model.id })
+        @*@Html.DisplayFor(model => model.id)*@
+
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.degreeID)
+        </div>
+        <div class="editor-field" style="width: 250px">
+            @* @Html.EditorFor(model => model.degreeID) *@
+            @Html.DropDownListFor(model => model.degreeID,
+            new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "degreeId", "degree"),
+            "-- Select --", new { id = "Degree", @class = "width" })
+            @Html.ValidationMessageFor(model => model.degreeID)
+        </div>
+
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.DepartmentID)
+        </div>
+        <div class="editor-field" style="width: 250px">
+            @Html.DropDownListFor(model => model.DepartmentID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+            "-- Select --", new { id = "Department", @class = "width" })
+            @Html.ValidationMessageFor(model => model.DepartmentID)
+        </div>
+
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.specializationId)
+        </div>
+        <div class="editor-field" style="width: 250px">
+            @Html.DropDownListFor(model => model.specializationId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "specializationName"),
+            "-- Select --", new { id = "Specialization", @class = "width" })
+            @Html.ValidationMessageFor(model => model.specializationId)
+        </div>
+
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.shiftId)
+        </div>
+        <div class="editor-field" style="width: 250px">
+            @Html.DropDownListFor(model => model.shiftId,
+            new SelectList(ViewBag.Shift as System.Collections.IEnumerable, "id", "shiftName"),
+            new { id = "Shift", @class = "width" })
+            @Html.ValidationMessageFor(model => model.shiftId)
+        </div>
+
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.courseAffiliationStatusCodeId)
+        </div>
+        <div class="editor-field" style="width: 250px">
+            @Html.DropDownListFor(model => model.courseAffiliationStatusCodeId,
+            new SelectList(ViewBag.CourseAffiliationstatus as System.Collections.IEnumerable, "id", "courseAffiliationStatusCode"),
+            "-- Select --", new { id = "CourseAffiliationstatus", @class = "width" })
+            @Html.ValidationMessageFor(model => model.courseAffiliationStatusCodeId)
+        </div>
+
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.proposedIntake)<label>@ViewBag.Year</label>
+        </div>
+        <div class="editor-field" style="width: 250px">
+            @Html.TextBoxFor(model => model.proposedIntake, new { Value = @Model.proposedIntake == 0 ? "0" : @Model.proposedIntake.ToString(), @class = "width", @maxlength = "10" })
+            @Html.ValidationMessageFor(model => model.proposedIntake)
+        </div>
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.createdBy)
+        <div class="clear"></div>
+        <div style="text-align: center">
+            <p>
+                @if (ViewBag.IsUpdate == true)
+                {
+                    <input type="submit" value="Save" id="btnSave" name="cmd" />                    
+                }
+                else
+                {
+                    <input type="submit" value="Add" id="btnAdd" name="cmd" />
+                }
+            </p>
+        </div>
+        <div class="editor-label" style="width: 90%">
+            <b>Course Affiliation Status Codes:</b>
+            <br />
+            S – Existing Course with no Increase or Reduction in Intake<br />
+            N – New course<br />
+            I – Existing Course with Increase in Intake<br />
+            R – Existing Course with Reduction in Intake<br />
+            C - Closure of the existing course<br />
+        </div>
+    </div>
+    
+}

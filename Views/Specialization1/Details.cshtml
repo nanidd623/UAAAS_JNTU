@@ -1,0 +1,58 @@
+﻿@model UAAAS.Models.jntuh_specialization
+@{
+    ViewBag.Title = "Specialization Details";
+}
+<h2>Specialization Details</h2>
+<div class="details_table">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.degreeId)
+    </div>
+    <div class="editor-field">
+        @ViewBag.Degree
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.departmentId)
+    </div>
+    <div class="editor-field">
+        @Html.DisplayFor(model => model.jntuh_department.departmentName)
+    </div>
+    @*<div class="display-label">Department Name</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.jntuh_department.departmentName)
+    </div>*@
+    <div class="display-label">Specialization Name</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.specializationName)
+    </div>
+    <div class="display-label">Description</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.specializationDescription)
+    </div>
+
+    <div class="display-label">Status</div>
+    <div class="display-field">
+        @if (this.Model.isActive == true)
+        { <label>Active</label>}
+        else
+        {<label>Inactive</label>}
+    </div>
+
+
+    @Html.HiddenFor(model => model.createdOn)
+    @Html.HiddenFor(model => model.my_aspnet_users.name)
+    @Html.HiddenFor(model => model.updatedOn)
+    @Html.HiddenFor(model => model.my_aspnet_users1.name)
+
+    <div class="display-label last-row">
+        &nbsp;
+    </div>
+    <div class="display-field last-row">
+        <p>
+            @Html.ActionLink("Back", "Index", null, new { @class = "back_button" })
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }, new { @class = "submit_button" })
+        </p>
+    </div>
+    <div class="clear"></div>
+</div>
+

@@ -1,0 +1,248 @@
+﻿@model IEnumerable<UAAAS.Models.AdminFacultyphdDetails>
+@{
+    ViewBag.Title = "PhdDetails";
+    var index = 1;
+}
+
+<h2>Ph.d details</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 5000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        //Update collegestatus popup
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/College',
+            autoOpen: false,
+            resizable: false,
+            height: 300,
+            width: 640,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'College'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'College'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        $('#collegeId').change(function () {
+            var collegeId = $(this).val();
+            if ($('#collegeId').val() != '') {
+                window.location = '/Admin/PhdDetails?collegeid=' + collegeId;
+            }
+            else {
+                window.location = '/Admin/PhdDetails';
+            }
+        });
+    });
+</script>
+
+<table class="four_columns">
+    <tr>
+        <td class="col1">
+            <span>College</span>
+        </td>
+        <td class="col2" colspan="4">
+            @Html.DropDownList("collegeId",
+                                  new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"),
+                                  "--Select--", new { id = "collegeId" })
+        </td>
+    </tr>
+</table>
+<br />
+<table id="example" class="display" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="width: 20px; text-align: center;" rowspan="2">S.No</th>
+            @*<th style="width: 80px; text-align: center;" rowspan="2">Code</th>*@
+            @*<th style="text-align: left;" rowspan="2">College Name</th>*@
+            <th class="ui-state-default" style="width: 100px; text-align: center;" rowspan="2">Registration Number</th>
+            <th class="ui-state-default" style="width: 100px; text-align: center;" rowspan="2">Name</th>
+            <th class="ui-state-default" style="width: 100px !important; min-width: 80px !important; text-align: center;" rowspan="2">University</th>
+            <th style="width: 80px; text-align: center;" rowspan="2">Admission Year</th>
+            <th class="ui-state-default" style="width: 50px; text-align: center;" rowspan="2">PH.D Award Year </th>
+            <th class="ui-state-default" style="width: 50px; text-align: center;" rowspan="2">View</th>
+            @*<th style="width: 80px; text-align: center;" rowspan="2"></th>
+                <th style="width: 80px; text-align: center;" rowspan="2"></th>*@
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align: center;">
+                    @(index++)
+                </td>
+                @*<td style="text-align: center; text-transform: uppercase;">
+                        @Html.DisplayFor(modelItem => item.CollegeCode)
+                    </td>*@
+                @*<td style="text-align: left;">
+                        @Html.DisplayFor(modelItem => item.CollegeName)
+                    </td>*@
+                <td style="text-align: left; font-weight: normal;">
+                    @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                </td>
+                <td style="text-align: left; font-weight: normal;">
+                    @Html.DisplayFor(left => item.FirstName)
+                    @Html.DisplayFor(modelItem => item.LastName)
+                    @Html.DisplayFor(modelItem => item.MiddleName)
+                </td>
+                <td style="text-align: left;">
+                    @Html.DisplayFor(modelItem => item.University)
+                </td>
+                <td style="text-align: left; font-weight: normal;">
+                    @Html.DisplayFor(modelItem => item.PhdAdmissionYear)
+                </td>
+                <td style="text-align: left; font-weight: normal;">
+                    @Html.DisplayFor(modelItem => item.PhdawardYear)
+                </td>
+
+                <td style="text-align: center;">
+                    @*<a href="/NewOnlineRegistration/FacultyphdDetails?fid=' + @item.EncryptId" target=" _blank" class="view_button"><span>View</span></a>*@
+                    @Html.ActionLink("View", "ViewFacultyphdDetails", "NewOnlineRegistration", new { @fid = item.EncryptId }, new { @target = "_blank", @class = "view_button" })
+                </td>
+                @*<td style="text-align: center;"></td>
+                    <td style="text-align: center;"></td>*@
+            </tr>
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th>
+                <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            @*<th>
+                    <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                </th>*@
+            @*<th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>*@
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th class=" ui-state-default" style="width: 70px;">
+                <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th style="width: 60px;" class=" ui-state-default">
+                <input type="text" id="i-6" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th style="width: 135px;" class=" ui-state-default">
+                <input type="text" id="i-7" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th style="width: 135px;" class=" ui-state-default">
+                <input type="text" id="i-7" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            @*<th style="width: 135px;" class=" ui-state-default">
+                    <input type="text" id="i-8" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-9" style="width: 50%; text-align: left; display: none;" class="search_init">
+                </th>*@
+        </tr>
+    </tfoot>
+</table>
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+
+<div id="dialog-edit" style="display: none"></div>

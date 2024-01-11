@@ -1,0 +1,546 @@
+﻿@model UAAAS.Models.CollegeInformation
+
+@{
+    //if (@ViewBag.PartialEdit == false)
+    //{
+    //    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    //}
+
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    ViewBag.Title = "Affiliation Information";
+    var status = @Model.collegeStatus;
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+    @*@if (ViewBag.IsEditable == true)
+        {
+            <h2>College Information</h2>
+
+
+        }
+        @if (ViewBag.IsEditable == true)
+        {
+            <p class="create_link_right">
+                @Html.ActionLink("Edit", "Edit", "CollegeInformation", new { @class = "create_button" })
+            </p>
+        }
+        else
+        {
+            @*<p class="create_link_right">
+                    <input name="btnPrint" type="button" onclick="printdiv('div_print');" class="create_button" value=" Print ">
+                </p>
+        }*@
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".calendar").css("width","75px");
+
+            if($("#state").val() > 0)
+            {
+                GetDistricts($("#state").val());
+            }
+
+            @*$("#state").change(function () {
+            var stateID = $(this).val();
+            GetDistricts(stateID);
+        });
+
+        function GetDistricts(stateID){
+            $.getJSON("/PA_CollegeInformation/GetDistrictList", { id: stateID },
+                   function (myData) {
+                       var select = $("#district");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: '',
+                           text: '-- Select --'
+                       }));
+                       $.each(myData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text,
+                               selected : (itemData.Value == @Model.districtId ? true: false)
+                           }));
+                       });
+                   });}*@
+        });
+
+        function isNumberKey(evt){
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+            {
+                alert("Allows Only Digits");
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        function printdiv(printpage)
+        {
+            //Get the HTML of div
+            var divElements = document.getElementById(printpage).innerHTML;
+            //Get the HTML of whole page
+            var oldPage = document.body.innerHTML;
+
+            //Reset the page's HTML with div's HTML only
+            document.body.innerHTML =
+              "<html><head><title></title></head><body>" +
+              divElements.fontsize(1) + "</body>";
+
+            //Print Page
+            window.print();
+
+            //Restore orignal HTML
+            document.body.innerHTML = oldPage;
+            return false;
+        }
+    </script>
+    <div id="div_print">
+        @*@if (ViewBag.IsEditable == false)
+            {
+                <h2>College Information</h2>
+                <br />
+            <span>
+                <strong style="color:red">Note:</strong>    If the college has obtained the UGC Autonomous Status, kindly Email with relevant soft copy to <b>supportaac@jntuh.ac.in</b> to enable the <strong> EDIT</strong>  option
+            </span>
+            }*@
+        @using (Html.BeginForm())
+        {
+            int otherCategoeryCount = 0;
+            @Html.ValidationSummary(true)
+
+            if (ViewBag.Norecords == true)
+            {
+                <div class="warning" style="width: 200px; margin: 0 auto;">
+                    <p>No Data found</p>
+                </div>
+            }
+            else
+            {
+                <table class="four_columns">
+                    <tr>
+                        <td class="col11" colspan="4">
+                            <b>Affiliation Information</b>
+                        </td>
+                    </tr>
+
+                    @*<tr>
+                            <td class="col11">
+                                @Html.LabelFor(model => model.collegeStatusID)
+                                @if (@Model.collegeStatusID == 1)
+                                {
+                                    <span><br /><br />Minority Status</span>
+                                }
+
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.collegeStatus)
+                                @Html.HiddenFor(model => model.collegeStatusID)
+                                @if (@Model.collegeStatusID == 1)
+                                {
+                                    <span class="collegestatustr">
+
+                                        <br /><br />@Html.DisplayFor(model => model.collegeminorityStatus, new { @id = "" })
+                                    </span>
+                                }
+
+                            </td>
+                            <td class="col1">
+                                @if (@Model.collegeStatusID == 1)
+                                {
+                                    <table style="width: 100%" class="collegestatustr">
+                                        <tr>
+                                            <td style="height: 25px; text-align: left;">From:</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="height: 25px; text-align: left;">To:</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="height: 25px; text-align: left;">Supporting Document:</td>
+                                        </tr>
+                                    </table>
+                                }
+
+                            </td>
+                            <td class="col21">
+                                @if (@Model.collegeStatusID == 1)
+                                {
+                                    <table style="width: 100%" class="collegestatustr">
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(model => model.collegestatusfromdate)
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="height: 25px; width: 120px;">
+                                                @Html.DisplayFor(model => model.collegestatustodate)
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="height: 25px; width: 55px;">
+                                                @if (@Model.collegestatusfilepath != null)
+                                                {
+                                                    <a href="~/Content/Upload/College/CollegeStatus/@Model.collegestatusfilepath" target="_blank">
+                                                        <span style="color: red;"><b>View</b></span>
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    </table>
+                                }
+                                @Html.ActionLink("View Previous Statuses", "View", "Minority", new { collegeStatus = Model.collegeStatus }, new { @class = "create_button", @style = "float:right;", @target = "_blank" })
+                            </td>
+                        </tr>*@
+
+                    @{int rowNo = 1;}
+                    @foreach (var item in Model.affiliationType)
+                    {
+                        var txtFromId = "txtfrom_" + @rowNo;
+                        var txtToId = "txtto_" + @rowNo;
+                        var txtDuration = "txtDuration_" + @rowNo;
+                        var rdoAffilitionId = "rdoAffilitionId_" + @rowNo;
+                        var lblAffilitionId = "lblAffilitionId_" + @rowNo;
+                        var fieldAffilitionId = "fieldAffilitionId_" + @rowNo;
+                        var selectedAffiliation = "affiliationTypeId" + @rowNo;
+                        var selectedAffiliationNew = "affiliationTypeIdNew" + @rowNo;
+                        var fromDate = "affiliationFromDate" + @rowNo;
+                        var toDate = "affiliationToDate" + @rowNo;
+                        var duration = "affiliationDuration" + @rowNo++;
+                        var txtFile = "txtFile" + @rowNo;
+                        var file = "affiliationfile" + @rowNo++;
+
+                        <tr>
+                            <td class="col1">
+                                @item.name
+                            </td>
+                            <td class="col2" id="@rdoAffilitionId">
+                                @if (@selectedAffiliation == "affiliationTypeId1")
+                                {
+                                    if (Model.affiliationSelected1 == 1)
+                                    {
+                                        <label>Yes</label>
+                                    }
+                                    else
+                                    {
+                                        <label>No</label>
+                                    }
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId2")
+                                {
+                                    if (Model.affiliationSelected2 == 1)
+                                    {
+                                        <label>Yes</label>
+                                    }
+                                    else
+                                    {
+                                        <label>No</label>
+                                    }
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId3")
+                                {
+                                    if (Model.affiliationSelected3 == 1)
+                                    {
+                                        <label>Yes</label>
+                                    }
+                                    else
+                                    {
+                                        <label>No</label>
+                                    }
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId4")
+                                {
+                                    if (Model.affiliationSelected4 == 1)
+                                    {
+                                        <label>Conferred</label>
+                                    }
+                                    else if (Model.affiliationSelected4 == 2)
+                                    {
+                                        <label>Applied</label>
+                                    }
+                                    else
+                                    {
+                                        <label>Not Yet Applied</label>
+                                    }
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId5")
+                                {
+                                    if (Model.affiliationSelected5 == 1)
+                                    {
+                                        <label>Yes</label>
+                                    }
+                                    else
+                                    {
+                                        <label>No</label>
+                                    }
+                                }
+                            </td>
+                            <td class="col3" id="@lblAffilitionId" style="width:28%">
+                                <table style="width: 90%">
+                                    <tr>
+
+                                        @if (@item.name.Contains("NAAC"))
+                                        {
+                                            <td>Validity of NAAC Accreditation</td>
+                                        }
+                                        else if (@item.name.Contains("Permanent"))
+                                        {
+                                            <td>Validity of Permanent Affiliation</td>
+                                        }
+                                        else
+                                        {
+                                            <td>Validity of Autonomous Status</td>
+                                        }
+
+                                        <td style="height: 25px; text-align: right; width: 55px;" colspan="2">From :</td>
+                                    </tr>
+                                    <tr>
+                                        @if (@item.name != "NBA Status")
+                                        {
+                                            <td></td>
+                                            <td style="height: 25px; text-align: right; width: 60px;" colspan="2">To :</td>
+                                        }
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td style="height: 25px; text-align: right; width: 60px;">Duration :</td>
+                                    </tr>
+                                    <tr>
+                                        @*<td></td>*@
+                                        <td style="height: 25px; text-align: right; width: 60px;" colspan="2">Supporting Document:</td>
+                                    </tr>
+                                    @if (@item.name.Contains("NAAC"))
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td style="height: 25px; text-align: right;">
+                                                @Html.LabelFor(model => model.affiliationGrade) :
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td style="height: 25px; text-align: right;">
+                                                @Html.LabelFor(model => model.affiliationCGPA) :
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                            <td class="col4 readonly" id="@fieldAffilitionId">
+                                <table style="width: 100%">
+                                    <tbody></tbody>
+                                    <tr>
+                                        <td colspan="2">
+                                            @if (@selectedAffiliation == "affiliationTypeId1")
+                                            {
+                                                <span>
+                                                    @Html.DisplayFor(model => model.affiliationFromDate1)
+                                                </span>
+                                            }
+                                            else if (@selectedAffiliation == "affiliationTypeId3")
+                                            {
+                                                <span>
+                                                    @Html.DisplayFor(model => model.affiliationFromDate3)
+                                                </span>
+                                            }
+                                            else if (@selectedAffiliation == "affiliationTypeId5")
+                                            {
+                                                <span>
+                                                    @Html.DisplayFor(model => model.pa_affiliationFromDate5)
+                                                </span>
+                                            }
+                                            <br />
+                                            <div style="height: 10px;"></div>
+
+                                            @if (@selectedAffiliation == "affiliationTypeId1")
+                                            {
+                                                <span>
+                                                    @Html.DisplayFor(model => model.affiliationToDate1)
+                                                </span>
+                                            }
+                                            else if (@selectedAffiliation == "affiliationTypeId3")
+                                            {
+                                                @Html.DisplayFor(model => model.affiliationToDate3)
+                                            }
+                                            else if (@selectedAffiliation == "affiliationTypeId5")
+                                            {
+                                                @Html.DisplayFor(model => model.pa_affiliationToDate5)
+                                            }
+                                            <br />
+                                            <div style="height: 6px;"></div>
+
+                                            @if (@selectedAffiliation == "affiliationTypeId1")
+                                            {
+                                                @Html.DisplayFor(model => model.affiliationDuration1)
+                                            }
+                                            else if (@selectedAffiliation == "affiliationTypeId3")
+                                            {
+                                                @Html.DisplayFor(model => model.affiliationDuration3)
+                                            }
+                                            else if (@selectedAffiliation == "affiliationTypeId5")
+                                            {
+                                                @Html.DisplayFor(model => model.pa_affiliationDuration5)
+                                            }
+                                            <br />
+                                            <div style="height: 10px;"></div>
+
+                                            @if (@selectedAffiliation == "affiliationTypeId1")
+                                            {
+                                                if (Model.affiliationfilepath1 != null)
+                                                {
+                                                    <a href="~/Content/Upload/College/UGC/@Model.affiliationfilepath1" target="_blank">
+                                                        <span style="color: red;"><b>View</b></span>
+                                                    </a>
+                                                }
+                                            }
+                                            else if (@selectedAffiliation == "affiliationTypeId3")
+                                            {
+                                                if (Model.affiliationfilepath3 != null)
+                                                {
+                                                    <a href="~/Content/Upload/College/NAAC/@Model.affiliationfilepath3" target="_blank">
+                                                        <span style="color: red;"><b>View</b></span>
+                                                    </a>
+                                                }
+                                            }
+                                            else if (@selectedAffiliation == "affiliationTypeId5")
+                                            {
+                                                if (Model.pa_affiliationfilepath5 != null)
+                                                {
+                                                    <a href="~/Content/Upload/College/PA/@Model.pa_affiliationfilepath5" target="_blank">
+                                                        <span style="color: red;"><b>View</b></span>
+                                                    </a>
+                                                }
+                                            }
+
+                                            @if (@item.name.Contains("NAAC"))
+                                            {
+                                                <div style="height: 3px;"></div>
+                                                @Html.DisplayFor(model => model.affiliationGrade, new { style = "width:100px" })
+                                                
+                                                <div style="height: 3px;"></div>
+                                                @Html.DisplayFor(model => model.affiliationCGPA, new { style = "width:100px" })
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                @if (@item.name.Contains("UGC"))
+                                {
+                                    @Html.ActionLink("View Previous Statuses", "View", "UGC", new { affiliationTypeId = item.id }, new { @class = "create_button", @style = "float:right;", @target = "_blank" })
+                                }
+                                @if (@item.name.Contains("NAAC"))
+                                {
+                                    @Html.ActionLink("View Previous Statuses", "View", "NAAC", new { affiliationTypeId = item.id }, new { @class = "create_button", @style = "float:right;", @target = "_blank" })
+                                }
+                                @if (@item.name.Contains("Permanent"))
+                                {
+                                    @Html.ActionLink("View Previous Statuses", "View", "PermanentAffiliation", new { affiliationTypeId = item.id }, new { @class = "create_button", @style = "float:right;", @target = "_blank" })
+                                }
+                            </td>
+                        </tr>
+                    }
+                    <script type="text/javascript">
+                        if(@Model.affiliationSelected1 == 1)
+                        {
+                            $("#lblAffilitionId_1 table").attr('style', 'display: block');
+                            $("#fieldAffilitionId_1 table").attr('style', 'display: block');
+                        }
+                        else
+                        {
+                            $("#lblAffilitionId_1 table").attr('style', 'display: none');
+                            $("#fieldAffilitionId_1 table").attr('style', 'display: none');
+                            $("#txtfrom_1").val("");
+                            $("#txtto_1").val("");
+                            $("#txtDuration_1").val("");
+                        }
+                        if(@Model.affiliationSelected2 == 1)
+                        {
+                            $("#lblAffilitionId_2 table").attr('style', 'display: block');
+                            $("#fieldAffilitionId_2 table").attr('style', 'display: block');
+                        }
+                        else
+                        {
+                            $("#lblAffilitionId_2 table").attr('style', 'display: none');
+                            $("#fieldAffilitionId_2 table").attr('style', 'display: none');
+                            $("#txtfrom_2").val("");
+                            $("#txtto_2").val("");
+                            $("#txtDuration_2").val("");
+                        }
+                        if(@Model.affiliationSelected3 == 1)
+                        {
+                            $("#lblAffilitionId_3 table").attr('style', 'display: block');
+                            $("#fieldAffilitionId_3 table").attr('style', 'display: block');
+                        }
+                        else
+                        {
+                            $("#lblAffilitionId_3 table").attr('style', 'display: none');
+                            $("#fieldAffilitionId_3 table").attr('style', 'display: none');
+                            $("#txtfrom_3").val("");
+                            $("#txtto_3").val("");
+                            $("#txtDuration_3").val("");
+                        }
+                        if(@Model.affiliationSelected4 == 1)
+                        {
+                            $("#lblAffilitionId_4 table").attr('style', 'display: block');
+                            $("#fieldAffilitionId_4 table").attr('style', 'display: block');
+                        }
+                        else if(@Model.affiliationSelected4 == 2)
+                        {
+                            $("#lblAffilitionId_4 table").attr('style', 'display: none');
+                            $("#fieldAffilitionId_4 table").attr('style', 'display: none');
+                            $("#txtfrom_4").val("");
+                            $("#txtto_4").val("");
+                            $("#txtDuration_4").val("");
+                        }
+                        else
+                        {
+                            $("#lblAffilitionId_4 table").attr('style', 'display: none');
+                            $("#fieldAffilitionId_4 table").attr('style', 'display: none');
+                            $("#txtfrom_4").val("");
+                            $("#txtto_4").val("");
+                            $("#txtDuration_4").val("");
+                        }
+                        if(@Model.affiliationSelected5 == 1)
+                        {
+                            $("#lblAffilitionId_5 table").attr('style', 'display: block');
+                            $("#fieldAffilitionId_5 table").attr('style', 'display: block');
+                        }
+                        else if(@Model.affiliationSelected5 == 2)
+                        {
+                            $("#lblAffilitionId_5 table").attr('style', 'display: none');
+                            $("#fieldAffilitionId_5 table").attr('style', 'display: none');
+                            $("#txtfrom_5").val("");
+                            $("#txtto_5").val("");
+                            $("#txtDuration_5").val("");
+                            $("#affiliationGrade").val("");
+                        }
+                        else
+                        {
+                            $("#lblAffilitionId_5 table").attr('style', 'display: none');
+                            $("#fieldAffilitionId_5 table").attr('style', 'display: none');
+                            $("#txtfrom_5").val("");
+                            $("#txtto_5").val("");
+                            $("#txtDuration_5").val("");
+                            $("#affiliationGrade").val("");
+                        }
+                    </script>
+                </table>
+            }
+        }
+    </div>

@@ -1,0 +1,152 @@
+﻿@model IEnumerable<UAAAS.Models.OtherCollege>
+@{
+    ViewBag.Title = "Other Colleges and Courses";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    int num = 1;
+    int cNum = 1;
+}
+<h2>Other Colleges and Courses</h2>
+<table class="four_columns" style="width: 100%;">
+    <tr>
+        <td colspan="5" class="col11">
+            <b>Other Colleges in the same premises</b>
+        </td>
+    </tr>
+    <tr>
+        <th style="text-align: left; width: 1%" class="col11">S.No
+        </th>
+        <th style="text-align: left; width: 59%" class="col11">College Name
+        </th>
+        <th style="text-align: left; width: 20%" class="col11">Year Of Establishment(YYYY)
+        </th>
+        <th style="text-align: left; width: 20%" class="col11">Affiliated University
+        </th>
+    </tr>
+    @foreach (var item in ViewBag.Colleges as List<UAAAS.Models.OtherCollege>)
+    {
+        <tr>
+            <td style="text-align: left;" class="col21">
+                @(num++)
+            </td>
+            <td style="text-align: left;" class="col21">
+                @Html.DisplayFor(modelItem => item.collegeName)
+            </td>
+            <td style="text-align: left;" class="col21">
+                @Html.DisplayFor(modelItem => item.yearOfEstablishment)
+            </td>
+            <td style="text-align: left;" class="col21">
+                @if (!string.IsNullOrWhiteSpace(item.otherUniversityName))
+                {
+                    @Html.DisplayFor(modelItem => item.otherUniversityName)
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.universityName)
+                }
+            </td>
+        </tr>
+    }
+</table>
+@if (ViewBag.CollegeCount == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+}
+<br />
+<table class="four_columns" style="width: 100%;">
+    <tr>
+        <td colspan="4" class="col11">
+            <b>Other Courses in the same premises</b>
+        </td>
+    </tr>
+    <tr>
+        <th style="text-align: left; width: 1%" class="col11">S.No
+        </th>
+        <th style="text-align: left; width: 60%" class="col11">Course Name 
+        </th>
+        <th style="text-align: left; width: 39%" class="col11">Affiliated University
+        </th>
+    </tr>
+    @foreach (var item in ViewBag.Courses as List<UAAAS.Models.OtherCourse>)
+    {
+        <tr>
+            <td style="text-align: left;" class="col21">
+                @(cNum++)
+            </td>
+            <td style="text-align: left;" class="col21">
+                @Html.DisplayFor(modelItem => item.courseName)
+            </td>
+            <td style="text-align: left;" class="col21">
+                @if (!string.IsNullOrWhiteSpace(item.otherUniversityName))
+                {
+                    @Html.DisplayFor(modelItem => item.otherUniversityName)
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.universityName)
+                }
+            </td>
+        </tr>
+    }
+</table>
+@if (ViewBag.CourseCount == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+}    
+<br />
+<table class="four_columns" style="width: 100%;">
+    <tr>
+        <td colspan="6" class="col11">
+            <b>Other Colleges in the same socity</b>
+        </td>
+    </tr>
+    <tr>
+        <th style="text-align: left; width: 1%" class="col11">S.No
+        </th>
+        <th style="text-align: left; width: 59%" class="col11">College Name
+        </th>
+        <th style="text-align: left; width: 20%" class="col11">Year Of Establishment(YYYY)
+        </th>
+         <th style="text-align: left; width: 20%" class="col11">College Location
+        </th>
+        <th style="text-align: left; width: 20%" class="col11">Affiliated University
+        </th>
+    </tr>
+    @foreach (var item in ViewBag.otherCollegesSameSociety as List<UAAAS.Models.OtherCollegesSameSociety>)
+    {
+        <tr>
+            <td style="text-align: left;" class="col21">
+                @(num++)
+            </td>
+            <td style="text-align: left;" class="col21">
+                @Html.DisplayFor(modelItem => item.collegeName)
+            </td>
+            <td style="text-align: left;" class="col21">
+                @Html.DisplayFor(modelItem => item.yearOfEstablishment)
+            </td>
+             <td style="text-align: left;" class="col21">
+                @Html.DisplayFor(modelItem => item.collegeLocation)
+            </td>
+            <td style="text-align: left;" class="col21">
+                @if (!string.IsNullOrWhiteSpace(item.otherUniversityName))
+                {
+                    @Html.DisplayFor(modelItem => item.otherUniversityName)
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.universityName)
+                }
+            </td>
+        </tr>
+    }
+</table>
+@if (ViewBag.otherCollegesSameSocietyCount == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+}
+<br />

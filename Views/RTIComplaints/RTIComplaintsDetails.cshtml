@@ -1,0 +1,23 @@
+﻿@model UAAAS.Models.RTIComplaints
+@{
+    ViewBag.Title = "RTIComplaints";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+}
+
+<h2>RTI Complaints</h2>
+
+<div class="details_table">
+<div class="display-label" style="width:130px">Complaint Received</div>
+    <div class="display-field" style="width:270px">
+        @Html.DisplayFor(model => model.complaintReceived)
+    </div>
+
+    <div class="display-label" style="width:130px">Actions Taken</div>
+    <div class="display-field" style="width:270px">
+        @Html.DisplayFor(model => model.actionsTaken)
+    </div>
+</div>

@@ -1,0 +1,176 @@
+﻿@model List<UAAAS.Models.MinorityCollegesList>
+@{
+    ViewBag.Title = "Minority Colleges List";
+    var index = 1;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Minority Colleges List</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 25,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null],
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+
+@if (Model.Count > 0)
+{
+    <div style="text-align: right">
+        <p style="text-align: right">
+            @Html.ActionLink("Export", "MinorityCollegesListExcel", "ReportsLists", new { @class = "create_button", target = "_blank" })
+        </p>
+    </div>
+}
+
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success">
+        <p style="text-align: center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+    </div>
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div>
+}
+<br />
+<table id="example" class="display" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="width: 80px; text-align: center;">
+                S.No
+            </th>
+            <th style="width: 80px; text-align: center;">
+                College Code
+            </th>
+            <th style="text-align: left;">
+                College Name
+            </th>
+            <th style="text-align: left;">
+                Status From Date
+            </th>
+            <th style="text-align: left;">
+                Status To Date
+            </th>
+            <th style="text-align: center;">
+                Status Document
+            </th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @(index++)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase;">
+                        @Html.DisplayFor(modelItem => item.CollegeCode)
+                    </td>
+                    <td style="text-align: left;">
+                        @Html.DisplayFor(modelItem => item.CollegeName)
+                    </td>
+                    <td style="text-align: left;">
+                        @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.StatusFromDate))
+                    </td>
+                    <td style="text-align: left;">
+                        @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.StatusToDate))
+                    </td>
+                    <td style="text-align: left;">
+                        @if (item.StatusDocument != null)
+                        {
+                            <a href="~/Content/Upload/College/CollegeStatus/@item.StatusDocument" target="_blank">
+                                <span style="color: red;"><b>View</b></span>
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th>
+                <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            @*<th class=" ui-state-default">
+                    <input type="text" id="i-6" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-7" style="width: 90%; text-align: left;" class="search_init">
+                </th>*@
+        </tr>
+    </tfoot>
+</table>

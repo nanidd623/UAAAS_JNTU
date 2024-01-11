@@ -1,0 +1,44 @@
+﻿@model UAAAS.Models.OperationalFunds
+@{
+    ViewBag.Title = "OperationalFunds Details";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+}
+
+<h2>OperationalFundsDetails</h2>
+
+
+<div class="details_table">
+    <div class="display-label" style="width: 40%;">Bank Name</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.bankName)
+    </div>
+     <div class="display-label" style="width: 40%;">Branch</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.bankBranch)
+    </div>
+     <div class="display-label" style="width: 40%;"> Address</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.bankAddress)
+    </div>
+     <div class="display-label" style="width: 40%;"> Account Number</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.bankAccountNumber)
+    </div>
+     <div class="display-label" style="width: 40%;">FDR</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.FDR)
+    </div>
+     <div class="display-label" style="width: 40%;">Cash Balance</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.cashBalance)
+    </div>
+    <div class="display-label" style="width: 40%;">Total Amount</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.total)
+    </div>
+   
+</div>

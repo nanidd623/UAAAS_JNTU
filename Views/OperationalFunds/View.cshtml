@@ -1,0 +1,172 @@
+﻿@model IEnumerable<UAAAS.Models.OperationalFunds>
+@{
+    ViewBag.Title = "Operational Funds";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    int num = 1;
+    // int cNum = 1;
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".view_hide").show();
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Operational Funds',
+            autoOpen: false,
+            resizable: false,
+            height: 500,
+            width: 600,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Operational Funds',
+                autoOpen: false,
+                resizable: false,
+                height: 500,
+                width: 400,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+</script>
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+<div id="div_print">
+    <h2>Operational Funds</h2>
+    <table class="four_columns" style="width: 100%">
+        <tr>
+            <th style="text-align: center;" class="col11">S.No
+            </th>
+            <th class="col11">Name of the </br> &nbsp;&nbsp;&nbsp;&nbsp;Bank
+            </th>
+            <th style="text-align: center;" class="col11">Branch
+            </th>
+            <th style="text-align: center;" class="col11">Address
+            </th>
+            <th style="text-align: center;" class="col11">Account No
+            </th>
+            <th style="text-align: center; width: 150px;" class="col11">FDR, if any (Excluding FDR submitted to AICTE)
+            </th>
+            <th style="text-align: center;" class="col11">Cash Balance
+            <br />
+                (Rs. in Lakhs)
+            </th>
+            <th style="text-align: center;" class="col11">Total
+            </th>
+            <th colspan="3" style="text-align: center;" class="view_hide col11"></th>
+        </tr>
+
+        @foreach (var item in ViewBag.OperationalFunds as List<UAAAS.Models.OperationalFunds>)
+        {
+            <tr>
+                <td style="width: 50px; text-align: center;" class="col21">
+                    @(num++)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(modelItem => item.bankName)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(modelItem => item.bankBranch)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(modelItem => item.bankAddress)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(modelItem => item.bankAccountNumber)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(modelItem => item.FDR)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(modelItem => item.cashBalance)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(modelItem => item.total)
+                </td>
+
+                <td style="width: 30px; text-align: center;" class="view_hide col21">
+                    @Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "viewDialog view_button" })
+                </td>
+
+            </tr>
+        }
+
+    </table>
+</div>
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+<div id="dialog-view" style="display: none">
+</div>
+

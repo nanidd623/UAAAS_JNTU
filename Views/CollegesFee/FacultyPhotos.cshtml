@@ -1,0 +1,93 @@
+﻿@model List<UAAAS.Controllers.Faculty>
+@using (Html.BeginForm())
+{
+    int count = 1;
+    string Date = string.Empty;
+    string Date12 = string.Empty;
+    <table border="1" style="width: 100%">
+        <thead>         
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    S.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    CollegeCode
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    CollegeName
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Address
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    RegistrationNumber
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    FirstName
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    MiddleName
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    LastName
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Department
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Designation
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    PAN Number
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Gender
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Date of Birth
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Photo
+                </th>
+             
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)           
+                {
+                    <tr style="height:45px;">
+                        <td style="text-align: left;vertical-align:top;">@(count++)</td>
+                        <td style="text-align: left;vertical-align:top;">@item.CollegeCode</td>
+                        <td style="text-align: left;vertical-align:top;">@item.CollegeName</td>
+                        <td style="text-align: left;vertical-align:top;">@item.address</td>
+                        <td style="text-align: left;vertical-align:top;">@item.RegNumber</td>
+                        <td style="text-align: left;vertical-align:top;">@item.FirstName</td>
+                        <td style="text-align: left;vertical-align:top;">@item.MiddleName</td>
+                        <td style="text-align: left;vertical-align:top;">@item.LastName</td>
+                        <td style="text-align: left;vertical-align:top;">@item.Department</td>
+                        <td style="text-align: left;vertical-align:top;">@item.Designation</td>
+                        <td style="text-align: left;vertical-align:top;">@item.PanNumber</td>
+                        <td style="text-align: left;vertical-align:top;">@item.Gender</td>
+                        @{                             
+                                Date12 = item.DOB.Split(' ')[0];
+                        }
+                        <td style="text-align: left;vertical-align:top;">
+                            @Date12
+                        </td>
+                        <td style="text-align: right;">
+                            <div style="">
+                                <img src="http://jntuhaac.in/Content/Upload/Faculty/Photos/@item.Photo" height="40" />
+                                @*<img src="C:\SIVA JNTUH\SVN Development\SVN UAAAS 10-08-2018\Content\Upload\Faculty\Photos\@Model.Photo" height="40" />*@
+                            </div>     
+                        </td>
+                    </tr>
+                }
+
+
+            }
+
+        </tbody>
+    </table>
+}

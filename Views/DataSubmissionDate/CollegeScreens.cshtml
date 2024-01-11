@@ -1,0 +1,163 @@
+﻿@*@model IList<UAAAS.Models.jntuh_college_screens>*@
+@model UAAAS.Models.CollegeAssignedScreens
+@using UAAAS.Models
+@{
+    ViewBag.Title = "College Screens";
+    int sno = 1;
+}
+<h2>College Screens</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script type="text/javascript">   
+    $(document).ready(function () {
+        $('#chkselectall').click(function () {
+            // add multiple select / deselect functionality       
+            $('.forcheckbox').attr('checked', this.checked);
+        });
+        $('#btnsubmit').click(function () {
+            if ($('#college').val() == '') {
+                $('#college').addClass("required");
+            }
+            else {
+                $('#college').removeClass("required");
+            }
+            if ($('#FromDate').val() == '') {
+                $('#FromDate').addClass("required");
+            }
+            else {
+                $('#FromDate').removeClass("required");
+            }
+            if ($('#ToDate').val() == '') {
+                $('#ToDate').addClass("required");
+            }
+            else {
+                $('#ToDate').removeClass("required");
+            }
+            var CheckedCount = $("[type='checkbox']:checked").length;
+            if (CheckedCount == 0) {
+                alert('Please select atleast one checkbox');
+                return false;
+            }
+        });
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/DataSubmissionDate/CollegeScreens?id=' + collegeId;
+            }
+            else {
+                window.location = '/DataSubmissionDate/CollegeScreens';
+            }
+        });  
+
+    });
+    </script>
+@section onReady{
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 100,
+                              "bStateSave": false,
+                              "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+                              "bPaginate": false,
+                              "bFilter": false, 
+                              "bInfo": false,
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ]
+                           });
+}
+
+@using (Html.BeginForm("CollegeScreens", "DataSubmissionDate", FormMethod.Post))
+{ 
+     if (TempData["Error"] != null)
+        {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+        }
+        if (TempData["Success"] != null)
+        {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+        }
+    <div style="text-align:right">
+        <input type="submit" id="btnsubmit" value="Save" style="padding: 4px 15px; font-size: 15px;text-align:right" />        
+    </div>
+    <table id="example1" class="four_columns">
+        <tr>
+            <td class="col1">College</td>
+            <td class="col2" colspan="4">
+                @Html.DropDownListFor(m=>m.CollegeId,new SelectList(Model.colleges,"Id","CollegeName")  ,
+                "--Select--",new { id = "college", @style = "width:95%",  @class = "required" })
+            </td>
+        </tr>
+         <tr>
+            <td class="col1">From Date</td>
+            <td class="col2">
+                @Html.TextBoxFor(m => m.FromDate, new {  @style = "width:150px",@class = "required" })<span>(DD/MM/YYYY)</span>
+            </td>
+              <td class="col3">To Date</td>
+            <td class="col4">
+                @Html.TextBoxFor(m=>m.ToDate , new {  @style = "width:150px",@class = "required" })<span>(DD/MM/YYYY)</span>
+            </td>
+        </tr>
+         <tr>
+            <td class="col1">Remarks</td>
+            <td class="col2" colspan="4">
+                @Html.TextAreaFor(m=>m.Remarks)
+            </td>
+        </tr>
+    </table>
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No</th>
+                <th style="width: 120px; text-align: center;">Screen Code</th>
+                <th style="text-align: left;">Screen Name</th>               
+                <th class="ui-state-default" style="width: 60px; text-align: center;">Select</th>              
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.collegeScreens.Count(); i++)
+            {           
+                <tr>
+                    <td style="text-align: center;">
+                        @(sno++)
+                    </td>
+                    <td style="text-align: center;">
+                         @Html.DisplayFor(m => m.collegeScreens[i].ScreenCode)                       
+                        @Html.HiddenFor(m => m.collegeScreens[i].Id)                       
+                    </td>
+                    <td style="text-align: left;">
+                        @Html.DisplayFor(m => m.collegeScreens[i].ScreenName)                     
+                    </td>                   
+                    <td style="text-align: center;" id="tdcheck">
+                       @Html.CheckBoxFor(m => m.collegeScreens[i].IsSelected, new { id = "chkall", @class = "forcheckbox" })                    
+                       @*  @Html.CheckBox("isSelect", new { id = "chkall", @class = "forcheckbox" }) *@  
+                    </td>                   
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th style="">
+                    <input type="text" id="i-0" style="width: 30%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="">
+                    <input type="text" id="i-1" style="width: 80%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                 <th class=" ui-state-default" style="text-align: left">
+                    <input type="checkbox" id="chkselectall" style="width: 85%; text-align: left;" class="forcheckbox">
+                </th>            
+            </tr>
+        </tfoot>
+    </table>      
+     <div id="dialog-edit" style="display: none">
+    </div>
+}
+

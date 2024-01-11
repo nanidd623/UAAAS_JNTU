@@ -1,0 +1,83 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeFaculty>
+@{
+    ViewBag.Title = "Non-Teaching Staff";
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    var index = 1;
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        printdiv('div_print');
+    });
+    function printdiv(printpage) {
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+        var url = '@Url.Action("ViewNonTeaching", "PA_Faculty")';
+        window.location.href = url;
+        return false;
+    }
+</script>
+<div id="div_print">
+    <h2>Non-Teaching Faculty</h2>
+    <table class="four_columns" style="width: 100%;">
+            <tr style="font-weight: bold;">
+                <td style="text-align: left;" class="col11">S.No</td>
+                <td style="text-align: center; width: 140px;" class="col11">Name</td>
+                <td style="text-align: center; width: 150px;" class="col11">Designation</td>
+                <td style="text-align: center; width: 120px;" class="col11">Department</td>
+                <td style="text-align: center; width: 120px;" class="col11">Ratified</td>
+                <td style="text-align: center; width: 120px;" class="col11">Photo</td>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: left;width: 15%" class="col21" >
+                        @(index++)
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col21">
+                        @Html.DisplayFor(modelItem => item.facultyFirstName)
+                        @Html.DisplayFor(modelItem => item.facultyLastName)
+                        @Html.DisplayFor(modelItem => item.facultySurname)
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col21">
+                        @Html.DisplayFor(modelItem => item.designation)
+                        @if (item.facultyOtherDesignation != null)
+                        { <span>, @item.facultyOtherDesignation</span>}
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col21">
+                        @Html.DisplayFor(modelItem => item.department)
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col21">
+                        @if (item.isFacultyRatifiedByJNTU == true)
+                        { <span>Yes</span>}
+                        else
+                        {<span>No</span>}
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col21">
+                       @* @Html.DisplayFor(modelItem => item.facultyMobile)*@
+                         @if (item.photo != null)
+                        {
+                            <img src="@item.photo.Replace("~", "")" style="width: 50px;" />
+                        }
+                    </td>
+                </tr>
+            }
+    </table>
+    @if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }    
+</div>

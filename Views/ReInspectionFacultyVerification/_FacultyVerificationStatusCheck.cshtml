@@ -1,0 +1,203 @@
+﻿@model UAAAS.Models.FacultyRegistration
+@using UAAAS.Models;
+
+@{
+    ViewBag.Title = Model.RegistrationNumber + " - " + Model.FirstName + " " + Model.MiddleName + " " + Model.LastName;
+}
+
+<div id="div_print">
+
+    @using (Html.BeginForm("", "", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+
+        <div>
+            <table style="width:100%">
+                <tr>
+                    <td style="width:100%">
+                        <table class="faculty_table" id="information">
+                            @*<tr>
+                                    <td class="col1" colspan="2">
+                                        <b>Registration Information</b>
+                                    </td>
+
+                                </tr>*@
+                            <tr>
+                                <td class="col1" style="font-weight: bold;width:24%">
+                                    @Html.Label("Registration No.", "Registration No.")
+                                </td>
+                                <td class="col2">
+                                    <span style="text-transform: uppercase; font-weight: bold;">@Html.DisplayFor(model => model.RegistrationNumber)</span>
+                                </td>
+                                <td rowspan="2" style="vertical-align:initial">
+                                    @if (@Model.facultyPhoto != null)
+                                    {
+                                        <a href="../Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" target="_blank" style="vertical-align:inherit">
+                                            <img src="../Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" style="height: 60px; vertical-align:top" />
+                                        </a>
+                                    }
+                                    @Html.HiddenFor(model => model.facultyPhoto)
+                                </td>
+                                @Html.HiddenFor(model => model.RegistrationNumber)
+                                @Html.HiddenFor(model => model.CollegeId)
+                                @Html.HiddenFor(model => model.id)
+                            </tr>
+                            <tr>
+                                <td class="col1" style="width: 10% !important; font-weight: bold; ">
+                                    <span>(FULL NAME)</span> <span class="mandatory">*</span>
+                                </td>
+                                <td class="col2 focus" style="width: 90% !important; font-weight: bold;">
+                                    @if (@Model.FirstName != null)
+                                    {
+                                        @Html.DisplayFor(modelItem => modelItem.FirstName)
+                                        @Html.DisplayFor(modelItem => modelItem.MiddleName)
+                                        @Html.DisplayFor(modelItem => modelItem.LastName)
+                                        @Html.HiddenFor(model => model.Email)
+                                    }
+
+                                </td>
+
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <table class="faculty_table">
+
+            <tr>
+                <td class="col1">
+                    <b>Absent</b>
+                </td>
+                <td class="col2">
+                    @if (Model.Absent == true)
+                    {
+                        @Html.Label("Yes", "Yes")
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>Modified PAN NO</b><span class="mandatory">*</span>
+                </td>
+                <td class="col2">
+                    @if (Model.ModifiedPANNo != null)
+                    {
+                        @Html.DisplayFor(model => model.ModifiedPANNo)
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>Invalid PAN /No PAN</b>
+                </td>
+                <td class="col2">
+
+                    @if (Model.InvalidPANNo == true)
+                    {
+                        @Html.Label("Yes", "Yes")
+                    }
+
+                </td>
+
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>PG Specialization</b>
+                </td>
+                <td class="col2">
+
+                    <table>
+                        <tr>
+                            @if (Model.NORelevantPG != null)
+                            {
+                                @Html.DisplayFor(model => model.NORelevantPG)
+                            }
+
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>NO SCM</b>
+                </td>
+                <td class="col2">
+                    @if (Model.NoSCM == true)
+                    {
+                        @Html.Label("Yes", "Yes")
+                    }
+
+                </td>
+
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>NO Form16</b>
+                </td>
+                <td class="col2">
+
+                    @if (Model.NOForm16 == true)
+                    {
+                        @Html.Label("Yes", "Yes")
+                    }
+
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>NOT Qualified As Per AICTE Norms</b>
+                </td>
+                <td class="col2">
+
+                    @if (Model.NOTQualifiedAsPerAICTE == true)
+                    {
+                        @Html.Label("Yes", "Yes")
+                    }
+
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>InComplete Certificates</b>
+                </td>
+                <td class="col2">
+
+                    @if (Model.InCompleteCeritificates == true)
+                    {
+                        @Html.Label("Yes", "Yes")
+                    }
+
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>Faculty Deactivation Reason</b>
+                </td>
+                <td class="col2">
+
+                    @if (Model.DeactivationReason != null || Model.DeactivationReason != String.Empty)
+                    {
+                        @Html.DisplayFor(model => model.DeactivationReason)
+                    }
+
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>PAN Deactivation Reason</b>
+                </td>
+                <td class="col2">
+
+                    @if (Model.PanDeactivationReasion != null || Model.PanDeactivationReasion != String.Empty)
+                    {
+                        @Html.DisplayFor(model => model.PanDeactivationReasion)
+                    }
+
+                </td>
+            </tr>
+        </table>
+    }
+</div>

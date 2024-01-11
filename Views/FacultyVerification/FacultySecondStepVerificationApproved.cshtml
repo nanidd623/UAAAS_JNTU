@@ -1,0 +1,281 @@
+﻿@model IEnumerable<UAAAS.Models.FacultyRegistration>
+
+@{
+    ViewBag.Title = "FacultySecondStepVerificationApproved";
+    var index = 1;
+}
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+        $('#collegeId').change(function () {
+           // alert('Hai');
+            var collegeId = $(this).val();
+            //alert(collegeId)
+
+            if ($('#collegeId').val() != '') {
+                window.location = '/FacultyVerification/FacultySecondStepVerificationApproved?collegeid=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerification/FacultySecondStepVerificationApproved';
+            }
+        });
+
+    });
+</script>
+
+<table align="center">
+    <tr>
+        <td>
+            <span>College</span>
+        </td>
+        <td>
+            @Html.DropDownList("collegeId",
+                              new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"),
+                                       "--Select--", new { id = "collegeId" })
+            @*@Html.ActionLink("Search", "FacultyList", "OnlineRegistration", new { collegeId = DBNull.Value }, new { @class = "create_button", id = "btnSearch" })*@
+        </td>
+    </tr>
+
+</table>
+
+<br />
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th style="width: 60px; text-align: center;">
+                S.No
+            </th>
+            <th style="width: 150px; text-align: center;">
+                Registration ID
+            </th>
+            <th style="width: 120px; text-align: center;">
+                Type
+            </th>
+            <th style="text-align: left;">
+                Full Name
+            </th>
+            <th style="width: 120px; text-align: center;">
+                Mobile
+            </th>
+            <th style="width: 120px; text-align: center;">
+                PAN Number
+            </th>
+            <th class="ui-state-default" style="width: 140px; text-align: center;">
+                Aadhaar Number
+            </th>
+            <th class="ui-state-default" style="width: 80px; text-align: center;">
+                Photo
+            </th>
+            <th class="ui-state-default" style="width: 50px;">
+
+                Verification
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(m => m.isActive == true).OrderByDescending(m => m.id).ToList())
+        {
+            <tr>
+                <td style="text-align: center; vertical-align: middle;">
+                    @(index++)
+                </td>
+                <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                </td>
+                <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                    @if (item.Type.ToUpper() == "EXISTFACULTY")
+                    { <span style="color: green;">Existing</span>}
+                    else
+                    { <span style="color: red;">New</span>}
+                </td>
+                <td style="vertical-align: middle; text-transform: uppercase;">
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                    @*@Html.DisplayFor(modelItem => item.MiddleName)
+                        @Html.DisplayFor(modelItem => item.LastName)*@
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.Mobile)
+                </td>
+
+                @if (item.SamePANNumberCount > 1)
+                {
+                    <td style="text-align: center; vertical-align: middle; color: red;">
+                        @Html.DisplayFor(modelItem => item.PANNumber)
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align: center; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.PANNumber)
+                    </td>
+                }
+                @if (item.SameAadhaarNumberCount > 1)
+                {
+                    <td style="text-align: center; vertical-align: middle; color: red;">
+                        @Html.DisplayFor(modelItem => item.AadhaarNumber)
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align: center; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.AadhaarNumber)
+                    </td>
+                }
+
+                @*<td style="text-align: center; vertical-align: middle; text-transform: uppercase;">
+                        @if (item.isApproved == true)
+                        { <span style="color: green;">Approved</span>}
+                        else if (item.isApproved == false)
+                        { <span style="color: red;">Rejected</span>}
+                        else
+                        {<span style="color: orange;">Processing</span>}
+                    </td>*@
+                <td style="text-align: center; vertical-align: middle;">
+                    @if (@item.facultyPhoto != null)
+                    {
+                        <img src="../Content/Upload/Faculty/Photos/@item.facultyPhoto.Replace("~", "")" style="height: 50px;" />
+                    }
+                    else
+                    {
+                        <img src="../Content/Images/no-photo.gif" style="height: 50px;" />
+                    }
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+
+                    @if (@item.FIsApproved == 1)
+                    {
+                        <span style="color: green;">Approved</span>
+                    }
+                    else
+                    {
+                        <span style="color: red;">Not Approved</span>
+                    }
+
+                </td>
+            </tr>
+        }
+
+    </tbody>
+    <tfoot>
+    <th>
+        <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+    </th>
+    <th>
+        <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+    </th>
+    <th>
+        <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+    </th>
+    <th>
+        <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+    </th>
+    <th class=" ui-state-default">
+        <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+    </th>
+    <th class=" ui-state-default">
+        <input type="text" id="i-5" style="width: 90%; text-align: center;" class="search_init">
+    </th>
+    <th class=" ui-state-default">
+        <input type="text" id="i-6" style="width: 90%; text-align: center;" class="search_init">
+    </th>
+    <th class=" ui-state-default">
+        <input type="text" id="i-7" style="width: 90%; text-align: left;display: none;" class="search_init">
+    </th>
+    <th class=" ui-state-default">
+        <input type="text" id="i-8" style="width: 90%; text-align: left;" class="search_init">
+    </th>
+    </tfoot>
+</table>
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    //rettriveing collegeId by using querystring
+    function querystring(key) {
+        var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi');
+        var r = [], m;
+        while ((m = re.exec(document.location.search)) != null) r.push(m[1]);
+        return r;
+    }
+    $(document).ready(function () {
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $("#collegeId").change(function () {
+            var id = $('#collegeId').val();
+
+            var s = $("#btnSearch").attr("href");
+            s = s.substring(0, s.indexOf('=') + 1);
+            $("#btnSearch").attr("href", s + id)
+
+        });
+    });
+</script>
+
+

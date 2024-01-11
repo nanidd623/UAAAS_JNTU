@@ -1,0 +1,645 @@
+﻿@model UAAAS.Models.AntiRaggingCommittee
+@{
+    ViewBag.Title = "Anti Ragging Committee";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+}
+
+<h2>Anti Ragging Committee</h2>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Anti Ragging Committee',
+            autoOpen: false,
+            resizable: false,
+            height: 320,
+            width: 600,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $('.subtUpload').click(function () {
+
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+
+        });
+
+        $(".fileUploadcheck").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "Documentfile");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Anti Ragging Committee'
+            });
+            url = $("#openDialog").attr('href');
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        //$('.full_table').find('tr').click(function () {
+        $('.webGrid').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit Anti Ragging Committee'
+            });
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Anti Ragging Committee',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Anti Ragging Committee',
+                autoOpen: false,
+                resizable: false,
+                height: 330,
+                width: 600,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+</script>
+@if (ViewBag.CommitteeNotUpload == true)
+{
+    <b>Anti Ragging Committee</b><br />
+    <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+}
+else
+{
+if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+using (Html.BeginForm("AntiRaggingSupportfile", "AntiRaggingCommittee", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table class="webGrid" style="width: 100%;">
+            <tr>
+                <td colspan="2" class="col1">
+                    <span>Proceedings of the Anti-Ragging Committee</span> @*for the A.Y. @ViewBag.PreviousYear:*@
+                </td>
+            </tr>
+            <tr>
+              
+                <td class="col2" colspan="2">
+                    <input type="file" name="antiraggingfileUploader" id="filepicker" class="file fileUploadcheck" />
+
+                    @if (!string.IsNullOrEmpty(ViewBag.SupportDocument))
+                    {
+                        <span><a href="../Content/Upload/CollegeEnclosures/AntiRagging/@ViewBag.SupportDocument" class="viewFileData" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+
+
+                    }
+                    &nbsp &nbsp &nbsp &nbsp &nbsp
+                    <input type="submit" value="Upload" name="fileUploader" class="subtUpload" />
+                </td>
+            </tr>
+        </table>
+    }
+    <br />
+<table style="width: 100%">
+    <tr>
+        <td>
+            <b>Anti Ragging Committee</b>
+        </td>
+        <td class="create_link_right">
+            @Html.ActionLink("Add Anti Ragging Committee", "AddEditRecord", "AntiRaggingCommittee", new { collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })
+        </td>
+    </tr>
+</table>
+
+<div id="CommitteegridContent">
+
+    @{            
+        var Committeegrid = new WebGrid(ViewBag.Committee,
+            canPage: false,
+            selectionFieldName: "selectedRow",
+            ajaxUpdateContainerId: "gridContent"
+            );
+       // Committeegrid.Pager(WebGridPagerModes.NextPrevious);
+        var CommitteeCount = 1; 
+    }
+    @Committeegrid.GetHtml(tableStyle: "webGrid",
+                headerStyle: "gridHeader",
+                alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: Committeegrid.Columns(
+                Committeegrid.Column("ID", "S.No.", format: p => CommitteeCount++, style: "row_number", canSort: true),
+                Committeegrid.Column("actualDesignation", "Actual Designation", null, style: "align_left", canSort: true),
+                Committeegrid.Column("designationName", "Designation in the committee", null, style: "align_left", canSort: true),
+                Committeegrid.Column("memberName", "Name", null, style: "align_left", canSort: true),
+                Committeegrid.Column("registrationNumber", "Registration No.", null, style: "align_left", canSort: true),
+                Committeegrid.Column("Email", "Email", null, style: "align_left", canSort: true),
+                Committeegrid.Column("Mobile", "Mobile", null, style: "align_left", canSort: true),
+                Committeegrid.Column("Edit", "Edit", format: @<text>@Html.ActionLink("Edit", "AddEditRecord", new { id = item.id }, new { @class = "editDialog edit_button" }) </text>, style: "edit", canSort: true),
+                Committeegrid.Column("Details", "Details", format: @<text>@Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "viewDialog view_button" }) </text>, style: "view", canSort: true),
+                Committeegrid.Column("Delete", "Delete", format: @<text>@Html.ActionLink("Delete", "DeleteRecord", new { id = item.id }, new { @class = "confirmDialog delete_button" }) </text>, style: "view", canSort: true)
+         ))
+</div>
+if (ViewBag.CommitteeCount == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+<div id="dialog-view" style="display: none">
+</div>
+}
+<br />
+<br />
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var ComplaintmainUrl = window.location;
+        var courseurl;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myCourseDialog = $("#dialog-edit-course").dialog({
+            title: 'Add/Edit Anti Ragging Complaints',
+            autoOpen: false,
+            resizable: false,
+            height: 350,
+            width: 550,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(courseurl);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialogCourse").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit-course").dialog({
+                title: 'Add Anti Ragging Complaints'
+            });
+            courseurl = $("#openDialogCourse").attr('href');
+            $myCourseDialog.dialog('open');
+            return false;
+        });
+
+        $('.webGrid').find('tr').click(function () {
+
+            courseurl = $(this).find(".editDialogComplaints").attr('href');
+        });
+
+        $(".editDialogComplaints").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit-course").dialog({
+                title: 'Edit Anti Ragging Complaints'
+            });
+            //url = $(".editDialog").attr('href');
+            $myCourseDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialogComplaints").live("click", function (e) {
+
+            var courseurl = $(this).attr('href');
+            $("#dialog-confirm-course").dialog({
+                title: 'Delete Anti Ragging Complaints',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = courseurl;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm-course").dialog('open');
+            return false;
+        });
+
+        $(".viewDialogComplaints").live("click", function (e) {
+            var courseurl = $(this).attr('href');
+            $("#dialog-view-course").dialog({
+                title: 'View Anti Ragging Complaints',
+                autoOpen: false,
+                resizable: false,
+                height: 350,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(courseurl);
+                },
+                buttons: {
+                    "Close": function () {
+
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view-course").dialog('open');
+            return false;
+        });
+        $("#btncancelCourse").live("click", function (e) {
+            $("#dialog-edit-course").dialog("close");
+        });
+
+        $($myCourseDialog).bind("dialogclose", function () {
+            window.location = ComplaintmainUrl;
+        });
+    });
+</script>
+@if (ViewBag.ComplaintsNotUpload == true)
+{
+    <br />
+    <b>Anti Ragging Complaints</b><br />
+    <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+}
+else
+{
+if (TempData["ComplaintsError"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["ComplaintsError"].ToString()</p>
+    </div>
+}
+if (TempData["ComplaintsSuccess"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["ComplaintsSuccess"].ToString()</p>
+    </div>
+}
+<table style="width: 100%">
+    <tr>
+        <td>
+            <b>Anti Ragging Complaints</b>
+        </td>
+        <td class="create_link_right">
+            @Html.ActionLink("Add Anti Ragging Complaints", "AddEditRecord", "AntiRaggingComplaints",  new { collegeId = @ViewBag.collegeId }, new { @id = "openDialogCourse", @class = "create_button" })
+
+        </td>
+    </tr>
+</table>
+<div id="gridContent">
+
+    @{            
+        var grid = new WebGrid(ViewBag.Complaints,
+            canPage: false,
+           // rowsPerPage: 10,
+            selectionFieldName: "selectedRow",
+            ajaxUpdateContainerId: "gridContent"
+            );
+       // grid.Pager(WebGridPagerModes.NextPrevious);
+        var count = 1; 
+    }
+    @grid.GetHtml(tableStyle: "webGrid",
+                headerStyle: "gridHeader",
+                alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: grid.Columns(
+                grid.Column("ID", "S.No.", format: p => count++, style: "row_number", canSort: true),
+        //grid.Column("complaintReceived", "Complaint", null, style: "align_left", canSort: true),
+                grid.Column("complaintGivenByRegNum", "Complaint given by Registration No.", null, style: "align_left", canSort: true),
+                grid.Column("complaintGivenByName", "Complaint given by Name", null, style: "align_left", canSort: true),
+                grid.Column("complaintOnRegNum", "Complaint on Registration No.", null, style: "align_left", canSort: true),
+                grid.Column("complaintOnName", "Complaint on Name", null, style: "align_left", canSort: true),
+                grid.Column("complaintDescription", "Complaint Description", null, style: "align_left", canSort: true),
+
+                grid.Column("complaintSupportingDocPath", "Complaint Supporting Document", format: @<text>@if (!string.IsNullOrEmpty(item.complaintSupportingDocPath))
+                {<text> <span><a href="../Content/Upload/CollegeEnclosures/Ragging/@item.complaintSupportingDocPath" class="viewFileData" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span></text>}  </text>, style: "align_center", canSort: true),
+
+                grid.Column("actionsTaken", "Action Taken", null, style: "align_left", canSort: true),
+
+                grid.Column("actionTakenSupportingDocPath", "Action Taken Supporting Document", format: @<text>@if (!string.IsNullOrEmpty(item.actionTakenSupportingDocPath))
+                {<text> <span><a href="../Content/Upload/CollegeEnclosures/Ragging/@item.actionTakenSupportingDocPath" class="viewFileData" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span></text>}  </text>, style: "align_center", canSort: true),
+
+                grid.Column("Edit", "Edit", format: @<text>@Html.ActionLink("Edit", "AddEditRecord", "AntiRaggingComplaints", new { id = item.id }, new { @class = "editDialogComplaints edit_button" }) </text>, style: "edit", canSort: true),
+                grid.Column("Details", "Details", format: @<text>@Html.ActionLink("Details", "Details", "AntiRaggingComplaints", new { id = item.id }, new { @class = "viewDialogComplaints view_button" }) </text>, style: "view", canSort: true),
+                grid.Column("Delete", "Delete", format: @<text>@Html.ActionLink("Delete", "DeleteRecord", "AntiRaggingComplaints", new { id = item.id }, new { @class = "confirmDialogComplaints delete_button" }) </text>, style: "view", canSort: true)
+         ))
+</div>
+  
+    
+    
+    
+if (ViewBag.ComplaintsCount == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+<div id="dialog-confirm-course" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>
+<div id="dialog-edit-course" style="display: none">
+</div>
+<div id="dialog-view-course" style="display: none">
+</div>
+}
+<br />
+<br />
+@using (Html.BeginForm("Index", "AntiRaggingCommittee", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table width="100%">
+        <tr>
+            <th class="col1">@Html.Label("Details of Measures Taken Prevent Ragging")</th>
+            <td class="col2 files">
+                @*@Html.TextBox("file", new { type = "file",@class="file",@required=true,@id="totalMeasuresTaken"})*@
+                @Html.TextBox("file", "", new { @type = "file", @required = true,@class="file", @id = "totalMeasuresTaken" })
+                <br />
+                <span style="color: red;"></span>
+            </td>
+            <td class="col2">
+                <input type="submit" name="cmd" value="Upload"/>&nbsp;&nbsp;
+                      @if (ViewBag.Path != null)
+                        {
+                            string path = @ViewBag.Path;
+                           
+                     <a href="@path.Replace("~","")" target="_blank">
+                        <img src="@Url.Content("../../Content/images/pdf.png")" alt="A-416 Old" height="18"><span style="color:red">Download</span>
+                    </a>
+                        }
+                       </td>
+
+        </tr>
+    </table>
+}
+
+
+
+<script type="text/javascript"> 
+   
+
+
+    $(function () {
+        $(".file").change(function () {
+            debugger;
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+
+                    case 'pdf':
+                    case 'PDF':
+
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                $(".files > span").text("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            }
+            else {
+                var size = GetFileSize(file);
+                debugger;
+                size = size / 1048576;
+                if (size > 2) {
+                    $(".files > span").text("Document should not exceed 2 MB in Size");
+                    $(this).val('');
+                }
+                else {
+
+                    $(".files > span").text("");
+                }
+            }
+
+        });
+    });
+
+
+
+
+    //get file size
+    function GetFileSize(fileid) {
+        debugger;
+        try {
+            var fileSize = 0;
+            //for IE
+            if ($.browser.msie) {
+                //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                var objFile = objFSO.getFile(filePath);
+                var fileSize = objFile.size; //size in kb
+                //alert(fileSize);
+                //fileSize = fileSize / 1048576; //size in mb 
+                // fileSize = fileSize / 1048576; //size in mb 
+                alert(fileSize);
+            }
+                //for FF, Safari, Opeara and Others
+            else {
+                fileSize = $("#totalMeasuresTaken")[0].files[0].size //size in kb
+                //fileSize = fileSize / 1048576; //size in mb 
+            }
+            return fileSize;
+        }
+        catch (e) {
+
+            //alert("Error is : " + e);
+        }
+    }
+
+    //get file path from client system
+    function getNameFromPath(strFilepath) {
+        var objRE = new RegExp(/([^\/\\]+)$/);
+        var strName = objRE.exec(strFilepath);
+
+        if (strName == null) {
+            return null;
+        }
+        else {
+            return strName[0];
+        }
+    }
+
+</script>

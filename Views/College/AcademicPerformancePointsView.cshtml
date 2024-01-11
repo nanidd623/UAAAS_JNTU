@@ -1,0 +1,429 @@
+﻿@model UAAAS.Models.AcademicPerformancePoints
+@{
+    ViewBag.Title = "Academic Performance";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+
+@if (ViewBag.IsEditable == true)
+{
+    <h2>Academic Performance</h2>
+
+    <p class="create_link_right">
+        @Html.ActionLink("Edit", "AcademicPerformancePointsEdit", "AcademicPerformancePoints", new { @class = "create_button" })
+    </p>
+}
+else
+{
+    <p class="create_link_right">
+        <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+    </p>
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+</script>
+<div id="div_print">
+    @if (ViewBag.IsEditable == false)
+    {
+        <h2>Academic Performance</h2>
+    }
+    @using (Html.BeginForm())
+    {
+        if (ViewBag.Norecords == true)
+        {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No Data found</p>
+        </div>
+        }
+        else
+        {
+    <table class="four_columns" style="width: 100%">
+        <tr>
+            <td class="col11" colspan="8">
+                <b>Academic Performance:</b> (Please enclose the relevant documents)
+            </td>
+            <td class="col11" style="text-align: center; width: 10%">
+                <b>POINTS
+                    <br />
+                    ALLOTED  </b>
+            </td>
+            <td class="col11" style="text-align: center; width: 10%">
+                <b>POINTS
+                    <br />
+                    OBTAINED</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="col21" colspan="8">1.  (a). Overall Pass Percentages in First Year     ___________ %
+                <br />
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;(b). Overall Pass Percentage in 2nd Year&nbsp;&nbsp;&nbsp;&nbsp;___________ %
+                <br />
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;(c). Overall Pass Percentage in 3rd Year &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___________ %
+                <br />
+                <table border="1"  style="width: 35%;">
+                    <tr>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                &lt; 3%
+                            </p>                            
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                21-40%   
+                            </p> 
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                41-60%    
+                            </p>                             
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                61-80% 
+                            </p>    
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                > 80%
+                            </p> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                1
+                            </p>                            
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                2  
+                            </p> 
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                3   
+                            </p>                             
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                4
+                            </p>    
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                5
+                            </p> 
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                <label>(0</label>@Model.allotedPoints1.ToString()<label>)</label>
+                <br />
+                <br />
+                <label>(0</label>@Model.allotedPoints2.ToString()<label>)</label>
+                <br />
+                <br />
+                <label>(0</label>@Model.allotedPoints3.ToString()<label>)</label>
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                @Html.DisplayFor(model => model.obtainedPoints1)
+                <br />
+                <br />
+                @Html.DisplayFor(model => model.obtainedPoints2)
+                <br />
+                <br />
+                @Html.DisplayFor(model => model.obtainedPoints3)
+            </td>
+        </tr>
+        <tr>
+            <td class="col21" colspan="8">
+                2.        Overall Pass Percentage in Final Year       ___________ %	
+                <br />
+                <table border="1"  style="width: 35%;">
+                    <tr>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                &lt;  50 %    
+                            </p>                            
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                51-60 %     
+                            </p> 
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                61-70 %   
+                            </p>                             
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                71-80 %
+                            </p>    
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                > 80%
+                            </p> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                1
+                            </p>                            
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                2  
+                            </p> 
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                3   
+                            </p>                             
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                4
+                            </p>    
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                5
+                            </p> 
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                (Data to be verified with Director of Evaluation, JNTUH)
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                <label>(0</label>@Model.allotedPoints4.ToString()<label>)</label>
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                @Html.DisplayFor(model => model.obtainedPoints4)
+            </td>
+        </tr>
+        <tr>
+            <td class="col21" colspan="8">
+               3.   No. of students placed on/off campus:	(for the past three years)      
+                <br />
+                <table border="1"  style="width: 35%;">
+                    <tr>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                &lt;  3 %    
+                            </p>                            
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                               3-5%         
+                            </p> 
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                5-7% 
+                            </p>                             
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                7-10%
+                            </p>    
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                > 10%
+                            </p> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                1
+                            </p>                            
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                2  
+                            </p> 
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                3   
+                            </p>                             
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                4
+                            </p>    
+                        </td>
+                        <td colspan="1">
+                            <p style="text-align:center">
+                                5
+                            </p> 
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                (Data to be verified with Director of Evaluation, JNTUH)
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                <label>(0</label>@Model.allotedPoints5.ToString()<label>)</label>
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+               @Html.DisplayFor(model => model.obtainedPoints5)
+            </td>
+        </tr>
+        <tr>
+            <td class="col21" colspan="8">
+                4.	No. of seminars/conferences organized by Institution in the past 
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;academic year:		
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;Each seminar/conference conducted carries one point subject 
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;to a maximum of  5 points (in the past academic year)
+
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                <label>(0</label>@Model.allotedPoints6.ToString()<label>)</label>
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                @Html.DisplayFor(model => model.obtainedPoints6)
+            </td>
+        </tr>
+        <tr>
+            <td class="col21" colspan="8">
+                5.   No. of Teachers deputed for faculty development programmes
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;in the past academic year:
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;a) - for Short-Term Programmes (1 pts)
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;b) - for M.Tech. (1 pts per M.Tech registration)
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  - for Ph.D.(1 pts per Ph.D. registration)   
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                <label>(0</label>@Model.allotedPoints7.ToString()<label>)</label>
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                @Html.DisplayFor(model => model.obtainedPoints7)
+            </td>
+        </tr>
+        <tr>
+            <td class="col21" colspan="8">
+                6.   No. of International/National Journal papers published by faculty 
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;and students of the institute in the past academic year:
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;(one pt per paper subject to a maximum of five pts)  
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                <label>(0</label>@Model.allotedPoints8.ToString()<label>)</label>
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                @Html.DisplayFor(model => model.obtainedPoints8)
+            </td>
+        </tr>
+        <tr>
+            <td class="col21" colspan="8">
+                7.   No. of International/National conference papers presented by faculty 
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;and students of the institute in the past academic year:	
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;(one pt per paper subject to a maximum of five pts)
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                <label>(0</label>@Model.allotedPoints9.ToString()<label>)</label>
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                @Html.DisplayFor(model => model.obtainedPoints9)
+            </td>
+        </tr>
+        <tr>
+            <td class="col21" colspan="8">
+                No.of Governing Body meetings held in the past one academic year.   		
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;(Presence of JNTUH nominee mandatory)
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;NIL (0)    /      ONE (3)     / 	 TWO or More (5)         
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;(A copy of the resolution of the meeting to be enclosed)
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                <label>(0</label>@Model.allotedPoints10.ToString()<label>)</label>
+            </td>
+            <td class="col21" style="text-align: center; width: 10%">
+                @Html.DisplayFor(model => model.obtainedPoints10)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11" colspan="8">
+                TOTAL MARKS OBTAINED FOR ACADEMIC PERFORMANCE (X) = 
+            </td>
+            <td class="col11" style="text-align: center; width: 10%">
+                @Html.DisplayFor(model => model.totalAllotedPoints)
+            </td>
+            <td class="col11" style="text-align: center; width: 10%">
+                @Html.DisplayFor(model => model.totalObtainedPoints)
+            </td>
+        </tr>
+    </table>
+    }
+}
+</div>

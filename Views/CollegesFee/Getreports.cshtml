@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "Getreports";
+}
+
+<h2>Reports</h2>
+
+@using (Html.BeginForm("Getreports", "CollegesFee"))
+{
+    <table>
+        <tr>
+            <td style="text-align:center;">
+                <div class="editor-label" style="width:151px;">
+                    <span>Report Type</span>
+                </div>
+            </td>
+            <td style="text-align:center;">
+                <div class="editor-field" style="width:593px;">
+                    @Html.DropDownList("fType", new SelectList(ViewBag.FeeTypes as System.Collections.IEnumerable, "Id", "feeType"), "---Select---", new { @style = "width:589px;" })
+                </div>
+            </td>
+            <td style="text-align:center;">
+                <div class="editor-label" style="width:151px;">
+                    <span>Academic Year</span>
+                </div>
+            </td>
+            <td style="text-align:center;">
+                <div class="editor-field" style="width:241px;">
+                    @Html.DropDownList("academicId", new SelectList(ViewBag.AcademicYears as System.Collections.IEnumerable, "AcademicYearId", "AcademicYear"), "---Select---", new { @style = "width:240px;" })
+                </div>
+            </td>
+            <td style="text-align:center;">
+                <input type="submit" value="Download All" class="create_button" />
+            </td>
+        </tr>
+    </table>
+    <br />
+}

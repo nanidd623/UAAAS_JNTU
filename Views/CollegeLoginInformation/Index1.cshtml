@@ -1,0 +1,130 @@
+﻿@model IEnumerable<UAAAS.Models.jntuhuserlogin>
+@{
+    ViewBag.Title = "College Login Information";
+    //  Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    //if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    //{
+    //    Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    //}
+    var index = 1;
+}
+
+<h2>College Login Information</h2>
+
+@section onReady{
+
+    /* Initialize table and make first column non-sortable*/
+
+    $('#example').dataTable({  "bJQueryUI": true,
+    "iDisplayLength": 100,
+    "bStateSave": false,
+    "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+    "aoColumns": [ { "bSortable": true, "bSearchable": true }, null,null,null, null ],
+   "aLengthMenu": [
+        [100,500, -1], 
+        [100,500, "All"]
+     ]
+    });
+}
+
+<p align="right">
+    <input type="button" value="Export Excel" id="btnexcel" style="background:green;color:white;border-radius:2px;height:20px;width:85px"  />
+</p>
+<br />
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th style="width: 10px; text-align: center;">
+                S.No
+            </th>
+            <th style="width:20px;text-align:left">
+                College Code
+            </th>
+            <th style="width: 380px; text-align: left;">
+                College Name
+            </th>
+            <th style="width: 60px; text-align: left;">
+                Login
+            </th>
+            <th class="ui-state-default" style="width: 60px; text-align: left;">
+                Logout
+            </th>
+            <th class="ui-state-default" style="text-align: left;width:20px">
+                Time
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 10px; text-align: center;">
+                    @(index++)
+                </td>
+                <td style="width:20px;text-align:left">
+                    @Html.DisplayFor(modelItem => item.collegeCode)
+                </td>
+                <td style="text-align:left;width:380px">
+                    @Html.DisplayFor(modelItem => item.collegeName)
+                </td>
+                <td style="text-align: left;width:60px">
+                    @Html.DisplayFor(modelItem => item.Login)
+                </td>
+
+                <td style="text-align: left;width:60px">
+                    @Html.DisplayFor(modelItem => item.Logout)
+                </td>
+                <td style="text-align: left;width:20px">
+                    @Html.DisplayFor(modelItem => item.Time)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>
+
+
+
+
+
+   
+
+<script src="~/Scripts/jquery.base64.js"></script>
+<script src="~/Scripts/tableExport.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var varpdfFontSize = '7';
+        $('#btnexcel').bind('click', function (e) {
+           // alert('Hai');
+            $('#example').tableExport({ type: 'excel', escape: 'false', pdfFontSize: varpdfFontSize });
+        });
+
+       
+    });
+
+    //$(document).on('click', '#btnexcel', function (e) {
+    //    var varpdfFontSize = '7';
+    //    debugger;
+    //    $('#example').tableExport({ type: 'excel', escape: 'false', pdfFontSize: varpdfFontSize });
+    //});
+
+
+
+
+
+
+</script>

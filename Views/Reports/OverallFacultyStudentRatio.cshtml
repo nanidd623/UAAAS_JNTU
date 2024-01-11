@@ -1,0 +1,96 @@
+﻿@model IEnumerable<UAAAS.Models.OverallStudentRatio>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "College Overall Faculty Student Ratio";
+   
+}
+<h2>College Overall Faculty Student Ratio</h2>
+@using (Html.BeginForm())
+{
+    
+    <table class="full_table" style="width: 100%; font-size: 0.7rem;">
+        <tr>
+            <th style="text-align: center;">Program</th>
+            @* <th style="text-align: center;">College Overall Faculty Student Ratio</th>*@
+            @* <th style="text-align: center;"  rowspan="2">Sactioned Strength</th>
+            <th style="text-align: center;" colspan="">Total Faculty</th>
+            <th style="text-align: center;">Total Ratified Faculty</th>*@
+
+            <th style="text-align: center;">Spelization
+            </th>
+            <th style="text-align: center;">Sanctioned Strenth
+            </th>
+            <th style="text-align: center;">Total Faculty
+            </th>
+            <th style="text-align: center;">Total Ratified Faculty
+            </th>
+
+        </tr>
+    </table>
+    
+    var count = 0;
+    var prev_degree = string.Empty;
+    List<string> degree = Model.Select(d => d.degree).Distinct().ToList();
+
+    foreach (var degreename in degree)
+    {
+        
+    <table class="full_table">
+
+        @foreach (var item in Model)
+        {
+            if (degreename == item.degree)
+            {
+            <tr>
+                @if (count == 0)
+                {
+                    <td rowspan="@Model.Count()">@degreename</td>
+                }
+                <td>@item.Specialization</td>
+                <td style="width: 50px; text-align: center;">@item.approvedIntake6</td>
+                <td style="width: 50px; text-align: center;">@item.approvedIntake5</td>
+                <td style="width: 50px; text-align: center;">@item.approvedIntake4</td>
+                <td style="width: 50px; text-align: center;">@item.approvedIntake3</td>
+                <td style="width: 50px; text-align: center;">@item.approvedIntake2</td>
+                <td style="width: 50px; text-align: center;">@item.approvedIntake1</td>
+                <td style="width: 50px; text-align: center;">@item.totalFaculty</td>
+                <td style="width: 50px; text-align: center;">@item.ratifiedFaculty</td>
+            </tr>
+                count++;
+
+            }
+        }
+
+    </table>
+        
+    <span>
+        <br />
+    </span>
+        
+        prev_degree = degreename;
+        count = 0;
+    }
+
+}
+
+
+@* @foreach (var item in Model)
+    {
+        
+        <tr>                       
+            <td style="width: 60px;">@item.degree</td>           
+            <td>@item.Specialization</td>           
+            <td style="width: 50px; text-align: center;">@item.approvedIntake6</td>
+            <td style="width: 50px; text-align: center;">@item.approvedIntake5</td>
+            <td style="width: 50px; text-align: center;">@item.approvedIntake4</td>
+            <td style="width: 50px; text-align: center;">@item.approvedIntake3</td>
+            <td style="width: 50px; text-align: center;">@item.approvedIntake2</td>
+            <td style="width: 50px; text-align: center;">@item.approvedIntake1</td>  
+            <td style="width: 50px; text-align: center;">@item.totalFaculty</td>  
+            <td style="width: 50px; text-align: center;">@item.ratifiedFaculty</td>  
+        </tr>
+    }*@

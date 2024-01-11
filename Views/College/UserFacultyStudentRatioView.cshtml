@@ -1,0 +1,54 @@
+﻿@model IList<UAAAS.Models.FacultyStudentRatio>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Overall Faculty Student Ratio";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+}
+<h2>Overall Faculty Student Ratio</h2>
+@using (Html.BeginForm())
+{
+    if (ViewBag.Norecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+    }
+    else
+    {    
+    <table class="webGrid" style="width: 100%;">
+        <tr style="font-weight: bold;" class="gridHeader">
+            <td style="text-align: left;">Degree</td>
+            <td style="text-align: center; width: 140px;">Total Student Strength </td>
+            <td style="text-align: center; width: 140px;">Total Faculty</td>
+        </tr>
+        @for (int i = 0; i < ViewBag.Count; i++)
+        {
+            <tr>
+                <td style="text-align: left;" class="col1">
+                    @Html.LabelFor(m => m[i].degree, Model[i].degree == null ? string.Empty : Model[i].degree.ToString())
+                    @Html.HiddenFor(m => m[i].degreeId)
+                    @Html.HiddenFor(m => m[i].collegeId)
+                </td>
+                @if (ViewBag.Update == true)
+                {
+                    <td style="text-align: center; width: 15%" class="col2">
+                        @Html.DisplayFor(m => m[i].totalIntake, new { Value = Model[i].totalIntake == 0 ? "0" : Model[i].totalIntake.ToString(), style = "text-align: center;" })
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col2">
+                        @Html.DisplayFor(m => m[i].totalFaculty, new { Value = Model[i].totalFaculty == 0 ? "0" : Model[i].totalFaculty.ToString(), style = "text-align: center;" })
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align: center; width: 15%" class="col2">
+                        @Html.DisplayFor(m => m[i].totalIntake, new { Value = Model[i].totalIntake == 0 ? string.Empty : Model[i].totalIntake.ToString(), style = "text-align: center;" })
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col2">
+                        @Html.DisplayFor(m => m[i].totalFaculty, new { Value = Model[i].totalFaculty == 0 ? string.Empty : Model[i].totalFaculty.ToString(), style = "text-align: center;" })
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+    }
+}

@@ -1,0 +1,77 @@
+﻿@model List<UAAAS.Models.CollegeBalanceFee>
+@{
+    int count = 1;
+}
+<table border="1" style="width: 100%">
+    <thead>
+        <tr>
+            <th rowspan="2" style="text-align: center; background-color: yellow; vertical-align: top">
+                S.No
+            </th>
+            <th rowspan="2" style="text-align: center; background-color: yellow; vertical-align: top">
+                C.C
+            </th>
+            <th rowspan="2" style="text-align: center; background-color: yellow; vertical-align: top">
+                Name of the College
+            </th>
+            <th colspan="4" style="text-align: center; background-color: yellow; vertical-align: top">
+                @ViewBag.FourthYear
+            </th>
+            <th colspan="4" style="text-align: center; background-color: yellow; vertical-align: top">
+                @ViewBag.ThirdYear
+            </th>
+            <th colspan="4" style="text-align: center; background-color: yellow; vertical-align: top">
+                @ViewBag.SecondYear
+            </th>
+            <th colspan="4" style="text-align: center; background-color: yellow; vertical-align: top">
+                @ViewBag.FirstYear
+            </th>
+        </tr>
+        <tr>
+            @for (int i = 0; i < 4; i++)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Previous year <br /> dues
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Current year <br /> Dues
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Payment on the <br/> current Year
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Total Dues
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count != 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: left;">@(count++)</td>
+                    <td style="text-align: left;">@item.Collegecode</td>
+                    <td style="text-align: left;">@item.CollegeName</td>
+                    <td style="text-align: left;">@item.FourthYearFee</td>
+                    <td style="text-align: left;">@item.FourthYearAffiliationFee</td>
+                    <td style="text-align: left;">@item.FourthYear_PaidFee</td>
+                    <td style="text-align: left;">@item.FourthYear_BalanceFee</td>
+                    <td style="text-align: left;">@item.ThridYearFee</td>
+                    <td style="text-align: left;">@item.ThridYearAffiliationFee</td>
+                    <td style="text-align: left;">@item.ThridYear_PaidFee</td>
+                    <td style="text-align: left;">@item.ThridYear_BalanceFee</td>
+                    <td style="text-align: left;">@item.SecondYearFee</td>
+                    <td style="text-align: left;">@item.SecondYearAffiliationFee</td>
+                    <td style="text-align: left;">@item.SecondYear_PaidFee</td>
+                    <td style="text-align: left;">@item.SecondYear_BalanceFee</td>
+                    <td style="text-align: left;">@item.FirstYearFee</td>
+                    <td style="text-align: left;">@item.FirstYearAffiliationFee</td>
+                    <td style="text-align: left;">@item.FirstYear_PaidFee</td>
+                    <td style="text-align: left;">@item.FirstYear_BalanceFee</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

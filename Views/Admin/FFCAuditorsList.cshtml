@@ -1,0 +1,377 @@
+﻿@model IEnumerable<UAAAS.Models.FFCAuditors>
+@{
+    ViewBag.Title = "FFCAditorsList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var index = 1;
+}
+@*@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "bStateSave": false,
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ]
+                           });
+}*@
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Auditors',
+            autoOpen: false,
+            resizable: false,
+            height: 460,
+            width: 700,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Auditors'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit Auditors'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 550,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+    });
+</script>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+        
+        //Filling dropdowns for filtering
+        GetDepartments();
+        GetDesignation();
+      
+        $('#ddldept').change(function () {
+            var dept = $('#ddldept').val();
+            //alert(dept);         
+            if (dept != '') {
+                oTable.fnFilter(dept);
+            }
+            else {               
+                dept = '';
+                oTable.fnFilter(dept);
+            }
+        });
+        $('#ddlDesignation').change(function () {
+            var ddlDesignation = $('#ddlDesignation').val();
+            //alert(ddlDesignation);
+            if (ddlDesignation != '') {
+                oTable.fnFilter(ddlDesignation);
+            }
+            else {
+                ddlDesignation = '';
+                oTable.fnFilter(ddlDesignation);
+            }
+        });
+    });
+    function GetDepartments() {
+        $.getJSON("/FFCAuditors/GetDepartments", {},
+            function (DepartmentsData) {
+                // alert('b');
+                var select = $("#ddldept");
+                select.empty();
+                select.append($('<option/>', {
+                    value: '',
+                    text: '-- Select --'
+                }));
+                $.each(DepartmentsData, function (index, itemdata) {
+                    select.append($('<option/>', {
+                        value: itemdata.Text,
+                        text: itemdata.Text,                        
+                    }));
+                });
+            });
+    }
+    function GetDesignation() {
+        $.getJSON("/FFCAuditors/GetDesignation", {},
+            function (DesignationData) {
+                var select = $("#ddlDesignation");
+                select.empty();
+                select.append($('<option/>', {
+                    value: '',
+                    text: '-- Select --'
+                }));
+                $.each(DesignationData, function (index, itemdata) {
+                    select.append($('<option/>', {
+                        value: itemdata.Text,
+                        text: itemdata.Text,                       
+                        }));
+                    });
+                });
+            }
+
+</script>
+<h2>Aditors List</h2>
+@using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "CollegeIntakeDialog" }))
+{
+    <table style="width: 100%">
+        <tr>
+            <td class="create_link_right">
+                @Html.ActionLink("Add New Auditor", "FFCAuditorsCreate", "FFCAuditors", null, new { @id = "openDialog", @class = "create_button" })
+
+            </td>
+        </tr>
+    </table>
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No
+                </th>
+                <th style="width: 150px; text-align: left;">Auditor
+                </th>
+                <th style="width: 250px; text-align: left;">Department
+                </th>
+                <th class="ui-state-default" style="width: 70px; text-align: left;">Designation
+                </th>
+                <th class="ui-state-default" style="width: 100px; text-align: left;">Email
+                </th>
+                <th class="ui-state-default" style="width: 100px; text-align: center;">Mobile No
+                </th>
+                <th class="ui-state-default" style="width: 100px; text-align: center;">Status
+                </th>
+                <th class="ui-state-default" colspan="2"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                int i = 1;
+                <tr>
+                    <td style="width: 50px; text-align: center;">
+                        @(index++)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.auditorName)
+                        @Html.HiddenFor(modelItem => item.id)
+                    </td>
+                    <td>
+                        @Html.HiddenFor(modelItem => item.auditorDepartmentID)
+                        @Html.DisplayFor(modelItem => item.Department)
+                    </td>
+                    <td>
+                        @Html.HiddenFor(modelItem => item.auditorDesignationID)
+                        @Html.DisplayFor(modelItem => item.Designation)
+                    </td>
+                    <td style="text-align: left;">
+                        @Html.DisplayFor(modelItem => item.auditorEmail1)
+                    </td>
+                    <td style="text-align: center;">
+                        @Html.DisplayFor(modelItem => item.auditorMobile1)
+                    </td>
+                    <td style="text-align: center;">
+
+                        @if (item.isActive == true)
+                        { <span>Active</span>}
+                        else
+                        {<span>In-Active</span>}
+                    </td>
+                    <td style="width: 30px; text-align: center;">
+                        @Html.ActionLink("Edit", "FFCAuditorsCreate", "FFCAuditors", new { id = item.id }, new { @class = "editDialog edit_button" })
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr style="background-color: gainsboro">
+                <th style="width: 60px;">
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="width: 200px;">
+                    <input type="text" id="i-1" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th style="width: 300px;">
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;display:none;" class="search_init">
+                    <select id="ddldept" style="width: 90%; text-align: left;" class="search_init"></select>                
+                </th>
+                <th>
+                    <input type="text" id="i-3" style="width: 90%; text-align: left;display:none;" class="search_init">
+                      <select id="ddlDesignation" style="width: 90%; text-align: left;" class="search_init"></select>
+                </th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init"></th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init"></th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-6" style="width: 90%; text-align: left; display: none;" class="search_init"></th>
+                <th style="width: 140px;" class=" ui-state-default">
+                    <input type="text" id="i-7" style="width: 90%; text-align: left; display: none;" class="search_init"></th>
+            </tr>
+        </tfoot>
+    </table>
+      
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+
+}

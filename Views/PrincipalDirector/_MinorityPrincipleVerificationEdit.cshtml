@@ -1,0 +1,357 @@
+﻿@model UAAAS.Models.FacultyRegistration
+@using UAAAS.Models;
+@{
+    ViewBag.Title = Model.RegistrationNumber + " - " + Model.FirstName + " " + Model.MiddleName + " " + Model.LastName;
+}
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<style>
+    /*.col2, .col4 {
+        width: 10px;
+    }*/
+    b {
+        font-weight: normal;
+    }
+
+    .faculty_table {
+        width: 100%;
+    }
+
+    tbody tr td:nth-child(5).col1 {
+        width: 25%;
+    }
+</style>
+<div id="div_print">
+
+    @using (Html.BeginForm("MinorityPrincipalVerificationEditPost", "PrincipalDirector", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+
+        <div>
+            <table style="width:100%">
+                <tr>
+                    <td style="width:100%">
+                        <table class="faculty_table" id="information">
+                            @*<tr>
+                                    <td class="col1" colspan="2">
+                                        <b>Registration Information</b>
+                                    </td>
+
+                                </tr>*@
+                            <tr>
+                                <td class="col1" style="font-weight: bold;width:24%">
+                                    @Html.Label("Registration No.", "Registration No.")
+                                </td>
+                                <td class="col2">
+                                    <span style="text-transform: uppercase; font-weight: bold;">@Html.DisplayFor(model => model.RegistrationNumber)</span>
+                                </td>
+                                <td rowspan="2" style="vertical-align:initial">
+                                    @if (@Model.facultyPhoto != null)
+                                    {
+                                        <a href="../Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" target="_blank" style="vertical-align:inherit">
+                                            <img src="../Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" style="height: 60px; vertical-align:top" />
+                                        </a>
+                                    }
+                                    @Html.HiddenFor(model => model.facultyPhoto)
+                                </td>
+                                @Html.HiddenFor(model => model.RegistrationNumber)
+                                @Html.HiddenFor(model => model.CollegeId)
+                                @Html.HiddenFor(model => model.id)
+                            </tr>
+                            <tr>
+                                <td class="col1" style="width: 10% !important; font-weight: bold; ">
+                                    <span>(FULL NAME)</span> <span class="mandatory">*</span>
+                                </td>
+                                <td class="col2 focus" style="width: 90% !important; font-weight: bold;">
+                                    @if (@Model.isView != null)
+                                    {
+                                        @Html.DisplayFor(modelItem => modelItem.FirstName)
+                                        @Html.DisplayFor(modelItem => modelItem.MiddleName)
+                                        @Html.DisplayFor(modelItem => modelItem.LastName)
+                                        @Html.HiddenFor(model => model.Email)
+                                    }
+
+                                </td>
+
+                            </tr>
+
+                        </table>
+                    </td>
+                    @*<td style="width:20%">
+                            <table style="width:20%">
+                                <tr>
+                                    <td rowspan="3">
+                                        @if (@Model.facultyPhoto != null)
+                                        {
+                                            <a href="../Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" target="_blank">
+                                                <img src="../Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" style="height: 60px;" />
+                                            </a>
+                                        }
+                                        @Html.HiddenFor(model => model.facultyPhoto)
+                                    </td>
+                                    <td style="display:none">
+                                        @Html.DisplayFor(modelItem => modelItem.RegistrationNumber)
+                                        @Html.HiddenFor(model => model.RegistrationNumber)
+                                    </td>
+                                    <td style="display:none">
+                                        @Html.DisplayFor(modelItem => modelItem.CollegeId)
+                                        @Html.HiddenFor(model => model.CollegeId)
+                                    </td>
+                                    <td style="display:none">
+                                        @Html.DisplayFor(modelItem => modelItem.id)
+                                        @Html.HiddenFor(model => model.id)
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>*@
+                </tr>
+            </table>
+
+        </div>
+        <table class="faculty_table">
+            @*<tr>
+                <th class="col1" colspan="4">
+                    <b>Title</b>
+                </th>
+                </tr>*@
+            <tr>
+                <td class="col1">
+                    <b>Absent</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.Absent, false)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>Modified PAN NO</b><span class="mandatory">*</span>
+                </td>
+                <td class="col2">
+                    @Html.RadioButton("ModifiedPAN", 0) Yes &nbsp;
+                    @Html.RadioButton("ModifiedPAN", 1, "checked") No &nbsp; &nbsp; &nbsp;
+                    @Html.TextBoxFor(model => model.ModifiedPANNo, new { @style = "display:none", @placeholder = "Enter PAN Number", @maxlength = "10" })
+                    @Html.ValidationMessageFor(model => model.ModifiedPANNo)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>Invalid PAN /No PAN</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.InvalidPANNo, false)
+                </td>
+
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>False PAN</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.FalsePAN, false)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>PG Specialization</b>
+                </td>
+                <td class="col2">
+
+                    <table>
+                        <tr>
+                            @*<td>
+                                        UG &nbsp;
+                                        @Html.DropDownListFor(model => model.NORelevantUG, new SelectList(ViewBag.ugcourses as System.Collections.IEnumerable, "specializationName", "specializationName"),
+                                "--Select--", new { id = "NORelevantUG", @class = "width" })
+                                    </td>*@
+                            <td>
+                                @Html.DropDownListFor(model => model.NORelevantPG, new SelectList(ViewBag.pgcourses as System.Collections.IEnumerable, "specializationName", "specializationName"),
+                        "--Select--", new { id = "NORelevantPG", @class = "width" })
+                            </td>
+                            @*<td>
+                                        Ph.D &nbsp;@Html.DropDownListFor(model => model.NORelevantPHD, new SelectList(ViewBag.ugcourses as System.Collections.IEnumerable, "specializationName", "specializationName"),
+                                "--Select--", new { id = "NORelevantPHD", @class = "width" })
+                                    </td>*@
+                        </tr>
+                    </table>
+
+
+
+
+
+
+                    @*@Html.DropDownListFor(model => model.NORelevantPHD, new SelectList(ViewBag.phdcourses as System.Collections.IEnumerable, "", "specializationName"),
+                        "--Select--", new { id = "NORelevantPHD", @class = "width" })*@
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>NO SCM</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NoSCM, false)
+                </td>
+
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>NO Form16</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NOForm16, false)
+                </td>
+            </tr>
+            <tr>
+                @*<td class="col1">
+                        @*<b>Modified Date of Appointment</b>
+                    </td>
+                    <td class="col2">
+                      @Html.TextBoxFor(model => model.MOdifiedDateofAppointment1, new { @placeholder = "MM/DD/YYYY" })
+                    </td>*@
+                <td class="col1">
+                    <b>NOT Qualified As Per AICTE Norms</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NOTQualifiedAsPerAICTE, false)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>InComplete Certificates</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.InCompleteCeritificates, false)
+                </td>
+            </tr>
+            @*<tr>
+                    <td class="col1">
+                        <b>Multiple Registrations In Same College</b>
+                    </td>
+                    <td class="col2">
+                        @Html.CheckBoxFor(model => model.MultipleReginSamecoll, false)
+                    </td>
+                    <td class="col3">
+                        <b>Multiple Registrations In Different College</b>
+                    </td>
+                    <td class="col4">
+                        @Html.CheckBoxFor(model => model.MultipleReginDiffcoll, false)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <b>Same PAN No Used By Multiple Faculty</b>
+                    </td>
+                    <td class="col2">
+                        @Html.CheckBoxFor(model => model.SamePANUsedByMultipleFaculty, false)
+                    </td>
+                    <td class="col3">
+                        <b>Photo Copy of PAN</b>
+                    </td>
+                    <td class="col4">
+                        @Html.CheckBoxFor(model => model.PhotocopyofPAN, false)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <b>Applied PAN/Ack Produced</b>
+                    </td>
+                    <td class="col2">
+                        @Html.CheckBoxFor(model => model.AppliedPAN, false)
+                    </td>
+                    <td class="col3">
+                        <b>Lost PAN/Ack Produced</b>
+                    </td>
+                    <td class="col4">
+                        @Html.CheckBoxFor(model => model.LostPAN, false)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <b>Originals Verified</b>
+                    </td>
+                    <td class="col2">
+                        @Html.CheckBoxFor(model => model.OriginalsVerifiedUG, false) UG &nbsp;&nbsp;
+                        @Html.CheckBoxFor(model => model.OriginalsVerifiedPG, false) PG &nbsp;&nbsp;
+                        @Html.CheckBoxFor(model => model.OriginalsVerifiedPHD, false) PH.D
+                    </td>
+
+                    <td class="col3">
+                        <b>Department</b>
+
+                    </td>
+                    <td class="col4">
+                        @Html.DropDownListFor(model => model.DepartmentId,
+                            new SelectList(ViewBag.department as System.Collections.IEnumerable, "id", "departmentName"),
+                            "-- Select --", new { id = "department", style = "" })
+                    </td>
+
+                </tr>*@
+            <tr>
+                <td colspan="4" style="text-align:right">
+                    <br />
+                    <input type="submit" value="Save" id="btnSave" name="cmd" class="btnclass" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#department').val($('#department option:first').val());
+        $('#MOdifiedDateofAppointment').val('');
+    });
+    $("input[name=ModifiedPAN]").change(function () {
+        var value = $(this).val();
+        if (value == 0) {
+            $("#ModifiedPANNo").show();
+        }
+        else {
+            $("#ModifiedPANNo").val('');
+            $("#ModifiedPANNo").hide();
+            $("#ModifiedPANNo>span").text('');
+            $("tbody tr td.col4 span.field-validation-error span").hide();
+        }
+
+    });
+
+    $("input[name=Absent]").change(function () {
+        if ($(this).is(":checked")) {
+            $("input[type=checkbox]").attr("disabled", true);
+            $("input[name=Absent]").attr("disabled", false);
+            $("input[type=radio]").attr("disabled", true);
+            $("#NORelevantUG").prop("disabled", true);
+            $("#NORelevantPG").prop("disabled", true);
+            $("#NORelevantPHD").prop("disabled", true);
+            $("#ModifiedPANNo").prop("disabled", true);
+            $("#MOdifiedDateofAppointment1").attr("disabled", true);
+            $("#InCompleteCeritificates").attr("disabled", true);
+            //
+            $("#department").prop("disabled", true);
+        }
+        else {
+            $("input[type=checkbox]").attr("disabled", false);
+            $("input[name=Absent]").attr("disabled", false);
+            $("input[type=radio]").attr("disabled", false);
+            $("#NORelevantUG").prop("disabled", false);
+            $("#NORelevantPG").prop("disabled", false);
+            $("#NORelevantPHD").prop("disabled", false);
+            $("#ModifiedPANNo").prop("disabled", false);
+            $("#MOdifiedDateofAppointment1").attr("disabled", false);
+            $("#InCompleteCeritificates").attr("disabled", false);
+            $("#department").prop("disabled", false);
+        }
+
+    });
+
+
+
+</script>

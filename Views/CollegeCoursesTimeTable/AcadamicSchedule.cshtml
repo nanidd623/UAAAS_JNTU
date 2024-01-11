@@ -1,0 +1,638 @@
+﻿@using UAAAS.Models
+@model UAAAS.Controllers.College.AcadamicimeTable
+@{
+    ViewBag.Title = "AcadamicSchedule";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    int count = 1;
+    int sscount = 1;
+    var dep = "department";
+    var spec = "specialization";
+    var deg = "degree";
+}
+
+<h2>Academic Calendar (for Autonomous College)</h2>
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success">
+        <p style="text-align: center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+    </div>
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div>
+}
+<br />
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('.calendar').attr("readonly", "true");
+        $('.calendar').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            //minDate:'-2016/01/02', //yesterday is minimum date
+            //maxDate: "+2Y", //tomorrow is maximum date
+            maxDate: "+180M",
+            yearRange: '2000:2050',
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+        });
+        //$("#academic_calender_0__todate").css('display', 'none');
+        //$("#academic_calender_2__todate").css('display', 'none');
+        $("#academic_calender_0__todate").removeClass('required');
+        $("#academic_calender_2__todate").removeClass('required');
+        //$("#academic_calender_6__todate").removeClass('required');
+        //$("#academic_calender_6__fromdate").removeClass('required');
+        $("#academic_calender_1__todate").on('change', function () {
+            var startDate = $("#academic_calender_1__fromdate").val();
+            var endDate = $("#academic_calender_1__todate").val();
+
+            if (startDate == "" || endDate == "") {
+                alert("from date and to date should not be empty.");
+                isValidDate = false;
+                $("#academic_calender_1__todate").val("");
+                $("#academic_calender_1__todate").focus();
+                return isValidDate;
+                alert(startDate);
+            }
+            if (startDate != " " && endDate != " ") {
+                var fromDate = startDate.substr(6, 4) + startDate.substr(3, 2) + startDate.substr(0, 2);
+                var toDate = endDate.substr(6, 4) + endDate.substr(3, 2) + endDate.substr(0, 20);
+                if (toDate < fromDate) {
+                    alert("from date should be less than to date.");
+                    isValidDate = false;
+                    $("#academic_calender_1__todate").val("");
+                    $("#academic_calender_1__todate").focus();
+                }
+                else {
+                    isValidDate = true;
+                }
+            }
+
+            return isValidDate;
+        });
+
+        $("#academic_calender_3__todate").on('change', function () {
+            debugger
+
+            var startDate = $("#academic_calender_3__fromdate").val();
+            var endDate = $("#academic_calender_3__todate").val();
+
+            if (startDate == "" || endDate == "") {
+                alert("from date and to date should not be empty.");
+                isValidDate = false;
+                $("#academic_calender_3__todate").val("");
+                $("#academic_calender_3__todate").focus();
+                return isValidDate;
+            }
+            if (startDate != " " && endDate != " ") {
+                var fromDate = startDate.substr(6, 4) + startDate.substr(3, 2) + startDate.substr(0, 2);
+                var toDate = endDate.substr(6, 4) + endDate.substr(3, 2) + endDate.substr(0, 2);
+                if (toDate < fromDate) {
+                    alert("from date should be less than to date.");
+                    isValidDate = false;
+                    $("#academic_calender_3__todate").val("");
+                    $("#academic_calender_3__todate").focus();
+                }
+                else {
+                    isValidDate = true;
+                }
+            }
+
+
+
+            return isValidDate;
+
+
+
+        });
+
+        $("#academic_calender_4__todate").on('change', function () {
+            var startDate = $("#academic_calender_4__fromdate").val();
+            var endDate = $("#academic_calender_4__todate").val();
+
+            if (startDate == "" || endDate == "") {
+                alert("from date and to date should not be empty.");
+                isValidDate = false;
+                $("#academic_calender_4__todate").val("");
+                $("#academic_calender_4__todate").focus();
+                return isValidDate;
+            }
+            if (startDate != " " && endDate != " ") {
+                var fromDate = startDate.substr(6, 4) + startDate.substr(3, 2) + startDate.substr(0, 2);
+                var toDate = endDate.substr(6, 4) + endDate.substr(3, 2) + endDate.substr(0, 2);
+                if (toDate < fromDate) {
+                    alert("from date should be less than to date.");
+                    isValidDate = false;
+                    $("#academic_calender_4__todate").val("");
+                    $("#academic_calender_4__todate").focus();
+                }
+                else {
+                    isValidDate = true;
+                }
+            }
+
+
+
+            return isValidDate;
+
+
+
+        });
+
+        $("#academic_calender_5__todate").on('change', function () {
+            debugger
+
+            var startDate = $("#academic_calender_5__fromdate").val();
+            var endDate = $("#academic_calender_5__todate").val();
+
+            if (startDate == "" || endDate == "") {
+                alert("from date and to date should not be empty.");
+                isValidDate = false;
+                $("#academic_calender_5__todate").val("");
+                $("#academic_calender_5__todate").focus();
+                return isValidDate;
+            }
+            if (startDate != " " && endDate != " ") {
+                var fromDate = startDate.substr(6, 4) + startDate.substr(3, 2) + startDate.substr(0, 2);
+                var toDate = endDate.substr(6, 4) + endDate.substr(3, 2) + endDate.substr(0, 2);
+                if (toDate < fromDate) {
+                    alert("from date should be less than to date.");
+                    isValidDate = false;
+                    $("#academic_calender_5__todate").val("");
+                    $("#academic_calender_5__todate").focus();
+                }
+                else {
+                    isValidDate = true;
+                }
+            }
+
+
+
+            return isValidDate;
+
+
+
+        });
+
+        $("#academic_calender_6__todate").on('change', function () {
+            debugger
+
+            var startDate = $("#academic_calender_6__fromdate").val();
+            var endDate = $("#academic_calender_6__todate").val();
+
+            if (startDate == "" || endDate == "") {
+                alert("from date and to date should not be empty.");
+                isValidDate = false;
+                $("#academic_calender_6__todate").val("");
+                $("#academic_calender_6__todate").focus();
+                return isValidDate;
+            }
+            if (startDate != " " && endDate != " ") {
+                var fromDate = startDate.substr(6, 4) + startDate.substr(3, 2) + startDate.substr(0, 2);
+                var toDate = endDate.substr(6, 4) + endDate.substr(3, 2) + endDate.substr(0, 2);
+                if (toDate < fromDate) {
+                    alert("from date should be less than to date.");
+                    isValidDate = false;
+                    $("#academic_calender_6__todate").val("");
+                    $("#academic_calender_6__todate").focus();
+                }
+                else {
+                    isValidDate = true;
+                }
+            }
+
+
+
+            return isValidDate;
+
+
+
+        });
+
+        $("#SupportingDoc").change(function () {
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "complaintFile");
+                size = size / 1048576;
+                if (size > 1) {
+                    alert("Document should not exceed 1 MB in Size");
+                    $(this).val('');
+                } else {
+                    $(".complaintFile > span").text("");
+                }
+            }
+
+            //get file size
+            function GetFileSize(fileid, title) {
+
+                try {
+                    var fileSize = 0;
+                    //for IE
+                    if ($.browser.msie) {
+                        //before making an object of ActiveXObject,
+                        //please make sure ActiveX is enabled in your IE browser
+                        var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                        var filePath = $("#" + fileid)[0].value;
+                        var objFile = objFSO.getFile(filePath);
+                        var fileSize = objFile.size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+                        //for FF, Safari, Opeara and Others
+                    else {
+                        fileSize = $("#" + title)[0].files[0].size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+
+                    return fileSize;
+                } catch (e) {
+
+                    //alert("Error is : " + e);
+                }
+            }
+
+            //get file path from client system
+            function getNameFromPath(strFilepath) {
+                var objRE = new RegExp(/([^\/\\]+)$/);
+                var strName = objRE.exec(strFilepath);
+
+                if (strName == null) {
+                    return null;
+                }
+                else {
+                    return strName[0];
+                }
+            }
+
+
+
+        });
+
+        if ($("#@deg").val() > 0) {
+            GetDepartments($("#@deg").val());
+        }
+
+        $("#@deg").change(function () {
+            var DegreeID = $(this).val();
+            GetDepartments(DegreeID);
+        });
+
+        if ($("#@dep").val() > 0) {
+            GetSpecialization($("#@dep").val());
+        }
+
+        $("#@dep").change(function () {
+            var DepartmentID = $(this).val();
+            GetSpecialization(DepartmentID);
+        });
+
+        @*function GetDepartments(DegreeID) {
+            $.getJSON("/CollegeIntakeProposed/GetCollegeDepartments", { id: DegreeID },
+                function (DepartmentsData) {
+                    var select = $("#@dep");
+                    select.empty();
+                    select.append($('<option/>', {
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(DepartmentsData, function (index, itemdata) {
+                        select.append($('<option/>', {
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.Departmentid  ? true : false)
+                        }));
+                    });
+                    if ($("#@dep").val() > 0) {
+                        GetSpecialization($("#@dep").val());
+                    }
+                });
+        }
+
+        function GetSpecialization(DepartmantID) {
+            $.getJSON("/CollegeIntakeProposed/GetSpecialization", { id: DepartmantID },
+                function (Specializationdata) {
+                    var select = $("#@spec");
+                    select.empty();
+                    select.append($('<option/>', {
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(Specializationdata, function (index, itemdata) {
+                        select.append($('<option/>', {
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.specializationid ? true : false)
+                        }));
+                    });
+                });
+        }*@
+    });
+</script>
+
+@if (ViewBag.Autonomusaffiliation == true)
+{
+    using (Html.BeginForm("AcadamicSchedule", "CollegeCoursesTimeTable", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table class="faculty_table" style="border-collapse:collapse;">
+
+            @Html.HiddenFor(m => m.id)
+            @Html.HiddenFor(m => m.accadamicyearid)
+            @Html.HiddenFor(m => m.Createdon)
+
+            @*@{
+                    var getDegreeslist = (ViewBag.Degree as List<UAAAS.Controllers.College.CollegeDegrees>);
+                }
+                @if (getDegreeslist != null)
+                {
+                    for (int i = 0; i < getDegreeslist.Count(); i++)
+                    {
+                        <tr>
+                            <td class="col1" colspan="2">
+                                @Html.LabelFor(m => m.Degree)
+                            </td>
+                            <td class="col2" colspan="2">
+                                @Html.Display(getDegreeslist[i].degree)
+                            </td>
+                        </tr>
+                    }
+                }*@
+
+            <tr>
+                <td class="col1" colspan="2">
+                    @Html.LabelFor(m => m.Degree)
+                </td>
+                <td class="col2" colspan="2">
+                    @*@Html.DropDownListFor(m => m.Degreeid, new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "DegreeId", "Degree"), "---Select---", new { @class = "required", @style = "width:95%;" })*@
+                    @Html.DropDownListFor(model => model.Degreeid,
+             new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "degreeId", "degree"),
+                    "-- Select --", new { id = deg, style = "width: 100%;" })
+                </td>
+            </tr>
+            <tr style="display: none;">
+                <td class="col1" style="vertical-align: top;">
+                    @Html.LabelFor(m => m.Department)
+                </td>
+                <td class="col2" style="vertical-align: top;">
+                    @*@Html.DropDownListFor(m => m.Departmentid, new SelectList(ViewBag.Dept as System.Collections.IEnumerable, "Did", "Dname"), "---Select---", new { @class = "required", @style = "width:95%;" })
+                        @Html.ValidationMessageFor(model => model.Department)*@
+
+                    @Html.DropDownListFor(m => m.Departmentid,
+                    new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+                    "-- Select --", new { id = dep, style = "width: 100%;" })
+                </td>
+                <td class="col3">
+                    @Html.LabelFor(m => m.Specialization)
+                </td>
+                <td class="col4">
+                    @*@Html.DropDownListFor(m => m.specializationid, new SelectList(ViewBag.Specilization as System.Collections.IEnumerable, "Sid", "Sname"), "---Select---", new { @class = "required", @style = "width:95%;" })*@
+                    @Html.DropDownListFor(model => model.specializationid,
+                    new SelectList(Enumerable.Empty<SelectListItem>(), "id", "specializationName"),
+                    "-- Select --", new { id = spec, style = "width: 100%;" })
+                </td>
+            </tr>
+            <tr style="display: none;">
+                <td class="col1" style="vertical-align: top;">
+                    @Html.LabelFor(m => m.year)
+                </td>
+                <td class="col2" style="vertical-align: top;">
+                    @Html.DropDownListFor(m => m.year, new SelectList(new List<object> {
+           new { value = 1 , text = "First"  },
+                       new { value = 2 , text = "Second" },
+                       new { value = 3 , text = "Third "  },
+                       new { value = 4 , text = "Fourth " }
+          }, "value", "text"), "---Select---", new { @class = "required", @style = "width:100%;" })
+                    @Html.ValidationMessageFor(model => model.year)
+                </td>
+                <td class="col3">
+                    @Html.LabelFor(m => m.Semester)
+                </td>
+                <td class="col4">
+                    @Html.DropDownListFor(m => m.Semester, new SelectList(new List<object> {
+           new { value = 1 , text = "First"  },
+                       new { value = 2 , text = "Second" }
+
+          }, "value", "text"), "---Select---", new { @class = "required", @style = "width:100%;" })
+                    @Html.ValidationMessageFor(model => model.Semester)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" colspan="2">
+                    @Html.LabelFor(m => m.SupportingDoc)
+                </td>
+                <td class="col2" colspan="2">
+                    @if (Model.isaction == 0)
+                    {
+                        @Html.TextBoxFor(m => m.SupportingDoc, new { type = "file", @class = "required" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(m => m.SupportingDoc, new { type = "file", @class = "required" })
+                        <a href="../Content/Upload/AcadamicSchedule/TimeTable/@Model.SupportingDocname.Replace("~", "")" target="_blank">
+                            @*<img src="../Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" style="height: 60px;"/>*@
+                            <span style="font-weight:bold;color:red">View</span>
+                        </a>
+                        @Html.HiddenFor(m => m.SupportingDocname);
+                    }
+
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        if (Model != null)
+        {
+            <table class="faculty_table" style="border-collapse:collapse;">
+                <tr>
+                    <th width="4%" style="text-align: center; background-color: #E8EFF3; border: solid 1px #bbb;">
+                        S.No
+                    </th>
+
+                    <th width="4%" style="text-align: center; background-color: #E8EFF3; border: solid 1px #bbb;">
+                        Event
+                    </th>
+                    <th style="text-align: center; background-color: #E8EFF3; border: solid 1px #bbb;">
+                        From Date
+                    </th>
+                    <th style="text-align: center; background-color: #E8EFF3; border: solid 1px #bbb;">
+                        To Date
+                    </th>
+
+                </tr>
+                <tbody>
+                    @for (int i = 0; i < Model.academic_calender.Count; i++)
+                    {
+                        <tr>
+                            <td width="4%" style="text-align:center;background-color:#FCF1D1;border:solid 1px #bbb;">
+                                @(count++)
+                                @Html.HiddenFor(m => Model.academic_calender[i].id)
+                            </td>
+
+                            <td class="col2">
+                                @Html.DisplayFor(m => Model.academic_calender[i].eventname)
+                                @Html.HiddenFor(m => Model.academic_calender[i].evntid)
+                            </td>
+
+                            <td class="col2">
+                                @Html.TextBoxFor(m => Model.academic_calender[i].fromdate, new { @class = "calendar  required", @placeholder = "DD/MM/YYYY" })
+                            </td>
+
+                            <td class="col4">
+                                @Html.TextBoxFor(m => Model.academic_calender[i].todate, new { @class = "calendar required", @placeholder = "DD/MM/YYYY" })
+                            </td>
+                            @Html.HiddenFor(m => Model.academic_calender[i].Createdon)
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        }
+
+        if (Model.isaction == 0)
+        {
+            <div style="line-height: 1.2rem;" class="right_buttons submitButton">
+                <input type="submit" id="btnsave" value="Save" class="submit" name="Command" />
+            </div>
+        }
+        else
+        {
+            <div style="line-height: 1.2rem;" class="right_buttons submitButton">
+                <input type="submit" id="btnupdate" value="Update" class="submit" name="Command" />
+                @Html.ActionLink("Cancel", "AcadamicSchedule", "CollegeCoursesTimeTable", new { }, new { @class = "create_button" })
+            </div>
+        }
+    }
+}
+else
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">No records to display</p>
+    </div>
+}
+
+@{
+    var academicCalenderlistDto = (ViewBag.academicCalenderlistDto as List<UAAAS.Controllers.College.AcadamicimeTableDto>);
+}
+
+@if (academicCalenderlistDto != null && academicCalenderlistDto.Count > 0)
+{
+    <br />
+    <table class="faculty_table" style="border-collapse:collapse;">
+        <tr>
+            @*<th style="text-align: left; background-color: #E8EFF3; border: solid 1px #bbb;">
+                    S.No
+                </th>*@
+            <th style="text-align: center; background-color: #E8EFF3; border: solid 1px #bbb;">
+                Degree
+            </th>
+            <th style="text-align: center; background-color: #E8EFF3; border: solid 1px #bbb;">
+                Event
+            </th>
+            <th style="text-align: center; background-color: #E8EFF3; border: solid 1px #bbb;">
+                From Date
+            </th>
+            <th style="text-align: center; background-color: #E8EFF3; border: solid 1px #bbb;">
+                To Date
+            </th>
+            <th style="text-align: center; background-color: #E8EFF3; border: solid 1px #bbb;">
+                Supporting Document
+            </th>
+            <th style="text-align: center; background-color: #E8EFF3; border: solid 1px #bbb;">
+
+            </th>
+        </tr>
+        <tbody>
+            @for (int i = 0; i < academicCalenderlistDto.Count; i++)
+            {
+                <tr>
+                    @*<td style="text-align: center; background-color: #FCF1D1; border: solid 1px #bbb;">
+                            @(sscount++)
+                        </td>*@
+                    @if (i == 0)
+                    {
+                        <td class="col4" rowspan="7" style="text-align: center; width:20%;">
+                            @Html.DisplayFor(m => academicCalenderlistDto[i].Degree)
+                        </td>
+                    }
+                    else if (i != 0 && academicCalenderlistDto[i].Degree != academicCalenderlistDto[i - 1].Degree)
+                    {
+
+                        <td class="col4" rowspan="7" style="text-align: center; width:20%;">
+                            @Html.DisplayFor(m => academicCalenderlistDto[i].Degree)
+                        </td>
+                    }
+                    <td class="col2" style="width: 40%; ">
+                        @Html.DisplayFor(m => academicCalenderlistDto[i].eventname)
+                    </td>
+
+                    <td class="col2" style="width: 15%; text-align: center;">
+                        @Html.DisplayFor(m => academicCalenderlistDto[i].fromdate, new { @class = "calendar  required", @placeholder = "DD/MM/YYYY" })
+                    </td>
+
+                    <td class="col4" style="width: 15%; text-align: center;">
+                        @Html.DisplayFor(m => academicCalenderlistDto[i].todate, new { @class = "calendar required", @placeholder = "DD/MM/YYYY" })
+                    </td>
+
+                    @if (i == 0)
+                    {
+
+                        <td class="col4" rowspan="7" style="text-align: center;">
+                            <a href="../Content/Upload/AcadamicSchedule/TimeTable/@academicCalenderlistDto[i].SupportingDocname.Replace("~", "")" target="_blank">
+                                @*<img src="../Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" style="height: 60px;"/>*@
+                                <span style="font-weight: bold; color: red;">View</span>
+                            </a>
+                        </td>
+                        if (ViewBag.IsEditable)
+                        {
+                            <td class="col4" rowspan="7" style="text-align: center;">
+                                @*@Html.ActionLink("Edit", "AcadamicScheduleview", "CollegeCoursesTimeTable", new { eventid = academicCalenderlistDto[i].evntid }, new { @class = "edit_button", @target = "_blank" })*@
+                                @Html.ActionLink("Edit", "AcadamicSchedule", "CollegeCoursesTimeTable", new { eventid = academicCalenderlistDto[i].id }, new { @class = "create_button" })
+                            </td>
+                        }
+                    }
+                    else if (i != 0 && academicCalenderlistDto[i].Degree != academicCalenderlistDto[i - 1].Degree)
+                    {
+
+                        <td class="col4" rowspan="7" style="text-align: center;">
+                            <a href="../Content/Upload/AcadamicSchedule/TimeTable/@academicCalenderlistDto[i].SupportingDocname.Replace("~", "")" target="_blank">
+                                @*<img src="../Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" style="height: 60px;"/>*@
+                                <span style="font-weight: bold; color: red">View</span>
+                            </a>
+                        </td>
+                        if (ViewBag.IsEditable)
+                        {
+                            <td class="col4" rowspan="7" style="text-align: center;">
+                                @*@Html.ActionLink("Edit", "AcadamicScheduleview", "CollegeCoursesTimeTable", new { eventid = academicCalenderlistDto[i].evntid }, new { @class = "edit_button", @target = "_blank" })*@
+                                @Html.ActionLink("Edit", "AcadamicSchedule", "CollegeCoursesTimeTable", new { eventid = academicCalenderlistDto[i].id }, new { @class = "create_button" })
+                            </td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}

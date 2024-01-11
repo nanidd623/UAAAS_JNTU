@@ -1,0 +1,289 @@
+﻿@model IEnumerable<UAAAS.Models.PGCourseSpecializationandFacultyList>
+@{
+    ViewBag.Title = "PGCourseSubmittedandColleges";
+    int count = 0;
+}
+<br />
+@if (@ViewBag.course != string.Empty)
+{
+    <h2>@ViewBag.course Colleges</h2>
+}
+else
+{
+    <h2>ALL Colleges</h2>
+}
+
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+    });
+</script>
+
+@using (Html.BeginForm())
+{            
+    <table>
+        <tr>
+            <td style="text-align: right;">
+                @Html.DropDownList("collegeId",
+            new SelectList(ViewBag.CollegesList, "Id", "Name"),
+            "-- Select --", new { id = "CollegeName" })
+                <input type="submit" value="Search" name="cmd" style="width: 80px; padding: 4px 15px" />
+                <input type="submit" value="Export" name="cmd" style="width: 80px; padding: 4px 15px" />
+            </td>
+        </tr>
+    </table>
+    <br />
+    <div class="details_table">
+        <div class="details_table">
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="M.Tech" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="M.Pharm" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="MBA" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="MCA" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Pharm.D" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Pharm.D PB" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="MAM" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="MTM" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="ALL" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+        </div>
+        <div class="details_table" style="font-size: 11px">
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export M.Tech" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export M.Pharm" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export MBA" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export MCA" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export Pharm.D" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export Pharm.D PB" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export MAM" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export MTM" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 10%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export" name="cmd" style="width: 110px; padding: 4px 10px" />
+            </div>
+        </div>
+
+    </div>
+    <br />
+    <div style="width: 100%; overflow: auto; overflow-y: scroll; height: 580px;">
+        <table class="tbl_report display" style="width: 2500px; border: solid 1px #ccc; border-collapse: collapse;" id="example">
+            <thead>
+                <tr class="DataTables_sort_wrapper" style="border: solid 1px #ccc;">
+                    <th style="text-align: center; width: 30px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">S.No
+                    </th>
+                    <th style="text-align: left; width: 200px; font-weight: bold; padding: 3px 5px;" rowspan="2" class="ui-state-default">College Name
+                    </th>
+                    <th style="text-align: center; width: 40px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Code & Year
+                    </th>
+                    <th style="text-align: center; padding: 3px 5px; font-weight: bold" colspan="1" class="ui-state-default">PG Course Details
+                    </th>
+                </tr>
+                <tr style="border: solid 1px #ccc;">
+                    <td style="text-align: center; border: solid 1px #ccc; padding: 0; vertical-align: top">
+                        <table style="border-collapse: collapse; text-align: left; width: 100%; border: 0;" class="no-border">
+                            <tr>
+                                <th style="text-align: left; width: 100px; padding: 3px 5px; font-weight: bold" class="ui-state-default">Degree	
+                                </th>
+                                <th style="text-align: left; width: 100px; padding: 3px 5px; font-weight: bold" class="ui-state-default">Department
+                                </th>
+                                <th style="text-align: left; padding: 3px 5px; font-weight: bold" class="ui-state-default">Specialization	
+                                </th>
+                                <th style="text-align: left; width: 40px; padding: 3px 5px; font-weight: bold" class="ui-state-default">Shift	
+                                </th>
+                                <th style="text-align: center; width: 40px; padding: 3px 5px; font-weight: bold" class="ui-state-default">Intake
+                                </th>
+                                <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" class="ui-state-default">Professors	
+                                </th>
+                                <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" class="ui-state-default">Associate Professors
+                                </th>
+                                <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" class="ui-state-default">Assistant Professors	
+                                </th>
+                                <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" class="ui-state-default">Total	
+                                </th>
+                                <th style="text-align: left; width: 500px; padding: 3px 5px; font-weight: bold" class="ui-state-default">PG Specialization	
+                                </th>
+                                <th style="text-align: left; width: 500px; padding: 3px 5px; font-weight: bold" class="ui-state-default">Ph.D Specialization	
+                                </th>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tbody>
+                   @if (@item.PGCourse.Count>0)
+                    {
+                        <tr style="border: solid 1px #ccc;">
+                            <td style="text-align: center; width: 30px; border: solid 1px #ccc; padding: 3px 5px; vertical-align: top">
+                                @(count = count + 1)
+                            </td>
+                            <td style="text-align: left; border: solid 1px #ccc; padding: 3px 5px; vertical-align: top">
+                                <label>@item.collegeName</label>
+                            </td>
+                            <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px; vertical-align: top">
+                                <table style="border-collapse: collapse; text-align: left; width: 100%">
+                                    <tr>
+                                        <td style="border: none; text-align: center; vertical-align: top">
+                                            <label style="text-transform: uppercase">@item.collegeCode</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: none; text-align: center; vertical-align: top">
+                                            <label style="text-transform: uppercase">@item.instituteEstablishedYear</label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+
+                            <td style="text-align: center; border: solid 1px #ccc; padding: 0; vertical-align: top">
+
+                                <table style="border-collapse: collapse; text-align: left; width: 100%; border: 0;" class="no-border">
+
+                                    @foreach (var course in @item.PGCourse)
+                                    {  
+                                        <tr>
+                                            <td style="border: solid 1px #ccc; text-align: left; vertical-align: top; width: 100px">
+                                                <label style="text-transform: uppercase">@course.degree</label>
+                                            </td>
+                                            <td style="border: solid 1px #ccc; text-align: left; vertical-align: top; width: 100px">
+                                                <label style="text-transform: uppercase">@course.jntuh_department.departmentName</label>
+                                            </td>
+                                            <td style="border: solid 1px #ccc; text-align: left; vertical-align: top;">
+                                                <label style="text-transform: uppercase">@course.jntuh_specialization.specializationName</label>
+                                            </td>
+                                            <td style="border: solid 1px #ccc; text-align: center; vertical-align: top; width: 40px">
+                                                <label style="text-transform: uppercase">@course.shiftId</label>
+                                            </td>
+                                            <td style="border: solid 1px #ccc; text-align: center; vertical-align: top; width: 40px">
+                                                <label style="text-transform: uppercase">@course.intake</label>
+                                            </td>
+                                            <td style="border: solid 1px #ccc; text-align: center; vertical-align: top; width: 100px">
+                                                <label style="text-transform: uppercase">@course.professors</label>
+                                            </td>
+                                            <td style="border: solid 1px #ccc; text-align: center; vertical-align: top; width: 100px">
+                                                <label style="text-transform: uppercase">@course.associateProfessors</label>
+                                            </td>
+                                            <td style="border: solid 1px #ccc; text-align: center; vertical-align: top; width: 100px">
+                                                <label style="text-transform: uppercase">@course.assistantProfessors</label>
+                                            </td>
+                                            <td style="border: solid 1px #ccc; text-align: center; vertical-align: top; width: 100px">
+                                                <span style="text-transform: uppercase">@Convert.ToInt32(@course.professors + @course.associateProfessors + @course.assistantProfessors)</span>
+                                            </td>
+                                            <td style="border: solid 1px #ccc; text-align: left; vertical-align: top; width: 500px">
+                                                @if (@course.PGFaculty.Count() > 0)
+                                                {
+                                                    <ol style="margin-left: 20px;">
+                                                        @foreach (var PGFaculty in @course.PGFaculty)
+                                                        {
+                                                            if (PGFaculty.PG != string.Empty)
+                                                            {
+                                                            <li>
+                                                                <label style="text-transform: uppercase">@PGFaculty.PG - @PGFaculty.PGSpecialization</label></li>
+                                                            }
+                                                        }
+                                                    </ol>
+                                                }
+                                            </td>
+
+                                            <td style="border: solid 1px #ccc; text-align: left; vertical-align: top; width: 500px">
+                                                @if (@course.PGFaculty.Count() > 0)
+                                                {
+                                                    <ol style="margin-left: 20px;">
+                                                        @foreach (var PGFaculty in @course.PGFaculty)
+                                                        {
+                                                            if (PGFaculty.Phd != string.Empty)
+                                                            { <li>
+                                                            <label style="text-transform: uppercase">@PGFaculty.Phd - @PGFaculty.PhdSpecialization</label></li>
+                                                            }
+                                                        }
+                                                    </ol>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            }
+        </table>
+    </div>
+    
+    
+    
+
+   
+   
+}
+<style type="text/css">
+    .dataTables_wrapper {
+        overflow: auto;
+        overflow-y: scroll;
+        height: 500px;
+    }
+</style>
+
+

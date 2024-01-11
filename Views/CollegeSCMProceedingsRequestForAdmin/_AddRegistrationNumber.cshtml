@@ -1,0 +1,93 @@
+﻿@model UAAAS.Controllers.College.ScmProceedingsRequestAddReg
+@{
+    ViewBag.Title = "Add Registration Number";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Ajax.BeginForm("AddRegistrationNumber", "CollegeSCMProceedingsRequestForAdmin", new AjaxOptions()))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+
+
+
+    <fieldset>
+        <legend></legend>
+
+        @if (Model.Id > 0)
+        {
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.CollegeId)
+            <div class="editor-label" style="width: 200px;">
+                <b> @Html.Label("Department")</b>
+            </div>
+            <div class="editor-field" style="width: 380px;">
+                @Html.DisplayFor(model => model.DepartmentName)
+                @Html.HiddenFor(model => model.DepartmentId)
+            </div>
+            <div class="editor-label" style="width: 200px;">
+                <b> <span>Specilization</span></b>
+            </div>
+            <div class="editor-field" style="width: 380px;">
+                @Html.DisplayFor(model => model.SpecializationName)
+                @Html.HiddenFor(model => model.SpecializationId)
+            </div>
+           <div class="editor-label" style="width: 200px;height: 42px">
+                <b><span>Designation</span></b>
+            </div>
+            <div class="editor-field" style="width: 380px; height: 42px">
+                @Html.DropDownListFor(model => model.FacultyId,
+                    new SelectList(ViewBag.Designations as System.Collections.IEnumerable, "Id", "Name"),
+                    "--Select--", new {id = "facultyId", style = "width: 220px;"})
+            </div>
+             <div class="editor-label" style="width: 200px;">
+            <b><span>Previous Working College</span></b>
+        </div>
+            <div class="editor-field" style="width: 380px;">
+                @Html.DropDownListFor(model => model.PreviousCollegeId,
+                    new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"),
+                    "--Select--", new {id = "collegeId", style = "width: 220px;"})
+            </div>
+
+
+            <div class="editor-label" style="width: 200px;height: 42px">
+                <b>  <span>Registration Number</span></b>
+            </div>
+            <div class="editor-field" style="width: 380px; height: 42px">
+                @Html.TextBoxFor(model => model.RegistrationNo, new { @maxlength = "25", @placeholder = "Enter Faculty Registration Number", style = "width: 220px;" })
+                <br />
+                @Html.ValidationMessageFor(model => model.RegistrationNo)
+            </div>
+            <div style="text-align: center">
+                <p>
+                    <input type="submit" value="Submit" id="btnsend" name="cmd" />
+                    @*@Html.ActionLink("Cancel", "CollegeScmProceedingsRequest", "CollegeSCMProceedingsRequest", null, new { @class = "create_button" })*@
+                </p>
+            </div>
+
+        }
+
+
+
+    </fieldset>
+}
+<script>
+    $(document).ready(function () {
+        //  $("#collegeId1 option:first").val("");
+        $("#collegeId1").find('option:selected').removeAttr("selected");
+        $("#collegeId").find('option:selected').removeAttr("selected");
+    });
+</script>

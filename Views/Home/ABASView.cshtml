@@ -1,0 +1,120 @@
+﻿@{
+    //ViewBag.Title = "ABASView";
+    ViewBag.Title = "JNTUH AAC (Affiliations & Academic Audit)";
+    Layout = "~/Views/Shared/_LayoutABAS.cshtml";
+    
+
+}
+
+<h2 class="title_aac" style="text-align:center;">AADHAAR BASE ATTENDANCE SYSTEM</h2>
+<style type="text/css">
+    /*h1.news {
+        color: #C73013;
+        font-family: Verdana;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    th.title {
+        font-family: Verdana;
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    a.navigationurl:link, a.navigationurl:visited {
+        color: #02649E;
+        font-family: Verdana;
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    a.navigationurl:hover {
+        color: #F98102;
+    }*/
+</style>
+
+<script type="text/javascript" lang="javascript">
+    $(document).ready(function () {
+        //when user clicks title of news and events toggle body content of news and events
+        //$('.newstitle').click(function () {
+        //    $(this).parent().find('.newsbody').toggle();
+        //});
+    });
+
+</script>
+<p style="text-align:right;padding-bottom:10px">
+   @*@Html.ActionLink("Login", "", "", new { @class = "create_button" })\*@
+    <a href="http://120.138.8.102/abas/branches/Login.aspx" class="create_button" target="_blank">Login</a>
+</p>
+<table class="home_table">
+    <tr>
+        <td class="left">
+            <div class="director">
+                <img src="../../Content/images/directorNew.jpg" /><br />
+                Dr. M Sreenivasa Rao<br />
+                Director, Affiliations & Academic Audit
+            </div>
+            <div class="divider_1"></div>
+            <div class="section_red">
+                <a href="http://jntuh.ac.in/" target="_blank">
+                    <span class="main"  style="font-size:20px; line-height:35px;">JNTU Hyderabad</span>
+                    <span class="sub" style="font-size:20px; line-height:35px;">Main Website</span>
+                </a>
+            </div>
+           
+        </td>
+        <td style="padding: 10px;">
+            <div style="font-size: 0.8rem; font-weight: normal; line-height: 1.25rem; text-align: justify;">
+                ABAS is system that captures attendance of a person at the server level and provides twelve kinds of reports and analytics.
+                This system that needs no enrollments and is a complete foolproof solution for daily attendance.
+            </div>
+            <div class="center_divider_1"></div>
+            <div class="news">
+                <h2 class="news_header">Notifications</h2>
+                <ul class="newstitle">
+                    <li style="text-align: justify; line-height:35px;  font-size:16px;">
+                        <a class="navigationurl" href="http://120.138.8.102/abas/jntu_bas.pdf" target="_blank">Aadhaar base attendance system FAQ guide</a><img src="../Content/images/latest.gif" alt="latest" />
+                    </li>
+                    <li style="text-align: justify; line-height:35px;  font-size:16px;">
+                        <a class="navigationurl" href="https://youtu.be/FAi-fCVye_c" target="_blank">Visiontek installation processes</a><img src="../Content/images/latest.gif" alt="latest" />
+                    </li>
+                    <li style="text-align: justify; line-height:35px;  font-size:16px;">
+                        <a class="navigationurl" href="https://youtu.be/gNZ3ltOLtTs" target="_blank">Analogics installation processes</a><img src="../Content/images/latest.gif" alt="latest" />
+                    </li>
+                    <li style="text-align: justify; line-height:35px;  font-size:16px;">
+                        <a class="navigationurl" href="https://youtu.be/LJaDpNAd9h0" target="_blank">Datamini installation processes</a><img src="../Content/images/latest.gif" alt="latest" />
+                    </li>
+                    <li style="text-align: justify; line-height:35px; font-size:16px;">
+                        <a class="navigationurl" href="http://jntuh.ac.in/bulletin_board/Empanelled_list_of_biometric_device_vendors.pdf" target="_blank">List of Empanelled Biometric Device Vendors</a><img src="../Content/images/latest.gif" alt="latest" />
+                    </li>
+                </ul>
+                    @*<p class="create_link_right">
+                <span style="text-decoration: underline;">@Html.ActionLink("view more", "Public", "NewsEvents", null, new { @class = "" })</span> <span style="font-family: 'Arial Narrow'; font-size: 10px;">>></span>
+            </p>*@
+</div>
+        </td>
+        <td class="right">
+            <div class="vc">
+                <img src="../../Content/images/vcic.jpg" /><br />
+                Prof. A. Venugopal Reddy <br />
+                Vice-Chancellor
+            </div>
+            <div class="divider_1"></div>
+            <div class="section_pink">
+                <span class="sub" style="font-size:14px; line-height:15px;">Support</span>
+                <div style="text-align: left;">
+                    <b style="font-size:14px; line-height:35px;">Phone: +91-9133333701</b>
+                    <br />
+                    @*<b>Fax:</b> 040-2315 0010 <br />*@
+                    <b style="font-size:14px; line-height:35px;">Email: bas@jntuh.ac.in</b> 
+                </div>
+            </div>
+          
+    </td>
+</tr>
+</table>
+<script>
+    function DisplayMessage() {
+        alert("The Adjunct Faculty service will be avilable shortly");
+    }
+</script>

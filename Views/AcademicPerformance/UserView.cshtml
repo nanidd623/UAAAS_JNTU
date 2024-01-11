@@ -1,0 +1,89 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeAcademicPerformance>
+@{
+    ViewBag.Title = "Academic Performance";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    int num = 1;
+}
+<h2>Academic Performance of the Students for the A.Y. @ViewBag.AcademicYear</h2>
+<table class="four_columns" style="width: 100%; font-size: 0.7rem;">
+    <tr>
+        <th style="text-align: center;" rowspan="3" class="col11">S.No
+        </th>
+        <th rowspan="3" class="col11">Degree
+        </th>
+        <th style="text-align: center;" rowspan="3" class="col11">Dept.
+        </th>
+        <th style="text-align: center;" rowspan="3" class="col11">Specialization
+        </th>
+        <th style="text-align: center;" rowspan="3" class="col11">Shift
+        </th>
+        <th style="text-align: center;" colspan="12" class="col11">Academic Performance during the Year @ViewBag.AcademicYear
+        </th>
+    </tr>
+    <tr>
+        <th style="text-align: center;" colspan="3" class="col11">@ViewBag.FourthYear
+        </th>
+        <th style="text-align: center;" colspan="3" class="col11">@ViewBag.ThirdYear
+        </th>
+        <th style="text-align: center;" colspan="3" class="col11">@ViewBag.SecondYear
+        </th>
+        <th style="text-align: center;" colspan="3" class="col11">@ViewBag.FirstYear
+        </th>
+    </tr>
+    <tr style="">
+        <th style="text-align: center;" class="col11">A
+        </th>
+        <th style="text-align: center;" class="col11">P
+        </th>
+        <th style="text-align: center;" class="col11">%
+        </th>
+        <th style="text-align: center;" class="col11">A
+        </th>
+        <th style="text-align: center;" class="col11">P
+        </th>
+        <th style="text-align: center;" class="col11">%
+        </th>
+        <th style="text-align: center;" class="col11">A
+        </th>
+        <th style="text-align: center;" class="col11">P
+        </th>
+        <th style="text-align: center;" class="col11">%
+        </th>
+        <th style="text-align: center;" class="col11">A
+        </th>
+        <th style="text-align: center;" class="col11">P
+        </th>
+        <th style="text-align: center;" class="col11">%
+        </th>
+    </tr>
+    @foreach (var item in ViewBag.AcademicPerformance as List<UAAAS.Models.CollegeAcademicPerformance>)
+    {
+        <tr>
+            <td style="width: 30px; text-align: center;" class="col21">
+                @(num++)
+            </td>
+            <td style="width: 60px;" class="col21">@item.Degree</td>
+            <td style="width: 50px;" class="col21">@item.Department</td>
+            <td class="col21">@item.Specialization</td>
+            <td style="width: 30px;text-align:center" class="col21">@item.Shift</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.appearedStudents4</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.passedStudents4</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.passPercentage4</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.appearedStudents3</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.passedStudents3</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.passPercentage3</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.appearedStudents2</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.passedStudents2</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.passPercentage2</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.appearedStudents1</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.passedStudents1</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.passPercentage1</td>
+        </tr>
+    }
+</table>
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}

@@ -1,0 +1,33 @@
+﻿@model UAAAS.Models.CollegeExaminationBranchstaffDetails
+
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+    ViewBag.Title = "College Examination Branch Details";
+}
+
+<h2>College Examination Branch Details</h2>
+<div class="details_table">
+
+    <div class="display-label" style="width:200px">Name of the Staff</div>
+    <div class="display-field" style="width:350px">
+        @Html.DisplayFor(model => model.staffName)
+    </div>
+
+    <div class="display-label" style="width:200px">Designation</div>
+    <div class="display-field" style="width:350px">
+        @Html.DisplayFor(model => model.staffDesignation)
+    </div>
+
+    <div class="display-label" style="width:200px">Teaching/Non-Teaching</div>
+    <div class="display-field" style="width:350px">
+        @if (this.Model.isTeachingStaff == true)
+        { <label>Teaching</label>}
+        else
+        {<label>Non-Teaching</label>}
+    </div>
+
+</div>

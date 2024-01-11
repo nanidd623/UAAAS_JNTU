@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "DropdownIndex";
+}
+
+<h2>DropdownIndex</h2>
+<style>
+    #ddlFruits {
+        max-width: 500px;
+        -ms-text-overflow: clip;
+        /*overflow: auto;*/
+    }
+    .dropdown1 {
+        overflow: auto;
+        width: 100px;
+        height: auto;
+    }
+    .dropdown1 {
+        /*width: 290px;
+        overflow-x: ;
+        height: 20px;*/
+    }
+</style>
+<div>
+    <fieldset>
+        <legend>Fruits</legend>
+        @Html.Label("Fruit : ")
+        @Html.DropDownList("Fruit", ViewData["Fruits"] as SelectList, "Select Fruit", new {id = "ddlFruits", style = "max-height: 50px;overflow-wrap: break-word;width: 100px"})
+        @*@Html.DropDownList("Fruit", ViewData["Fruits"] as SelectList, "Select Fruit", new { id = "ddlFruits", style = "max-height: 50px;overflow: auto;", onmouseover="this.size=3;", onmouseout="this.size=1;" })*@
+    </fieldset>
+</div>
+<br/>
+<select size="1" name="channel" class="dropdown1" >
+<option value="">SELECT</option>
+<option value="All">All Videos All Videos All Videos All Videos All Videos All Videos All Videos</option>
+<option value="1">Channel1</option>
+<option value="4">Channel2</option>
+	  	</select>

@@ -1,0 +1,51 @@
+﻿@model IList<UAAAS.Models.Labscount>
+@{
+    ViewBag.Title = "CollegeLabsChecking";
+    int Count = 1;
+}
+
+<h2>College Labs Uploaded Count</h2>
+
+
+@using (Html.BeginForm())
+{
+    
+
+
+
+    <table width="100%" class="webGrid">
+        <tr class="gridHeader">
+            <th>S.No</th>
+            <th>Degree</th>
+            <th>Department</th>
+            <th>Specialization</th>
+            <th>Total Equipment Count</th>
+            <th>Total Equipment Uploaded Count</th>
+        </tr>
+        @foreach (var item in @Model)
+        {
+            <tr style="background-color: #FCF1D1">
+                <td>@(Count++)</td>
+                <td>
+                    @Html.DisplayFor(model => item.DegreeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.DepartmentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.SpecializationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.TotalLabCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.CollegeLabCount)
+                </td>
+            </tr>
+        }
+    </table>
+
+
+
+}
+

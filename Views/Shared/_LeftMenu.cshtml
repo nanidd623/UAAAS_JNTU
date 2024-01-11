@@ -1,0 +1,337 @@
+﻿@using UAAAS.Models
+@{
+    string path = string.Empty;
+    string Href = string.Empty;
+    string Slase = "";
+    string StaticText = string.Empty;
+    string StaticHref = string.Empty;
+    DateTime todayDate = DateTime.Now;
+    DateTime applastdate = new DateTime(2023, 04, 15, 23, 59, 59);
+    //DateTime applastdate = new DateTime(2019, 03, 08, 18, 30, 0);
+
+}
+@*<div class="menu_title">
+        <div class="DashboardLinks" style="background-color:#fff7ea;">
+            <div class="DivLinksHeaders" style="background-color:#71468A;">
+                <b>College Menu</b>
+            </div>
+        </div>
+    </div>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(function () {
+            setNavigation();
+        });
+
+        function setNavigation() {
+            StaticText = window.location.pathname;
+            path = window.location.pathname;
+            path = path.replace(/\/$/, "");
+            path = decodeURIComponent(path);
+            Slase = path.indexOf("/");
+            Slase = Slase != null ? "1" : "";
+            $(".DivLinks li a").each(function () {
+                Href = $(this).attr('href');
+                StaticHref = $(this).attr('href');
+
+                if (Slase == "1") {
+                    path = path != null ? path.split('/')[1] : "";
+                    Slase = "0";
+                }
+                else {
+                    path = path;
+                }
+
+                Href = Href != null ? Href.split('/')[1] : "";
+
+                if (path === Href) {
+                    if (StaticText === "/Faculty/ViewTeaching" && StaticHref === "/Faculty/Teaching") {
+                        $(this).closest('li').addClass('active');
+                    }
+                    else if (StaticText === "/Faculty/ViewNonTeaching" && StaticHref === "/Faculty/NonTeaching") {
+                        $(this).closest('li').addClass('active');
+                    }
+                    else if (StaticText === "/Faculty/ViewTechnical" && StaticHref === "/Faculty/Technical") {
+                        $(this).closest('li').addClass('active');
+                    }
+                    else if (StaticText === "/Labs/View" && StaticHref === "/Labs") {
+                        $(this).closest('li').addClass('active');
+                    }
+                    else if (StaticText === "/Labs/ViewPhysicalLabsDetails" && StaticHref === "/Labs/ViewPhysicalLabs") {
+                        $(this).closest('li').addClass('active');
+                    }
+                    else if (path != "Faculty" && path != "Labs") {
+                        $(this).closest('li').addClass('active');
+                    }
+                }
+
+
+            });
+        }
+
+        //$('.menu_items p').css({ cursor: "pointer" })
+        //    .on('click', function () {
+        //        var txt = $(this).text() == "College Menu" ? "CLOSE" : "College Menu";
+        //        $(this).text(txt);
+        //        $(this).next('div').toggle();
+        //    });
+    });
+</script>
+
+@*<span class="error" style="font-size: 0.8rem;">You will be able to upload college data after 2 hours. The data you have entered has been saved. Thank you</span>*@
+@*<img src="/Content/images/latest.gif" alt="latest" /></li>*@
+<style>
+    .left_menu li {
+        padding-left: 0px;
+        background: none;
+    }
+    /*.menu_items ul li:hover{
+        background-color:#F2552C;
+    }
+    .menu_items ul li a:link {
+        color:white;
+        font-weight:bold;
+    }*/
+
+    /*.menu_items ul li {
+        background-color:#1E98A7;border-radius:15px;padding-left: 10px;color:white;
+    }
+    .menu_items ul li a {
+        color:white;
+        font-weight:bold;
+    }
+
+    .menu_items ul li:hover {
+        color:white;
+        font-weight:bold;
+        background-color:tomato;
+    }
+     .menu_items ul li a:active {
+        color:white;
+        font-weight:bold;
+        background-color:tomato;
+    }*/
+
+    .DivLinks ul li {
+        background-color:;
+        /*border-radius:15px;*/
+        border-top-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        padding-left: 10px;
+        color: white;
+    }
+
+        .DivLinks ul li span {
+            color: black;
+            /*font-weight:bold;*/
+        }
+
+        .DivLinks ul li a {
+            color: black;
+            /*font-weight:bold;*/
+        }
+
+        .DivLinks ul li:hover {
+            color: white;
+            font-weight: bold;
+            background-color: #0e4e8e;
+            /*position:absolute;*/
+            /*left: 0px;*/
+            /*transition: 0.3s;*/
+            /*padding: 3px;
+            width: 250px;
+            text-decoration:inherit;
+            text-align:center;
+            height:15px;
+            padding-bottom:5px;*/
+        }
+        /*.DivLinks ul li a:active {
+                color:white;
+                font-weight:bold;
+                background-color:tomato;
+            }*/
+        .DivLinks ul li a:hover {
+            color: white;
+        }
+
+    .DashboardLinks {
+        text-align: center;
+        background-color: white;
+        border: solid 1px #e6e6e6;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        color: white;
+    }
+
+    .DivLinksHeaders {
+        text-align: center;
+    }
+
+    .DivLinks li.active {
+        background-color: #de1c85;
+    }
+
+        .DivLinks li.active a {
+            color: #fff;
+            font-weight: bold;
+        }
+</style>
+
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    var submittedids = db.jntuh_appeal_college_edit_status.Where(i => i.IsCollegeEditable == false).Select(i => i.collegeId).ToArray();
+    int userID = Convert.ToInt32(Membership.GetUser(User.Identity.Name).ProviderUserKey);
+    int userCollegeID = db.jntuh_college_users.Where(collegeUser => collegeUser.userID == userID).Select(collegeUser => collegeUser.collegeID).FirstOrDefault();
+    if (userCollegeID == 375)
+    {
+        userCollegeID = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["appCollegeId"]);
+    }
+    var appealstatus = db.jntuh_appeal_college_edit_status.Where(p => p.collegeId == userCollegeID).Select(s => s).FirstOrDefault();
+
+}
+
+<div class="menu_items" style="min-height: 838px;">
+    @*<div class="DashboardLinks" style="background-color:#fff7ea;width:100%; box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);">
+            <div class="DivLinksHeaders" style="background-color:#71468A;">
+                <b>College Menu</b>
+            </div>
+        </div>*@
+    @*<p>College Menu</p>*@
+    <div class="DivLinks slider" style="font-size:11px;padding:4px 8px 2px 8px;">
+        <ul>
+            @*<li>@Html.ActionLink("01. College Information", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeInformation")</li>*@
+            <li>@Html.ActionLink("01. College Information", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeInformation")</li>
+            <li>@Html.ActionLink("02. Educational Society", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "SocietyInformation")</li>
+            <li>@Html.ActionLink("03. Principal / Director", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "View", "PrincipalDirector")</li>
+            <li>@Html.ActionLink("04. ChairPerson", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "ChairPerson")</li>
+            <li>@Html.ActionLink("05. Other Colleges & Courses", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "OtherColleges")</li>
+            <li>@Html.ActionLink("06. Land Information", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "LandInformation")</li>
+            <li>@Html.ActionLink("07. Administrative Area", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "AdministrativeLand")</li>
+            <li>@Html.ActionLink("08. Instructional Area", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "InstructionalLand")</li>
+            <li>@Html.ActionLink("09. Existing & Proposed Intake", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegeIntakeExisting")</li>
+
+            @*<li>@Html.ActionLink("Proposed Intake", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegeIntakeProposed")</li>*@
+            @*<li>@Html.ActionLink("College Overall Faculty Student Ratio", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegeOverallFacultyStudentRatio")<img src="/Content/images/latest.gif" alt="latest" /></li>*@
+            @*<li>@Html.ActionLink("PG Courses", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegePGCourse") <img src="/Content/images/latest.gif" alt="latest" /></li>*@
+
+            <li>@Html.ActionLink("10. Academic Performance", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "AcademicPerformance")</li>
+            <li>@Html.ActionLink("11. Teaching Faculty", @User.IsInRole("Admin") ? "ViewTeaching/" + @ViewContext.RouteData.Values["id"] : "Teaching", "Faculty")</li>
+            <li>@Html.ActionLink("12. Non-Teaching Staff", @User.IsInRole("Admin") ? "ViewNonTeaching/" + @ViewContext.RouteData.Values["id"] : "NonTeaching", "Faculty")</li>
+            <li>@Html.ActionLink("13. Technical Staff", @User.IsInRole("Admin") ? "ViewTechnical/" + @ViewContext.RouteData.Values["id"] : "Technical", "Faculty")</li>
+
+            @*@if (User.IsInRole("Admin") || User.IsInRole("Committee") || User.IsInRole("DataEntry"))
+                        {
+                <li>@Html.ActionLink("Teaching Faculty Position (Department-wise)", @User.IsInRole("Admin") ? "TeachingFacultyPositionView/" + @ViewContext.RouteData.Values["id"] : "TeachingFacultyPositionIndex", "TeachingFacultyPosition")</li>
+                            <li>@Html.ActionLink("Overall Faculty Student Ratio", @User.IsInRole("Admin") ? "FacultyStudentRatioView/" + @ViewContext.RouteData.Values["id"] : "FacultyStudentRatioCreate", "FacultyStudentRatio")</li>
+
+                        }*@
+
+            <li>@Html.ActionLink("14. Labs", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "Labs")</li>
+            <li>@Html.ActionLink("15. Number of Additional Labs", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "ViewPhysicalLabs", "Labs")</li>
+            <li>@Html.ActionLink("16. Library Information", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeLibrary")</li>
+            <li>@Html.ActionLink("17. Library Books", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeLibraryDetails")</li>
+            <li>@Html.ActionLink("18. Computers", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeComputerStudentRatio")</li>
+            <li>@Html.ActionLink("19. Internet Bandwidth", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeInternetBandwidth")</li>
+            <li>@Html.ActionLink("20. Legal Software", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeLegalSoftwar")</li>
+            <li>@Html.ActionLink("21. Printers", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegePrinters")</li>
+            <li>@Html.ActionLink("22. Operational Funds", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "OperationalFunds")</li>
+            <li>@Html.ActionLink("23. Income", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeIncome")</li>
+            <li>@Html.ActionLink("24. Expenditure", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeExpenditure")</li>
+            <li>@Html.ActionLink("25. Examination Branch", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeExaminationBranch")</li>
+            <li>@Html.ActionLink("26. EDEP Equipment", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeExaminationEDEPEquipment")</li>
+            @*<li>@Html.ActionLink("Fee Reimbursement", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegeFeeReimbursement")</li>*@
+            <li>@Html.ActionLink("27. Grievance Redressal", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "GrievanceRedressalCommittee")</li>
+            <li>@Html.ActionLink("28. Anti-Ragging", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "AntiRaggingCommittee")</li>
+            <li>@Html.ActionLink("29. Women Protection Cell", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "WomenProtectionCell")</li>
+            <li>@Html.ActionLink("30. RTI Details", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "RTIDetails")</li>
+            <li>@Html.ActionLink("31. Sports & Games", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeSports")</li>
+            <li>@Html.ActionLink("32. Desirable Requirements", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "OtherDesirables")</li>
+            <li>@Html.ActionLink("33. Campus Hostel", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CampusHostel")</li>
+            <li>@Html.ActionLink("34. Placement Cell", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegePlacement")</li>
+            <li>@Html.ActionLink("35. College Photos", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegeDocuments")</li>
+            <li>@Html.ActionLink("36. College Enclosures SoftCopy", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegeEnclosures")</li>
+            @*<li>@Html.ActionLink("36. College Enclosures HardCopy", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeEnclosuresHardCopy")</li>
+                <li>@Html.ActionLink("37. Payment Details", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegePayment")</li>
+                <li>@Html.ActionLink("38. Payment of Fees (to JNTUH)", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "PaymentOfFees")</li>*@
+            <li>@Html.ActionLink("37. NBA Accreditation", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegeNBAAccredited")</li>
+            <li>@Html.ActionLink("38. College Events", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "Index", "Jntuhcollegeevents")</li>
+            <li>@Html.ActionLink("39. Value added Programs", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegeExtraCurricularActivities")</li>
+            <li>@Html.ActionLink("40. Essential Requirements", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegeEssentialRequirements")</li>
+            <li>@Html.ActionLink("41. Data Modifications", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "StaticdataModifications")</li>
+            <li>@Html.ActionLink("42. Aicte Faculty", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "Index", "AICTEFaculty")</li>
+            <li>@Html.ActionLink("43. Academic Calender", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "AcadamicSchedule", "CollegeCoursesTimeTable")</li>
+            <li>@Html.ActionLink("44. J-Hub Requirements", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegeJHubActivities")</li>
+            @*<li>@Html.ActionLink("45. Affidavit", @User.IsInRole("Admin") ? "Affidavit/" + @ViewContext.RouteData.Values["id"] : "Affidavit", "SubmitData")</li>
+            <li>@Html.ActionLink("46. Fee Details & Payment", @User.IsInRole("Admin") ? "FeeDetailsandPaymentView/" + @ViewContext.RouteData.Values["id"] : "FeeDetailsandPayment", "CollegeIntakeExisting")</li>
+            @if (todayDate > applastdate)
+            {
+                <li>@Html.ActionLink("47. LateFee Details", @User.IsInRole("Admin") ? "LateFeeDetailsandPaymentView/" + @ViewContext.RouteData.Values["id"] : "LateFeeDetailsandPayment", "LateFee")</li>
+                <li>@Html.ActionLink("48. Declaration", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "Create", "SubmitData")</li>
+            }
+            else
+            {
+                <li>@Html.ActionLink("47. Declaration", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "Create", "SubmitData")</li>
+            }
+
+            <li>
+                @Html.ActionLink("Faculty SCM Upload", "SCMUpload", "CollegeSCMProceedingsRequest")
+                <span>&nbsp;</span><img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><br />
+            </li>
+            <li>
+                @Html.ActionLink("Principal SCM Upload", "SCMUploadForPrincipal", "CollegeSCMProceedingsRequest")
+                <span>&nbsp;</span><img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><br />
+            </li>*@
+            @*<li>@Html.ActionLink("47. Self-Appraisal", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "Index", "PA_SelfAppraisal")</li>
+                <li>@Html.ActionLink("48. Desirable Conditions", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "Index", "PA_DesirableConditions")</li>*@
+
+            @*<li>@Html.ActionLink("42. Faculty SCM Upload", @User.IsInRole("Admin") ? "SCMUploadView/" + @ViewContext.RouteData.Values["id"] : "SCMUpload", "CollegeSCMProceedingsRequest")</li>
+                <li>@Html.ActionLink("43. Principal SCM Upload", @User.IsInRole("Admin") ? "SCMUploadView/" + @ViewContext.RouteData.Values["id"] : "SCMUploadForPrincipal", "CollegeSCMProceedingsRequest")</li>*@
+
+            @*<li>@Html.ActionLink("42. LateFee Details", @User.IsInRole("Admin") ? "LateFeeDetailsandPaymentView/" + @ViewContext.RouteData.Values["id"] : "LateFeeDetailsandPayment", "LateFee")</li>*@
+            @if (appealstatus != null)
+            {
+                if (todayDate >= appealstatus.editFromDate && appealstatus.editToDate >= todayDate)
+                {
+                    <li><span style="font-weight: bold; font-size: 15px">40. Online Appeal</span></li>
+                    <li>@Html.ActionLink("a). OnlineAppeal (Principal)", @User.IsInRole("Admin") ? "Appelaprincipal/" + @ViewContext.RouteData.Values["id"] : "Appelaprincipal", "CollegeAppeal")</li>
+                    <li>@Html.ActionLink("b). OnlineAppeal (Existing Intake)", @User.IsInRole("Admin") ? "AppealExistingAndProposedIntake/" + @ViewContext.RouteData.Values["id"] : "AppealExistingAndProposedIntake", "CollegeAppeal")</li>
+                    <li>@Html.ActionLink("c). OnlineAppeal (Faculty)", @User.IsInRole("Admin") ? "ALLCollegeFacultyWithIntakeFaculty/" + @ViewContext.RouteData.Values["id"] : "ALLCollegeFacultyWithIntakeFaculty", "CollegeAppeal")</li>
+                    <li>@Html.ActionLink("d). OnlineAppeal (Labs)", @User.IsInRole("Admin") ? "LabsForAppeal/" + @ViewContext.RouteData.Values["id"] : "LabsForAppeal", "CollegeAppeal")</li>
+                    <li>@Html.ActionLink("e). OnlineAppeal - Declaration", @User.IsInRole("Admin") ? "AppealSubmission/" + @ViewContext.RouteData.Values["id"] : "AppealSubmission", "CollegeAppeal")</li>
+                    <li>@Html.ActionLink("f). OnlineAppeal - Processing Fee", @User.IsInRole("Admin") ? "onlineappealfeedetailsandpayment/" + @ViewContext.RouteData.Values["id"] : "onlineappealfeedetailsandpayment", "onlineappeal")</li>
+                }
+
+            }
+            @*Appeal Screen commentted by Suresh on (31-08-2017)*@
+                @*<li>@Html.ActionLink("d). OnlineAppeal (Physical Labs)", @User.IsInRole("Admin") ? "PhysicalLabsUploading/" + @ViewContext.RouteData.Values["id"] : "PhysicalLabsUploading", "FacultyVerification")</li>*@
+                @*<li><span style="font-weight: bold;font-size: 15px">43. Online Appeal</span></li>
+                    <li>@Html.ActionLink("a). OnlineAppeal (Principal)", @User.IsInRole("Admin") ? "CollegeFacultyWithIntakePrincipal/" + @ViewContext.RouteData.Values["id"] : "CollegeFacultyWithIntakePrincipal", "FacultyVerification")</li>
+                      <li>@Html.ActionLink("e). OnlineAppeal (Existing Intake)", @User.IsInRole("Admin") ? "ExistingAndProposedIntakeForAppeal/" + @ViewContext.RouteData.Values["id"] : "ExistingAndProposedIntakeForAppeal", "FacultyVerification")</li>
+                    <li>@Html.ActionLink("b). OnlineAppeal (Faculty)", @User.IsInRole("Admin") ? "ALLCollegeFacultyWithIntakeFaculty/" + @ViewContext.RouteData.Values["id"] : "ALLCollegeFacultyWithIntakeFaculty", "FacultyVerification")</li>
+                    <li>@Html.ActionLink("c). OnlineAppeal (Labs)", @User.IsInRole("Admin") ? "LabsForAppeal/" + @ViewContext.RouteData.Values["id"] : "LabsForAppeal", "FacultyVerification")</li>
+                    <li>@Html.ActionLink("d). OnlineAppeal (Physical Labs)", @User.IsInRole("Admin") ? "PhysicalLabsUploading/" + @ViewContext.RouteData.Values["id"] : "PhysicalLabsUploading", "FacultyVerification")</li>*@
+
+                @*<li>@Html.ActionLink("f). OnlineAppeal (Supporting Documents)", @User.IsInRole("Admin") ? "SupportingDocumentsForAppeal/" + @ViewContext.RouteData.Values["id"] : "SupportingDocumentsForAppeal", "FacultyVerification")</li>*@
+                @*<li>@Html.ActionLink("g). OnlineAppeal - Declaration", @User.IsInRole("Admin") ? "AppealSubmission/" + @ViewContext.RouteData.Values["id"] : "AppealSubmission", "FacultyVerification")</li>
+                    <li>@Html.ActionLink("h). OnlineAppeal - Processing Fee", @User.IsInRole("Admin") ? "onlineappealfeedetailsandpayment/" + @ViewContext.RouteData.Values["id"] : "onlineappealfeedetailsandpayment", "onlineappeal")</li>*@
+
+
+
+                @*<li>@Html.ActionLink("42. OnlineAppeal", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "CollegeFacultyWithIntake", "FacultyVerification")</li>*@
+                @*@if (submittedids.Contains(userCollegeID)||(User.IsInRole("Admin")))
+                    {
+                        <li style="font-weight:bold">@Html.ActionLink("h). Faculty Not Considered After Appeal", @User.IsInRole("Admin") ? "ViewComplianceFacultyDetails/" + @ViewContext.RouteData.Values["id"] : "ViewComplianceFacultyDetails", "AppealFormat")</li>
+                    }
+                    <li>@Html.ActionLink("42. Request for SCM", @User.IsInRole("Admin") ? "CollegeScmProceedingsRequestView/" + @ViewContext.RouteData.Values["id"] : "CollegeScmProceedingsRequest", "CollegeSCMProceedingsRequest")</li>
+                    <li>@Html.ActionLink("43. SCM Upload", @User.IsInRole("Admin") ? "SCMUploadView/" + @ViewContext.RouteData.Values["id"] : "SCMUpload", "CollegeSCMProceedingsRequest")</li>
+                    <li>@Html.ActionLink("44. Faculty Time Table", @User.IsInRole("Admin") ? "Index/" + @ViewContext.RouteData.Values["id"] : "Index", "CollegeCoursesTimeTable")</li>*@
+                @*@if (User.IsInRole("Admin") || User.IsInRole("Committee") || User.IsInRole("DataEntry"))
+                            {
+                    <li>@Html.ActionLink("Academic PerformancePoints", @User.IsInRole("Admin") ? "AcademicPerformancePointsView/" + @ViewContext.RouteData.Values["id"] : "AcademicPerformancePointsCreate", "AcademicPerformancePoints")</li>
+                                <li>@Html.ActionLink("Infrastructure Parameters", @User.IsInRole("Admin") ? "InfrastructureParametersView/" + @ViewContext.RouteData.Values["id"] : "InfrastructureParametersCreate", "InfrastructureParameters")</li>
+                                <li>@Html.ActionLink("Miscellaneous Parameters", @User.IsInRole("Admin") ? "MiscellaneousParametersView/" + @ViewContext.RouteData.Values["id"] : "MiscellaneousParametersCreate", "MiscellaneousParameters")</li>
+                                <li>@Html.ActionLink("Committee Observations", @User.IsInRole("Admin") ? "CommitteeObservationsView/" + @ViewContext.RouteData.Values["id"] : "CommitteeObservationsCreate", "CommitteeObservations")</li>
+                            }*@
+            </ul>
+        </div>
+
+    </div>

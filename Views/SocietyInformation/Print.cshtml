@@ -1,0 +1,163 @@
+﻿@model UAAAS.Models.SocietyInformation
+@{
+    var OddColor = "#FFFFFF";    
+}
+<br />
+<table class="four_columns" border="1">
+    <tr>
+        <td class="col1" colspan="4">
+            <b>Name & Address of the Educational Society</b>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.societyEstablishmentYear)
+        </td>
+        <td class="col2 focus">
+            @Html.DisplayFor(model => model.societyEstablishmentYear, new { Value = @Model.societyEstablishmentYear == 0 ? "" : @Model.societyEstablishmentYear.ToString(), @maxlength = "4" })
+        </td>
+
+        <td class="col3">
+            @Html.LabelFor(model => model.societyRegisterNumber)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.societyRegisterNumber)
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.societyName)
+        </td>
+        <td class="col2" colspan="3">
+            @Html.DisplayFor(model => model.societyName)
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.address)
+        </td>
+        <td class="col2" colspan="3">
+            @Html.DisplayFor(model => model.address)
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.townOrCity)
+        </td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.townOrCity)
+        </td>
+        <td class="col3">
+            @Html.LabelFor(model => model.mandal)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.mandal)
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.stateId)
+        </td>
+        <td class="col2"> 
+            @Html.DisplayFor(model => model.jntuh_state.stateName)
+        </td>
+        <td class="col3">
+            @Html.LabelFor(model => model.districtId)
+        </td>
+        <td class="col4">          
+            @Html.DisplayFor(model => model.jntuh_district.districtName)
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.pincode)
+        </td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.pincode, new { Value = Model.pincode == 0 ? "" : Model.pincode.ToString() })
+        </td>
+
+        <td class="col3">
+            @Html.LabelFor(model => model.fax)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.fax)
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.landline)
+        </td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.landline)
+        </td>
+        <td class="col3">
+            @Html.LabelFor(model => model.mobile)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.mobile)
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.email)
+        </td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.email)
+        </td>
+        <td class="col3">
+            @Html.LabelFor(model => model.website)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.website)
+        </td>
+    </tr>
+    <tr>
+        <td class="col1" colspan="4">
+            <b>Information on Establishment of the Institution :</b> (for existing colleges only)
+        </td>
+    </tr>
+    <tr>
+        <td class="col1" colspan="3">
+            @Html.LabelFor(model => model.instituteEstablishedYear)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.instituteEstablishedYear, new { @class = "year", Value = @Model.instituteEstablishedYear == 0 ? "" : @Model.instituteEstablishedYear.ToString(), @maxlength = "4" })
+        </td>
+    </tr>
+    <tr>
+        <td class="col1" colspan="3">
+            @Html.LabelFor(model => model.firstApprovalDateByAICTE)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.firstApprovalDateByAICTE, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) 
+        </td>
+    </tr>
+    <tr>
+        <td class="col1" colspan="3">
+            @Html.LabelFor(model => model.firstAffiliationDateByJNTU)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.firstAffiliationDateByJNTU, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) 
+
+
+        </td>
+    </tr>
+    <tr>
+        <td class="col1" colspan="3">
+            @Html.LabelFor(model => model.firstBatchCommencementYear)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.firstBatchCommencementYear, new { @class = "year", Value = @Model.firstBatchCommencementYear == 0 ? "" : @Model.firstBatchCommencementYear.ToString(), @maxlength = "4" })
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.HiddenFor(model => model.addressTye, new { Value = "SOCIETY" })
+            @Html.HiddenFor(model => model.collegeId)
+            @Html.HiddenFor(model => model.createdOn, new { Value = DateTime.Now })
+        </td>
+
+    </tr>
+</table>
+
+

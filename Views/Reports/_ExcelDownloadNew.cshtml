@@ -1,0 +1,59 @@
+﻿@model IList<UAAAS.Models.FacultyCountNew>
+@{
+   ViewBag.Title = "ExcelFileDownload";
+   int Count = 1;
+}
+
+<h2>ExcelFileDownload</h2>
+
+@using (Html.BeginForm())
+{
+   int data = 0;
+    <table style="width: 100%; border: 1px;" border="1">
+        <tr>
+            <th style="text-align: center; vertical-align: top; background-color:yellow">SNo</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Code</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">CollegeName</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">College Portal Total Count (Teaching +Non-Teaching)</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">College/ BAS  Portal Teaching FacultyCount</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Biometric Count (Atleast 15 Days)</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">BAS Difference Count</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Required Faculty Count As per Affiliation</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Required Difference Count</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Required Difference %</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Required PHD Count</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">PHD Present Count</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Required Ph.D Difference Count</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Required Ph.D Difference %</th>
+
+        </tr>
+
+
+
+
+        
+           @foreach (var item in Model)
+           {
+                <tr>
+                    <td style="text-align: left; vertical-align: top;">@Count</td>
+
+                    <td style="text-align: left; vertical-align: top;">@item.COllegecode</td>
+                    <td style="text-align: left; vertical-align: top;">@item.CollegeName</td>
+                    <td style="text-align: left; vertical-align: top;">@item.PortalFaculty</td>
+                    <td style="text-align: left; vertical-align: top;">@item.UploadedCount</td>
+                    <td style="text-align: left; vertical-align: top;">@item.BiometricCount</td>
+                    <td style="text-align: left; vertical-align: top;">@item.BASDifferenceCount</td>
+                    <td style="text-align: left; vertical-align: top;">@item.RequiredCount</td>
+                    <td style="text-align: left; vertical-align: top;">@(item.RequiredCount-item.BiometricCount)</td>
+                    <td style="text-align: left; vertical-align: top;"></td>
+
+                    <td style="text-align: left; vertical-align: top;">@item.RequiredPHDCount</td>
+                    <td style="text-align: left; vertical-align: top;">@item.PHDPresentCount</td>
+                    <td style="text-align: left; vertical-align: top;">@(item.RequiredPHDCount-item.PHDPresentCount)</td>
+                    <td style="text-align: left; vertical-align: top;"></td>
+                </tr>
+               Count++;
+           }
+
+            </table>
+}

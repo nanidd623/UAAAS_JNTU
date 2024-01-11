@@ -1,0 +1,158 @@
+﻿@model IList<UAAAS.Controllers.FacultyVerificationController.CollegeFacultyWithIntakeReport>
+@using UAAAS.Models;
+@{
+    ViewBag.Title = "CollegeFacultyWithIntake";
+    int sno = 1;    
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake';
+            }
+        });
+    });
+</script>
+<h2>College Faculty With Intake</h2>
+@using (Html.BeginForm())
+{
+    <table class="faculty_table">
+        <tr>
+            <td class="col1">College
+            </td>
+            <td class="col2">
+                @Html.DropDownList("collegeId", new SelectList(@ViewBag.Colleges, "collegeId", "collegeName"),
+                "--Select--", new { id = "college", @style = "width:95%" })
+            </td>
+            <td class="col3">
+                @Html.ActionLink("Export", "CollegeFacultyWithIntake", "FacultyVerification", new { type = "Excel", collegeId = Request.Params["collegeId"] }, new { @class = "create_button" })
+            </td>
+        </tr>
+    </table>
+
+    <br />
+    <table style="width: 100%; border: 1px; border-color: red" class="faculty_table">
+        <tr>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">SNo</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Code</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">College Name</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Department</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Degree</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Specialization</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">ShiftId</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="4">Intake</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Total</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Minimum Faculty Requirement programwis</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Total Faculty Requirement</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="6">Available Faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency of Doctorates</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Number of faculty after Last date of Submission</th>
+        </tr>
+        <tr>
+            <th class="col1" style="text-align: right; vertical-align: top;">IV Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">III Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">II Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">I Year</th>
+
+            <th class="col1" style="text-align: center; vertical-align: top;">No. Of UG Faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">No. Of PG Faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">No. Of Ph.D Faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">Total Faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red">Whether minimum requirement met</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red">Deficiency</th>
+        </tr>
+
+        @foreach (var collegeId in Model.Select(c => c.collegeId).Distinct().ToList())
+        {
+            var count = Model.Where(m => m.collegeId == collegeId).Select(m => m).Count();
+            var list = Model.Where(c => c.collegeId == collegeId).ToList();
+            var distDeptcount = 1;
+            var loop = 1;
+            var deptloop = 1;
+
+            foreach (var item in list)
+            {
+                distDeptcount = list.Where(d => d.Department == item.Department).Distinct().Count();
+
+                int indexnow = list.IndexOf(item);
+
+                if (indexnow > 0 && list[indexnow].Department != list[indexnow - 1].Department)
+                {
+                    deptloop = 1;
+                }
+
+                if (list.IndexOf(item) == 0)
+                {
+            <tr>
+                <td class="col2" style="text-align: center; vertical-align: top;width:10px" rowspan="@count">@(sno++)</td>
+                <td class="col2" style="text-align: center; vertical-align: top;width:10px; text-transform: uppercase" rowspan="@count">@item.collegeCode</td>
+                <td class="col2" style="text-align: left; vertical-align: top; text-transform: uppercase" rowspan="@count">@item.collegeName)</td>
+                <td class="col2" style="text-align: left; vertical-align: top;" rowspan="@distDeptcount">@item.Department</td>
+                <td class="col2" style="text-align: left; vertical-align: top;">@item.Degree</td>
+                <td class="col2" style="text-align: left; vertical-align: top;">@item.Specialization</td>
+                <td class="col2" style="text-align: center; vertical-align: top;">@item.shiftId</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake4</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake3</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake2</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake1</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.totalIntake</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.requiredFaculty</td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.ugFaculty</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.pgFaculty</td>
+                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@item.phdFaculty</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.totalFaculty</td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+            </tr>   
+                }
+                else
+                {
+            <tr>
+                @if (deptloop == 1)
+                {
+                    
+                    <td class="col2" style="text-align: left; vertical-align: top;" rowspan="@distDeptcount">@item.Department</td>
+                }
+
+                <td class="col2" style="text-align: left; vertical-align: top;">@item.Degree</td>
+                <td class="col2" style="text-align: left; vertical-align: top;">@item.Specialization</td>
+                <td class="col2" style="text-align: center; vertical-align: top;">@item.shiftId</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake4</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake3</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake2</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake1</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.totalIntake</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.requiredFaculty</td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.ugFaculty</td>
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.pgFaculty</td>
+                @if (deptloop == 1)
+                {
+                    <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@item.phdFaculty</td>
+                }
+
+                <td class="col2" style="text-align: right; vertical-align: top;">@item.totalFaculty</td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+            </tr>
+            
+                }
+                deptloop++;
+
+            }
+
+        }
+
+    </table>
+}

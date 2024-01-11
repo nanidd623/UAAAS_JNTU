@@ -1,0 +1,89 @@
+﻿@model UAAAS.Models.jntuh_error_log
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>jntuh_error_log</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.exception)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.exception)
+            @Html.ValidationMessageFor(model => model.exception)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.controller)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.controller)
+            @Html.ValidationMessageFor(model => model.controller)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.action)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.action)
+            @Html.ValidationMessageFor(model => model.action)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.StackTrace)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.StackTrace)
+            @Html.ValidationMessageFor(model => model.StackTrace)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.createdOn)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.createdOn)
+            @Html.ValidationMessageFor(model => model.createdOn)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.createdBy, "my_aspnet_users")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("createdBy", String.Empty)
+            @Html.ValidationMessageFor(model => model.createdBy)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.updatedOn)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.updatedOn)
+            @Html.ValidationMessageFor(model => model.updatedOn)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.updatedBy, "my_aspnet_users1")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("updatedBy", String.Empty)
+            @Html.ValidationMessageFor(model => model.updatedBy)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

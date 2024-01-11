@@ -1,0 +1,234 @@
+﻿@model IList<UAAAS.Models.AdminLand>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Administrative Area";
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+}
+
+<h2>Administrative Area</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".Supportingfile").change(function () {
+            var rdid = $(this).attr('id').split('_')[1];
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "Documentfile");
+                size = size / 1048576;
+                if (size > 1) {
+                    $(".SupportingfileSpan_" + rdid).text("Document should not exceed 1 MB in Size");
+                    $(".SupportingfileSpan_" + rdid).css("color", "red");
+                    $(this).val('');
+                } else {
+                    $(".SupportingfileSpan_" + rdid).text("");
+                }
+            }
+        });
+
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $(".Supportingfile")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+    });
+</script>
+@using (Html.BeginForm("Create", "PA_AdministrativeLand", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    if (ViewBag.NotUpload == true)
+    {
+        <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+    }
+    else
+    {
+        if (TempData["Error"] != null)
+        {
+            <div class="error">
+                <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+            </div>
+        }
+        if (TempData["Success"] != null)
+        {
+            <div class="success">
+                <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+            </div>
+        }
+
+        <table class="downloads_table InstructionalLand" style="width: 100%;">
+            <tr style="font-weight: bold;">
+                <th style="text-align: left;">Type</th>
+                <th style="text-align: center; width: 200px;">Program</th>
+                <th style="text-align: center; width: 150px; display: none;">Required Rooms</th>
+                <th style="text-align: center; width: 120px;">Available Rooms</th>
+                <th style="text-align: center; width: 120px; display: none;">Required Area</th>
+                <th style="text-align: center; width: 120px;">Available Area</th>
+                <th style="text-align: center; width: 120px;">Supporting Document</th>
+            </tr>
+
+            @for (int i = 0; i < ViewBag.Count; i++)
+            {
+                <tr>
+                    <td style="text-align: left;" class="col1">
+                        @Html.LabelFor(m => m[i].requirementType, Model[i].requirementType == null ? string.Empty : Model[i].requirementType.ToString())
+                        @Html.HiddenFor(m => m[i].id)
+                        @Html.HiddenFor(m => m[i].collegeId)
+                    </td>
+                    <td style="text-align: center;">@Html.LabelFor(m => m[i].programId, Model[i].jntuh_program_type == null ? string.Empty : Model[i].jntuh_program_type.programType.ToString())</td>
+                    <td style="text-align: center; display: none;">@Html.LabelFor(m => m[i].requiredRooms, Model[i].requiredRooms == null ? Model[i].requiredRoomsCalculation == null ? "-" : Model[i].requiredRoomsCalculation : Model[i].requiredRooms.ToString().Replace(".00", ""))</td>
+                    <td style="text-align: center;">@Html.TextBoxFor(m => m[i].availableRooms, new { id = "aRooms", @class = "allownumericwithdecimal", @style = "width: 60px; text-align: center;", Value = Model[i].availableRooms.ToString().Replace(".00", "") })</td>
+                    <td style="text-align: center; display: none;">@Html.LabelFor(m => m[i].requiredArea, Model[i].requiredArea == null ? Model[i].requiredAreaCalculation == null ? "-" : Model[i].requiredAreaCalculation : Model[i].requiredArea.ToString().Replace(".00", ""))</td>
+                    <td style="text-align: center;">@Html.TextBoxFor(m => m[i].availableArea, new { id = "aArea", @class = "allownumericwithdecimal", @style = "width: 60px; text-align: center;", Value = Model[i].availableArea.ToString().Replace(".00", "") })</td>
+                    <td>
+                        @if (Model[i].supportingdocpath != null)
+                        {
+                            @Html.TextBoxFor(model => model[i].supportingdoc, new { type = "file", @name = "@file", @class = "Supportingfile" })
+                            @Html.HiddenFor(model => model[i].supportingdocpath)
+                            <span class="SupportingfileSpan_@i" style="color:red;"></span>
+                            <a href="~/Content/Upload/College/AdministrativeLand/@Model[i].supportingdocpath" target="_blank">
+                                <span style="color: red;"><b>View</b></span>
+                            </a>
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model[i].supportingdoc, new { type = "file", @id = "suptdoc", @name = "@file", @class = "Supportingfile" })
+                            @Html.HiddenFor(model => model[i].supportingdocpath)
+                            <span class="SupportingfileSpan_@i" style="color:red;"></span>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+        <p class="right_buttons">
+            <input type="submit" value="Save" onclick="return validate();" />
+        </p>
+    }
+}
+<script type="text/javascript">
+    function validate() {
+        var availableRoomsResult = true;
+        var availableAreaResult = true;
+        var supdocumentResult = true;
+        $('.InstructionalLand > tbody  > tr').each(function () {
+            var availableRooms = $(this).find('#aRooms').val();
+            var availableArea = $(this).find('#aArea').val();
+            var suprDocs = $(this).find('#suptdoc').val();
+            if (availableArea != '') {
+                if (availableArea != "0") {
+                    if (availableRooms == '' || availableRooms == "0") {
+                        alert("Please Enter Available Rooms");
+                        $(this).find("#aRooms").css({
+                            "background": "#FC6A6C"
+                        });
+                        availableRoomsResult = false;
+                    }
+                    else {
+                        $(this).find("#aRooms").css({
+                            "background": "#FFFFFF"
+                        });
+                    }
+
+                    if (suprDocs == '' || suprDocs == "0") {
+                        //alert("Please Upload Supporting Document");
+                        $(this).find("#suptdoc").css({
+                            "background": "#FC6A6C"
+                        });
+                        supdocumentResult = false;
+                    }
+                    else {
+                        $(this).find("#suptdoc").css({
+                            "background": "#FFFFFF"
+                        });
+                    }
+                }
+            }
+            if (availableRooms != '') {
+                if (availableRooms != "0") {
+                    if (availableArea == '' || availableArea == "0") {
+                        alert("Please Enter Available Area");
+                        $(this).find("#aArea").css({
+                            "background": "#FC6A6C"
+                        });
+                        availableAreaResult = false;
+                    }
+                    else {
+                        $(this).find("#aArea").css({
+                            "background": "#FFFFFF"
+                        });
+                    }
+
+                    if (suprDocs == '' || suprDocs == "0") {
+                        //alert("Please Upload Supporting Document");
+                        $(this).find("#suptdoc").css({
+                            "background": "#FC6A6C"
+                        });
+                        supdocumentResult = false;
+                    }
+                    else {
+                        $(this).find("#suptdoc").css({
+                            "background": "#FFFFFF"
+                        });
+                    }
+                }
+            }
+        });
+        return availableRoomsResult && availableAreaResult && supdocumentResult;
+    }
+</script>

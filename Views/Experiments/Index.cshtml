@@ -1,0 +1,262 @@
+﻿@model IList<UAAAS.Models.Lab>
+@using UAAAS.Models;
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "Experiments";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    int count = 0;
+}
+<h2>Experiments</h2>
+
+<p class="create_link_right">
+    @Html.ActionLink("Summary of Lab Experiments", "Summary", "Experiments", new { @class = "create_button" })
+</p>
+<script type="text/javascript">
+
+</script>
+
+
+
+
+@if (ViewBag.NotUpload == true)
+{
+    <b>Laboratories</b><br />
+    <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+}
+else
+{
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <br />
+    if (ViewBag.Pages != null)
+    {
+        for (int i = 1; i <= ViewBag.Pages; i++)
+        {
+            <span>@Html.ActionLink("PageNo", "Index", "Experiments", new { pageNumber = i }, null) @i &nbsp &nbsp &nbsp</span>
+        }
+    }
+    <br />
+
+
+    <table class="webGrid" style="width: 100%;">
+        <tr style="font-weight: bold;" class="gridHeader">
+            <td style="text-align: center; width: 5%;">S.No</td>
+            <td style="text-align: left; width: 10%;">Degree</td>
+            <td style="text-align: left; width: 10%;">Department</td>
+            <td style="text-align: left;">Specialization</td>
+            <td style="text-align: center; width: 5%;">Year</td>
+            <td style="text-align: left;">Semester</td>
+            <td style="text-align: left;">Lab Code</td>
+            <td style="text-align: left; width: 10%">Lab Name</td>
+            <td style="text-align: left; ">Experiment Name</td>
+            <td style="text-align: left; width: 10%;">Available</td>
+        </tr>
+        @*  <tr>
+                <td colspan="9" style="text-align: center;">
+                    <div style="text-align: center;">
+                        <img src="../../Content/images/loader.gif" /><br />
+                        Loading Labs list .....
+                    </div>
+                </td>
+            </tr>*@
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            <tr>
+                <td style="text-align: center; width: 5%; background-color: #FCF1D1" class="col1">
+                    @Html.HiddenFor(m => m[i].id)
+                    @Html.HiddenFor(m => m[i].degreeId)
+                    @Html.HiddenFor(m => m[i].departmentId)
+                    @Html.HiddenFor(m => m[i].specializationId)
+                    @Html.HiddenFor(m => m[i].year)
+                    @Html.HiddenFor(m => m[i].LabName)
+                    @Html.HiddenFor(m => m[i].ExperimentName)
+                    @Html.HiddenFor(m => m[i].ExperimentAutoincrementID)
+                    @(i + 1)
+                </td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].degree)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].department)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].specializationName)</td>
+                @if (Model[i].year != 0)
+                {
+                    <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].year)</td>
+                }
+                else
+                {
+                    <td style="background-color: #FCF1D1"></td>
+                }
+                @if (Model[i].Semester != 0)
+                {
+                    <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].Semester)</td>
+                }
+                else
+                {
+                    <td style="background-color: #FCF1D1"></td>
+                }
+
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].Labcode)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].LabName)</td>
+                @{
+                var eqid = Model[i].ExperimentAutoincrementID;
+                var id = Model[i].id;
+                var collegeId = Model[i].collegeId;
+                var ExpName1 = Model[i].ExperimentName;
+                count = db.jntuh_college_experiments.Where(l => l.Id == id && l.CollegeId == collegeId).Select(l => l.Id).Count();
+                }
+                <td style="background-color: #FCF1D1">
+                    @if (Model[i].ExperimentName != null && Model[i].ExperimentName != "")
+                    { 
+                        @Html.TextBoxFor(m => m[i].ExperimentName, new { @Value = Model[i].ExperimentName, ExpermtntName1 = Model[i].ExperimentName, @placeholder = "Experiment Name", @maxlength = "100", @class = "required eqpname", @id = "eqpname1", @readonly="readonly", @style="cursor:not-allowed;background-color:#FCF1D1" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(m => m[i].ExperimentName, new { @Value = Model[i].ExperimentName, ExpermtntName1 = Model[i].ExperimentName, @placeholder = "Experiment Name", @maxlength = "100", @class = "required eqpname", @id = "eqpname", @title = "We do not have Experiment Names for the selected Lab, please specify your own 'Name of the Experiment' in the textbox shown" })
+                    }
+                </td>
+               
+
+                @if (count > 0)
+                {
+                    <td style="background-color: #FCF1D1">
+                        @Html.RadioButton("Availability" + i, true, true, new { eqpid = Model[i].EquipmentID, eqpno = Model[i].EquipmentNo, @class = "editDialog", id = Model[i].ExperimentAutoincrementID, ExpName1 = Model[i].ExperimentName }) Yes &nbsp;&nbsp;
+                        @Html.RadioButton("Availability" + i, false, new { eqpid = Model[i].EquipmentID, eqpno = Model[i].EquipmentNo, @class = "editDialog", id = Model[i].ExperimentAutoincrementID, ExpName1 = Model[i].ExperimentName, id1 = "No" }) No
+                    </td>
+
+                }
+                else
+                {
+                    <td style="background-color: #FCF1D1">
+                        @Html.RadioButton("Availability" + i, true, new { eqpid = Model[i].EquipmentID, eqpno = Model[i].EquipmentNo, @class = "editDialog", id = Model[i].ExperimentAutoincrementID, ExpName1 = Model[i].ExperimentName }) Yes &nbsp;&nbsp;
+                        @Html.RadioButton("Availability" + i, false, true, new { eqpid = Model[i].EquipmentID, eqpno = Model[i].EquipmentNo, @class = "editDialog", id = Model[i].ExperimentAutoincrementID, ExpName1 = Model[i].ExperimentName }) No
+                    </td>
+                }
+
+            </tr>
+        }
+    </table>
+
+    if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }
+
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete this lab related details ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.editDialog').click(function () {
+            debugger;
+           // var ExpermtntName = '';
+            var radioid = $(this).attr('id');
+            var status = $(this).val();
+            if (status == "True") {
+                var id = $(this).attr("id");
+                var ExpermtntlblName = $(this).closest("tr").find(".eqpname").val();
+                var ExpermtntName = "";
+               
+                if (ExpermtntlblName != "") {
+                    ExpermtntName = ExpermtntlblName;
+                }
+                else {
+                    ExpermtntName = $("#eqpname").val();
+                }
+                
+                if (ExpermtntName != "")
+                {
+                    $.ajax({
+                        url: "/Experiments/AddEditRecord",
+                        type: "POST",
+                        contentType: "application/x-www-form-urlencoded",
+                        data: 'status=' + status + '&id=' + id + '&ExpermtntName=' + ExpermtntName,
+                        success: function (data) {
+                            alert('Lab Experiment Added Successfully');
+                            window.location.reload();
+                        },
+                        error: function (event) {
+                        }
+
+                    });
+                }
+                else
+                {
+                    alert('Pleae enter Experiment Name');
+                    $('input:radio[id=' + radioid + ']').prop('checked', true);
+                }
+               
+            }
+            else if (status == "False") {
+                var result = confirm('Are you sure you want to delete?');
+                if (result == true) {
+                    var id = $(this).attr("id");
+                    $.ajax({
+                        url: "/Experiments/AddEditRecord",
+                        type: "POST",
+                        contentType: "application/x-www-form-urlencoded",
+                        data: 'status=' + status + '&id=' + id,
+                        success: function (data) {
+                            alert('Lab Experiment Deleted Successfully');
+                            window.location.reload();
+                        },
+                        error: function (event) {
+                        }
+
+                    });
+                    //url = "/Labs/DeleteRecord?id=" + url;
+                    //alert(url);
+                    //$("#dialog-confirm").dialog({
+                    //    title: 'Delete Lab',
+                    //    autoOpen: false,
+                    //    resizable: false,
+                    //    height: 170,
+                    //    width: 350,
+                    //    show: { effect: 'drop', direction: "up" },
+                    //    modal: true,
+                    //    draggable: true,
+                    //    buttons: {
+                    //        "Yes": function () {
+                    //            $(this).dialog("close");
+                    //            window.location = url;
+
+                    //        },
+                    //        "No": function () {
+                    //            $(this).dialog("close");
+
+                    //        }
+                    //    }
+                    //});
+                    //$("#dialog-confirm").dialog('open');
+                    //return false;
+
+                }
+
+            }
+
+
+
+        });
+    });
+</script>

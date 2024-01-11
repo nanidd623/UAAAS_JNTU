@@ -1,0 +1,88 @@
+﻿@model UAAAS.Models.AntiRaggingComplaints
+@{
+    ViewBag.Title = "AntiRagging Complaints";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+}
+
+<h2>AntiRagging Complaints</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)    
+    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    <fieldset>
+        <legend>Grievance Redressal Complaints</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.collegeId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.collegeId)
+            @Html.ValidationMessageFor(model => model.collegeId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.complaintReceived)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.complaintReceived)
+            @Html.ValidationMessageFor(model => model.complaintReceived)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.actionsTaken)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.actionsTaken)
+            @Html.ValidationMessageFor(model => model.actionsTaken)
+        </div>
+
+        
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.createdOn)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.createdOn)
+            @Html.ValidationMessageFor(model => model.createdOn)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.createdBy)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.createdBy)
+            @Html.ValidationMessageFor(model => model.createdBy)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.updatedOn)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.updatedOn)
+            @Html.ValidationMessageFor(model => model.updatedOn)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.updatedBy)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.updatedBy)
+            @Html.ValidationMessageFor(model => model.updatedBy)
+        </div>
+
+       
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

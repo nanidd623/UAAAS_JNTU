@@ -1,0 +1,173 @@
+﻿@model UAAAS.Models.CollegePlayground
+@{
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Sports Facilities";
+}
+<h2>College Sports Facilities</h2>
+@using (Html.BeginForm())
+{
+    int count = 0;
+    int PlayGroundCount=0;
+    int ModeOfTransportCount = 0;
+    int ModeOfPaymentCount = 0;
+    if (ViewBag.Count == 0 && ViewBag.Norecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+    }
+    else
+    {
+    <table class="four_columns" style="width: 100%;">
+        <tr>
+            <td class="col11" colspan="3">
+                <b>Sports Types:</b>
+            </td>
+        </tr>
+        <tr style="font-weight: bold;">
+            <td style="text-align: center; width: 50px;" class="col11">S.No</td>
+            <td style="text-align: left; width: 250px;" class="col11">Sports Type</td>
+            <td style="text-align: left;" class="col11">Sports Facility</td>
+        </tr>
+        @foreach (var item in ViewBag.Games)
+        {                
+            <tr>
+                <td style="text-align: center;" class="col21">
+                    @(count = count + 1)
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.sportsType != null)
+                    {
+                        <label>@item.sportsType</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.sportsFacility != null)
+                    {
+                        <label>@item.sportsFacility</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+            </tr>
+        }
+    </table> 
+    <br />
+        if (ViewBag.Norecords == true)
+        {
+    <table class="four_columns">
+        <tr>
+            <td class="col11" colspan="2">
+                <b>Other Desirable Requirements:</b>
+            </td>
+        </tr>
+    </table>
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+        }
+        else
+        {
+    <table class="four_columns" style="width:100%">
+        <tr>
+            <td class="col11" colspan="2">
+                <b>Other Desirable Requirements:</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="col11" style="width:10%">
+                @Html.LabelFor(model => model.totalPlaygrounds)
+            </td>
+            <td class="col21" style="width:10%">
+                @Html.DisplayFor(model => model.totalPlaygrounds, new { @Value = Model.totalPlaygrounds == 0 ? "" : Model.totalPlaygrounds.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.PlayGroundTypeId)
+            </td>
+            <td class="col21">
+                @foreach (var item in Model.GroundTypes)
+                {
+                    var optionValue = "PlayGroundType_" + item.id;
+                    var selectValue = item.Checked;
+                    if (item.id != "0" && item.Checked == 1)
+                    {
+                        if (PlayGroundCount > 0)
+                        {
+                    <label>,&nbsp;</label>
+                        }
+                    @item.Name
+                    PlayGroundCount = PlayGroundCount + 1;
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.modeOfTransportId)
+            </td>
+            <td class="col21">
+                @foreach (var item in Model.TransportModes)
+                {
+                    var optionValue2 = "ModeOfTransport_" + item.id;
+                    var selectValue = item.Checked;
+                    if (item.id != "0" && item.Checked == 1)
+                    {
+                        if (ModeOfTransportCount > 0)
+                        {
+                    <label>,&nbsp;</label>
+                        }
+                    @item.Name
+                        ModeOfTransportCount = ModeOfTransportCount + 1;
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.numberOfBus)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.numberOfBus, new { @Value = Model.numberOfBus == 0 ? "" : Model.numberOfBus.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.numberOfOtherVehicles)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.numberOfOtherVehicles, new { @Value = Model.numberOfOtherVehicles == 0 ? "" : Model.numberOfOtherVehicles.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.modeOfPaymentId)
+            </td>
+            <td class="col21">
+                @foreach (var item in Model.PaymentModes)
+                {
+                    var optionValue3 = "ModeOfPayment_" + item.id;
+                    var selectValue = item.Checked;
+                    if (item.id != "0" && item.Checked == 1)
+                    {
+                        if (ModeOfPaymentCount > 0)
+                        {
+                    <label>,&nbsp;</label>
+                        }
+                    @item.Name
+                        ModeOfPaymentCount = ModeOfPaymentCount + 1;
+                    }
+                }
+            </td>
+        </tr>
+    </table>
+        }
+    }
+}

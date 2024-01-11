@@ -1,0 +1,47 @@
+﻿@model UAAAS.Models.InspectionFee
+@{
+    ViewBag.Title = "AY_Colleges_AffiliationFee_Inserting_DB";
+}
+
+<h2>AY_Colleges_AffiliationFee_Inserting_DB</h2>
+
+<div>
+    @if (TempData["Success"] != null)
+    {
+        <div class="success" style="background-color: gold; border: 1px solid #f49820;height:12px;">
+            <p style="text-align: center;font-weight: bold;margin-top:-3px;"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+        </div>
+    }
+    else if (TempData["Error"] != null)
+    {
+        <div class="error" style="background-color: red; border: 1px solid #f49820;height:12px;">
+            <p style="text-align: center;font-weight: bold;color:white;margin-top:-3px;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+        </div>
+    }
+</div>
+<br />
+@using (Html.BeginForm("AY_Colleges_AffiliationFee_Inserting_DB", "CollegesFee"))
+{
+    <div>
+        <div>
+            <div class="editor-label" style="width:151px;">
+                <span>Colleges</span>
+            </div>
+            <div class="editor-field" style="width:693px;">
+                @Html.DropDownListFor(model => model.CollegeId, new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "CollegeId", "CollegeName"), "---Select---", new { @style = "width:689px;" })
+            </div>
+        </div>
+        <div>
+            <div class="editor-label" style="width:151px;">
+                <span>Academic Year</span>
+            </div>
+            <div class="editor-field" style="width:250px;">
+                @Html.DropDownListFor(model => model.AcademicYearId, new SelectList(ViewBag.Years as System.Collections.IEnumerable, "id", "Year"), "---Select---", new { @style = "width:250px;" })
+            </div>
+        </div>
+    </div>
+    <br /><br />
+    <div>
+        <input type="submit" value="Insert" />
+    </div>
+}

@@ -1,0 +1,174 @@
+﻿@using System.Web.UI.WebControls
+@using UAAAS.Models
+@model IEnumerable<UAAAS.Models.FacultyRegistration>
+@{
+    ViewBag.Title = "Department wise Faculty";
+    var index = 1;
+    string fid = string.Empty;
+    DateTime date = new DateTime(2018, 02, 19, 00, 00, 00);
+    int?[] Group1_Specializationids = new int?[] { 115, 119, 172, 120 };
+    int?[] Group2_Specializationids = new int?[] { 116, 167, 123, 170, 117, 124 };
+    int?[] Group3_Specializationids = new int?[] { 18, 19, 114, 169, 122 };
+    int?[] Group4_Specializationids = new int?[] { 172, 117, 121 };
+
+}
+
+@using (Html.BeginForm())
+{
+    <table border="1" id="example" class="display" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No</th>
+                <th style="width: 140px; text-align: center;">Registration ID</th>
+                <th style="text-align: left;width:315px">Full Name</th>
+                <th style="width: 120px; text-align: center;">College</th>
+                <th style="width: 120px; text-align: center;">Degree</th>
+                <th style="width: 120px; text-align: center;">Department</th>
+                <th style="width: 120px; text-align: center;">Specialization</th>
+                <th style="width: 120px; text-align: center;">PG Specialization</th>
+                <th style="width: 120px; text-align: center;">Identified For</th>
+                <th style="width: 120px; text-align: center;">Email</th>
+                <th style="width: 120px; text-align: center;">Phone Number</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                int Phd = 0;
+                if (@item.jntuh_registered_faculty_education.Count() != 0)
+                {
+                    if (@item.jntuh_registered_faculty_education.Where(e => e.jntuh_education_category.id == 6).Select(e => e.id).FirstOrDefault() != 0)
+                    {
+                        Phd = 1;
+                    }
+                }
+                <tr>
+                    <td style="text-align: center; vertical-align: middle">
+                        @(index++)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                    </td>
+                    <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                        @if (item.Principal != "")
+                        {
+                            if (@Phd == 1)
+                            {
+                                @*@Html.ActionLink(Html.DisplayFor(modelItem => item.FirstName).ToHtmlString(), "ViewFacultyDetails", "FacultyVerificationDENew", new { fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"] }, new { target = "_blank" })*@
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.MiddleName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                                if (item.NotconsiderPhd == true)
+                                {
+                                    <span style="color: blue; font-weight: bold">(Ph.D)</span>
+                                }
+                                else
+                                {
+                                    <span style="color: Red; font-weight: bold">(Ph.D)</span>
+                                }
+
+                                <span style="color: red; font-weight: bold;">(Principal)</span>
+                            }
+                            else
+                            {
+                                @*@Html.ActionLink(Html.DisplayFor(modelItem => item.FirstName).ToHtmlString(), "ViewFacultyDetails", "FacultyVerificationDENew", new { fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"] }, new { target = "_blank" })*@
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.MiddleName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.LastName) <span style="color: red; font-weight: bold;">(Principal)</span>
+                            }
+
+                        }
+                        else
+                        {
+                            if (@Phd == 1)
+                            {
+                                @*@Html.ActionLink(Html.DisplayFor(modelItem => item.FirstName).ToHtmlString(), "ViewFacultyDetails", "FacultyVerificationDENew", new { fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"] }, new { target = "_blank" })*@
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.MiddleName)
+                                <span>&nbsp;&nbsp;</span>
+                                if (item.NotconsiderPhd == true)
+                                {
+                                    <span style="color: blue; font-weight: bold">(Ph.D)</span>
+                                }
+                                else
+                                {
+                                    <span style="color: Red; font-weight: bold">(Ph.D)</span>
+                                }
+                            }
+                            else
+                            {
+                                @*@Html.ActionLink(Html.DisplayFor(modelItem => item.FirstName).ToHtmlString(), "ViewFacultyDetails", "FacultyVerificationDENew", new { fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"] }, new { target = "_blank" })*@
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.MiddleName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            }
+                        }
+
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.CollegeName)
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.DegreeName)
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.department)
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        <span>
+                            @if (item.IdentfiedFor == "PG" || item.IdentfiedFor == "UG&PG")
+                            {
+                                @Html.DisplayFor(modelItem => item.SpecializationIdentfiedFor)
+                            }
+
+                        </span>
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+
+                        @if (Group1_Specializationids.Contains(item.PGSpecialization))
+                        {
+                            @Html.DisplayFor(modelItem => item.PGSpecializationName)
+                            <span style="color: red; font-weight: bold">(G1)</span>
+                        }
+                        else if (Group2_Specializationids.Contains(item.PGSpecialization))
+                        {
+                            @Html.DisplayFor(modelItem => item.PGSpecializationName)
+                            <span style="color: red; font-weight: bold">(G2)</span>
+                        }
+                        else if (Group3_Specializationids.Contains(item.PGSpecialization))
+                        {
+                            @Html.DisplayFor(modelItem => item.PGSpecializationName)
+                            <span style="color: red; font-weight: bold">(G3)</span>
+                        }
+                        else if (Group4_Specializationids.Contains(item.PGSpecialization))
+                        {
+                            @Html.DisplayFor(modelItem => item.PGSpecializationName)
+                            <span style="color: red; font-weight: bold">(G4)</span>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.PGSpecializationName)
+                        }
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.IdentfiedFor)
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.Mobile)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

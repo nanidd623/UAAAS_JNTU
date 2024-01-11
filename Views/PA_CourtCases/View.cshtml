@@ -1,0 +1,182 @@
+﻿@model UAAAS.Models.Permanent_Affiliation.CourtCasesModel
+
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    ViewBag.Title = "Court Cases";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $(".calendarnew").css("width", "160px");
+
+        $('.calendarnew').attr("readonly", "true");
+        $('.calendarnew').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: "-180M",
+            maxDate: "+180M",
+            yearRange: '2000:2050',
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+        });
+
+        $(".Supportingfile").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "Documentfile");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+    });
+</script>
+<h2>Court Cases filed against University during past six years (if any)</h2>
+@if (ViewBag.IsEditable == true)
+{
+    <p class="create_link_right">
+        @Html.ActionLink("Add new Court Case", "Edit", "PA_CourtCases", new
+                {
+                    collegeId = "",
+                    courtCaseId = ""
+                }, new { @class = "create_button" })
+    </p>
+}
+
+
+@if (ViewBag.CourtCasesList.Count > 0)
+{
+    <div style="margin-top:15px;">
+        <table class="webGrid">
+            <thead>
+                <tr class="col1">
+                    <th>S.No</th>
+                    <th>WP / SL / other No.</th>
+                    <th>Year of filing</th>
+                    <th>Prayer of the Petitioner</th>
+                    <th>If JNTUH is one of the respondents, mention the position</th>
+                    <th>Petitioner Affidavit</th>
+                    <th>Interim Order Copy</th>
+                    <th>Order / Judgement Copy</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in ((List<UAAAS.Controllers.Permanent_Affiliation.CourtCases>)ViewBag.CourtCasesList).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr class="col2">
+                        <td>@pay.i </td>
+                        <td>@pay.value.WporSlorOtherNo</td>
+                        <td>@pay.value.YearofFilling</td>
+                        <td>@pay.value.PrayerofthePetitioner</td>
+                        <td>@pay.value.Respondents</td>
+                        <td style="text-align: left; font-weight: normal;">
+                            @if (pay.value.WpPetitionerFilepath != null)
+                            {
+                                <a href="../Content/Upload/College/CourtCases/WP Petitioner/@pay.value.WpPetitionerFilepath" target="_blank"><span style="color: red; font-weight: bold">View</span></a>
+                            }
+                        </td>
+                        <td style="text-align: left; font-weight: normal;">
+                            @if (pay.value.InternOrderCopyPath != null)
+                            {
+                                <a href="../Content/Upload/College/CourtCases/Intern Order Copy/@pay.value.InternOrderCopyPath" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                            }
+                        </td>
+                        <td style="text-align: left; font-weight: normal;">
+                            @if (pay.value.OrderCopypath != null)
+                            {
+                                <a href="../Content/Upload/College/CourtCases/Order Copy/@pay.value.OrderCopypath" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+}

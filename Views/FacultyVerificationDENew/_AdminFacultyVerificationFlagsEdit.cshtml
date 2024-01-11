@@ -1,0 +1,318 @@
+﻿@model UAAAS.Models.FacultyRegistration
+@using UAAAS.Models;
+@{
+    ViewBag.Title = Model.RegistrationNumber + " - " + Model.FirstName + " " + Model.MiddleName + " " + Model.LastName;
+}
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<style>
+    b {
+        font-weight: normal;
+    }
+
+    .faculty_table {
+        width: 100%;
+    }
+
+    tbody tr td:nth-child(5).col1 {
+        width: 25%;
+    }
+
+    .col1 {
+        width: 40%;
+    }
+
+    .col2 {
+        width: 10%;
+    }
+</style>
+<div id="div_print">
+
+    @using (Html.BeginForm("AdminFacultyVerificationFlagsPostDENew", "FacultyVerificationDENew", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+        <div>
+            <table style="width:100%">
+                <tr>
+                    <td style="width:100%">
+                        <table class="faculty_table" id="information">
+                            <tr>
+                                <td class="col1" style="font-weight: bold;width:24%">
+                                    @Html.Label("Registration No.", "Registration No.")
+                                </td>
+                                <td class="col2">
+                                    <span style="text-transform: uppercase; font-weight: bold;">@Html.DisplayFor(model => model.RegistrationNumber)</span>
+                                </td>
+                                <td rowspan="2" style="vertical-align:initial;border:1px solid darkgray;">
+                                    @if (@Model.facultyPhoto != null)
+                                    {
+                                        <a href="http://jntuhaac.in/Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" target="_blank" style="vertical-align:inherit">
+                                            <img src="http://jntuhaac.in/Content/Upload/Faculty/Photos/@Model.facultyPhoto.Replace("~", "")" style="height: 60px; vertical-align:top" />
+                                        </a>
+                                    }
+                                    @Html.HiddenFor(model => model.facultyPhoto)
+                                </td>
+                                @Html.HiddenFor(model => model.RegistrationNumber)
+                                @Html.HiddenFor(model => model.CollegeId)
+                                @Html.HiddenFor(model => model.id)
+                            </tr>
+                            <tr>
+                                <td class="col1" style="width: 10% !important; font-weight: bold; ">
+                                    <span>(FULL NAME)</span> <span class="mandatory">*</span>
+                                </td>
+                                <td class="col2 focus" style="width: 90% !important; font-weight: bold;">
+                                    @if (@Model.isView != null)
+                                    {
+                                        @Html.DisplayFor(modelItem => modelItem.FirstName)
+                                        @Html.DisplayFor(modelItem => modelItem.MiddleName)
+                                        @Html.DisplayFor(modelItem => modelItem.LastName)
+                                        @Html.HiddenFor(model => model.Email)
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <table style="width:100%" class="faculty_table"></table>
+        <table style="width:100%" class="faculty_table">
+            <tr>
+                <td class="col1">
+                    <b>Absent</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.Absent)
+                </td>
+                <td class="col1">
+                    <b>Original Certificates Notshown</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.OriginalCertificatesnotshownFlag)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>Xeroxcopyofcertificates</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.XeroxcopyofcertificatesFlag)
+                </td>
+                <td class="col1">
+                    <b>NOT Qualified As Per AICTE /PCI Norms</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NOTQualifiedAsPerAICTE)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>No SCM</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NoSCMFlag)
+                </td>
+                <td class="col1">
+                    <b>InComplete/ Blur Ceritificates</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.InCompleteCeritificates)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>No Relelvant UG</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NOrelevantUgFlag)
+                </td>
+                <td class="col1">
+                    <b>No Relelvant PG</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NOrelevantPgFlag)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>No Relelvant Ph.d</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NOrelevantPhdFlag)
+                </td>
+                <td class="col1">
+                    <b>PAN Mismatch</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.InvalidPANNo)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>No Guide Sign in PHD Thesis</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.OriginalsVerifiedPHD)
+                </td>
+                <td class="col1">
+                    <b>Complaint PHD Faculty</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.OriginalsVerifiedUG)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>Invalid Degree</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.InvalidDegree)
+                </td>
+                @*<td class="col1">
+                        <b>BAS</b>
+                    </td>
+                    <td class="col2">
+                        @Html.CheckBoxFor(model => model.BasStatusFlag)
+                    </td>*@
+                <td class="col1">
+                    <b>No Form26AS</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NOForm26AS)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>Covid-19</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.Covid19)
+                </td>
+                <td class="col1">
+                    <b>Maternity</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.Maternity)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>Invalid Aadhaar</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.InvalidAadhaarFlag)
+                </td>
+                <td class="col1">
+                    <b>No Class in UG/PG</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NoClass)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>Absent for Physical Verification</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.VerificationStatusFlag)
+                </td>
+                <td class="col1">
+                    <b>Cosider as a faculty but not cosider P.hD</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NotconsiderPhd)
+                </td>
+
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>Genuineness certificate not submitted</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.GenuinenessnotSubmitted)
+                </td>
+                <td class="col1">
+                    <b>No PGspecialization</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.NoPgSpecialization)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <b>BAS</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.BasStatusFlag)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align:right">
+                    <input type="submit" value="Save" id="btnSave" name="cmd" class="btnclass" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#department').val($('#department option:first').val());
+        $('#MOdifiedDateofAppointment').val('');
+    });
+
+    $("input[name=ModifiedPAN]").change(function () {
+        var value = $(this).val();
+        if (value == 0) {
+            $("#ModifiedPANNo").show();
+        }
+        else {
+            $("#ModifiedPANNo").val('');
+            $("#ModifiedPANNo").hide();
+            $("#ModifiedPANNo>span").text('');
+            $("tbody tr td.col4 span.field-validation-error span").hide();
+        }
+
+    });
+
+    $("input[name=Absent]").change(function () {
+        if ($(this).is(":checked")) {
+            $("input[type=checkbox]").attr("disabled", true);
+            $("input[name=Absent]").attr("disabled", false);
+            $("input[type=radio]").attr("disabled", true);
+            $("#NORelevantUG").prop("disabled", true);
+            $("#NORelevantPG").prop("disabled", true);
+            $("#NORelevantPHD").prop("disabled", true);
+            $("#ModifiedPANNo").prop("disabled", true);
+            $("#MOdifiedDateofAppointment1").attr("disabled", true);
+            $("#InCompleteCeritificates").attr("disabled", true);
+            //
+            $("#department").prop("disabled", true);
+        }
+        else {
+            $("input[type=checkbox]").attr("disabled", false);
+            $("input[name=Absent]").attr("disabled", false);
+            $("input[type=radio]").attr("disabled", false);
+            $("#NORelevantUG").prop("disabled", false);
+            $("#NORelevantPG").prop("disabled", false);
+            $("#NORelevantPHD").prop("disabled", false);
+            $("#ModifiedPANNo").prop("disabled", false);
+            $("#MOdifiedDateofAppointment1").attr("disabled", false);
+            $("#InCompleteCeritificates").attr("disabled", false);
+            $("#department").prop("disabled", false);
+        }
+
+    });
+
+
+
+</script>

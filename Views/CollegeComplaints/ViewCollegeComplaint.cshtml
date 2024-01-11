@@ -1,0 +1,424 @@
+﻿@model IEnumerable<UAAAS.Controllers.Complaints>
+@{
+    ViewBag.Title = "ViewCollegeComplaint";
+    var index = 1;
+}
+
+<h2>College Complaints</h2>
+<br />
+<div>
+    <p style="text-align: center;background-color: #71468A;"><span style="color: white; font-weight: bold;font-size: large">@ViewBag.CollegeCode - @ViewBag.CollegeName</span></p>
+</div>
+<br />
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success">
+        <p style="text-align: center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+    </div>
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div>
+}
+<br />
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 25,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        //Update collegestatus popup
+
+
+        $("#Dialog_NotApproved").click(function () {
+            debugger;
+            var url = $(this).attr('href');
+            $("#NotApprovedflags").dialog({
+                title: 'College Complaints',
+                width: 750,
+                height: 300,
+                model: true,
+                resizable: false,
+                autoOpen: false,
+                show: { effect: 'drop', direction: 'up' },
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    // $(this).dialog("close");
+                    window.location.href = "/CollegeComplaints/Index";
+                }
+
+            });
+            $("#NotApprovedflags").dialog('open');
+            return false;
+        });
+
+
+
+        $(".editDialog").live("click", function (e) {
+            debugger;
+            e.preventDefault();
+            var url = $(this).attr('href');
+
+            $("#dialog-view").dialog({
+                title: 'College Sub Complaints',
+                width: 500,
+                height: 300,
+                model: true,
+                resizable: false,
+                autoOpen: false,
+                show: { effect: 'drop', direction: 'up' },
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    debugger;
+                    var clgid = $("#item_collegeId").val();
+                    window.location.href = '/CollegeComplaints/ViewCollegeComplaint?collegeid=' + clgid;
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $(".replayeditDialog").live("click", function (e) {
+            debugger;
+            e.preventDefault();
+            var url = $(this).attr('href');
+
+            $("#dialog-edit").dialog({
+                title: 'College Reply Status',
+                width: 850,
+                height: 400,
+                model: true,
+                resizable: false,
+                autoOpen: false,
+                show: { effect: 'drop', direction: 'up' },
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    debugger;
+                    var clgid = $("#item_collegeId").val();
+                    window.location.href = '/CollegeComplaints/ViewCollegeComplaint?collegeid=' + clgid;
+                }
+            });
+
+            $("#dialog-edit").dialog('open');
+            return false;
+        });
+
+        //Delete College Complaint
+        $(".confirmDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete College Complaint',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'fadeIn', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        //Action taken dialog
+        $(".actioneditDialog").live("click", function (e) {
+            debugger;
+            e.preventDefault();
+            var url = $(this).attr('href');
+
+            $("#dialog-action").dialog({
+                title: 'Action Status',
+                width: 850,
+                height: 400,
+                model: true,
+                resizable: false,
+                autoOpen: false,
+                show: { effect: 'drop', direction: 'up' },
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    debugger;
+                    var clgid = $("#item_collegeId").val();
+                    window.location.href = '/CollegeComplaints/ViewCollegeComplaint?collegeid=' + clgid;
+                }
+            });
+
+            $("#dialog-action").dialog('open');
+            return false;
+        });
+
+    });
+</script>
+<table id="example" class="display" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="width: 20px; text-align: center;">
+                S.No
+            </th>
+            <th style="text-align: center;">
+                Complaint Name
+            </th>
+            <th style="text-align: center;">
+                Complaint Date (MM/DD/YY)
+            </th>
+            <th style="text-align: center;">
+                Reply Status
+            </th>
+            <th style="text-align: center;">
+                Reply Date  (MM/DD/YY)
+            </th>
+            <th style="text-align: center;">
+                Given By
+            </th>
+            <th style="text-align: center;">
+                Complaint Doc.
+            </th>
+            <th style="text-align: center;">
+                Reply Doc.
+            </th>
+            <th style="text-align: center;">
+                Edit
+            </th>
+            <th style="text-align: center;">
+                Action
+            </th>
+            <th style="text-align: center;">
+                Action Status
+            </th>
+
+            @if (@User.IsInRole("Admin"))
+            {
+                <th style="text-align: center;">
+                    Delete
+                </th>
+            }
+            else
+            {
+                <th style="text-align: center;">
+                    @*<span>--</span>*@
+                    Delete
+                </th>
+            }
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align: center;">
+                    @(index++)
+                </td>
+                <td style="text-align:left; text-transform: uppercase;">
+                    @*@Html.DisplayFor(modelItem => item.complaintname)*@
+                    @Html.HiddenFor(modelItem => item.collegeId)
+                    @Html.ActionLink(Html.DisplayFor(modelItem => item.complaintname).ToHtmlString(), "ViewCollegeSubComplaints", "CollegeComplaints", new { collegeid = item.collegeId, complaintId = item.complaintid, dateofcomplaint = item.dcomplaintdate }, new { @class = "editDialog" })
+                </td>
+                <td style="text-align: center;">
+                    @Html.DisplayFor(modelItem => item.complaintdate)
+                </td>
+                <td style="text-align: center;">
+                    @if (@item.replaystatus == true)
+                    {
+                        <span>Yes</span>
+                    }
+                    else
+                    {
+                        <span>No</span>
+                    }
+                </td>
+                <td style="text-align: center;">
+                    @Html.DisplayFor(modelItem => item.replaystatusdate)
+                </td>
+                <td style="text-align: center;">
+                    @Html.DisplayFor(modelItem => item.givenBy)
+                </td>
+                <td style="text-align: center;">
+                    @if (!String.IsNullOrEmpty(item.CollegecomplaintFile))
+                    {
+                        <a href="~/Content/Upload/Complaints/ComplaintFile/@item.CollegecomplaintFile" target="_blank">
+                            <span style="color:red;"><b>View</b></span>
+                        </a>
+                    }
+                    else
+                    {
+                        <span>----</span>
+                    }
+                </td>
+                <td style="text-align: center;">
+                    @if (!String.IsNullOrEmpty(item.CollegereplyFile))
+                    {
+                        <a href="~/Content/Upload/Complaints/ReplyFile/@item.CollegereplyFile" target="_blank">
+                            <span style="color:red;"><b>View</b></span>
+                        </a>
+                    }
+                    else
+                    {
+                        <span>----</span>
+                    }
+                </td>
+                <td>
+                    @if (@item.replaystatus != true || @item.CollegecomplaintFile == null || @item.CollegereplyFile == null)
+                    {
+                        @Html.ActionLink("Edit", "CollegeReplayStatus", "CollegeComplaints", new { id = item.Id, complaintId = item.complaintid, dateofcomplaint = item.dcomplaintdate }, new { @class = "replayeditDialog edit_button" })
+                    }
+                    else
+                    {
+                        <span>---</span>
+                    }
+                </td>
+                <td style="text-align: center;">
+                    @Html.ActionLink("Edit", "CollegeActionStatus", "CollegeComplaints", new { id = item.Id, complaintId = item.complaintid, dateofcomplaint = item.dcomplaintdate }, new { @class = "actioneditDialog edit_button" })
+                </td>
+                <td style="text-align: center;">
+                    @Html.DisplayFor(modelItem => item.actionstatusName)
+                </td>
+                <td>
+                    @if (@User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Delete", "DeleteCollegeComplaint", "CollegeComplaints", new { id = item.Id, collegeid = item.collegeId, complaintId = item.complaintid, dateofcomplaint = item.dcomplaintdate }, new { @class = "confirmDialog delete_button" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Delete", "DeleteCollegeComplaint", "CollegeComplaints", new { id = item.Id, collegeid = item.collegeId, complaintId = item.complaintid, dateofcomplaint = item.dcomplaintdate }, new { @class = "confirmDialog delete_button" })
+                        @*<span>--</span>*@
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th>
+                <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+        </tr>
+    </tfoot>
+</table>
+<div id="dialog-view" style="display: none">
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+<div id="dialog-action" style="display: none">
+</div>
+<div id="dialog-confirm" style="display: none">
+</div>

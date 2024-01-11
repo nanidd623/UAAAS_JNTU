@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Integrated Colleges Faculty With Intake";
+}
+<h2 style="text-align: center">SUBMISSION OF ONLINE APPEAL (FACULTY - STEP 2/5)</h2><br />
+<table>
+    <tr>
+        <td class="col3" style="text-align: center;">
+            @Html.ActionLink("For B.Tech Faculty Appeal", "IntegratedBtechFacultyWithIntake", new { collegeID = @ViewBag.collegeID }, new { @class = "create_button", target = "_blank" }) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            @Html.ActionLink("For Pharmacy Faculty Appeal", "IntegratedPharmacyFacultyWithIntake", new { collegeID = @ViewBag.collegeID }, new { @class = "create_button", target = "_blank" })
+        </td>
+    </tr>
+</table>
+
+
+   

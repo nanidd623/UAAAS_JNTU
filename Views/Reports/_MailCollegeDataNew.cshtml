@@ -1,0 +1,118 @@
+﻿@model UAAAS.Models.CollegeMails
+@using UAAAS.Models
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "ExcelFileDownload";
+    int Count = 1;
+    string Districtname = string.Empty;
+    string MandalName = string.Empty;
+    string CollegeMail = string.Empty;
+    string SOCIETYMail = string.Empty;
+    string SECRETARYMail = string.Empty;
+    string PrinicipalMail = string.Empty;
+    string CollegeMobile = string.Empty;
+    string SOCIETYMobile = string.Empty;
+    string SECRETARYMobile = string.Empty;
+    string PrinicipalMobile = string.Empty;
+    string CollegeAddress = string.Empty;
+    List<jntuh_college_principal_registered> Prinicipal = db.jntuh_college_principal_registered.Select(e => e).ToList();
+    var CollegeIds = Model.collegeMails.Select(s => s.collegeId).Distinct().ToList();
+    List<jntuh_address> jntuh_address = db.jntuh_address.Where(s => CollegeIds.Contains(s.collegeId)).Select(e => e).ToList();
+    List<jntuh_district> jntuh_district = db.jntuh_district.Where(s => s.isActive == true).Select(e => e).ToList();
+    var Collegetypes = db.jntuh_college_type.Where(c => c.isActive == true).ToList();
+}
+
+
+
+@using (Html.BeginForm())
+{
+    int data = 0;
+    <table style="width: 100%; border: 1px;" border="1">
+        <tr>
+            <th style="text-align: center; vertical-align: top; background-color:yellow">SNo</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">Code</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">CollegeName</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">CollegeType</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">CollegeAddress</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">District</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">CollegeMail</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">SocietyMail</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">SecretaryMail</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">PrinicipalMail</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">CollegeMobile</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">SocietyMobile</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">SecretaryMobile</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">PrinicipalMobile</th>
+
+        </tr>
+
+
+        @for (int i = 0; i < Model.collegeMails.Count(); i++)
+        {
+
+            var list = jntuh_address.Where(s => s.collegeId == Model.collegeMails[i].collegeId).Select(e => e).FirstOrDefault();
+            MandalName = list.mandal;
+            Districtname = jntuh_district.Where(s => s.id == list.districtId).Select(e => e.districtName).FirstOrDefault();
+            var CollegeData = jntuh_address.Where(a => a.collegeId == Model.collegeMails[i].collegeId && a.addressTye == "COLLEGE").Select(e => e).FirstOrDefault();
+            
+            CollegeMail = CollegeData.email;
+            CollegeMobile = CollegeData.mobile;
+            CollegeAddress = CollegeData.address;
+
+            var SECRETARYData = jntuh_address.Where(a => a.collegeId == Model.collegeMails[i].collegeId && a.addressTye == "SECRETARY").Select(e => e).FirstOrDefault();
+            SECRETARYMail = SECRETARYData.email;
+            SECRETARYMobile = SECRETARYData.mobile;
+
+            var SOCIETYData = jntuh_address.Where(a => a.collegeId == Model.collegeMails[i].collegeId && a.addressTye == "SOCIETY").Select(e => e).FirstOrDefault();
+            SOCIETYMail = SOCIETYData.email;
+            SOCIETYMobile = SOCIETYData.mobile;
+            var Collegetype = Collegetypes.Where(c => c.id == Model.collegeMails[i].collegeTypeId).Select(c => c.collegeType).FirstOrDefault();
+            var FullAddress = CollegeAddress + " " + MandalName + " " + Districtname;
+
+            var PrinicipalRegNo = Prinicipal.Where(p => p.collegeId == Model.collegeMails[i].collegeId).Select(e => e.RegistrationNumber).FirstOrDefault();
+            if (PrinicipalRegNo == null)
+            {
+                PrinicipalMail = "";
+                PrinicipalMobile = "";
+            }
+            else
+            {
+                var PrinicipalData = db.jntuh_registered_faculty.Where(f => f.RegistrationNumber == PrinicipalRegNo).Select(e => e).FirstOrDefault();
+                if (PrinicipalData == null)
+                {
+                    PrinicipalMail = "";
+                    PrinicipalMobile = "";
+
+                }
+                else
+                {
+
+                    PrinicipalMail = PrinicipalData.Email;
+                    PrinicipalMobile = PrinicipalData.Mobile;
+                }
+            }
+
+
+
+            <tr>
+                <td style="text-align: left; vertical-align: top;">@Count</td>
+                <td style="text-align: left; vertical-align: top;">@Model.collegeMails[i].collegeCode</td>
+                <td style="text-align: left; vertical-align: top;">@Model.collegeMails[i].collegeName</td>
+                <td style="text-align: left; vertical-align: top;">@Collegetype</td>
+                <td style="text-align: left; vertical-align: top;">@FullAddress</td>
+                <td style="text-align: left; vertical-align: top;">@Districtname</td>
+                <td style="text-align: left; vertical-align: top;">@CollegeMail</td>
+                <td style="text-align: left; vertical-align: top;">@SOCIETYMail</td>
+                <td style="text-align: left; vertical-align: top;">@SECRETARYMail</td>
+                <td style="text-align: left; vertical-align: top;">@PrinicipalMail</td>
+                <td style="text-align: left; vertical-align: top;">@CollegeMobile</td>
+                <td style="text-align: left; vertical-align: top;">@SOCIETYMobile</td>
+                <td style="text-align: left; vertical-align: top;">@SECRETARYMobile</td>
+                <td style="text-align: left; vertical-align: top;">@PrinicipalMobile</td>
+
+            </tr>
+            Count++;
+        }
+
+    </table>
+}

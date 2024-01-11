@@ -1,0 +1,130 @@
+﻿@model List<UAAAS.Controllers.Academic_Year_Student_Count>
+@{
+    ViewBag.Title = "Get_Intake_Details";
+    int index = 1;
+}
+
+<h2>Get_Intake_Details</h2>
+
+<br />
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 5000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+</script>
+
+<table id="example" class="display" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="width: 30px; text-align: center;" rowspan="1">
+                S.No
+            </th>
+            <th style="width: 80px; text-align: left;" rowspan="2">
+                Course
+            </th>
+            <th style="width: 80px;text-align: left;" rowspan="2">
+                Intake
+            </th>
+            @*<th class="ui-state-default" style="width: 100px; text-align: left;" rowspan="2">Department</th>
+            <th class="ui-state-default" style="width: 100px; text-align: left;" rowspan="2">Specialization</th>*@
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align: center;">
+                    @(index++)
+                </td>
+                <td style="text-align: left; text-transform: uppercase;">
+                    @Html.DisplayFor(modelItem => item.CourseName)
+                </td>
+                <td style="text-align: left;">
+                    @Html.DisplayFor(modelItem => item.ApprovedIntake)
+                </td>
+                @*<td style="text-align: left; font-weight: normal;">
+                    @Html.DisplayFor(modelItem => item.Department)
+                </td>
+                <td style="text-align: left; font-weight: normal;">
+                    @Html.DisplayFor(modelItem => item.Specialization)
+                </td>*@
+            </tr>
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th>
+                <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            @*<th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>*@
+        </tr>
+    </tfoot>
+</table>
+
+
+<div id="dialog-edit" style="display: none"></div>

@@ -1,0 +1,895 @@
+﻿@model UAAAS.Models.CollegeFaculty
+@{
+    if (ViewBag.FacultyType == 1)
+    {
+        ViewBag.Title = "Add Teaching Faculty";
+    }
+    else if (ViewBag.FacultyType == 3)
+    {
+        ViewBag.Title = "Add Non-Teaching Staff";
+    }
+    else if (ViewBag.FacultyType == 2)
+    {
+        ViewBag.Title = "Add Technical Staff";
+    }
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+}
+
+@if (ViewBag.FacultyType == 1)
+{
+    <h2>Add Teaching Faculty</h2>
+
+    if (ViewBag.DegreeCount == 0)
+    {
+        <div class="warning" style="width: 550px; margin: 0 auto;">
+            <p>Please select your courses in "College Information" page before filling up this page. Otherwise you can not select degrees while adding faculty Subjects</p>
+        </div>
+    }
+}
+else if (ViewBag.FacultyType == 3)
+{
+    <h2>Add Non-Teaching Faculty</h2>
+}
+else if (ViewBag.FacultyType == 2)
+{
+    <h2>Add Technical Faculty</h2>
+    if (ViewBag.DegreeCount == 0)
+    {
+        <div class="warning" style="width: 550px; margin: 0 auto;">
+            <p>Please select your courses in "College Information" page before filling up this page. Otherwise you can not select degrees while adding faculty Labs</p>
+        </div>
+    }
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".ratifed").hide();
+        $("#isFacultyRatifiedByJNTU").live("click", function () {
+            var selectedValue = $(this).val();
+            if (selectedValue == 'True') {
+                $(".ratifed").show();
+            }
+            else { $(".ratifed").hide(); }
+        });
+
+        if ($("#isFacultyRatifiedByJNTU").val() == 'True') {
+            $(".ratifed").show();
+        }
+
+        @* if ($(@Model.facultyPreviousExperience).val() >=0) {
+            alert('3131');
+            $("#prevExperience").val($(@Model.facultyPreviousExperience).val());
+        }*@
+
+        $('.submit').click(function (event, args) {
+
+            if ($('#photo').val() == undefined && $('#facultyPhoto').val() == '') {
+                alert("Please select photo")
+                return false;
+            }
+            // else {
+            //  return true;
+            //}
+            if($('#facultyRecruitedFor').val()=='0')
+            {
+                $('#facultyRecruitedFor').addClass('input-validation-error');
+                alert('Faculty Recruited For is Required');
+                return false;
+            }
+            else
+            {
+                $('#facultyRecruitedFor').removeClass('input-validation-error');
+            }
+            if($('#facultyPANNumber').val()=='' && $('#facultyAadhaarNumber').val()=='')
+            {
+                $('#facultyPANNumber').addClass('input-validation-error');
+                $('#facultyAadhaarNumber').addClass('input-validation-error');
+                alert('PAN Number or Aadhaar Number is Required');
+                return false;
+            }
+            else
+            {
+                $('#facultyPANNumber').removeClass('input-validation-error');
+                $('#facultyAadhaarNumber').removeClass('input-validation-error');
+            }
+
+
+            $("#isFacultyRatifiedByJNTU").live("click", function () {
+                var selectedValue = $(this).val();
+                if (selectedValue == 'True') {
+                    if ($("#facultyDateOfRatification").val() == '') {
+                        args.isValid = false;
+                    }
+
+                    if ($("#facultyDurationOfRatification").val() == '') {
+                        args.isValid = false;
+                    }
+                }
+            });
+            checkDateDifference($('#facultyDateOfAppointment').val(), $('#facultyDateOfRatification').val(), "Date of Appointment should not be grater than (or) equal to Date Of Resignation");
+        });
+    });
+
+    function checkDateDifference(startDate, endDate, alertString) {
+
+        if ((startDate != null && startDate != '') && (endDate != null && endDate != '')) {
+            startDate = $.datepicker.parseDate('dd/mm/yy', startDate);
+            endDate = $.datepicker.parseDate('dd/mm/yy', endDate);
+            var difference = (endDate - startDate) / (86400000);
+            if (difference < 0) {
+                alert(alertString);
+                dateFlag = 0;
+                return false;
+            }
+            else {
+                dateFlag = 1;
+                return true;
+            }
+        }
+        else {
+            dateFlag = 1;
+            return true;
+        }
+
+    }
+</script>
+
+<script type="text/jscript">
+
+    //$(document).ready(function () {
+
+    //    $("#dateOfBirth").keydown(IsValidFormat($(this).val(),event.keyCode));
+    //    $("#dateOfBirth").blur(function(){
+    //        alert($("#dateOfBirth").val());
+    //    });
+    //});
+    //get file size
+    function GetFileSize(fileid) {
+        try {
+            var fileSize = 0;
+            //for IE
+
+            if ($.browser.msie) {
+                //before making an object of ActiveXObject,
+                //please make sure ActiveX is enabled in your IE browser
+                var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                var objFile = objFSO.getFile(filePath);
+                var fileSize = objFile.size; //size in kb
+                //fileSize = fileSize / 1048576; //size in mb
+            }
+                //for FF, Safari, Opeara and Others
+            else {
+                fileSize = $("#facultyPhoto")[0].files[0].size //size in kb
+                //fileSize = fileSize / 1048576; //size in mb
+            }
+
+            return fileSize;
+        }
+        catch (e) {
+
+            //alert("Error is : " + e);
+        }
+    }
+
+    //get file path from client system
+    function getNameFromPath(strFilepath) {
+        var objRE = new RegExp(/([^\/\\]+)$/);
+        var strName = objRE.exec(strFilepath);
+
+        if (strName == null) {
+            return null;
+        }
+        else {
+            return strName[0];
+        }
+    }
+
+    $(function () {
+        $(".file").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'png':
+                    case 'PNG':
+                    case 'jpeg':
+                    case 'JPEG':
+                    case 'bmp':
+                    case 'BMP':
+                    case 'gif':
+                    case 'GIF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                $(".files > span").text("You can upload only JPEG / JPG / GIF / PNG / BMP files");
+                $(this).val('');
+                return false;
+            }
+            else {
+                var size = GetFileSize(file);
+                if (size > 153600) {
+                    $(".files > span").text("Photo should not exceed 150 KB in Size");
+                    $(this).val('');
+                }
+                else {
+                    $(".files > span").text("");
+                }
+            }
+        });
+    });
+</script>
+
+@using (Html.BeginForm("Create", "CollegeFaculty", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    @Html.HiddenFor(model => model.id)
+    @Html.HiddenFor(model => model.collegeId)
+    @Html.HiddenFor(model => model.facultyTypeId)
+    @Html.HiddenFor(model => model.createdBy)
+    @Html.HiddenFor(model => model.createdOn)
+
+
+    <table class="faculty_table">
+        <tr>
+            <td class="col1" colspan="4">
+                <b>Personal Information</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultyFirstName)
+            </td>
+            <td class="col2 focus">
+                @Html.EditorFor(model => model.facultyFirstName)
+                @Html.ValidationMessageFor(model => model.facultyFirstName)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.facultyLastName)
+            </td>
+            <td class="col4">
+                @Html.EditorFor(model => model.facultyLastName)
+                @Html.ValidationMessageFor(model => model.facultyLastName)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultySurname)
+            </td>
+            <td class="col2">
+                @Html.EditorFor(model => model.facultySurname)
+                @Html.ValidationMessageFor(model => model.facultySurname)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.facultyFatherName)
+            </td>
+            <td class="col4">
+                @Html.EditorFor(model => model.facultyFatherName)
+                @Html.ValidationMessageFor(model => model.facultyFatherName)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultyGenderId)
+            </td>
+            <td class="col2">
+                <label>@Html.RadioButtonFor(model => model.facultyGenderId, 1) Male </label>
+                <label>@Html.RadioButtonFor(model => model.facultyGenderId, 0) Female </label>
+                @Html.ValidationMessageFor(model => model.facultyGenderId)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.dateOfBirth)
+            </td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.dateOfBirth, new { @class = "calendar", style = "", @onblur = "IsValidDate(this,event.keyCode,0,0,0)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Select Date of Birth" })
+                @Html.ValidationMessageFor(model => model.dateOfBirth)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultyPhoto)
+            </td>
+            <td class="col2 files">
+                @Html.TextBoxFor(model => model.facultyPhoto, new { type = "file", @class = "file" })
+                <br />
+                <span style="color: red;"></span>
+
+                @if (@Model.photo != null)
+                {<br />
+                    <img src="@Model.photo.Replace("~", "")" style="width: 100px;" />
+                    @Html.HiddenFor(model => model.photo)
+                }
+            </td>
+            @if (ViewBag.FacultyType == 1)
+            {
+                <td class="col3">@Html.LabelFor(model => model.facultyRecruitedFor)</td>
+                <td class="col4">
+                    @Html.DropDownListFor(model => model.facultyRecruitedFor, new List<SelectListItem>
+                 {
+                        new SelectListItem{ Text="--Select--", Value = "0" },
+                        new SelectListItem{ Text="UG", Value = "UG" },
+                        new SelectListItem{ Text="PG", Value = "PG" }
+                 })
+                </td>
+            }
+            else
+            {
+                <td class="col3"></td>
+                <td class="col4"></td>
+            }
+        </tr>
+    </table>
+    <br />
+    <table class="faculty_table">
+        <tr>
+            <td class="col1" colspan="4">
+                <b>Professional Information</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultyDepartmentId)
+            </td>
+            <td class="col2">
+                @Html.DropDownListFor(model => model.facultyDepartmentId,
+                new SelectList(ViewBag.department as System.Collections.IEnumerable, "id", "departmentName"),
+                "-- Select --", new { id = "department" })
+                @Html.ValidationMessageFor(model => model.facultyDepartmentId)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.facultyCategoryId)
+            </td>
+            <td class="col4">
+                @Html.DropDownListFor(model => model.facultyCategoryId,
+                new SelectList(ViewBag.category as System.Collections.IEnumerable, "id", "facultyCategory"),
+                "-- Select --", new { id = "facultyCategory" })
+                @Html.ValidationMessageFor(model => model.facultyCategoryId)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultyDesignationId)
+            </td>
+            <td class="col2">
+                @Html.DropDownListFor(model => model.facultyDesignationId,
+                new SelectList(ViewBag.designation as System.Collections.IEnumerable, "id", "designation"),
+                "-- Select --", new { id = "designation" })
+                @Html.ValidationMessageFor(model => model.facultyDesignationId)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.facultyOtherDesignation)
+            </td>
+            <td class="col4">
+                @Html.EditorFor(model => model.facultyOtherDesignation)
+                @Html.ValidationMessageFor(model => model.facultyOtherDesignation)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.dateOfAppointment)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.dateOfAppointment, new { @class = "calendar", style = "", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Select Date Of Appointment" })
+                @Html.ValidationMessageFor(model => model.dateOfAppointment)
+            </td>
+            <td class="col3">
+                @*@if (ViewBag.FacultyID > 0)
+                {
+                    @Html.LabelFor(model => model.dateOfResignation)
+                }*@
+            </td>
+            <td class="col4">
+                @*@if (ViewBag.FacultyID > 0)
+                {
+                    @Html.TextBoxFor(model => model.dateOfResignation, new { @class = "calendar", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Select Date Of Resignation" }) <span></span>
+                    @Html.ValidationMessageFor(model => model.dateOfResignation)
+                }*@
+            </td>
+        </tr>
+        @if (ViewBag.FacultyType == 1)
+        {
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.isFacultyRatifiedByJNTU)
+                </td>
+                <td class="col2">
+                    @*@Html.EditorFor(model => model.isFacultyRatifiedByJNTU)*@
+                    <label>@Html.RadioButtonFor(model => model.isFacultyRatifiedByJNTU, true) Yes </label>
+                    <label>@Html.RadioButtonFor(model => model.isFacultyRatifiedByJNTU, false) No</label>
+                    @Html.ValidationMessageFor(model => model.isFacultyRatifiedByJNTU)
+                </td>
+                <td class="col3">
+                    <div class="ratifed">
+                        @Html.LabelFor(model => model.dateOfRatification)
+                        <div style="height: 5px;">
+                        </div>
+                        @Html.LabelFor(model => model.facultyDurationOfRatification) <span>(years)</span>
+                    </div>dateOfResignation
+                </td>
+                <td class="col4">
+                    <div class="ratifed">
+                        @Html.TextBoxFor(model => model.dateOfRatification, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                        @Html.ValidationMessageFor(model => model.dateOfRatification)
+                        <div style="height: 3px;">
+                        </div>
+                        @Html.DropDownListFor(model => model.facultyDurationOfRatification,
+                new SelectList(ViewBag.duration as System.Collections.IEnumerable, "value", "text"),
+                "-- Select --", new { id = "duration", style = "width: 105px;" })
+                        @Html.ValidationMessageFor(model => model.facultyDurationOfRatification)
+
+                    </div>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultyPayScale)
+            </td>
+            <td class="col2">
+                @Html.EditorFor(model => model.facultyPayScale)
+                @Html.ValidationMessageFor(model => model.facultyPayScale)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.facultySalary)
+            </td>
+            <td class="col4">
+                @Html.EditorFor(model => model.facultySalary)
+                @Html.ValidationMessageFor(model => model.facultySalary)
+            </td>
+
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.grossSalary)
+            </td>
+            <td class="col2">
+                @Html.EditorFor(model => model.grossSalary)
+                @Html.ValidationMessageFor(model => model.grossSalary)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.netSalary)
+            </td>
+            <td class="col4">
+                @Html.EditorFor(model => model.netSalary)
+                @Html.ValidationMessageFor(model => model.netSalary)
+            </td>
+
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.salaryAccountNumber)
+            </td>
+            <td class="col2">
+                @Html.EditorFor(model => model.salaryAccountNumber)
+                @Html.ValidationMessageFor(model => model.salaryAccountNumber)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.salaryBankName)
+            </td>
+            <td class="col4">
+                @Html.EditorFor(model => model.salaryBankName)
+                @Html.ValidationMessageFor(model => model.salaryBankName)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.salaryBranchName)
+            </td>
+            <td class="col2">
+                @Html.EditorFor(model => model.salaryBranchName)
+                @Html.ValidationMessageFor(model => model.salaryBranchName)
+            </td>
+            <td class="col3">@Html.LabelFor(model => model.facultyPreviousExperience) (years)</td>
+            <td class="col4">
+                @Html.DropDownListFor(model => model.facultyPreviousExperience,
+                new SelectList(ViewBag.prevExperience as System.Collections.IEnumerable, "value", "text"),
+                "-- Select --", new { id = "prevExperience", style = "width: 105px;" })
+                @Html.ValidationMessageFor(model => model.facultyPreviousExperience)
+            </td>
+        </tr>
+    </table>
+    <br />
+    <table class="faculty_table">
+        <tr>
+            <td class="col1" colspan="4">
+                <b>Contact Information</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultyMobile)
+            </td>
+            <td class="col2">
+                @Html.EditorFor(model => model.facultyMobile)
+                @Html.ValidationMessageFor(model => model.facultyMobile)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.facultyEmail)
+            </td>
+            <td class="col4">
+                @Html.EditorFor(model => model.facultyEmail)
+                @Html.ValidationMessageFor(model => model.facultyEmail)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultyPANNumber)
+            </td>
+            <td class="col2">
+                @Html.EditorFor(model => model.facultyPANNumber)
+                @Html.ValidationMessageFor(model => model.facultyPANNumber)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.facultyAadhaarNumber)
+            </td>
+            <td class="col4">
+                @Html.EditorFor(model => model.facultyAadhaarNumber)
+                @Html.ValidationMessageFor(model => model.facultyAadhaarNumber)
+            </td>
+        </tr>
+    </table>
+    <br />
+    <table class="faculty_table">
+        <tr>
+            <td class="col1" colspan="4">
+                <b>Other Information</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1" colspan="3">
+                @Html.LabelFor(model => model.isRelatedToExamBranch)
+            </td>
+            <td class="col4">
+                @*@Html.EditorFor(model => model.isRelatedToExamBranch)*@
+                <label>@Html.RadioButtonFor(model => model.isRelatedToExamBranch, true) Yes </label>
+                <label>@Html.RadioButtonFor(model => model.isRelatedToExamBranch, false) No</label>
+                @Html.ValidationMessageFor(model => model.isRelatedToExamBranch)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1" colspan="3">
+                @Html.LabelFor(model => model.isRelatedToPlacementCell)
+            </td>
+            <td class="col4">
+                @*@Html.EditorFor(model => model.isRelatedToPlacementCell)*@
+                <label>@Html.RadioButtonFor(model => model.isRelatedToPlacementCell, true) Yes </label>
+                <label>@Html.RadioButtonFor(model => model.isRelatedToPlacementCell, false) No</label>
+                @Html.ValidationMessageFor(model => model.isRelatedToPlacementCell)
+            </td>
+        </tr>
+    </table>
+    <br />
+    <table class="faculty_table" style="display:none;">
+        <tr>
+            <td class="col1" colspan="2">
+                <b>Achievements (if any)</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultyAchievements1) 1
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.facultyAchievements1, new { style = "width: 95%;" })
+                @Html.ValidationMessageFor(model => model.facultyAchievements1)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultyAchievements2) 2
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.facultyAchievements2, new { style = "width: 95%;" })
+                @Html.ValidationMessageFor(model => model.facultyAchievements2)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.facultyAchievements3) 3
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.facultyAchievements3, new { style = "width: 95%;" })
+                @Html.ValidationMessageFor(model => model.facultyAchievements3)
+            </td>
+        </tr>
+    </table>
+    <br />
+    <table class="faculty_table">
+        <tr>
+            <td class="row" colspan="7">
+                <b>Educational Qualifications</b>
+            </td>
+        </tr>
+        <tr>
+            @*<td class="row" style="text-align: center; width: 30px;">S.No</td>*@
+            <td class="row" style="text-align: center; width: 100px;"></td>
+            <td class="row" style="text-align: center; width: 130px;">Course Studied</td>
+            <td class="row" style="text-align: center; width: 90px;">Year of Passing (YYYY)</td>
+            <td class="row" style="text-align: center; width: 70px;">% of Marks / CGPA</td>
+            <td class="row" style="text-align: center; width: 90px;">Division</td>
+            <td class="row" style="text-align: center;">Board/University</td>
+            <td class="row" style="text-align: center; width: 220px;">Place</td>
+        </tr>
+        @for (int i = 0; i < Model.FacultyEducation.Count(); i++)
+        {
+            var style = "alt_row";
+            var year = "yr_" + i;
+            var divs = "division_" + i;
+
+            <tr>
+                @*<td class="@style" style="text-align: center;">@(i + 1).</td>*@
+                <td class="@style" style="text-align: left;">
+                    @Html.DisplayFor(model => model.FacultyEducation[i].educationName)
+                    @Html.HiddenFor(model => model.FacultyEducation[i].educationName)
+                    @Html.HiddenFor(model => model.FacultyEducation[i].educationId)
+                </td>
+                <td class="@style" style="text-align: center;">@Html.TextBoxFor(model => model.FacultyEducation[i].studiedEducation, new { style = "width: 90%" })</td>
+                <td class="@style" style="text-align: center;">
+                    @*@Html.TextBoxFor(model => model.FacultyEducation[i].passedYear, new { style = "width: 85%" })*@
+                    @Html.DropDownListFor(model => model.FacultyEducation[i].passedYear,
+                    new SelectList(ViewBag.years as System.Collections.IEnumerable, "value", "text"),
+                    "-- Select --", new { id = year, style = "width: 100%;" })
+                </td>
+                <td class="@style" style="text-align: center;">@Html.TextBoxFor(model => model.FacultyEducation[i].percentage, new { style = "width: 85%; text-align: center;", Value = Model.FacultyEducation[i].percentage == 0 ? string.Empty : Model.FacultyEducation[i].percentage.ToString() })</td>
+                <td class="@style" style="text-align: center;">
+                    @*@Html.TextBoxFor(model => model.FacultyEducation[i].division, new { style = "width: 85%; text-align: center;" })*@
+                    @Html.DropDownListFor(model => model.FacultyEducation[i].division,
+                    new SelectList(ViewBag.division as System.Collections.IEnumerable, "value", "text"),
+                    "-- Select --", new { id = divs, style = "width: 100%;" })
+                </td>
+                <td class="@style" style="text-align: center;">@Html.TextBoxFor(model => model.FacultyEducation[i].university, new { style = "width: 95%" })</td>
+                <td class="@style" style="text-align: center;">@Html.TextBoxFor(model => model.FacultyEducation[i].place, new { style = "width: 90%" })</td>
+            </tr>
+
+            <script type="text/javascript">
+
+                $(document).ready(function () {
+                    if(@ViewBag.FacultyID > 0)
+                    {
+                        if(@Model.FacultyEducation[i].passedYear > 0)
+                        {
+                            $("#@year").val(@Model.FacultyEducation[i].passedYear);
+                        }
+
+                        if(@Model.FacultyEducation[i].division != null)
+                        {
+                            if(@Model.FacultyEducation[i].division > 0)
+                            {
+                                $("#@divs").val(@Model.FacultyEducation[i].division);
+                            }
+                        }
+                    }
+
+                });
+
+            </script>
+        }
+    </table>
+    <br />
+    if (ViewBag.FacultyType == 1 || ViewBag.FacultyType == 2)
+    {
+
+        <table class="faculty_table">
+            <tr>
+                <td class="row" colspan="7">
+                    @if (ViewBag.FacultyType == 1)
+                    {
+                        <b>Subjects being taught as per college time – table :</b>
+                    }
+                    @if (ViewBag.FacultyType == 2)
+                    {
+                        <b>Labs being conduct as per college time – table :</b>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="row" style="text-align: center; width: 30px;">S.No</td>
+                <td class="row" style="text-align: center; width: 100px;">Degree</td>
+                <td class="row" style="text-align: center; width: 150px;">Department</td>
+                <td class="row" style="text-align: center; width: 150px;">Specialization</td>
+                <td class="row" style="text-align: center; width: 50px;">Shift</td>
+                <td class="row" style="text-align: center;">
+                    @if (ViewBag.FacultyType == 1)
+                    {
+                        <span>Subject Name</span>
+                    }
+                    @if (ViewBag.FacultyType == 2)
+                    {
+                        <span>Lab Name</span>
+                    }
+                </td>
+                <td class="row" style="text-align: center; width: 100px;">Duration (Minutes / week)</td>
+            </tr>
+            @for (int i = 0; i < Model.FacultySubject.Count(); i++)
+            {
+                var style = "alt_row";
+                var deg = "degree_" + i;
+                var dep = "department_" + i; var depName = "depName_" + i;
+                var spec = "specialization_" + i; var specName = "specName_" + i;
+                var shift = "shift_" + i; var shiftName = "shiftName_" + i;
+
+                <tr>
+                    <td class="@style" style="text-align: center;">@(i + 1).</td>
+                    <td class="@style" style="text-align: left;">
+                        @Html.DropDownListFor(model => model.FacultySubject[i].degreeId,
+                    new SelectList(ViewBag.degree as System.Collections.IEnumerable, "degreeId", "degree"),
+                    "-- Select --", new { id = deg, style = "width: 100%;" })
+                    </td>
+                    <td class="@style" style="text-align: center;">
+                        @Html.DropDownListFor(model => model.FacultySubject[i].departmentId,
+                    new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+                    "-- Select --", new { id = dep, style = "width: 100%;" })
+                    </td>
+                    <td class="@style" style="text-align: center;">
+                        @Html.DropDownListFor(model => model.FacultySubject[i].specializationId,
+                    new SelectList(Enumerable.Empty<SelectListItem>(), "id", "specializationName"),
+                    "-- Select --", new { id = spec, style = "width: 100%;" })
+                    </td>
+                    <td class="@style" style="text-align: center;">
+                        @Html.DropDownListFor(model => model.FacultySubject[i].shiftId,
+                    new SelectList(ViewBag.shift as System.Collections.IEnumerable, "id", "shiftName"), null, new { id = shift, style = "width: 100%;" })
+                    </td>
+                    <td class="@style" style="text-align: center;">@Html.TextBoxFor(model => model.FacultySubject[i].subject, new { style = "width: 95%" })</td>
+                    <td class="@style" style="text-align: center;">@Html.TextBoxFor(model => model.FacultySubject[i].duration, new { style = "width: 90%" })</td>
+                </tr>
+
+                <script type="text/javascript">
+
+                    $(document).ready(function () {
+
+                        if(@ViewBag.FacultyID > 0)
+                        {
+                            if(@Model.FacultySubject[i].degreeId != null)
+                            {
+                                $("#@deg").val(@Model.FacultySubject[i].degreeId);
+                            }
+
+                            if(@Model.FacultySubject[i].shiftId > 0)
+                            {
+                                $("#@shift").val(@Model.FacultySubject[i].shiftId);
+                            }
+                        }
+
+                        if ($("#@deg").val() > 0) {
+                            GetDepartments($("#@deg").val());
+                        }
+
+                        $("#@deg").change(function () {
+                            var DegreeID = $(this).val();
+                            GetDepartments(DegreeID);
+                        });
+
+                        if ($("#@dep").val() > 0) {
+                            GetSpecialization($("#@dep").val());
+                        }
+
+                        $("#@dep").change(function () {
+                            var DepartmentID = $(this).val();
+                            GetSpecialization(DepartmentID);
+                        });
+
+                        function GetDepartments(DegreeID) {
+
+                            $.getJSON("/CollegeIntakeProposed/GetCollegeDepartments", { id: DegreeID },
+                                function (DepartmentsData) {
+                                    var select = $("#@dep");
+                                    select.empty();
+                                    select.append($('<option/>', {
+                                        value: '',
+                                        text: '-- Select --'
+                                    }));
+
+                                    if(@ViewBag.FacultyID > 0)
+                                    {
+
+                                        $.each(DepartmentsData, function (index, itemdata) {
+                                            select.append($('<option/>', {
+                                                value: itemdata.Value,
+                                                text: itemdata.Text,
+                                                selected: (itemdata.Value == @Model.FacultySubject[i].departmentId  ? true : false)
+                                            }));
+                                        });
+
+                                    }
+                                    else
+                                    {
+                                        $.each(DepartmentsData, function (index, itemdata) {
+                                            select.append($('<option/>', {
+                                                value: itemdata.Value,
+                                                text: itemdata.Text
+                                            }));
+                                        });
+                                    }
+                                    if ($("#@dep").val() > 0) {
+                                        GetSpecialization($("#@dep").val());
+                                    }
+                                });
+                        }
+
+                        function GetSpecialization(DepartmantID) {
+                            $.getJSON("/CollegeIntakeProposed/GetSpecialization", { id: DepartmantID },
+                                function (Specializationdata) {
+                                    var select = $("#@spec");
+                                    select.empty();
+                                    select.append($('<option/>', {
+                                        value: '',
+                                        text: '-- Select --'
+                                    }));
+                                    if(@ViewBag.FacultyID > 0)
+                                    {
+                                        $.each(Specializationdata, function (index, itemdata) {
+                                            select.append($('<option/>', {
+                                                value: itemdata.Value,
+                                                text: itemdata.Text,
+                                                selected: (itemdata.Value == @Model.FacultySubject[i].specializationId ? true : false)
+                                            }));
+                                        });
+                                    }
+                                    else
+                                    {
+                                        $.each(Specializationdata, function (index, itemdata) {
+                                            select.append($('<option/>', {
+                                                value: itemdata.Value,
+                                                text: itemdata.Text
+                                            }));
+                                        });
+                                    }
+                                });
+                        }
+                    });
+
+                </script>
+            }
+        </table>
+    }
+
+    <div style="line-height: 1.2rem;" class="right_buttons">
+        @Html.HiddenFor(model => model.facultyTypeId, new { Value = ViewBag.FacultyType })
+        @if (ViewBag.FacultyType == 1)
+        {
+            @Html.ActionLink("Back", "Teaching", "Faculty", null, new { @class = "back_button" })
+        }
+        @if (ViewBag.FacultyType == 2)
+        {
+            @Html.ActionLink("Back", "Technical", "Faculty", null, new { @class = "back_button" })
+        }
+        @if (ViewBag.FacultyType == 3)
+        {
+            @Html.ActionLink("Back", "NonTeaching", "Faculty", null, new { @class = "back_button" })
+        }
+
+        <input type="submit" value="Save" class="submit" />
+    </div>
+
+}
+
+

@@ -1,0 +1,186 @@
+﻿@model IList<UAAAS.Controllers.FacultyVerificationController.CollegeFacultyWithIntakeReport>
+    @using UAAAS.Models;
+    @{
+        uaaasDBContext db = new uaaasDBContext();
+        var jntuh_degree = db.jntuh_degree.ToList();
+        ViewBag.Title = "PharmacyFacultyWithIntake";
+        int sno = 1;
+    }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#college').change(function () {
+                var collegeId = $(this).val();
+                //alert(collegeId);
+
+                if ($('#college').val() != '') {
+                    window.location = '/FacultyVerification/PharmacyFacultyWithIntake?collegeId=' + collegeId;
+                }
+                else {
+                    window.location = '/FacultyVerification/PharmacyFacultyWithIntake';
+                }
+            });
+        });
+    </script>
+    <h2>Pharmacy Faculty With Intake</h2>
+    @using (Html.BeginForm())
+    {
+        if (@TempData["Success"] != null)
+        {
+            <div class="success">
+                <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+            </div>
+        }
+        if (TempData["Error"] != null)
+        {
+            <div class="error">
+                <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+            </div>
+        }
+        <table class="faculty_table111">
+            <tr>
+                <td class="col1">
+                    College
+                </td>
+                <td class="col2">
+                    @Html.DropDownList("collegeId", new SelectList(@ViewBag.Colleges, "collegeId", "collegeName"),
+                "--Select--", new { id = "college", @style = "width:95%" })
+                </td>
+                <td class="col3">
+                    @Html.ActionLink("Export", "PharmacyFacultyWithIntake", "FacultyVerification", new { type = "Excel", collegeId = Request.Params["collegeId"] }, new { @class = "create_button" })
+                </td>
+
+            </tr>
+        </table>
+
+        <br />
+        <table style="width: 100%; border: 1px; border-color: red" class="faculty_table">
+            <tr>
+                <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">SNo</th>
+                <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Code</th>
+                <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">College Name</th>
+                <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Department</th>
+                <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Degree</th>
+                <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Specialization</th>
+                <th class="col1" style="text-align: center; vertical-align: top;" colspan="4">Intake</th>
+                <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Total</th>
+                <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Minimum Faculty Requirement Program Wise</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Total Faculty Requirement</th>
+
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Available Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">FalseName Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">FalsePhoto Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">FalsePANNo Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">FalseAadhaarNo Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Certificate(s) Incomplete Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Absent Faculty</th>
+            </tr>
+            <tr>
+                <th class="col1" style="text-align: right; vertical-align: top;">IV Year</th>
+                <th class="col1" style="text-align: right; vertical-align: top;">III Year</th>
+                <th class="col1" style="text-align: right; vertical-align: top;">II Year</th>
+                <th class="col1" style="text-align: right; vertical-align: top;">I Year</th>
+
+
+            </tr>
+            <tbody>
+                @foreach (var collegeId in Model.Select(c => c.collegeId).Distinct().ToList())
+                {
+                    var count = Model.Where(m => m.collegeId == collegeId).Select(m => m).Count();
+                    var list = Model.Where(c => c.collegeId == collegeId).ToList();
+                    var distDeptcount = 1;
+                    var deptloop = 1;
+                    decimal departmentWiseRequiredFaculty = 0;
+
+                    for (int i = 0; i < list.Count(); i++)
+                    {
+
+                        @Html.HiddenFor(m => m[i].id)
+                        @Html.HiddenFor(m => m[i].collegeId)
+                        @Html.HiddenFor(m => m[i].specializationId)
+                        @Html.HiddenFor(m => m[i].shiftId)
+
+                        distDeptcount = list.Where(d => d.Department == list[i].Department).Distinct().Count();
+
+                        int indexnow = list.IndexOf(list[i]);
+
+                        if (indexnow > 0 && list[indexnow].Department != list[indexnow - 1].Department)
+                        {
+                            deptloop = 1;
+                        }
+
+                        departmentWiseRequiredFaculty = list.Where(d => d.Department == list[i].Department).Select(d => d.requiredFaculty).Sum();
+
+
+
+                        if (list.IndexOf(list[i]) == 0)
+                        {
+                            <tr>
+                                <td class="col2" style="text-align: center; vertical-align: top;width:10px" rowspan="@count">@(sno++)</td>
+                                <td class="col2" style="text-align: center; vertical-align: top;width:10px; text-transform: uppercase" rowspan="@count">@list[i].collegeCode</td>
+                                <td class="col2" style="text-align: left; vertical-align: top; text-transform: uppercase" rowspan="@count">@list[i].collegeName</td>
+                                <td class="col2" style="text-align: left; vertical-align: top;" rowspan="@distDeptcount">@list[i].Department</td>
+                                <td class="col2" style="text-align: left; vertical-align: top;">@list[i].Degree</td>
+                                <td class="col2" style="text-align: left; vertical-align: top;">@list[i].Specialization</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake4</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake3</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake2</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake1</td>
+
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].totalIntake</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@Math.Ceiling(list[i].requiredFaculty)</td>
+
+
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@Math.Ceiling(departmentWiseRequiredFaculty)</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].AvailableFaculty</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].FalseNameFaculty</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].FalsePhotoFaculty</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].FalsePANNumberFaculty</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].FalseAadhaarNumberFaculty</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].CertificatesIncompleteFaculty</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].AbsentFaculty</td>
+
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                @if (deptloop == 1)
+                                {
+
+                                    <td class="col2" style="text-align: left; vertical-align: top;" rowspan="@distDeptcount">@list[i].Department</td>
+                                }
+
+                                <td class="col2" style="text-align: left; vertical-align: top;">@list[i].Degree</td>
+                                <td class="col2" style="text-align: left; vertical-align: top;">@list[i].Specialization</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake4</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake3</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake2</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake1</td>
+
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].totalIntake</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@Math.Ceiling(list[i].requiredFaculty)</td>
+
+                                @if (deptloop == 1)
+                                {
+                                    <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@Math.Ceiling(departmentWiseRequiredFaculty)</td>
+                                    <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].AvailableFaculty</td>
+                                    <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].FalseNameFaculty</td>
+                                    <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].FalsePhotoFaculty</td>
+                                    <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].FalsePANNumberFaculty</td>
+                                    <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].FalseAadhaarNumberFaculty</td>
+                                    <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].CertificatesIncompleteFaculty</td>
+                                    <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].AbsentFaculty</td>
+                                }
+
+                            </tr>
+
+                        }
+                        deptloop++;
+
+                    }
+
+                }
+            </tbody>
+        </table>
+    }
+

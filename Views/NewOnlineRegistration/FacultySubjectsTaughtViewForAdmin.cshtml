@@ -1,0 +1,214 @@
+﻿@model UAAAS.Controllers.OnlineRegistration.FacultySubjectsTaught
+@{
+    ViewBag.Title = "FacultySubjectsTaughtViewForAdmin";
+    var departmentsList = Model.Subjects;
+    int count = 1;
+}
+<h2>Faculty SubjectsTaughtView For Admin</h2>
+<style>
+    .ui-autocomplete {
+        height: 350px;
+        overflow: scroll;
+    }
+</style>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var availableTags = @Html.Raw(Json.Encode(Model.Subjects));
+        var availableTags2 = @Html.Raw(Json.Encode(Model.TestingSubjects));
+
+        function split(val) {
+            //  debugger;
+            return val.split(/,\s*/);
+        }
+        function extractLast(term) {
+            //debugger;
+            return split(term).pop();
+        }
+
+        $("#facultySubjectsTaught").on("keydown", function (event) {
+            //debugger;
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            }
+            else if(event.keyCode == 188)
+            {
+                return false;
+            }
+        })
+          .autocomplete({
+              minLength: 0,
+              source: function (request, response) {
+                  // delegate back to autocomplete, but extract the last term
+                  var results = $.ui.autocomplete.filter(availableTags, extractLast(request.term));
+                  var results2 = $.ui.autocomplete.filter(availableTags2, extractLast(request.term));
+                  //Merge it with old source
+                  $.merge(results, results2);
+                  //  response(results.slice(0, 15));
+                  response(results);
+              },
+              focus: function () {
+                  // prevent value inserted on focus
+                  return false;
+              },
+              select: function (event, ui) {
+                  var terms = split(this.value);
+                  if (terms.length <= 1) {
+                      // remove the current input
+                      terms.pop();
+                      // add the selected item
+                      terms.push(ui.item.value);
+                      // add placeholder to get the comma-and-space at the end
+                      terms.push("");
+                      this.value = terms.join("");
+                      //this.value = terms;
+                      $('#facultySubjectsTaught').focus();
+
+                      return false;
+                  }
+                  else {
+                      var last = terms.pop();
+                      $(this).val(this.value.substr(0, this.value.length - last.length - 2)); // removes text from input
+                      $(this).effect("highlight", {}, 1000);
+                      $(this).addClass("red");
+                      $("#warnings").html("<span style='color:red;'>Max people reached</span>");
+                      return false;
+                  }
+              }
+          });
+
+        $(".EditDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+
+            $("#dialog-edit").dialog({
+                title: 'Edit SubjectsTaught',
+                autoOpen: false,
+                resizable: false,
+                height: 320,
+                width: 540,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/NewOnlineRegistration/FacultySubjectsTaught";
+                }
+
+            });
+
+            $("#dialog-edit").dialog('open');
+            return false;
+        });
+
+    });
+</script>
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success">
+        <p style="text-align:center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+    </div>
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div>
+}
+
+<div class="note" style="display:none;">
+    <table>
+        <tr>
+            <td class="td1">
+                <b>NOTE : </b>
+            </td>
+            <td class="td2">
+                <span>&nbsp;&nbsp;&nbsp;<b>The faculty can add all the subject taught by submitting one by one.</b></span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+@using (Html.BeginForm())
+{
+    <br />
+    <table width="100%" style="display:none;">
+        <tr>
+            <td class="col1" style="width:15%;height:18px;">Registration Number</td>
+
+            <td class="col2" style="width:35%;height:18px;">
+                &nbsp; @Html.DisplayFor(model => model.RegistrationNumber)
+                @Html.HiddenFor(model => model.RegistrationNumber)
+                @Html.HiddenFor(model => model.facultyId)
+            </td>
+            <td class="col3" style="width:15%;height:18px;">Faculty Name</td>
+
+            <td class="col4" style="width:35%;height:18px;">
+                &nbsp; @Html.DisplayFor(model => model.Name)
+                @Html.HiddenFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1" style="width:20%;height:18px;">
+                Subjects Taught
+            </td>
+
+            <td class="col2" style="width:30%;height:35px;">
+                <div class="slider">
+                    @Html.TextBoxFor(model => model.facultySubjectsTaught, new { @class = "subjectstaught required", @style = "width:85%;height:22px;text-transform:uppercase", autofocus = "" })
+                    @Html.ValidationMessageFor(model => model.facultySubjectsTaught)
+                </div>
+
+            </td>
+            <td class="col3" style="width:20%;height:18px;">
+                No.of times subjects taught
+            </td>
+
+            <td class="col4" style="width:30%;height:35px;">
+                @Html.TextBoxFor(model => model.NoOfTimesSubjectsTaught, new { @class = "required", @style = "width:70%;height:22px;text-transform:uppercase", autofocus = "" })
+                @Html.ValidationMessageFor(model => model.NoOfTimesSubjectsTaught)
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <input type="submit" value="Submit" id="btnsave" style="float:right;" />
+            </td>
+        </tr>
+    </table>
+    
+    <table width="100%" border="0" class="webGrid">
+        <tr style="background-color:#C1D4E6;">
+            <th>S.No</th>
+            <th>Subjects taught</th>
+            <th>No. Of times subjects taught</th>
+            @*<th>Edit</th>*@
+        </tr>
+        @if (Model.SubjectTaughtList != null)
+        {
+            foreach (var item in Model.SubjectTaughtList)
+            {
+                <tr style="background-color:#FCF1D1;">
+                    <td>@(count++)</td>
+                    <td>@item.facultySubjectsTaught</td>
+                    <td>@item.NoOfTimesSubjectsTaught</td>
+                    @*<td>
+                        <a href="/NewOnlineRegistration/EditFacultySubjectsTaught?id=@item.Id" class="EditDialog edit_button" style="text-align:center"><span>Edit</span></a>
+                    </td>*@
+                </tr>
+            }
+        }
+    </table>
+
+}
+<div id="dialog-edit" style="display: none"></div>

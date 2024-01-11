@@ -1,0 +1,159 @@
+﻿@model List<UAAAS.Models.EditFields>
+@{
+    ViewBag.Title = "RequestsList";
+    int count = 1;
+    var fid = Model.Select(s => s.Id).FirstOrDefault();
+}
+
+<h2>Request Fields List</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success" style="height:15px;">
+        <p style="text-align: center;font-weight: bold"><span style="color:green;font-weight:bold;">Success : </span>@TempData["SUCCESS"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;"><span style="color:red;font-weight:bold;">Error : </span>@TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+<div style="float:right;">
+    @if (TempData["EditFieldsLink"] == "true")
+    {
+        @Html.ActionLink("Edit", "EditfieldsRequests", "NewOnlineRegistration", new { fid = UAAAS.Models.Utilities.EncryptString(@fid.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "create_button" })
+    }
+    <br/><br />
+</div>
+
+<table id="example" class="display" style="width: 100%;">
+    <thead>
+        <tr>
+            <th style="width: 30px; text-align: center;">
+                S.No
+            </th>
+            <th style="width: 80px; text-align: center;">
+                Request Field
+            </th>
+            <th style="text-align: left;width: 200px;">
+                Request Reason
+            </th>
+            <th style="text-align: left;width: 50px;">
+                Approved Status
+            </th>
+            <th style="text-align: left;width: 100px;">
+                Request Date
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(count++)</td>
+                <td>
+                    @item.Field
+                </td>
+                <td>
+                    @item.requestReason
+                </td>
+                <td>
+                    @if (item.isApproved == 0)
+                    {
+                        <span>Pending</span>
+                    }
+                    else if (item.isApproved == 1)
+                    {
+                        <span>Approved</span>
+                    }
+                    else if (item.isApproved == 2)
+                    {
+                        <span>Not Approved</span>
+                    }
+                </td>
+                <td>
+                    @item.createddate
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>
+                <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th width="120px">
+                <input type="text" id="i-1" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+        </tr>
+    </tfoot>
+</table>
+

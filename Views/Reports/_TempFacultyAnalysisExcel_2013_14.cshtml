@@ -1,0 +1,55 @@
+﻿@model IList<UAAAS.Models.TempFacultyAnalysis_2013_14>
+@{
+    int sno = 1;
+    ViewBag.Title = "Faculty Analasys";
+   
+}
+
+<table style="width:100%" border="1px">
+    <thead>
+        <tr>
+            <th style="text-align: center; vertical-align: top;background-color:yellow">S.No</th>
+            <th style="text-align: center; vertical-align: top;background-color:yellow">Code</th>
+            <th style="text-align: center; vertical-align: top;background-color:yellow">College Name</th>
+            <th style="text-align: left; vertical-align: top;background-color:yellow">Name</th>
+            <th style="text-align: left; vertical-align: top;background-color:yellow">Department</th>
+            <th style="text-align: left; vertical-align: top;background-color:yellow">Designation</th>
+            <th style="text-align: left; vertical-align: top;background-color:yellow">Qualification</th>            
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.OrderBy(f => f.Name).ToList())
+        { 
+            <tr>
+                <td style="text-align: center; vertical-align: top;">
+                    @(sno++)
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    @item.CollegeCode
+                </td>
+                  <td style="text-align: center; vertical-align: top;">
+                    @item.CollegeName
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.Name
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.Department
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.Designation
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.Qualification
+                </td>            
+
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+
+

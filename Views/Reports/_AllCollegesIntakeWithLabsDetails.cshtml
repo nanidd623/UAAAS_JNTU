@@ -1,0 +1,233 @@
+﻿@model UAAAS.Models.Lab
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@using (Html.BeginForm("AddEditRecord", "AllCollegesIntake"))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 550px; margin: 0 auto;">
+            <p>Please select your courses in "College Information" page before filling up this page.</p>
+        </div>
+    }
+    <div class="details_table">
+        @if (ViewBag.IsUpdate == true)
+        {
+            @Html.HiddenFor(model => model.id)
+            @Html.HiddenFor(model => model.createdBy)
+            @Html.HiddenFor(model => model.createdOn)
+            @Html.HiddenFor(model => model.ViewEquipmentPhoto)
+
+        }
+        @Html.HiddenFor(model => model.specializationId)
+        @Html.HiddenFor(model => model.Semester)
+        @Html.HiddenFor(model => model.year)
+        @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.degreeId)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.DisplayFor(model => model.degree)
+            @Html.ValidationMessageFor(model => model.degreeId)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.departmentId)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.DisplayFor(model => model.department)
+        </div>
+
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.specializationId)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.DisplayFor(model => model.specializationName)
+        </div>
+        @if (Model.degree == "B.Tech" || Model.degree == "B.Pharmacy")
+        {
+            <div class="editor-label" style="width: 250px">
+                @Html.LabelFor(model => model.yearInDegreeId)
+            </div>
+            <div class="editor-field" style="width: 420px">
+                @Html.DisplayFor(model => model.year)
+            </div>
+            <div class="editor-label" style="width: 250px">
+                @Html.LabelFor(model => model.Semester)
+            </div>
+            <div class="editor-field" style="width: 420px">
+                @Html.DisplayFor(model => model.Semester)
+            </div>
+        }
+        else
+        {
+            @Html.HiddenFor(model => model.year)
+            @Html.HiddenFor(model => model.Semester)
+        }
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.LabName)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @if (Model.LabName != null && Model.LabName != "")
+            {
+                @Html.DisplayFor(model => model.LabName)
+                @Html.HiddenFor(model => model.LabName)
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.LabName, new { @placeholder = "Lab Name", @maxlength = "50" })
+            }
+
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.AvailableArea)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.AvailableArea, new { @placeholder = "Foor Area" })
+            @Html.ValidationMessageFor(model => model.AvailableArea)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.RoomNumber)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.RoomNumber, new { @placeholder = "Room No", @maxlength = "25" })
+            @Html.ValidationMessageFor(model => model.RoomNumber)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.EquipmentID)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @if (Model.EquipmentName != "" && Model.EquipmentName != null)
+            {
+                @Html.DisplayFor(model => model.EquipmentName)
+                @Html.HiddenFor(model => model.EquipmentName)
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.EquipmentName, new { @Value = Model.EquipmentName, @placeholder = "Equipment Name", @maxlength = "50", @class = "required", @id = "eqpname", @title = "We do not have Equipment Names for the selected Lab, please specify your own 'Name of the Equipment' in the textbox shown" })
+            }
+            @Html.HiddenFor(model => model.EquipmentNo)
+            @Html.HiddenFor(model => model.EquipmentID)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.Make)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.Make, new { @placeholder = "Make", @maxlength = "50" })
+            @Html.ValidationMessageFor(model => model.Make)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.Model)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.Model, new { @placeholder = "Model", @maxlength = "50" })
+            @Html.ValidationMessageFor(model => model.Model)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.EquipmentUniqueID)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.EquipmentUniqueID, new { @placeholder = "Unique ID", @maxlength = "50" })
+            @Html.ValidationMessageFor(model => model.EquipmentUniqueID)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.AvailableUnits)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.AvailableUnits, new { @placeholder = "AvailableUnits" })
+            @Html.ValidationMessageFor(model => model.AvailableUnits)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @*@Html.LabelFor(model => model.EquipmentDateOfPurchasing )*@
+            @Html.Label("Date of Purchase Invoice(dd/MM/yyyy)")
+        </div>
+        <div class="editor-field" style="width: 420px;height:40px;">
+
+
+            @Html.TextBoxFor(model => model.EquipmentDateOfPurchasing1, "{0:dd/MM/yyyy}", new { @class = "calendar1 required", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Date Of Payment" })
+            @Html.ValidationMessageFor(model => model.EquipmentDateOfPurchasing1)
+
+        </div>
+        <div class="editor-label" style="width: 250px; height: 40px;">
+            @*@Html.LabelFor(model => model.EquipmentDateOfPurchasing )*@
+            @Html.Label("Date of Delivery Challan(dd/MM/yyyy)")
+        </div>
+        <div class="editor-field" style="width: 420px; height: 40px;">
+            @Html.TextBoxFor(model => model.DelivaryChalanaDate1, "{0:dd/MM/yyyy}", new { @class = "calendar1 required", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Date of Delivery Challan" })
+            @Html.ValidationMessageFor(model => model.DelivaryChalanaDate1)
+        </div>
+        <div class="editor-label" style="width: 250px">
+
+            @Html.Label("NO PI Doc")
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.CheckBoxFor(model => model.NoPIDoc)
+        </div>
+        <div class="editor-label" style="width: 250px">
+
+            @Html.Label("NO Bank Statement")
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.CheckBoxFor(model => model.NoDCDoc)
+        </div>
+        <div class="editor-label" style="width: 252px; ">
+            @*@Html.LabelFor(model => model.EquipmentPhoto)*@
+
+            @Html.Label("Equipment Photo ")
+
+        </div>
+        <div class="editor-field files" style="width: 397px;height: 57px">
+
+            @if (@Html.DisplayFor(model => model.ViewEquipmentPhoto) != null && @Html.DisplayFor(model => model.ViewEquipmentPhoto).ToString() != "")
+            {
+                @Html.HiddenFor(model => model.ViewEquipmentPhoto)
+                <img src="../Content/Upload/EquipmentsPhotos/@Html.DisplayFor(model => model.ViewEquipmentPhoto)" style="height: 50px;" />
+            }
+        </div>
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.createdBy)
+        <div style="text-align: center">
+            <p>
+                @if (ViewBag.IsUpdate == true)
+                {
+                    <input type="submit" value="Update" id="btnUpdate" name="cmd" class="submit" />
+                }
+                else
+                {
+                    <input type="submit" value="Save" id="btnSave" name="cmd" class="submit" />
+                }
+            </p>
+        </div>
+    </div>
+
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".submit").click(function () {
+
+            if ($("#eqpname").val() == '') {
+
+                $("#eqpname").addClass("required");
+            }
+            else {
+                $("#eqpname").removeClass("required");
+            }
+        });
+
+    });
+
+</script>
+

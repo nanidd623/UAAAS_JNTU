@@ -1,0 +1,90 @@
+﻿@model UAAAS.Models.DataSubmissionDate
+@{
+    ViewBag.Title = "College Data Submission Permission";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>College Data Submission Permission</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+     if (TempData["Error"] != null)
+        {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+        }
+        if (TempData["Success"] != null)
+        {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+        }
+     <table class="four_columns">       
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.CollegeName)
+            </td>
+            <td class="col2" colspan="4">
+                @Html.TextBoxFor(model => model.CollegeName, new { style = "width:90%" })                
+            </td>
+           
+        </tr>
+         
+           <tr>
+                <td class="col1">
+                @Html.LabelFor(model => model.CollegeCode)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.CollegeCode)                
+            </td>
+            <td class="col3">
+               <span>Status</span>
+            </td>
+            <td class="col4">
+              
+            <label>@Html.RadioButtonFor(model => model.EditStatus, true, new { @id = "EditStatustrue" }) Yes</label>
+            <label>@Html.RadioButtonFor(model => model.EditStatus, false,new { @id = "EditStatusfalse" }) No</label>         
+            </td>
+           
+                @Html.HiddenFor(model => model.CollegeId)
+                  @Html.HiddenFor(model => model.CreatedBy)      
+           
+                @Html.HiddenFor(model => model.IsCollegeRemarks) 
+                  @Html.HiddenFor(model => model.CreatedOn)               
+           
+        </tr>
+           <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.FromDate)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.strFromDate)   <span>(DD/MM/YYYY)</span>             
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.ToDate)
+            </td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.strToDate)      <span>(DD/MM/YYYY)</span>            
+            </td>
+        </tr>
+         
+          <tr>
+            <td class="col1">
+                <span>Remarks</span>
+            </td>
+            <td class="col2" colspan="3">
+                @Html.TextAreaFor(model => model.CollegeEditRemarks)                
+            </td>           
+        </tr>
+</table>
+    <div style="line-height: 1.2rem;" class="right_buttons">
+    @Html.ActionLink("Back to List", "Index", "Colleges", new {@style="background-color: #024b74;padding: 2px 15px;border: 0px solid #f49820;color: #ffffff;margin: 10px 0;" })
+    @*<input type="submit" value="Save" />*@
+         <input type="submit" value="Edit Permission For Single College" name="cmd"  />
+        <input type="submit" value="Edit Permission For All Colleges" name="cmd" style="background-color: red" onclick="return confirm('Are you sure to give permission for all colleges to upload data?');" />
+</div>  
+}
+

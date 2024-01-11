@@ -1,0 +1,101 @@
+﻿@model List<UAAAS.Controllers.AntiRaggingCommitteDetails>
+
+@using (Html.BeginForm())
+{
+    int count = 1;
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    S.No
+                </th>
+               
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Code
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Name
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Commite
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Complaints
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    int cmtcount = 1;
+                    int comtcount = 1;
+                    <tr>
+                        <td style="text-align: left; vertical-align: top">@(count++)</td>
+                        <td style="text-align: left;vertical-align: top">@item.CollegeCode</td>
+                        <td style="text-align: left; vertical-align: top">@item.CollegeName</td>
+                        <td style="text-align: left;">
+                            <table border="1" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center; background-color: yellow; vertical-align: top">
+                                            S.No
+                                        </th>
+                                        <th style="text-align: center; background-color: yellow; vertical-align: top">
+                                            Name
+                                        </th>
+                                        <th style="text-align: center; background-color: yellow; vertical-align: top">
+                                            Designation
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var commite in item.AntiRaggingCommitteeclgwise.Where(s => s.collegeId == item.collegeId).Select(s => s).ToList())
+                                    {
+                                        <tr>
+                                        <td style="text-align: left;">@(cmtcount++)</td>
+                                        
+                                    <td style="text-align: left;">@commite.memberName</td>
+                                <td style="text-align: left;">@commite.designationName</td>
+                                </tr>
+                                    }
+                              </tbody>
+                   </table>
+                        </td>
+                        <td style="text-align: left;">
+                            <table border="1" style="width: 100%">
+                                
+                                <thead>
+                                <tr>
+                                    @*<th style="text-align: center; background-color: yellow; vertical-align: top">
+                                            S.No
+                                       </th>*@
+                                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                                        Complaint
+                                    </th>
+                                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                                        Action Taken
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var Complaint in item.AntiRaggingComplaintsclgwise.Where(s => s.collegeId == item.collegeId).Select(s => s).ToList())
+                                {
+                                    <tr>
+                                        
+                                        <td style="text-align: left;">@Complaint.complaintReceived</td>
+                                        <td style="text-align: left;">@Complaint.actionsTaken</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </td>
+                        
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+}

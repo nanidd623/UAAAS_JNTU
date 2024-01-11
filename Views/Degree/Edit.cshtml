@@ -1,0 +1,128 @@
+﻿@model UAAAS.Models.jntuh_degree
+
+@{
+    ViewBag.Title = "Edit Degree";
+}
+
+<h2>Edit Degree</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    <div class="details_table">
+
+        @Html.HiddenFor(model => model.id)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.degree)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.degree)
+            @Html.ValidationMessageFor(model => model.degree)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.degreeTypeId, "jntuh_degree_type")
+        </div>
+        <div class="editor-field">
+           @* @Html.DropDownList("degreeTypeId", String.Empty)*@
+            @Html.DropDownListFor(model => model.degreeTypeId,
+            new SelectList(ViewBag.DegreeType as System.Collections.IEnumerable, "id", "degreeType"),
+            "-- Select --", new { id = "DegreeType" })
+            @Html.ValidationMessageFor(model => model.degreeTypeId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.degreeDuration)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.degreeDuration)
+            @Html.ValidationMessageFor(model => model.degreeDuration)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.degreeDescription)
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.degreeDescription)
+            @Html.ValidationMessageFor(model => model.degreeDescription)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.isActive)
+        </div>
+        <div class="editor-field">
+           @* @Html.EditorFor(model => model.isActive)*@
+             <label>@Html.RadioButtonFor(model => model.isActive, true) Active</label>
+            <label>@Html.RadioButtonFor(model => model.isActive, false) Inactive</label>
+            @Html.ValidationMessageFor(model => model.isActive)
+        </div>
+         @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.createdBy)
+
+        @Html.HiddenFor(model => model.updatedOn, new { Value = DateTime.Now })
+        @Html.HiddenFor(model => model.updatedBy, new { Value = Convert.ToInt32(Membership.GetUser(HttpContext.Current.User.Identity.Name).ProviderUserKey) })
+       @* <div class="editor-label">
+            @Html.LabelFor(model => model.createdOn)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.createdOn)
+            @Html.ValidationMessageFor(model => model.createdOn)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.createdBy, "my_aspnet_users")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("createdBy", String.Empty)
+            @Html.ValidationMessageFor(model => model.createdBy)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.updatedOn)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.updatedOn)
+            @Html.ValidationMessageFor(model => model.updatedOn)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.updatedBy, "my_aspnet_users1")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("updatedBy", String.Empty)
+            @Html.ValidationMessageFor(model => model.updatedBy)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>*@
+         <div class="editor-label last-row">
+            &nbsp;
+        </div>
+        <div class="editor-field last-row">
+            <p>
+                @Html.ActionLink("Back", "Index", null, new { @class = "back_button" })
+                <input type="submit" value="Save" />
+            </p>
+        </div>
+  </div>
+}
+
+@*<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@

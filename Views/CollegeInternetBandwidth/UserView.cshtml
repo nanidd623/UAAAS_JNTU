@@ -1,0 +1,49 @@
+﻿@model IList<UAAAS.Models.InternetBandwidthDetails>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "College Internet Bandwidth";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+}
+<h2>College Internet Bandwidth</h2>
+@using (Html.BeginForm())
+{
+    if (ViewBag.Norecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+    }
+    else
+    {
+    <table class="four_columns" style="width: 100%;">
+        <tr style="font-weight: bold;">
+            <td style="text-align: left;width:30%" class="col11">Degree</td>
+            <td style="text-align: center;width:35%" class="col11">Total Intake</td>
+            <td style="text-align: center;width:35%" class="col11">Available Internet Speed (Mbps)</td>
+        </tr>
+        @for (int i = 0; i < ViewBag.Count; i++)
+        {
+            <tr>
+                <td style="text-align: left;" class="col21">
+                    @Html.LabelFor(m => m[i].degree, Model[i].degree == null ? string.Empty : Model[i].degree.ToString())
+                    @Html.HiddenFor(m => m[i].degreeId)
+                </td>
+                <td style="text-align: center;" class="col21">
+                    @Html.LabelFor(m => m[i].totalIntake, Model[i].totalIntake == 0 ? "0" : Model[i].totalIntake.ToString())
+                    @Html.HiddenFor(m => m[i].totalIntake)
+                </td>
+                <td style="text-align: center;" class="col21 focus">
+                    @if (ViewBag.Update == true)
+                    {
+                        @Html.DisplayFor(m => m[i].availableInternetSpeed, new { Value = Model[i].availableInternetSpeed == 0 ? "0" : Model[i].availableInternetSpeed.ToString(), style = "text-align: center;" })
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(m => m[i].availableInternetSpeed, new { Value = Model[i].availableInternetSpeed == 0 ? string.Empty : Model[i].availableInternetSpeed.ToString(), style = "text-align: center;" })
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    }
+}

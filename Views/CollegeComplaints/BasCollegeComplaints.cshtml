@@ -1,0 +1,274 @@
+﻿@model UAAAS.Controllers.Bascomplaints
+@using UAAAS.Models;
+@{
+
+    ViewBag.Title = "BasCollegeComplaints";
+
+}
+
+<h2>BasCollegeComplaints</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+<style>
+    /*.col2, .col4 {
+            width: 10px;
+        }*/
+    b {
+        font-weight: normal;
+    }
+
+    .faculty_table {
+        width: 100%;
+    }
+
+    tbody tr td:nth-child(5).col1 {
+        width: 25%;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+
+        $("#complaintsupportingdoc").change(function () {
+            debugger;
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+
+                    case 'pdf':
+                    case 'PDF':
+
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            function GetFileSize(fileid, title) {
+
+                try {
+                    var fileSize = 0;
+                    //for IE
+                    if ($.browser.msie) {
+                        //before making an object of ActiveXObject,
+                        //please make sure ActiveX is enabled in your IE browser
+                        var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                        var filePath = $("#" + fileid)[0].value;
+                        var objFile = objFSO.getFile(filePath);
+                        var fileSize = objFile.size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+                        //for FF, Safari, Opeara and Others
+                    else {
+                        fileSize = $("#" + title)[0].files[0].size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+
+                    return fileSize;
+                } catch (e) {
+
+                    //alert("Error is : " + e);
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF file");
+                //$(".SelectionCommitteeProceedingsDocument > span").text("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "complaintsupportingdoc");
+                size = size / 1048576;
+                if (size > 1) {
+                    alert("Document should not exceed 1 MB in Size");
+                    //$(".SelectionCommitteeProceedingsDocument > span").text("Document should not exceed 1 MB in Size");
+                    $(this).val('');
+                } else {
+
+                    $(".complaintsupportingdoc > span").text("");
+                }
+            }
+
+        });
+
+
+        $('#replaystatus').change(function () {
+
+            if (this.checked) {
+                $("#replaydate").addClass("required");
+            } else {
+                $("#replaydate").removeClass("required");
+            }
+        });
+
+        $('#complainttype').change(function () {
+
+            debugger;
+            var value = $(this).val();
+            if (value == "3") {
+               
+                $('#regname').text("HallTicket Number");
+                $("#regnum").addClass("required");
+              
+            }
+           else if(value == "2") {
+               $('#regname').text("Registration Number");
+               $("#regnum").addClass("required");
+            
+           }
+            else
+           {
+               $('#regname').text("Registration Number");
+               $("#regnum").removeClass("required");
+           }
+           
+        });
+    });
+
+</script>
+<div id="div_print">
+
+    @using (Html.BeginForm("BasCollegeComplaints", "CollegeComplaints", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+
+        <div>
+            <table style="width: 100%">
+                <tr>
+                    <td style="width: 100%">
+                        <table class="faculty_table" id="information">
+
+                            <tr>
+                                <td class="col1" style="font-weight: bold">
+                                    @Html.Label("Registration No.", "College Name")
+                                </td>
+                                <td class="col2">
+                                    <span style="text-transform: uppercase; font-weight: bold;">@Html.DisplayFor(model => model.collegeName)&nbsp;(@Html.DisplayFor(model => model.collegeCode))</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+
+                </tr>
+            </table>
+
+        </div>
+        <br />
+        @*<table style="width:100%" class="faculty_table"></table>*@
+        <table style="width: 100%" class="faculty_table">
+
+
+            @*<td class="col1">
+                    <b>Absent</b>
+                </td>
+                <td class="col2">
+                    @Html.CheckBoxFor(model => model.Absent)
+                </td>*@
+            @Html.HiddenFor(model => model.collegeid)
+            @Html.HiddenFor(model => model.collegeCode)
+            @Html.HiddenFor(model => model.collegeName)
+
+            <tr>
+                <td class="col1" style="width: 20%">
+                    <b><span>RequestGiveBy</span></b>
+
+                </td>
+                <td class="col2" style="width: 20%">
+                    @Html.DropDownListFor(model => model.complainttype, new SelectList(ViewBag.Complaints as System.Collections.IEnumerable, "Value", "Text"), "-Select-")
+
+                </td>
+                <td class="col1" style="width: 20%">
+               <span id="regname">Registration number</span>
+
+                </td>
+                <td class="col2" style="width: 20%">
+                    @Html.TextBoxFor(model => model.regnum, new { @class = "" })
+                </td>
+
+
+            </tr>
+
+            <tr>
+                <td class="col1" style="width: 20%">
+                    <b><span>Complaint</span></b>
+
+                </td>
+                <td class="col2" style="width: 20%">
+                    @Html.TextAreaFor(model => model.complaint, new { @maxlength = "500", @class = "" })
+                </td>
+                <td class="col1" style="width: 20%">
+                    <b><span>Complaint Date</span></b>
+
+                </td>
+                <td class="col2" style="width: 20%">
+                    @Html.TextBoxFor(model => model.complaintdate, new { @class = "calendar", @placeholder = "DD/MM/YYYY" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="width: 20%">
+                    <b><span>Replay Status</span></b>
+                </td>
+                <td class="col2" style="width: 20%">
+                    @Html.CheckBoxFor(model => model.replaystatus)
+                </td>
+                <td class="col1" style="width: 20%">
+                    <b><span>Replay Status Date</span></b>
+                </td>
+                <td class="col2" style="width: 20%">
+                    @Html.TextBoxFor(model => model.replaydate, new { @class = "calendar", @placeholder = "DD/MM/YYYY" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="width: 20%">
+                    <b><span>Inward number</span></b>
+                </td>
+                <td class="col2" style="width: 20%">
+                    @Html.TextBoxFor(model => model.complaintid)
+                </td>
+                <td class="col1" style="width: 20%">
+                    <b><span>Complaint document (PDF)</span></b>
+                </td>
+                <td class="col2" style="width: 20%">
+                    @Html.TextBoxFor(model => model.complaintsupportingdoc, new { type = "file", @class = "required", id = "complaintsupportingdoc" })
+                    @Html.ValidationMessageFor(model => model.complaintsupportingdoc)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br />
+                </td>
+                <td>
+                    <br />
+                </td>
+
+            </tr>
+        </table>
+
+        <table style="width: 100%" class="faculty_table">
+            <tr>
+                <td colspan="4" style="text-align: right">
+
+                    <input type="submit" value="Save" id="btnSave" name="cmd" class="btnclass" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>

@@ -1,0 +1,320 @@
+﻿@model UAAAS.Models.CollegePlayground
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Sports Facilities";
+}
+
+
+
+@if (ViewBag.IsEditable == true)
+{
+    <h2>College Sports Facilities</h2>
+    <p class="create_link_right">
+        @Html.ActionLink("Edit", "Edit", "CollegeLibrary", new { @class = "create_button" /* id=Model.PrimaryKey */ })
+    </p>
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".view_hide").show();
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Sports',
+            autoOpen: false,
+            resizable: false,
+            height: 180,
+            width: 450,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Sports/Games Details',
+                autoOpen: false,
+                resizable: false,
+                height: 250,
+                width: 450,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+
+</script>
+<div id="div_print">
+    @if (ViewBag.IsEditable == false)
+    {
+        <h2>College Sports Facilities</h2>
+    }
+    @using (Html.BeginForm())
+    {
+        int count = 0;     
+        <table class="four_columns" style="width: 100%;">
+            <tr>
+                <td class="col11" colspan="4">
+                    <b>Sports Types:</b>
+                </td>
+            </tr>
+            <tr style="font-weight: bold;">
+                <td style="text-align: center; width: 50px;" class="col11">S.No</td>
+                <td style="text-align: left; width: 250px;" class="col11">Sports Type</td>
+                <td style="text-align: left;" class="col11">Sports Facility</td>
+                <td style="text-align: left;" class="col11 view_hide"></td>
+            </tr>
+
+            @foreach (var item in ViewBag.Games)
+            {                
+                <tr>
+                    <td style="text-align: center;" class="col21">
+                        @(count = count + 1)
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.sportsType != null)
+                        {
+                            <label>@item.sportsType</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.sportsFacility != null)
+                        {
+                            <label>@item.sportsFacility</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="width: 20px; text-align: center;" class="col21 view_hide">
+                        @Html.ActionLink("Details", "Details", "CollegeSports", new { id = item.id }, new { @class = "viewDialog view_button" })
+                    </td>
+                </tr>
+            }
+        </table>
+        
+            if (ViewBag.Count == 0)
+            {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+            }    
+        <div id="dialog-view" style="display: none">
+        </div>
+        <br />
+            if (ViewBag.Norecords == true)
+            {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No Data found</p>
+        </div>
+            }
+            else
+            {
+        <table class="four_columns">
+            <tr>
+                <td class="col11" colspan="2">
+                    <b>Other Desirable Requirements:</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.totalPlaygrounds)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(model => model.totalPlaygrounds, new { @Value = Model.totalPlaygrounds == 0 ? "" : Model.totalPlaygrounds.ToString() })
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.PlayGroundTypeId)
+                </td>
+                <td class="col21">
+                    @Html.HiddenFor(model => model.PlayGroundTypeId)
+                    @foreach (var item in Model.GroundTypes)
+                    {
+                        var optionValue = "PlayGroundType_" + item.id;
+                        var selectValue = item.Checked;
+                        if (item.id == "1" && item.Checked == 1)
+                        {
+                        <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                        if (item.id == "2" && item.Checked == 1)
+                        {
+                        <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                        if (item.id == "3" && item.Checked == 1)
+                        {
+                        <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                        if (item.id == "4" && item.Checked == 1)
+                        {
+                        <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                        if (item.id == "5" && item.Checked == 1)
+                        {
+                        <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                        if (item.id == "6" && item.Checked == 1)
+                        {
+                        <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.modeOfTransportId)
+                </td>
+                <td class="col21">
+                    @Html.HiddenFor(model => model.modeOfTransportId)
+                    @foreach (var item in Model.TransportModes)
+                    {
+                        var optionValue2 = "ModeOfTransport_" + item.id;
+                        var selectValue = item.Checked;
+
+                        if (item.id == "1" && item.Checked == 1)
+                        {
+                        <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                        if (item.id == "2" && item.Checked == 1)
+                        {
+                        <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                        if (item.id == "3" && item.Checked == 1)
+                        {
+                        <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.numberOfBus)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(model => model.numberOfBus, new { @Value = Model.numberOfBus == 0 ? "" : Model.numberOfBus.ToString() })
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.numberOfOtherVehicles)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(model => model.numberOfOtherVehicles, new { @Value = Model.numberOfOtherVehicles == 0 ? "" : Model.numberOfOtherVehicles.ToString() })
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.modeOfPaymentId)
+                </td>
+                <td class="col21">
+                    @Html.HiddenFor(model => model.modeOfPaymentId)
+                    @foreach (var item in Model.PaymentModes)
+                    {
+                        var optionValue3 = "ModeOfPayment_" + item.id;
+                        var selectValue = item.Checked;
+                        if (item.id == "1" && item.Checked == 1)
+                        {
+                        <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                        if (item.id == "2" && item.Checked == 1)
+                        {
+                        <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                        if (item.id == "3" && item.Checked == 1)
+                        {
+                        <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                        if (item.id == "4" && item.Checked == 1)
+                        {
+                        <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.Name</label>
+
+                        }
+                    }
+                </td>
+            </tr>
+        </table>
+        @Html.HiddenFor(model => model.id)
+        @Html.HiddenFor(model => model.collegeId)
+        @Html.HiddenFor(model => model.PlaygroundType)
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.createdBy)
+            }
+    }
+</div>

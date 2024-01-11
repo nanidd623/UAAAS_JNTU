@@ -1,0 +1,28 @@
+﻿@model IEnumerable<UAAAS.Controllers.ComplaintsList>
+@{
+    ViewBag.Title = "ViewCollegeSubComplaints";
+}
+
+<h2>College Subcomplaints</h2>
+<table style="width: 100%" class="faculty_table">
+    <tr>
+        <td class="col1" style="width: 20%">
+            <b><span>Sub Complaint Name</span></b>
+        </td>
+        @*<td class="col1" style="width: 20%">
+            <b><span>Complaint Date</span></b>
+        </td>*@
+    </tr>
+    @foreach (var item in Model)
+    {
+
+        <tr>
+            <td class="col2" style="width: 20%">
+                <b>@Html.DisplayFor(modelItem => item.subcomplaintname)</b>
+            </td>
+            @*<td class="col2" style="width: 20%">
+                <b>@Html.DisplayFor(modelItem => item.subcomplaintdate)</b>
+            </td>*@
+        </tr>
+    }
+</table>

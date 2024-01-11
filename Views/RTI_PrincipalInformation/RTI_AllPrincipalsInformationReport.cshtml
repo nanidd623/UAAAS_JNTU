@@ -1,0 +1,112 @@
+﻿@model IEnumerable<UAAAS.Models.PrincipalDirector> 
+@{
+    ViewBag.Title = "RTI_AllPrincipalsInformation";
+    var index = 1;
+}
+
+@using (Html.BeginForm())
+{
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    S.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Code
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">College Name</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">First Name</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Last Name</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Surname</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Qualification</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">DateOfAppointment</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">dateOfBirth</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Fax</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Landline</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Mobile</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Email</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">DepartmentName</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PhdSubjectName</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PhdFormUniversity</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PhdYear</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">RatificationPeriodFrom</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">RatificationPeriodTo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center;vertical-align: top">
+                        @(index++)
+                    </td>
+                    <td style="text-align: center;vertical-align: top; text-transform: uppercase;">
+                        @Html.DisplayFor(modelItem => item.collegeCode)
+                    </td>
+                    <td style="text-align: left;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.collegeName)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.firstName)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.lastName)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.surname)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.qualification) 
+                    </td>
+                    <td style="text-align: left;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.dateOfAppointment)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.dateOfBirth)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.fax)
+                    </td>
+                    <td style="text-align: center;vertical-align: top"> 
+                        @Html.DisplayFor(modelItem => item.landline)
+                    </td>
+                    <td style="text-align: center;vertical-align: top"> 
+                        @Html.DisplayFor(modelItem => item.mobile)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.email)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.departmentName)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.phdSubjectName)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.phdFromUniversity)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.phdYear)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.ratificationPeriodFrom)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.ratificationPeriodTo)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+
+
+
+

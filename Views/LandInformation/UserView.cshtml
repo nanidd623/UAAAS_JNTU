@@ -1,0 +1,399 @@
+﻿@model UAAAS.Models.LandInformation
+@{
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    ViewBag.Title = "Land Information";
+}
+<h2>Land Information</h2>
+@using (Html.BeginForm())
+{
+    if (ViewBag.NoRecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+    }
+    else
+    {
+    <table class="four_columns">
+        <tr>
+            <td class="col11" colspan="4">
+                <b>Land Details of the College:</b>(Please specify in CAPITAL LETTERS)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.areaInAcres) (in Acres)
+            </td>
+            <td class="col21" colspan="3" style="line-height: 1.2rem;">
+                @Html.DisplayFor(model => model.areaInAcres, new { @Value = Model.areaInAcres == 0 ? "" : @Model.areaInAcres.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.landTypeID)
+            </td>
+            <td class="col21" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.landTypeID)
+                @foreach (var item in Model.landType)
+                {
+                    var optionValue = "landType_" + item.id;
+                    var selectValue = item.selected;
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                    <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 4)
+                    {
+                    <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.landRegistrationTypeId)
+            </td>
+            <td class="col21" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.landRegistrationTypeId)
+                @foreach (var item in Model.landRegistrationType)
+                {
+                    var optionValue1 = "landRegistrationType_" + item.id;
+                    var selectValue = item.selected;
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                    <label for="@optionValue1" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue1" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 3)
+                    {
+                    <label for="@optionValue1" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.landCategoryId)
+            </td>
+            <td class="col21" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.landCategoryId)
+                @foreach (var item in Model.landCategory)
+                {
+                    var optionValue2 = "landCategory_" + item.id;
+                    var selectValue = item.selected;
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                    <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                    if (item.selected == 1 && item.id == 3)
+                    {
+                    <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                    if (item.selected == 1 && item.id == 4)
+                    {
+                    <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                }
+            </td>
+        </tr>
+    </table>     
+    <br />    
+                int count = 0;     
+    <table class="four_columns" style="width: 100%;">
+        <tr>
+            <td class="col11" colspan="7">
+                <b>Registration Details :</b>
+            </td>
+        </tr>
+        <tr style="font-weight: bold;">
+            <td style="text-align: center; width: 50px;" class="col11">S.No</td>
+            <td style="text-align: left; width: 150px;" class="col11">Registraion Date</td>
+            <td style="text-align: left; width: 100px;" class="col11">Area in Acres</td>
+            <td style="text-align: left; width: 100px;" class="col11">Document Number</td>
+            <td style="text-align: left; width: 300px;" class="col11">Survey Number</td>
+            <td style="text-align: left;" class="col11">Location/Village</td>
+        </tr>
+        @foreach (var item in ViewBag.RegistrationDetails)
+        {                
+            <tr>
+                <td style="text-align: center;" class="col21">
+                    @(count = count + 1)
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.landRegistraionDate != null)
+                    {
+                        <label>@item.landRegistraionDate</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.landAreaInAcres != null)
+                    {
+                        <label>@item.landAreaInAcres</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.landDocumentNumber != null)
+                    {
+                        <label>@item.landDocumentNumber</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.landSurveyNumber != null)
+                    {
+                        <label>@item.landSurveyNumber</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.landLocation != null)
+                    {
+                        <label>@item.landLocation</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+            </tr>
+        }
+    </table>                 
+    <br />    
+    <div id="dialog-view" style="display: none">
+    </div>  
+    <table class="four_columns">
+        <tr>
+            <td class="col11" colspan="4">
+                <b>Land Conversion Certificate :</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.conversionCertificateIssuedBy)
+            </td>
+            <td class="col21" colspan="3">
+                @Html.DisplayFor(model => model.conversionCertificateIssuedBy)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.conversionCertificateIssuedDate) <span>(DD/MM/YYYY)</span>
+            </td>
+            <td class="col21" colspan="3">
+                @Html.DisplayFor(model => model.conversionCertificateIssuedDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.conversionCertificateIssuedPurpose)
+            </td>
+            <td class="col21" colspan="3">
+                @Html.DisplayFor(model => model.conversionCertificateIssuedPurpose)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11" colspan="4">
+                <b>Building Plan</b>in the name of the proposed institution prepared by Architect and Approved by Competent Authority :
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.buildingPlanIssuedBy)
+            </td>
+            <td class="col21" colspan="3">
+                @Html.DisplayFor(model => model.buildingPlanIssuedBy)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.buildingPlanIssuedDate) <span>(DD/MM/YYYY)</span>
+            </td>
+            <td class="col21" colspan="3">
+                @Html.DisplayFor(model => model.buildingPlanIssuedDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11" colspan="4">
+                <b>Master Plan</b>in the name of the proposed institution prepared by Architect and Approved by Competent Authority :
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.masterPlanIssuedBy)
+            </td>
+            <td class="col21" colspan="3">
+                @Html.DisplayFor(model => model.masterPlanIssuedBy)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.masterPlanIssuedDate) <span>(DD/MM/YYYY)</span>
+            </td>
+            <td class="col21" colspan="3">
+                @Html.DisplayFor(model => model.masterPlanIssuedDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.compoundWall)
+            </td>
+            <td class="col21" colspan="3">
+                @if (Model.compoundWall == true)
+                {
+                    <label>Yes</label>
+                }
+                else
+                {
+                    <label>No</label>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.approachRoadId)
+            </td>
+            <td class="col21" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.approachRoadId)
+                @foreach (var item in Model.approachRoad)
+                {
+                    var optionValue3 = "approachRoad_" + item.id;
+                    var selectedValue = item.selected;
+
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                    <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                    if (item.selected == 1 && item.id == 3)
+                    {
+                    <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                    if (item.selected == 1 && item.id == 4)
+                    {
+                    <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.powerSupplyId)
+            </td>
+            <td class="col21" colspan="3">
+                @Html.HiddenFor(model => model.powerSupplyId)
+                @foreach (var item in Model.powerSupply)
+                {
+                    var optionValue4 = "powerSupply_" + item.id;
+                    var selectedValue = item.selected;
+
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                    <label for="@optionValue4" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue4" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.WaterSupplyId)
+            </td>
+            <td class="col21" colspan="3">
+                @Html.HiddenFor(model => model.WaterSupplyId)
+                @foreach (var item in Model.WaterSupply)
+                {
+                    var optionValue5 = "waterSupply_" + item.id;
+                    var selectedValue = item.selected;
+
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                    <label for="@optionValue5" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue5" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.drinkingWaterId)
+            </td>
+            <td class="col21" colspan="3">
+                @Html.HiddenFor(model => model.drinkingWaterId)
+                @foreach (var item in Model.DrinkingWater)
+                {
+                    var optionValue6 = "drinkingWater_" + item.id;
+                    var selectedValue = @item.selected;
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                    <label for="@optionValue6" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue6" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.IsPurifiedWater)
+            </td>
+            <td class="col21" colspan="3">
+                @if (Model.IsPurifiedWater == true)
+                {
+                    <label>Yes</label>
+                }
+                else
+                {
+                    <label>No</label>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.potableWaterPerDay)
+                <label>(in Liters per day)</label>
+            </td>
+            <td class="col21" colspan="3">
+                @Html.DisplayFor(model => model.potableWaterPerDay, new { Value = @Model.potableWaterPerDay == 0 ? "" : Model.potableWaterPerDay.ToString() })
+            </td>
+        </tr>
+    </table>
+    }
+}
+
+
+

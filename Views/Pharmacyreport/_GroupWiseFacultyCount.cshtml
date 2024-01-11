@@ -1,0 +1,89 @@
+﻿@model List<UAAAS.Models.PharmacyReportsClass>
+@{
+    int Count = 1;
+}
+<table border="1" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                S.No
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                College Code
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                College Name
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Course
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Proposed Intake
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Group 1 Required
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Group 1 Available
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Group 2 Required
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Group 2 Available
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Group 3 Required
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Group 3 Available
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Group 4 Required
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Group 4 Available
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                No.Of Faculty Required
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                No.Of Faculty Available
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Additional Faculty
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Total PHD Faculty
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model.OrderBy(a => a.CollegeName).ThenBy(q => q.GroupId).ToList())
+            {
+                <tr>
+                    <td style="text-align: center;">@(Count++)</td>
+                    <td style="text-align: center;">@item.CollegeCode</td>
+                    <td>@item.CollegeName</td>
+                    <td>@item.Degree - @item.Specialization</td>
+                    <td>@item.ProposedIntake</td>
+                    <td style="text-align: center;">@item.Group1RequiredFaculty</td>
+                    <td style="text-align: center;">@item.Group1AvilableFaculty</td>
+                    <td style="text-align: center;">@item.Group2RequiredFaculty</td>
+                    <td style="text-align: center;">@item.Group2AvilableFaculty</td>
+                    <td style="text-align: center;">@item.Group3RequiredFaculty</td>
+                    <td style="text-align: center;">@item.Group3AvilableFaculty</td>
+                    <td style="text-align: center;">@item.Group4RequiredFaculty</td>
+                    <td style="text-align: center;">@item.Group4AvilableFaculty</td>
+                    <td style="text-align: center;">@item.NoOfFacultyRequired</td>
+                    <td style="text-align: center;">@item.NoOfAvilableFaculty</td>
+                    <td style="text-align: center;">@(item.NoOfFacultyRequired - item.NoOfAvilableFaculty)</td>
+                    <td style="text-align: center;">@item.TotalPHdFaculty</td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>

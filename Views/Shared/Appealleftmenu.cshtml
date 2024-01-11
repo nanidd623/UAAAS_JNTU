@@ -1,0 +1,30 @@
+﻿<div style="clear: both;"></div>
+<div class="menu_title">
+    Appeal Menu
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(function () {
+            //$('.menu_items ul').css("display", "none");
+        })
+    });
+</script>
+
+@*<span class="error" style="font-size: 0.8rem;">You will be able to upload college data after 2 hours. The data you have entered has been saved. Thank you</span>*@
+@*<img src="/Content/images/latest.gif" alt="latest" /></li>*@
+<style>
+    .left_menu li {
+        padding-left: 0px;
+        background: none;
+    }
+</style>
+<div class="menu_items" style="min-height: 300px;">
+
+    <ul>
+        <li>@Html.ActionLink("01. College Information", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "CollegeInformation")</li>
+        <li>@Html.ActionLink("02. Educational Society", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "SocietyInformation")</li>
+        <li>@Html.ActionLink("03. Principal / Director", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "PrincipalDirector")</li>
+        <li>@Html.ActionLink("04. Chairperson", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Create", "Chairperson")</li>
+        <li>@Html.ActionLink("05. Other Colleges & Other Courses", @User.IsInRole("Admin") ? "View/" + @ViewContext.RouteData.Values["id"] : "Index", "OtherColleges")</li>
+            </ul>
+</div>

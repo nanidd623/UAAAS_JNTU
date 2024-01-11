@@ -1,0 +1,397 @@
+﻿@model List<UAAAS.Controllers.AffiliationFeeCollegeList>
+           
+@using (Html.BeginForm())
+{
+    int count = 0;
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Sl.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Code
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Name of the Institution
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Degree
+                </th>
+                @*<th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Department
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Specialization
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Shift
+                </th>*@
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                   Approved1
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                 Admitted1
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                  FirstFee
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Approved2
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Admitted2
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Leteral Entry
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    SecondFee
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Approved3
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Admitted3
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Leteral Entry
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    ThirdFee
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Approved4
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Admitted4
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Leteral Entry
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    FourthFee
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Total
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item1 in Model)
+        {
+            int deptloop = 1;
+            int FeeFirstYear = 0;
+            int FeeSecondYear = 0;
+            int FeeThirdYear = 0;
+            int FeeFourthYear = 0;
+
+            int approvedFeeFirstYear = 0;
+            int approvedFeeSecondYear = 0;
+            int approvedFeeThirdYear = 0;
+            int approvedFeeFourthYear = 0;
+
+            int admittedFeeFirstYear = 0;
+            int admittedFeeSecondYear = 0;
+            int admittedFeeThirdYear = 0;
+            int admittedFeeFourthYear = 0;
+
+
+            int totalfee = 0;
+            
+            foreach (var item in item1.CollegeApprovedList)
+            {
+                count++;
+
+                int columnspanfirst = 0;
+                int columnspansecond = 0;
+                int columnspanthird = 0;
+                int columnspanfourth = 0;
+                columnspanfirst = item1.CollegeApprovedList.Count(e => e.degreeId == 4 || e.degreeId == 5);
+                columnspansecond = item1.CollegeApprovedList.Count(e => e.degreeId == 4 || e.degreeId == 5);
+                columnspanthird = item1.CollegeApprovedList.Count(e => e.degreeId == 4 || e.degreeId == 5);
+                columnspanfourth = item1.CollegeApprovedList.Count(e => e.degreeId == 4 || e.degreeId == 5);
+                int totalugcount = item1.CollegeApprovedList.Count(e => e.degreeId == 4 || e.degreeId == 5);
+
+                int approvedIntake1 = 0;
+                int approvedIntake2 = 0;
+                int approvedIntake3 = 0;
+                int approvedIntake4 = 0;
+                int admittedIntake1 = 0;
+                int admittedIntake2 = 0;
+                int admittedIntake3 = 0;
+                int admittedIntake4 = 0;
+
+                int currentindex = item1.CollegeApprovedList.IndexOf(item);
+
+
+                if (item1.CollegeApprovedList[currentindex].degreeId == 5)
+                {
+                    if (currentindex > 0 && (item1.CollegeApprovedList[currentindex].degreeId == 4 || item1.CollegeApprovedList[currentindex].degreeId == 5))
+                    {
+                        deptloop++;
+                    }
+                }
+                else
+                {
+                    if (currentindex > 0 && item1.CollegeApprovedList[currentindex].Degree != item1.CollegeApprovedList[currentindex - 1].Degree && item1.CollegeApprovedList[currentindex].degreeId == 4)
+                    {
+                        deptloop = 1;
+                    }
+                }
+
+
+
+
+
+
+                <tr>
+                    <td style="text-align: center; vertical-align: top">
+                        @(count = count + 1)
+                    </td>
+                    <th style="text-align: center; vertical-align: top">
+                        '@item1.CollegeCode
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item1.CollegeName
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.Degree-@item.SpecializationName-@item.ShiftId
+                    </th>
+                    @*<th style="text-align: left; vertical-align: top">
+                        @item.Department
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.SpecializationName
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.ShiftId
+                    </th>*@
+                    @*AY 2017-18*@
+                    <th style="text-align: left; vertical-align: top">
+                        @item.ApprovedIntake1
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.AdmittedIntake1
+                    </th>
+
+
+                    @if (item.degreeId == 4 || item.degreeId == 5)
+                    {
+                        approvedIntake1 += item.ApprovedIntake1;
+                        admittedIntake1 += item.AdmittedIntake1;
+                        if (deptloop == 1)
+                        {
+                            <td style="width: 30px; text-align: center;" rowspan="@columnspanfirst">@item.FirstYearFee</td>
+                            FeeFirstYear += item.FirstYearFee;
+
+                        }
+
+
+                    }
+                    else
+                    {
+                        if (item.ApprovedIntake1 != 0)
+                        {
+                            <td style="width: 30px; text-align: center;">@item.FirstYearFee</td>
+                            FeeFirstYear += item.FirstYearFee;
+                        }
+                        else
+                        {
+                            <td style="width: 30px; text-align: center;">0</td>
+                        }
+
+                    }
+
+
+
+
+
+
+                    @*<th style="text-align: left; vertical-align: top">
+                            @item.FirstYearFee
+                        </th>*@
+
+                    @*AY 2016-17*@
+                    <th style="text-align: left; vertical-align: top">
+                        @item.ApprovedIntake2
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.AdmittedIntake2
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.LeteralentryIntake2
+                    </th>
+                    @*<th style="text-align: left; vertical-align: top">
+                            @item.SecondYearFee
+                        </th>*@
+
+                    @if (item.degreeId == 4 || item.degreeId == 5)
+                    {
+                        approvedIntake2 += item.ApprovedIntake2;
+                        admittedIntake2 += item.AdmittedIntake2;
+                        if (deptloop == 1)
+                        {
+                            <td style="width: 30px; text-align: center;" rowspan="@columnspansecond">@item.SecondYearFee</td>
+                            FeeSecondYear += item.SecondYearFee;
+
+                        }
+                    }
+                    else
+                    {
+                        if (item.ApprovedIntake2 != 0)
+                        {
+                            <td style="width: 30px; text-align: center;">@item.SecondYearFee</td>
+                            FeeSecondYear += item.SecondYearFee;
+                        }
+                        else
+                        {
+                            <td style="width: 30px; text-align: center;">0</td>
+                        }
+
+                    }
+
+
+
+
+                    @*AY 2015-16*@
+                    <th style="text-align: left; vertical-align: top">
+                        @item.ApprovedIntake3
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.AdmittedIntake3
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.LeteralentryIntake3
+                    </th>
+                    @*<th style="text-align: left; vertical-align: top">
+                            @item.ThirdYearFee
+                        </th>*@
+
+                    @if (item.degreeId == 4 || item.degreeId == 5)
+                    {
+                        approvedIntake3 += item.ApprovedIntake3;
+                        admittedIntake3 += item.AdmittedIntake3;
+                        if (deptloop == 1)
+                        {
+                            <td style="width: 30px; text-align: center;" rowspan="@columnspanthird">@item.ThirdYearFee</td>
+                            FeeThirdYear += item.ThirdYearFee;
+
+                        }
+                    }
+                    else
+                    {
+                        if (item.ApprovedIntake3 != 0)
+                        {
+                            <td style="width: 30px; text-align: center;">@item.ThirdYearFee</td>
+                            FeeThirdYear += item.ThirdYearFee;
+                        }
+                        else
+                        {
+                            <td style="width: 30px; text-align: center;">0</td>
+                        }
+
+                    }
+
+
+                    @*AY 2014-15*@
+                    <th style="text-align: left; vertical-align: top">
+                        @item.ApprovedIntake4
+                    </th>
+                <th style="text-align: left; vertical-align: top">
+                    @item.AdmittedIntake4
+                </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.LeteralentryIntake4
+                    </th>
+                    @*<th style="text-align: left; vertical-align: top">
+                            @item.FourthYearFee
+                        </th>*@
+
+                    @if (item.degreeId == 4 || item.degreeId == 5)
+                    {
+                        approvedIntake4 += item.ApprovedIntake4;
+                        admittedIntake4 += item.AdmittedIntake4;
+                        if (deptloop == 1)
+                        {
+                            <td style="width: 30px; text-align: center;" rowspan="@columnspanfourth">@item.FourthYearFee</td>
+                            FeeFourthYear += item.FourthYearFee;
+
+                        }
+                    }
+                    else
+                    {
+                        if (item.ApprovedIntake4 != 0)
+                        {
+                            <td style="width: 30px; text-align: center;">@item.FourthYearFee</td>
+                            FeeFourthYear += item.FourthYearFee;
+                        }
+                        else
+                        {
+                            <td style="width: 30px; text-align: center;">0</td>
+                        }
+
+                    }
+
+                    @if (currentindex == 0 && (item1.CollegeApprovedList[currentindex].degreeId == 4 || item1.CollegeApprovedList[currentindex].degreeId == 5))
+                    {
+
+                        <td style="width: 30px; text-align: center;" rowspan="@totalugcount">@item.SpecializationwiseSalary</td>
+                        totalfee += item.SpecializationwiseSalary;
+                    }
+
+
+
+
+
+                    @if (item.degreeId != 4 && item.degreeId != 5)
+                    {
+                        <td style="width: 30px; text-align: center;">@item.SpecializationwiseSalary</td>
+                        totalfee = totalfee + item.SpecializationwiseSalary;
+                    }
+                </tr>
+                    approvedFeeFirstYear += approvedIntake1;
+                    approvedFeeSecondYear += approvedIntake2;
+                    approvedFeeThirdYear += approvedIntake3;
+                    approvedFeeFourthYear += approvedIntake4;
+
+
+                    admittedFeeFirstYear += admittedIntake1;
+                    admittedFeeSecondYear += admittedIntake2;
+                    admittedFeeThirdYear += admittedIntake3;
+                    admittedFeeFourthYear += admittedIntake4;
+
+
+                    deptloop++;
+            }
+            <tr style="background-color:rgb(155,194,230)">
+                <td style="text-align: right"><span style="color: red">@(count = count + 1)</span></td>
+                <td colspan="3" style="text-align: right"><span style="color: red"><b>Total Amount :</b></span></td>
+
+                <td style="text-align: right"><span style="color: green"><b>@approvedFeeFirstYear</b></span></td>
+                <td style="text-align: right"><span style="color: blue;"><b>@admittedFeeFirstYear</b></span></td>
+                <td style="text-align: right"><span style="color: red"><b>@FeeFirstYear</b></span></td>
+
+                <td style="text-align: right"><span style="color: green"><b>@approvedFeeSecondYear</b></span></td>
+                <td style="text-align: right"><span style="color: blue"><b>@admittedFeeSecondYear</b></span></td>
+                <td style="text-align: right"><span style="color: blue"></span></td>
+                <td style="text-align: right"><span style="color: red"><b>@FeeSecondYear </b></span></td>
+
+                <td style="text-align: right"><span style="color: green"><b>@approvedFeeThirdYear</b></span></td>
+                <td style="text-align: right"><span style="color: blue"><b>@admittedFeeThirdYear</b></span></td>
+                <td style="text-align: right"><span style="color: blue"></span></td>
+                <td style="text-align: right"><span style="color: red"><b>@FeeThirdYear </b></span></td>
+
+                <td style="text-align: right"><span style="color: green"><b>@approvedFeeFourthYear</b></span></td>
+                <td style="text-align: right"><span style="color: blue"><b>@admittedFeeFourthYear</b></span></td>
+                <td style="text-align: right"><span style="color: blue"></span></td>
+                <td style="text-align: right"><span style="color: red"><b>@FeeFourthYear </b></span></td>
+
+
+
+                <td style="color: blue; text-align: center; font-size: 18px; background-color: greenyellow"><b>@totalfee </b></td>
+            </tr>
+        }
+        </tbody>
+</table>
+}

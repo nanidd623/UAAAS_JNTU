@@ -1,0 +1,79 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeFaculty>
+@{
+    ViewBag.Title = "Teaching Faculty";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    var index = 1;
+}
+
+<h2>Teaching Faculty</h2>
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "bStateSave": false,
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ]
+                           });
+}
+@using (Html.BeginForm())
+{
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No
+                </th>
+                <th>Name
+                </th>
+                <th style="width: 150px; text-align: left;">Designation
+                </th>
+                <th style="width: 250px; text-align: left;">Department
+                </th>
+                <th class="ui-state-default" style="width: 70px; text-align: center;">Ratified
+                </th>
+                <th class="ui-state-default" style="width: 100px; text-align: center;">Photo
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="width: 50px; text-align: center;">
+                        @(index++)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.facultyFirstName)
+                        @Html.DisplayFor(modelItem => item.facultyLastName)
+                        @Html.DisplayFor(modelItem => item.facultySurname)
+                    </td>
+                    <td style="text-align: left;">
+                        @Html.DisplayFor(modelItem => item.designation)
+                        @if (item.facultyOtherDesignation != null)
+                        { <span>, @item.facultyOtherDesignation</span>}
+                    </td>
+                    <td style="text-align: left;">
+                        @Html.DisplayFor(modelItem => item.department)
+                    </td>
+                    <td style="text-align: center;">
+                        @if (item.isFacultyRatifiedByJNTU == true)
+                        { <span>Yes</span>}
+                        else
+                        {<span>No</span>}
+                    </td>
+                    <td style="text-align: center;">
+                        @if (item.photo != null)
+                        {
+                            <img src="@item.photo.Replace("~", "")" style="width: 50px;" />
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+            if (ViewBag.Count == 0)
+            {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+            }
+}

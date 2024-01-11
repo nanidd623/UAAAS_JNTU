@@ -1,0 +1,744 @@
+﻿@model IList<UAAAS.Models.FacultyRegistration>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "PharmacyFacultyGroupingbasedonColleges";
+    DateTime date = new DateTime(2018, 03, 21, 00, 00, 00);
+    int?[] Group1_Specializationids = new int?[] { 115, 119, 172, 120, 118 };
+    int?[] Group2_Specializationids = new int?[] { 116, 167, 123, 170, 117, 124 };
+    int?[] Group3_Specializationids = new int?[] { 18, 19, 114, 169, 122 };
+    int?[] Group4_Specializationids = new int?[] { 172, 117, 121 };
+    var index = 1;
+    var count = 1;
+    int? viewcollegeId = null;
+    int? Group1RemainingFaculty = null;
+    int? Group2RemainingFaculty = null;
+    int? Group3RemainingFaculty = null;
+    int? Group4RemainingFaculty = null;
+    var sum = 0;
+    if (Model != null && Model.Count() != 0)
+    {
+        viewcollegeId = Model.Select(e => e.CollegeId).FirstOrDefault();
+        //Group1RemainingFaculty = Model.Where(e => Group1_Specializationids.Contains(e.PGSpecialization)).Select(e => e.RegistrationNumber).Count();
+        //Group2RemainingFaculty = Model.Where(e => Group2_Specializationids.Contains(e.PGSpecialization)).Select(e => e.RegistrationNumber).Count();
+        //Group3RemainingFaculty = Model.Where(e => Group3_Specializationids.Contains(e.PGSpecialization)).Select(e => e.RegistrationNumber).Count();
+        //Group4RemainingFaculty = Model.Where(e => Group4_Specializationids.Contains(e.PGSpecialization)).Select(e => e.RegistrationNumber).Count();
+    }
+    else if (TempData["ViewCollegeId"] != null)
+    {
+        viewcollegeId = Convert.ToInt32(TempData["ViewCollegeId"]);
+    }
+
+
+
+}
+<h2>Pharmacy Faculty Deficiency DataEntry</h2>
+
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $('#example').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $("#btncancel").live("click", function (e) {
+            debugger;
+            $("#dialog-edit").dialog("close");
+        });
+
+
+        $("#collegeId").change(function () {
+
+            var collegeid = $(this).val();
+
+            if (collegeid != null && collegeid != " ") {
+                window.location = "/Pharmacyreport/PharmacyFacultyGroupingbasedonColleges?collegeId=" + collegeid;
+            }
+            else {
+                window.location = "/Pharmacyreport/PharmacyFacultyGroupingbasedonColleges";
+            }
+        });
+
+        $("#DegreeId").change(function () {
+            debugger;
+            var degreeid = $(this).val();
+            var collegeId = $("#collegeId").val();
+            if (degreeid == "" || degreeid == null) {
+                window.location = "/Pharmacyreport/PharmacyFacultyGroupingbasedonColleges?collegeId=" + collegeId;
+            }
+            else if (degreeid != null || degreeid != "") {
+                if (degreeid == 5) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Pharmacyreport/GetGroups?DegreeId=" + degreeid,
+                        dataType: "json",
+                        ContentType: "application/json",
+                        success: function (data) {
+                            debugger;
+                            $("#GroupId").find('option').remove();
+                            var item = "<option value=''>---Select---</option>";
+                            if (data != null) {
+                                $.each(data.data, function (i, state) {
+                                    item += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                                });
+                                $("#GroupId").html(item);
+                                $("#TotalRequiredFaculty").val(null);
+                            }
+
+                        },
+                        error: function () {
+
+
+                        }
+
+                    });
+                }
+                else {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Pharmacyreport/GetSpecializations?DegreeId=" + degreeid + "&&collegeId=" + collegeId,
+                        dataType: "json",
+                        ContentType: "application/json",
+                        success: function (data) {
+                            debugger;
+                            $("#GroupId").find('option').remove();
+                            var item = "<option>--Select---</option>";
+                            if (data != null) {
+                                $.each(data.data, function (i, state) {
+                                    item += "<option value='" + state.id + "'>" + state.Specname + "</option>";
+                                });
+                                $("#GroupId").html(item);
+                                $("#TotalRequiredFaculty").val(2);
+                                $("#SpecializationWiseFaculty").val(2);
+                            }
+                        },
+                        error: function () {
+
+                        }
+                    });
+                }
+            }
+
+        });
+
+        $("#GroupId").change(function () {
+            debugger;
+            var collegeId = $("#collegeId").val();
+            var DegreeId = $("#DegreeId").val();
+            var GroupId = $(this).val();
+            var RequiredFacultyCount = $("#TotalRequiredFaculty").val();
+            var SpecializationWiseFaculty = $("#SpecializationWiseFaculty").val();
+            if (GroupId == "" || GroupId == null || GroupId == "--Select---") {
+                window.location = "/Pharmacyreport/PharmacyFacultyGroupingbasedonColleges?collegeId=" + collegeId;
+            }
+            else if (DegreeId == 5 && GroupId != null) {
+                if ((collegeId != null && collegeId != "") && (GroupId != null && GroupId != "")) {
+                    window.location = "/Pharmacyreport/PharmacyFacultyGroupingbasedonColleges?collegeId=" + collegeId + "&&DegreeId=" + DegreeId + "&&GroupId=" + GroupId + "&&TotalRequiredFaculty=" + RequiredFacultyCount;
+                }
+                else if ((collegeId != null && collegeId != "") && (GroupId == null && GroupId == "")) {
+                    window.location = "/Pharmacyreport/PharmacyFacultyGroupingbasedonColleges?collegeId=" + collegeId + "&&DegreeId=" + DegreeId + "&&GroupId=null";
+                }
+                else {
+                    window.location = "/Pharmacyreport/PharmacyFacultyGroupingbasedonColleges";
+                }
+            }
+            else {
+                window.location = "/Pharmacyreport/PharmacyFacultyGroupingbasedonColleges?collegeId=" + collegeId + "&&DegreeId=" + DegreeId + "&&GroupId=" + GroupId + "&&TotalRequiredFaculty=" + RequiredFacultyCount + "&&SpecializationWiseFaculty=" + SpecializationWiseFaculty;
+            }
+        });
+
+        $("#Check").click(function () {
+            debugger;
+            $(".Checkall").attr("Checked", this.checked);
+        });
+
+        $(".ViewAddedFaculty").click(function () {
+            debugger;
+            var collegeId = $("#collegeId").val();
+            if (collegeId != null) {
+                window.open("/Pharmacyreport/ViewAddedFaculty?collegeId=" + collegeId);
+            }
+
+        });
+
+        $(".UpdateAddedFaculty").click(function () {
+            debugger;
+            var collegeId = $("#collegeId").val();
+            if (collegeId != null) {
+                window.open("/Pharmacyreport/EditPharmacyIntake?collegeId=" + collegeId);
+            }
+
+        });
+    });
+</script>
+
+<style>
+    #Show {
+        border: 1px solid #808080;
+        text-align: center;
+    }
+
+    .col4, .col3 {
+        width: 15%;
+        padding-left: 43px;
+    }
+</style>
+@using (Html.BeginForm("PharmacyFacultyGroupingbasedonColleges", "Pharmacyreport"))
+{
+    @*<div>
+            <input type="submit" value="ADD"/>
+        </div>*@
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <br />
+    <div>
+        <table>
+            <tr>
+                <td class="col1">Colleges</td>
+                <td class="col2">
+                    @Html.DropDownList("collegeId", new SelectList(ViewBag.PharmacyCollegeList as System.Collections.IEnumerable, "collegeId", "collegeName"), "---Select---", new { id = "collegeId" })
+                </td>
+                <td class="col3" width="12%;" style="text-align:center">
+                    <div style="text-align: center;border: 1px solid;width: 64%;font-weight: bold;background-color:#024b74;">
+                        @Html.ActionLink("View Added Faculty", "", "", new { }, new { @class = "ViewAddedFaculty", @style = "color:White;", @target = "_blank" })
+                    </div>
+
+                </td>
+                <td class="col4" width="12%;" style="text-align:center">
+                    <div style="text-align: center;border: 1px solid;width: 64%;font-weight: bold;background-color:#024b74;">
+                        @Html.ActionLink("Update Added Faculty", "", "", new { }, new { @class = "UpdateAddedFaculty", @style = "color:White;", @target = "_blank" })
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br />
+    <table width="100%">
+        <tr>
+            <td style="width:15%;background-color:#E8EFF3;border:1px solid #bbb;height:23%;">
+                Degrees
+            </td>
+            <td style="width:35%;background-color:#FCF1D1;border:1px solid #bbb;height:23%;">
+                @if (ViewBag.checkcollegeId == null)
+                {
+                    @Html.DropDownList("DegreeId", new SelectList(ViewBag.Degrees as System.Collections.IEnumerable, "Value", "Text"), new { @style = "width:76%", @class = "", @required = true })
+                }
+                else
+                {
+                    @Html.DropDownList("DegreeId", new SelectList(ViewBag.Degrees as System.Collections.IEnumerable, "DegreeId", "Degreename"), "---Select---", new { id = "DegreeId", @style = "width:76%", @class = "", @required = true })
+                }
+            </td>
+            <td style="width:15%;background-color:#E8EFF3;border:1px solid #bbb;height:23%;">
+                TotalRequiredFaculty
+            </td>
+            <td style="width:35%;background-color:#FCF1D1;border:1px solid #bbb;height:23%;">
+                @if (TempData["Required"] == null)
+                {
+                    if (TempData["RequiredFaculty"] != null)
+                    {
+
+                        @Html.TextBox("TotalRequiredFaculty", @TempData["RequiredFaculty"].ToString(), new { required = "required" })
+                    }
+                    else
+                    {
+                        @Html.TextBox("TotalRequiredFaculty", null, new { required = "required" })
+                    }
+                }
+
+                else
+                {
+                    if (TempData["RequiredFaculty"] != null)
+                    {
+                        @Html.TextBox("TotalRequiredFaculty", @TempData["RequiredFaculty"].ToString(), new { required = "required" })
+                    }
+                    else
+                    {
+                        @Html.TextBox("TotalRequiredFaculty", null, new { required = "required" })
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td style="width:15%;background-color:#E8EFF3;border:1px solid #bbb;height:23%;">
+                Groups
+            </td>
+            <td style="width:35%;background-color:#FCF1D1;border:1px solid #bbb;height:23%;">
+                @if (ViewBag.AfterCollegeSelect == null)
+                {
+                    @Html.DropDownList("GroupId", new SelectList(ViewBag.Groups as System.Collections.IEnumerable, "Value", "Text"), "---Select---", new { id = "GroupId", @style = "width:76%", @class = "", @required = true })
+                }
+                else
+                {
+                    @Html.DropDownList("GroupId", new SelectList(ViewBag.Groups as System.Collections.IEnumerable, "GroupId", "GroupName"), "---Select---", new { id = "GroupId", @style = "width:76%", @class = "", @required = true })
+                }
+
+            </td>
+            <td style="width:15%;background-color:#E8EFF3;border:1px solid #bbb;height:23%;">
+                SpecializationWiseFaculty
+            </td>
+            <td style="width:35%;background-color:#FCF1D1;border:1px solid #bbb;height:23%;">
+                @if (TempData["SpecializationFaculty"] != null)
+                {
+
+                    @Html.TextBox("SpecializationWiseFaculty", @TempData["SpecializationFaculty"].ToString(), new { required = "required" })
+                }
+                else
+                {
+                    @Html.TextBox("SpecializationWiseFaculty", null, new { required = "required" })
+                }
+                @*@Html.TextBox("SpecializationWiseFaculty", null, new { required ="required" })*@
+            </td>
+        </tr>
+        <tr style="border:none;">
+            <td style="border:none;"></td>
+            <td style="border:none;"></td>
+            <td style="border:none;"></td>
+            <td colspan="4" style="float:right;border:none; ">
+                <input type="submit" value="Save" id="save" />
+            </td>
+        </tr>
+    </table>
+
+    <div>
+        <table width="100%">
+            <tr>
+                <td>
+                    @if (viewcollegeId != 0 && viewcollegeId != null)
+                    {
+                        <table id="Show" width="100%" style="border-collapse:collapse;">
+                            <tr id="Show" style="background-color: #F08080; font-weight: bold;">
+                                <td id="Show">Type</td>
+                                <td id="Show">Group1</td>
+                                <td id="Show">Group2</td>
+                                <td id="Show">Group3</td>
+                                <td id="Show">Group4</td>
+                                <td id="Show">Total</td>
+                            </tr>
+                            <tr id="Show">
+                                <td id="Show">Required</td>
+                                <td id="Show">
+                                    @if (ViewBag.Group1Required != null)
+                                    {
+                                        <span>@ViewBag.Group1Required</span>
+                                    }
+                                </td>
+                                <td id="Show">
+                                    @if (ViewBag.Group2Required != null)
+                                    {
+                                        <span>@ViewBag.Group2Required</span>
+                                    }
+                                </td>
+                                <td id="Show">
+                                    @if (ViewBag.Group3Required != null)
+                                    {
+                                        <span>@ViewBag.Group3Required</span>
+                                    }
+                                </td>
+                                <td id="Show">
+                                    @if (ViewBag.Group4Required != null)
+                                    {
+                                        <span>@ViewBag.Group4Required</span>
+                                    }
+                                </td>
+                                <td id="Show">
+                                    @{
+                        sum = (ViewBag.Group1Required + ViewBag.Group2Required + ViewBag.Group3Required + ViewBag.Group4Required);
+                                    }
+
+                                    @if (sum != 0)
+                                    {
+                                        <span>@sum</span>
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </td>
+                            </tr>
+                            <tr id="Show">
+                                <td id="Show">Available</td>
+                                <td id="Show">
+                                    @if (ViewBag.Group1Available != null)
+                                    {
+                                        <span>@ViewBag.Group1Available</span>
+
+                                    }
+                                </td>
+                                <td id="Show">
+                                    @if (ViewBag.Group2Available != null)
+                                    {
+                                        <span>@ViewBag.Group2Available</span>
+                                    }
+                                </td>
+                                <td id="Show">
+                                    @if (ViewBag.Group3Available != null)
+                                    {
+                                        <span>@ViewBag.Group3Available</span>
+                                    }
+                                </td>
+                                <td id="Show">
+                                    @if (ViewBag.Group4Available != null)
+                                    {
+                                        <span>@ViewBag.Group4Available</span>
+                                    }
+                                </td>
+                                <td id="Show">@(ViewBag.Group1Available + ViewBag.Group2Available + ViewBag.Group3Available + ViewBag.Group4Available)</td>
+                            </tr>
+                            <tr id="Show">
+                                <td id="Show">Remaining</td>
+                                <td id="Show">
+                                    @if (ViewBag.Group1RemainingFaculty != null)
+                                    {
+                                        <span>@ViewBag.Group1RemainingFaculty</span>
+
+                                    }
+                                </td>
+                                <td id="Show">
+                                    @if (ViewBag.Group2RemainingFaculty != null)
+                                    {
+                                        <span>@ViewBag.Group2RemainingFaculty</span>
+                                    }
+                                </td>
+                                <td id="Show">
+                                    @if (ViewBag.Group3RemainingFaculty != null)
+                                    {
+                                        <span>@ViewBag.Group3RemainingFaculty</span>
+                                    }
+                                </td>
+                                <td id="Show">
+                                    @if (ViewBag.Group4RemainingFaculty != null)
+                                    {
+                                        <span>@ViewBag.Group4RemainingFaculty</span>
+                                    }
+                                </td>
+                                <td id="Show">@(ViewBag.Group1RemainingFaculty + ViewBag.Group2RemainingFaculty + ViewBag.Group3RemainingFaculty + ViewBag.Group4RemainingFaculty)</td>
+                            </tr>
+                        </table>
+                    }
+                </td>
+                <td>
+                    @if (Model != null)
+                    {
+                        <table id="Show" width="100%" style="border-collapse:collapse;">
+                            <tr id="Show" style="background-color:yellow;color:black;font-weight:bold;">
+                                <td id="Show">S.No</td>
+                                <td id="Show">Degree</td>
+                                <td id="Show">ProposedInatke</td>
+                                <td id="Show">2022-23Intake</td>
+                                <td id="Show">2021-22Intake</td>
+                                <td id="Show">2020-21Intake</td>
+                                <td id="Show">2019-20Intake</td>
+                                <td id="Show">2018-19Intake</td>
+                                <td id="Show">2017-18Intake</td>
+                                @*<td id="Show">2015-16Intake</td>*@
+                                @*<td id="Show">2014-15Intake</td>*@
+                            </tr>
+
+                            @if (ViewBag.BpharmacyProposedInatke != null && ViewBag.BpharmacyProposedInatke != 0)
+                            {
+                                <tr id="Show">
+                                    <td id="Show">@(count++)</td>
+                                    <td id="Show">B.Pharmacy</td>
+                                    <td id="Show">@ViewBag.BpharmacyProposedInatke</td>
+                                    <td id="Show">@ViewBag.BpharmcySecondInatke</td>
+                                    <td id="Show">@ViewBag.BpharmcythirdInatke</td>
+                                    <td id="Show">@ViewBag.BpharmcyfouthInatke</td>
+                                    <td id="Show">@ViewBag.BpharmcyfifthInatke</td>
+                                    <td id="Show">@ViewBag.BpharmcySixthInatke</td>
+                                    <td id="Show">@ViewBag.BpharmcySeventhInatke</td>
+                                    <td id="Show"></td>
+                                </tr>
+                            }
+                            @if (ViewBag.PharmDProposedInatke != null && ViewBag.PharmDProposedInatke != 0)
+                            {
+                                <tr id="Show">
+                                    <td id="Show">@(count++)</td>
+                                    <td id="Show">Pharm D</td>
+                                    <td id="Show">@ViewBag.PharmDProposedInatke</td>
+                                    <td id="Show">@ViewBag.PharmDySecondInatke</td>
+                                    <td id="Show">@ViewBag.PharmDthirdInatke</td>
+                                    <td id="Show">@ViewBag.PharmDfouthInatke</td>
+                                    <td id="Show">@ViewBag.PharmDfifthInatke</td>
+                                    <td id="Show">@ViewBag.PharmDSixthInatke</td>
+                                    <td id="Show">@ViewBag.PharmDSeventhInatke</td>
+                                </tr>
+                            }
+
+                            @if (ViewBag.PharmDPBProposedInatke != null && ViewBag.PharmDPBProposedInatke != 0)
+                            {
+                                <tr id="Show">
+                                    <td id="Show">@(count++)</td>
+                                    <td id="Show">Pharm D PB</td>
+                                    <td id="Show">@ViewBag.PharmDPBProposedInatke</td>
+                                    <td id="Show">@ViewBag.PharmDPBySecondInatke</td>
+                                    <td id="Show">@ViewBag.PharmDPBthirdInatke</td>
+                                    <td id="Show">@ViewBag.PharmDPBfouthInatke</td>
+                                    <td id="Show">@ViewBag.PharmDPBfifthInatke</td>
+                                    <td id="Show">@ViewBag.PharmDPBSixthInatke</td>
+                                    <td id="Show">@ViewBag.PharmDPBSeventhInatke</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br /><br />
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">
+                    S.No
+                </th>
+                <th style="width: 400px; text-align: center;">
+                    Registration ID
+                </th>
+                <th style="text-align: left;width:300px">
+                    Full Name
+                </th>
+                <th style="text-align: left;width:315px">
+                    Specialization
+                </th>
+                <th style="width: 120px; text-align: center;">
+                    IdentfiedFor
+                </th>
+                <th style="text-align: left;width:315px">
+                    Faculty Specialization
+                </th>
+                <th style="width:50px;">Check</th>
+                <th style="width: 300px; text-align: center;">PAN Number</th>
+                <th style="width: 350px; text-align: center;">Reason</th>
+                <th style="width:50px;">View</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                for (int i = 0; i < Model.OrderBy(e => e.PGSpecializationName).Count(); i++)
+                {
+                    string color = string.Empty;
+                    @Html.HiddenFor(m => m[i].CollegeId)
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle; background-color:@color; border-bottom: 1px solid #fff;">
+                            @(index++)
+                        </td>
+                        <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                            @Html.HiddenFor(m => m[i].CollegeId)
+                            @Html.DisplayFor(m => m[i].RegistrationNumber)
+                            @Html.HiddenFor(m => m[i].RegistrationNumber)
+                        </td>
+                        <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                            @if (Model[i].PHD != null)
+                            {
+                                if (ViewBag.Prinicipal == Model[i].RegistrationNumber)
+                                {
+                                    @Html.DisplayFor(m => m[i].FirstName)<span>&nbsp;&nbsp;</span>
+                                    @Html.DisplayFor(m => m[i].MiddleName)<span>&nbsp;&nbsp;</span>
+                                    @Html.DisplayFor(m => m[i].LastName)<span>&nbsp;&nbsp;</span>
+                                    if (Model[i].NotconsiderPhd == true)
+                                    {
+                                        <span style="color:blue;font-weight:bold;">Prinicipal(Ph.D)</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color:red;font-weight:bold;">Prinicipal(Ph.D)</span>
+                                    }
+
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(m => m[i].FirstName)<span>&nbsp;&nbsp;</span>
+                                    @Html.DisplayFor(m => m[i].MiddleName)<span>&nbsp;&nbsp;</span>
+                                    @Html.DisplayFor(m => m[i].LastName)<span>&nbsp;&nbsp;</span>
+                                    if (Model[i].NotconsiderPhd == true)
+                                    {
+                                        <span style="color:blue;font-weight:bold;">(Ph.D)</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color:red;font-weight:bold;">(Ph.D)</span>
+                                    }
+
+                                }
+
+                            }
+                            else
+                            {
+                                if (ViewBag.Prinicipal == Model[i].RegistrationNumber)
+                                {
+                                    @Html.DisplayFor(m => m[i].FirstName)<span>&nbsp;&nbsp;</span>
+                                    @Html.DisplayFor(m => m[i].MiddleName)<span>&nbsp;&nbsp;</span>
+                                    @Html.DisplayFor(m => m[i].LastName)<span>&nbsp;&nbsp;</span>
+                                    <span style="color:red;">Prinicipal</span>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(m => m[i].FirstName)<span>&nbsp;&nbsp;</span>
+                                    @Html.DisplayFor(m => m[i].MiddleName)<span>&nbsp;&nbsp;</span>
+                                    @Html.DisplayFor(m => m[i].LastName)<span>&nbsp;&nbsp;</span>
+                                }
+                            }
+                        </td>
+                        <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                            @Html.DisplayFor(m => m[i].SpecializationName)
+                            @Html.HiddenFor(m => m[i].SpecializationName)
+                        </td>
+                        <td style="vertical-align: middle; text-transform: uppercase; text-align: center;">
+                            @Html.DisplayFor(m => m[i].IdentfiedFor)
+                            @Html.HiddenFor(m => m[i].IdentfiedFor)
+                        </td>
+                        <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                            @Html.DisplayFor(m => m[i].PGSpecializationName)
+                            @Html.HiddenFor(m => m[i].PGSpecializationName)
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;width: 150px">
+                            @if (Model[i].DeactivationReason == null && Model[i].DegreeId >= 4)
+                            {
+                                @Html.CheckBoxFor(m => m[i].isVerified, new { @class = "Checkall" })
+                            }
+
+                        </td>
+                        @if (Model[i].SamePANNumberCount > 1)
+                        {
+                            <td style="text-align: center; vertical-align: middle; color: red;">
+                                @Html.DisplayFor(m => m[i].PANNumber)
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="text-align: center; vertical-align: middle;">
+                                @Html.DisplayFor(m => m[i].PANNumber)
+                            </td>
+                        }
+                        <td style="text-align: center; vertical-align: middle;">
+                            @if (Model[i].DeactivationReason != null)
+                            {
+                                <span style="color:red;">@Html.DisplayFor(m => m[i].DeactivationReason)</span>
+
+                            }
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;width: 150px">
+                            @Html.ActionLink("View", "PharmacyViewFacultyDetails", "FacultyVerificationDENew", new { fid = UAAAS.Models.Utilities.EncryptString(Model[i].id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"] }, new { @class = "view_button", @target = "_blank" })  @*viewDialog*@
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                </th>
+                <th>
+                    <input type="checkbox" id="Check" style="width: 90%; text-align: center" />
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+
+                <th>
+                    <input type="text" id="i-6" style="width: 90%; text-align: center" class="search_init">
+                </th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-10" style="width: 90%; text-align: left; " class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+    <div id="dialog-check" style="display: none">
+    </div>
+}

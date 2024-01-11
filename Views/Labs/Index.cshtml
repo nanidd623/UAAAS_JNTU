@@ -1,0 +1,1685 @@
+﻿@model UAAAS.Models.Lab
+@using UAAAS.Models;
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "Laboratories";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    int count = 0;
+}
+
+<h2>Laboratories</h2>
+@*<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>*@
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<link href="~/Scripts/Jquerydatatables/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/Jquerydatatables/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Jquerydatatables/dataTables.bootstrap.min.js"></script>
+
+<style type="text/css">
+    .button_class {
+        background-color: #024b74;
+        padding: 2px 15px;
+        border: 0px solid #f49820;
+        color: #ffffff;
+        margin-right: 3px;
+        touch-action: manipulation;
+        cursor: pointer;
+       
+    }
+    
+        .button_class:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+</style>
+
+
+
+
+<script type="text/javascript">
+
+    var url;
+    var labid;
+    $(document).ready(function () { 
+
+        $('.delete').click(function() {
+            //alert($(this).attr('id'));
+            //var result = confirm('Are you sure you want to delete?');
+            // if (result == true) {
+            $.getJSON("/Labs/DeleteRecord", { id: $(this).attr('id') },
+                function(DepartmentsData) {
+                });
+            // } else {
+            //}
+        });
+
+        var mainUrl = window.location;
+        var url;
+        var equipmentId;
+        $.ajaxSetup({ cache: false });
+         
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Lab',
+            autoOpen: false,
+            resizable: false,
+            height: 620,
+            width: 720,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function(event, ui) {
+                $(this).load(url);
+            },
+            close: function(event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function(e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Lab'
+            });
+            url = $("#openDialog").attr('href');
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+
+        //$('.webGrid').find('tr').click(function () {
+        //    url = $(this).find(".editDialog").attr("id");
+        //    url = "/Labs/AddEditRecord?id=" + url + "&eqpid=" + $(this).find(".editDialog").attr("eqpid") + "&eqpno=" + $(this).find(".editDialog").attr("eqpno");
+        //    //alert(url);
+        //});
+
+        //$(".editDialog").live("click", function (e) {
+        //     
+        //    //e.preventDefault();
+        //    //$("#dialog-edit").dialog({
+        //    //    title: 'Edit Lab'
+        //    //});
+        //    //$myDialog.dialog('open');
+        //    //return false;
+        //    $("#dialog-edit").dialog({
+        //        title: 'Edit Lab',
+        //        autoOpen: false,
+        //        resizable: false,
+        //        height: 620,
+        //        width: 720,
+        //        show: { effect: 'drop', direction: "up" },
+        //        modal: true,
+        //        draggable: true,
+        //        closeOnEscape: true,
+        //        open: function (event, ui) {
+        //            $(this).load(url);
+        //        },
+        //        close: function (event, ui) {
+        //            $(this).dialog("close");
+        //        }
+        //    });
+        //    //$("#dialog-edit").dialog('open');
+        //    //return false;
+        //});
+
+        //$(".confirmDialog").live("click", function(e) {
+        //    var url = $(this).attr('id');
+        //    url = "/Labs/DeleteRecord?id=" + url;
+        //    //alert(url);
+        //    $("#dialog-confirm").dialog({
+        //        title: 'Delete Lab',
+        //        autoOpen: false,
+        //        resizable: false,
+        //        height: 170,
+        //        width: 350,
+        //        show: { effect: 'drop', direction: "up" },
+        //        modal: true,
+        //        draggable: true,
+        //        buttons: {
+        //            "Yes": function() {
+        //                $(this).dialog("close");
+        //                window.location = url;
+
+        //            },
+        //            "No": function() {
+        //                $(this).dialog("close");
+
+        //            }
+        //        }
+        //    });
+        //    $("#dialog-confirm").dialog('open');
+        //    return false;
+        //});
+
+        $(".viewDialog").live("click", function(e) {
+            var url = $(this).attr('href');
+            alert(url);
+            $("#dialog-view").dialog({
+                title: 'Lab Details',
+                autoOpen: false,
+                resizable: false,
+                height: 620,
+                width: 720,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function(event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function() {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function(event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function(e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        //$($myDialog).bind("dialogclose", function () {
+        //    window.location = mainUrl;
+        //});
+
+
+        $("#degreeIds").change(function() {
+            debugger;
+            var selectedValue = $(this).val();
+            if (selectedValue != null && selectedValue != "") {
+                 
+                $.ajax({
+                    type: "GET",
+                    contentType: "application/json",
+                    url: "/Labs/GetDepartments?degreeId=" + selectedValue,
+                    // data: "{}",
+                    dataType: "Json",
+                    success: function(data) {
+                        // console.log(data);
+                        // first remove the current options if any
+                        $("#Departments").find('option').remove();
+                        var item = "<option value=''>---Select---</option>";
+                        // next iterate thru your object adding each option to the drop down\    
+                        // $(data).each(function (index, item) { // GETTING ERROR HERE
+                        $.each(data.Data, function(i, state) {
+                             
+                            item += "<option value='" + state.DeptId + "'>" + state.DeptName + "</option>";
+                            // $("#Departments").append($('<option></option>').val(item.Value).html(item.Text));
+                        });
+                        $("#Departments").html(item);
+
+                    },
+                    error: function ajaxError(response) {
+                        alert(response.status + ' ' + response.statusText);
+                    }
+                });
+            }
+        });
+
+
+        $("#Departments").change(function() {
+            debugger;
+            var selectedDegreeId = $("#degreeIds option:selected").val();
+            var selectedDepartmentId = $(this).val();
+            if (selectedDegreeId != null && selectedDegreeId != "" && selectedDepartmentId != null && selectedDepartmentId != "") {
+                $("#example").show();
+                DataTable(selectedDegreeId, selectedDepartmentId);
+            } else {
+                $("#example").hide();
+            }
+        });
+
+        $("#EditLabsForm").validate({
+            rules: {
+                AvailableArea: "required",
+                Make: "required"
+            },
+            messages: {
+                AvailableArea: "Please Enter Available Floor Area.",
+                Make: "Please Enter Make."
+            }
+        });
+
+
+        $(".submit").click(function(event, args) {
+
+             
+
+            var command = $(this).val();
+            $("#EditLabsForm").valid();
+            var validationcheck = $("#EditLabsForm").valid();
+            if ($('#scannedCopy').val() == undefined && $('#EquipmentPhoto').val() == '' && $('#ViewEquipmentPhoto').val() == undefined) {
+                alert("Please select photo");
+            }
+            var EquimentName = "";
+            if ($("#EquipmentName").val() != "" && $("#EquipmentName").val() != null && $("#Labcode").val() != "TMP-CL") {
+                EquimentName = $("#EquipmentName").val();
+            } else {
+                EquimentName = $("#epname").val();
+            }
+
+            var formData = new FormData();
+            formData.append("collegeId", $("#collegeId").val());
+            formData.append("EquipmentUniqueID", $("#EquipmentUniqueID").val());
+            formData.append("EquipmentID", $("#EquipmentID").val());
+            formData.append("LabName", $("#LabName").val());
+            formData.append("Make", $("#Make").val());
+            formData.append("Model", $("#Model").val());
+            formData.append("EquipmentName", EquimentName);
+            formData.append("AvailableUnits", $("#AvailableUnits").val());
+            formData.append("AvailableArea", $("#AvailableArea").val());
+            formData.append("RoomNumber", $("#RoomNumber").val());
+            formData.append("EquipmentNo", $("#EquipmentNo").val());
+            formData.append("EquipmentDateOfPurchasing1", $("#EquipmentDateOfPurchasing1").val());
+            formData.append("DelivaryChalanaDate1", $("#DelivaryChalanaDate1").val());
+            formData.append("EquipmentPhoto", $("#EquipmentPhoto").prop("files")[0]);
+            formData.append("id", $("#id").val());
+         //   formData.append("DelivaryChalanaImage", $("#DelivaryChalanaImage").prop("files")[0]);
+         //   formData.append("BankStatementImage", $("#BankStatementImage").prop("files")[0]);
+          //  formData.append("StockRegisterEntryImage", $("#StockRegisterEntryImage").prop("files")[0]);
+           formData.append("ViewEquipmentPhoto", $("#ViewEquipmentPhoto").val());
+           // formData.append("ViewDelivaryChalanaImage", $("#ViewDelivaryChalanaImage").val());
+          //  formData.append("ViewBankStatementImage", $("#ViewBankStatementImage").val());
+          //  formData.append("ViewStockRegisterEntryImage", $("#ViewStockRegisterEntryImage").val());
+            formData.append("createdBy", $("#createdBy").val());
+            formData.append("createdOn", $("#createdOn").val());
+          //  formData.append("PurchaseOrderImage", $("#PurchaseOrderImage").prop("files")[0]);
+          //  formData.append("ViewPurchaseOrderImage", $("#ViewPurchaseOrderImage").val());
+            //cmd: command
+           
+            var DegreeId = $("#degreeIds option:selected").val();
+            if (DegreeId == null) {
+                DegreeId = 0;
+            }
+            var DepartmentId = $("#Departments option:selected").val();
+            if (DepartmentId == null) {
+                DepartmentId = 0;
+            }
+            if (validationcheck) {
+                var laboratories = {
+                    collegeId: $("#colzlegeId").val(),
+                    EquipmentUniqueID: $("#EquipmentUniqueID").val(),
+                    EquipmentID: $("#EquipmentID").val(),
+                    LabName: $("#LabName").val(),
+                    Make: $("#Make").val(),
+                    Model: $("#Model").val(),
+                    EquipmentName: $("#EquipmentName").val(),
+                    AvailableUnits: $("#AvailableUnits").val(),
+                    AvailableArea: $("#AvailableArea").val(),
+                    RoomNumber: $("#RoomNumber").val(),
+                    EquipmentNo: $("#EquipmentNo").val(),
+                    EquipmentDateOfPurchasing1: $("#EquipmentDateOfPurchasing1").val(),
+                    DelivaryChalanaDate1: $("#DelivaryChalanaDate1").val(),
+                    EquipmentPhoto: $("#EquipmentPhoto").prop("files")[0],
+                    id: $("#id").val()
+
+
+                };
+                console.log(laboratories);
+
+                $.ajax({
+                    type: "POST",
+                    url: "Labs/AddEditRecord", // + laboratories + "&cmd=" + command,
+                    contentType: false,
+                    // enctype: 'multipart/form-data',
+                    dataType: "json",
+                    cache: false,
+                    processData: false,
+                    data: formData,
+                    //JSON.stringify({ laboratories: formData, cmd: command }),
+                    success: function(d) {
+                         
+                        if (d != null) {
+                            DataTable(DegreeId, DepartmentId);
+                            $("#DivEditLabs").dialog("close");
+                            $("#DivEditLabs").hide();
+                            console.log(d);
+                            // alert(d.jsondata);
+                            Success("dialog-result", "Success", d.jsondata);
+
+                        }
+                    }
+                });
+            }
+        });
+
+
+        //get file size
+        function GetFileSize(fileid) {
+            // 
+            try {
+                var fileSize = 0;
+
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                //for FF, Safari, Opeara and Others
+                else {
+                    var FileName1 = $("#EquipmentPhoto")[0].files[0].value;
+                    //alert('Hai1');
+                    //alert(FileName1);
+                    fileSize = $("#EquipmentPhoto")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                    //alert('Hai');
+                    // alert(fileSize);
+
+
+                    //alert('hai3');
+
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+        $(function() {
+            $(".file").change(function() {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'png':
+                    case 'PNG':
+                    case 'jpeg':
+                    case 'JPEG':
+                    case 'bmp':
+                    case 'BMP':
+                    case 'gif':
+                    case 'GIF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".files > div > span").text("You can upload only JPEG / JPG / GIF / PNG / BMP files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetFileSize(file);
+
+                    if (size > 307200) {
+                        $(".files > div > span").text("Photo should not exceed 300 KB in Size");
+                        $(this).val('');
+                    } else {
+                        $(".files > div > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+      //for Delivery chalana doc
+        $(function() {
+            $(".deliverychalanafile").change(function() {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                    case 'pdf':
+                    case 'PDF':
+
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".deliverychalanafiles > div > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetDeliveryChalanaFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".deliverychalanafiles > div > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $(".deliverychalanafiles > div > span").text("");
+                    }
+                }
+
+            });
+        });
+
+        //for bank statement
+        $(function() {
+            $(".bankstatementfile").change(function() {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                    case 'pdf':
+                    case 'PDF':
+
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".bankstatementfiles > div > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetBankStatementFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".bankstatementfiles > div > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $(".bankstatementfiles > div > span").text("");
+                    }
+                }
+
+            });
+        });
+
+        //for stock register 
+        $(function() {
+            $(".stockRegisterfile").change(function() {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                    case 'pdf':
+                    case 'PDF':
+
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".stockRegisterfiles > div > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetStockRegisterFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".stockRegisterfiles > div > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $(".stockRegisterfiles > div > span").text("");
+                    }
+                }
+
+            });
+        });
+
+        //get delivery chalana file size
+        function GetDeliveryChalanaFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb 
+                    // fileSize = fileSize / 1048576; //size in mb 
+                    alert(fileSize);
+                }
+                //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#DelivaryChalanaImage")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb 
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get bank statement file size bankstatementfiles
+        function GetBankStatementFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb 
+                    // fileSize = fileSize / 1048576; //size in mb 
+                    alert(fileSize);
+                }
+                //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#BankStatementImage")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb 
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get stock register file size
+        function GetStockRegisterFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb 
+                    // fileSize = fileSize / 1048576; //size in mb 
+                    alert(fileSize);
+                }
+                //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#StockRegisterEntryImage")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb 
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //for Purchase Order doc
+        $(function () {
+            $(".purchaseorderfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".purchaseorderfiles > div > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetPurchaseOrderFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".purchaseorderfiles > div > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $(".purchaseorderfiles > div > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+        //get purchase order file size
+        function GetPurchaseOrderFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb 
+                    // fileSize = fileSize / 1048576; //size in mb 
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#PurchaseOrderImage")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb 
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+
+
+    });
+
+    function DataTable(degreeId, departmentId) {
+        if (degreeId==null) {
+            degreeId = 0;
+        }
+        if (departmentId == null) {
+            departmentId = 0;
+        }
+        //degreeId = null;
+        var otable = $('#example').DataTable({
+            "processing": true,
+            //"serverSide": true,
+            "stateSave": true,
+            "bDestroy": true,
+            // "paging": false,
+            // "ordering": false,
+            //"searching": false,
+            "ajax":
+            {
+                "type": "POST",
+                "url": "/Labs/LabsJson?DegreeId=" + degreeId + "&DepartmentId=" + departmentId,
+                "dataSrc": ""
+            },
+            "columns": [
+                {
+                    "data": "id",
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { "data": "specializationName" },
+                  { "data": "year" },
+                { "data": "Semester" },
+              
+                { "data": "Labcode" },
+                { "data": "LabName" },
+                { "data": "EquipmentName" },
+                {
+                    render: function(data, type, full, meta, row) {
+                         
+                        //var eqid = full.EquipmentID;
+                        //var id = full.id;
+                        //var EquipmentNo = full.EquipmentNo;
+                        //var collegeId = full.collegeId;
+                        var count = full.ExpCount;
+                        if (count > 0) {
+                             
+                            return '<input type="radio" checked="true" value="True"  name="Availability' + meta.row + '"  id="' + full.id + '"  eqpid = "' + full.EquipmentID + '" eqpno = "' + full.EquipmentNo + '"  class="editDialog"/>Yes&nbsp;&nbsp;<input type="radio" name="Availability' + meta.row + '" value="False"   id ="' + full.id + '" eqpid = "' + full.EquipmentID + '" eqpno ="' + full.EquipmentNo + '" class="confirmDialog delete1">No</input>';
+                        } else {
+                            return '<input type="radio"  value="True"  name="Availability' + meta.row + '"  eqpid = "' + full.EquipmentID + '"  eqpno = "' + full.EquipmentNo + '"  class="editDialog" />Yes&nbsp;&nbsp;<input type="radio" value="False" checked="true" name="Availability' + meta.row + '"    eqpid = "' + full.EquipmentID + '"   eqpno = "' + full.EquipmentNo + '"  class="confirmDialog delete1">No</input>';
+                        }
+                    }
+
+
+                }
+                //{ "data": "EquipmentName" } 
+                //  {
+                //      "render": function (data, type, full) {
+                //          return '<a href="/Faculty/FacultyRegistrationNumber?fid=' + full["id"] + '" class ="EditDialog edit_button" style="text-align:center"><span>Edit</span></a>';
+                //      }
+                //  },
+                //   {
+                //       "render": function (data, type, full) {
+                //           return '<a href="/Faculty/Delete?fid=' + full["id"] + '&&type=' + full["facultyTypeId"] + '&&rid=' + full["facultyCategoryId"] + '"  class="confirmDialog delete_button"><span>Delete</span></a>';
+                //       }
+                //   },
+                //{
+                //    "render": function (data, type, full) {
+
+                //        return '<a href="/Faculty/ViewFacultyDetails?fid=' + full["id"] + ' " target="_blank" class="view_button"><span>View</span></a>';
+                //    }
+                //}
+            ]
+            //"createdRow": function (row, data, index) {
+            //     
+            //    if (data["SpecializationName"] === null || data["department"] === null) {
+            //        $('td:eq(0)', row).css("background-color", "red");
+            //    }
+            //}
+        });
+
+        //$('#example tfoot tr th').each(function(i) {
+        //    if (i !== 8 && i !== 9 && i !== 0) {
+        //        var title = $(this).text();
+        //        $(this).html('<input type="text" placeholder="" />');
+        //    }
+        //});
+        //otable.columns().every(function() {
+        //    var column = this;
+        //    $('input', this.footer()).on('keyup change', function() { column.search(this.value).draw(); });
+        //});
+        //otable.on('order.dt search.dt', function() {
+        //    otable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function(cell, i) {
+        //        cell.innerHTML = i + 1;
+        //    });
+        //}).draw();
+    }
+
+    //Success  Result dailog
+    function Success(Id, Title, Message) {
+        $("#lblMessage").text(Message);
+        $("#"+Id+"").dialog({
+         autoOpen: false,
+         title: Title,
+         show: { effect: 'drop', direction: "up" },
+        hide: 'explode',
+        width: 300,
+        height: 200,
+        top:50,
+        position: 'center',
+        buttons: { 'OK': function() { $(this).dialog('close'); } },
+        closeOnEscape: true,
+        resizable: false
+         });
+        $("#" + Id + "").dialog('open');
+        return false;
+    }
+
+
+
+
+    $(".webGrid").find("tbody").find("tr").click(function() {
+         
+        url = $(this).find(".editDialog").attr("id");
+        url = "/Labs/AddEditRecord?id=" + url + "&eqpid=" + $(this).find(".editDialog").attr("eqpid") + "&eqpno=" + $(this).find(".editDialog").attr("eqpno");
+        //alert(url);
+    });
+
+    function clearAll() {
+        $("#EditLabsForm input[type='text'],input[type='file'],input[type='hidden']").each(function() {
+            $(this).val("");
+        });
+
+        $("#EditLabsForm").each(function() {
+            $(this).trigger("reset.unobtrusiveValidation");
+        });
+
+
+        $("#EditLabsForm .input-validation-error").addClass("input-validation-valid");
+        $("#EditLabsForm .input-validation-error").removeClass("input-validation-error");
+        //Removes validation message after input-fields
+        $("#EditLabsForm .field-validation-error").addClass("field-validation-valid");
+        $("#EditLabsForm .field-validation-error").removeClass("field-validation-error");
+    }
+
+
+    //Edit Dailog Code
+    $(".editDialog").live("click", function(e) {
+         
+        // $("#EditLabsForm").clearAll();
+        clearAll();
+        url = "/Labs/AddEditRecord?id=" + $(this).attr("id") + "&eqpid=" + $(this).attr("eqpid") + "&eqpno=" + $(this).attr("eqpno");
+        AddLab(url);
+        $("#DivEditLabs").show();
+        $("#DivEditLabs").dialog({
+            title: 'Edit Lab',
+            autoOpen: false,
+            resizable: false,
+            height: 620,
+            width: 720,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            //open: function (event, ui) {
+            //    $(this).load(url);
+            //},
+            close: function(event, ui) {
+                 
+                // $("#DivEditLabs").dialog("close");
+                // return false;
+            }
+        });
+        $("#DivEditLabs").dialog('open');
+        return false;
+    });
+
+     //Binding Data to Edit Dialog Code
+    function AddLab(url) {
+         
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: url,
+            dataType: "Json",
+            success: function(data) {
+                console.log(data);
+                if (data != null) {
+                    $("#DivEditLabs").show();
+                    $("#degreeId").val(data.degreeId);
+                    $("#degree").val(data.degree);
+                    $("#spandegree").text(data.degree);
+                    $("#spandepartment").text(data.department);
+                    $("#department").val(data.department);
+                    $("#departmentId").val(data.departmentId);
+                    $("#spanspecialization").text(data.specializationName);
+                    $("#specializationName").val(data.specializationName);
+                    //$("#degreeId").val(data.specializationId);
+                    $("#LabName").text(data.LabName);
+                    $("#LabName").val(data.LabName);
+                    $("#spanLabName").text(data.LabName);
+                    $("#id").val(data.id);
+                    $("#EquipmentID").val(data.EquipmentID);
+                    $("#EquipmentNo").val(data.EquipmentNo);
+                    $("#EquipmentIds").val(data.EquipmentIds);
+                    $("#Semester").val(data.Semester);
+                    $("#year").val(data.year);
+                    $("#ViewEquipmentPhoto").val(data.ViewEquipmentPhoto);
+                    $("#collegeId").val(data.collegeId);
+                    $("#Labcode").val(data.Labcode);
+                    $("#createdBy").val(data.createdBy);
+                    $("#createdOn").val(data.ViewCreatedOn);
+                     
+                    if (data.degree == "B.Tech" || data.degree == "B.Pharmacy") {
+                        $("#Yeardiv").show();
+                        $("#spanSemester").text(data.Semester);
+                        $("#spanyear").text(data.year);
+                    } else {
+                        $("#Yeardiv").hide();
+                        $("#spanSemester").text("");
+                        $("#spanyear").text("");
+                    }
+
+                    if (data.Labcode != "TMP-CL" && data.Labcode != "" && data.Labcode != null) {
+                        $("#LabNamedivdisplay").show();
+                        $("#LabNamedivEdit").hide();
+                        $("#spanLabName").text(data.LabName);
+
+
+                    } else {
+                        
+                        $("#LabNamedivEdit").show();
+                        $("#Labpname").val(data.LabName);
+                        $("#LabNamedivdisplay").hide();
+                    }
+
+                    if (data.Labcode != "TMP-CL" && data.EquipmentName != "" && data.EquipmentName != null) {
+                        $("#EquipmentNamedivdisplay").show();
+                        $("#EquipmentNamedivedit").hide();
+                        $("#spanEquipment").text(data.EquipmentName);
+                        $("#EquipmentName").val(data.EquipmentName);
+                    } else {
+                        $("#EquipmentNamedivedit").show();
+                        $("#epname").val(data.LabEquipmentName);
+                        $("#EquipmentNamedivdisplay").hide();
+                      
+                    }
+
+                    if (data.ViewEquipmentPhoto != null && data.ViewEquipmentPhoto !== "") {
+                        $("#EquipmentPhotodiv").show();
+                        $("#equimentsrc").attr("src", "Content/Upload/EquipmentsPhotos/" + data.ViewEquipmentPhoto);
+                        $("#EquipmentPhoto").removeClass("required");
+                    } else {
+                        $("#EquipmentPhotodiv").hide();
+                        $("#EquipmentPhoto").addClass("required");
+                    }
+
+
+                    if (data.ViewDelivaryChalanaImage != null && data.ViewDelivaryChalanaImage !== "") {
+                        $("#DelivaryChalanaImagediv").show();
+                        $("#DelivaryChalanaImagesrc").attr("href", "Content/Upload/Labs/DeliverychallanDocuments/" + data.ViewDelivaryChalanaImage);
+                        $("#DelivaryChalanaImage").removeClass("required");
+                    } else {
+                        $("#DelivaryChalanaImagediv").hide();
+                        $("#DelivaryChalanaImage").addClass("required");
+                    }
+
+                    if (data.ViewBankStatementImage != null && data.ViewBankStatementImage !== "") {
+                        $("#BankStatementImagediv").show();
+                        $("#BankStatementImage").removeClass("required");
+                        $("#BankStatementImagesrc").attr("href", "Content/Upload/Labs/BankstatementDocuments/" + data.ViewBankStatementImage);
+                    } else {
+                        $("#BankStatementImagediv").hide();
+                        $("#BankStatementImage").addClass("required");
+                    }
+
+                    if (data.ViewStockRegisterEntryImage != null && data.ViewStockRegisterEntryImage !== "") {
+                        $("#StockRegisterEntryImagediv").show();
+                        $("#StockRegisterEntryImage").removeClass("required");
+                        $("#StockRegisterEntryImagesrc").attr("href", "Content/Upload/Labs/StockregisterentryDocuments/" + data.ViewStockRegisterEntryImage);
+                    } else {
+                        $("#StockRegisterEntryImagediv").hide();
+                        $("#StockRegisterEntryImage").addClass("required");
+                    }
+
+
+                    if (data.ViewPurchaseOrderImage != null && data.ViewPurchaseOrderImage !== "") {
+                        $("#PurchaseOrderImagediv").show();
+                        $("#PurchaseOrderImage").removeClass("required");
+                        $("#PurchaseOrderImagesrc").attr("href", "Content/Upload/Labs/PurchaseOrderDocument/" + data.ViewPurchaseOrderImage);
+                    } else {
+                        $("#PurchaseOrderImagediv").hide();
+                        $("#PurchaseOrderImage").addClass("required");
+                    }
+
+                     
+                    if (data.id != "" && data.id != null) {
+                        $("#btnUpdate").show();
+                        $("#btnSave").hide();
+                        $("#AvailableArea").val(data.AvailableArea);
+                        $("#RoomNumber").val(data.RoomNumber);
+                        $("#Make").val(data.Make);
+                        $("#Model").val(data.Model);
+                        $("#EquipmentUniqueID").val(data.EquipmentUniqueID);
+                        $("#AvailableUnits").val(data.AvailableUnits);
+
+                        $("#EquipmentDateOfPurchasing1").val(data.EquipmentDateOfPurchasing1);
+                        $("#DelivaryChalanaDate1").val(data.DelivaryChalanaDate1);
+                        $("#ViewDelivaryChalanaImage").val(data.ViewDelivaryChalanaImage);
+                        $("#ViewBankStatementImage").val(data.ViewBankStatementImage);
+                        $("#ViewStockRegisterEntryImage").val(data.ViewStockRegisterEntryImage);
+                        $("#ViewPurchaseOrderImage").val(data.ViewPurchaseOrderImage);
+
+                    } else {
+                        $("#btnSave").show();
+                        $("#btnUpdate").hide();
+                    }
+
+
+                }
+
+            },
+            error: function ajaxError(response) {
+                alert(response.status + ' ' + response.statusText);
+            }
+        });
+    }
+
+    //Delete Dailog Code
+    $(".confirmDialog").live("click", function () {
+        // url = "/Labs/AddEditRecord?id=" + $(this).attr("id");
+         
+        labid = $(this).attr("id");
+        var DegreeId = $("#degreeIds option:selected").val();
+        var DepartmentId = $("#Departments option:selected").val();
+        $("#dialog-confirm").dialog({
+            title: 'Delete Lab',
+            autoOpen: false,
+            resizable: false,
+            height: 170,
+            width: 350,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            buttons: {
+                "Yes": function () {
+                     
+                    $(this).dialog("close");
+                    if (labid != null && labid != "" && labid != undefined) {
+                        DeleteLab(labid, DegreeId, DepartmentId);
+                    }
+                },
+                "No": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $("#dialog-confirm").dialog('open');
+        return false;
+    });
+
+
+    // Delete Lab Ajax Request
+    function DeleteLab(labid,DegreeId,DepartmentId) {
+         
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: "/Labs/DeleteRecord?id=" + labid,
+            dataType: "Json",
+            success: function (data) {
+                 
+                console.log(data);
+                if (data != null) {
+                    DataTable(DegreeId, DepartmentId);
+                    //  alert(data.jsondata);
+                    Success("dialog-result", "Success", data.jsondata);
+                }
+            },
+            error: function ajaxError(response) {
+                alert(response.status + ' ' + response.statusText);
+            }
+        });
+    }
+
+
+</script>
+
+
+
+<p style="text-align: right;padding-bottom: 10px">
+   
+    @Html.ActionLink("Lab details uploaded for A.Y.2022-23 affiliation process", "Index", "Labscopy","", new { target = "_blank", @class = "create_button" })
+    @Html.ActionLink("Equipments Uploaded Count", "CollegeLabsChecking", "Labs", new {target = "_blank", @class = "create_button"}) &nbsp;&nbsp;&nbsp;&nbsp;
+    @Html.ActionLink("No of Lab Units", "ViewPhysicalLabs", "Labs", new { target = "_blank", @class = "create_button" })
+</p>
+
+@using (Html.BeginForm())
+{
+    <table width="100%">
+        <tr>
+            <th class="col1">Degree</th>
+            <td class="col2">
+                @Html.DropDownList("degreeIds", new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "DegreeId", "DegreeName"), "---Select---", new {style = "width: 200px"})
+            </td>
+        </tr>
+        <tr>
+            <th class="col1">Department-Specialization</th>
+            <td class="col2">
+                @Html.DropDownList("Departments", new List<SelectListItem> {}, "---select---", new {style = "width: 200px"})
+            </td>
+        </tr>
+    </table>
+    <br/>
+    <table id="example" class="webGrid display" style="display: none">
+        <thead>
+            <tr style="background: #FCF1D1">
+                <th style="text-align: left;">S.No</th>
+                <th style="text-align: left;">Specialization</th>
+                <th style="text-align: left;">Year</th>
+                <th style="text-align: left;">Semester</th>
+                <th style="text-align: left;">Lab Code</th>
+                <th style="text-align: left;width:165px">Lab Name</th>
+                <th style="text-align: center;width:300px">Equipment Name</th>
+                <th style="text-align: center;">Available</th>
+            </tr>
+        </thead>
+
+
+        @*<tfoot style="display:table-header-group">
+                <tr>
+                    <th>S.No </th>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    <th>Department</th>
+                    <th>Faculty Registration Number</th>
+                    <th>Verification Status</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </tfoot>*@
+        <tbody></tbody>
+    </table>
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete this lab related details ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none"></div>
+    <div id="dialog-view" style="display: none"></div>
+    <div id="dialog-result" style="display: none">
+        <span style="color: green;background:white" id="lblMessage"></span>
+    </div>
+}
+
+
+<div id="DivEditLabs" style="display: none">
+    @using (Html.BeginForm("","",FormMethod.Post,new{@id="EditLabsForm"}))
+    {
+         @Html.ValidationSummary(true)
+    
+    <div class="details_table">
+        @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.degreeId)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @*@Html.TextBoxFor(model => model.degree)*@
+            <span id="spandegree"></span>
+            @Html.HiddenFor(model => model.degree)
+            @Html.ValidationMessageFor(model => model.degreeId)
+            @Html.HiddenFor(model => model.degreeId)
+            @Html.HiddenFor(model => model.id)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.departmentId)
+        </div>
+    <div class="editor-field" style="width: 400px">
+        <span id="spandepartment"></span>
+        @*@Html.TextBoxFor(model => model.department)*@
+        @Html.HiddenFor(model => model.department)
+        @Html.HiddenFor(model => model.departmentId)
+    </div>
+
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.specializationId)
+        </div>
+    <div class="editor-field" style="width: 400px">
+        <span id="spanspecialization"></span>
+        @Html.HiddenFor(model => model.specializationName)
+    </div>
+    @*@if (Model.degree == "B.Tech" || Model.degree == "B.Pharmacy")
+        {*@
+        <div id="Yeardiv" style="display: none">
+            <div class="editor-label" style="width: 250px">
+                @Html.LabelFor(model => model.yearInDegreeId)
+            </div>
+            <div class="editor-field" style="width: 400px">
+                <span id="spanyear"></span>
+                @*@Html.DisplayFor(model => model.year)*@
+            </div>
+            <div class="editor-label" style="width: 250px">
+                @Html.LabelFor(model => model.Semester)
+            </div>
+            <div class="editor-field" style="width: 400px">
+                <span id="spanSemester"></span>
+                @*@Html.DisplayFor(model => model.Semester)*@
+            </div>
+        </div>
+        @*}
+        else
+        {
+            @Html.HiddenFor(model => model.year)
+            @Html.HiddenFor(model => model.Semester)
+        }*@
+        @Html.HiddenFor(model => model.year)
+        @Html.HiddenFor(model => model.Semester)
+        @* <div class="editor-label" style="width: 250px">
+                @Html.LabelFor(model => model.Labcode)
+            </div>
+            <div class="editor-field" style="width: 420px">
+                @Html.DisplayFor(model => model.Labcode)
+            </div>*@
+
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.LabName)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @*@if (Model.Labcode != "TMP-CL" && Model.LabName != "" && Model.LabName != null)
+            {*@
+            @*@Html.DisplayFor(model => model.LabName)*@
+            <div id="LabNamedivdisplay" style="display: none">
+               <span id="spanLabName"></span>
+                @Html.HiddenFor(model => model.LabName)
+                @Html.HiddenFor(model => model.Labcode)
+            </div>
+
+                    @*}
+            else
+            {*@
+            <div id="LabNamedivEdit" style="display: none">
+                @Html.TextBoxFor(model => model.LabName, new {  @placeholder = "Lab Name", @maxlength = "90", @class = "required", @id = "Labpname", @title = "We do not have Lab Names for the selected Lab, please specify your own 'Name of the Equipment' in the textbox shown" })
+            </div>
+                @*}*@
+
+            </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.AvailableArea)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.AvailableArea, new { @placeholder = "Floor Area" })
+            @Html.ValidationMessageFor(model => model.AvailableArea)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.RoomNumber)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.RoomNumber, new { @placeholder = "Room No", @maxlength = "25" })
+            @Html.ValidationMessageFor(model => model.RoomNumber)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.EquipmentID)
+        </div>
+        <div class="editor-field" style="width: 400px">
+           
+            <div id="EquipmentNamedivdisplay" style="display: none">
+                <span id="spanEquipment"></span>
+               
+                @Html.HiddenFor(model => model.EquipmentName)
+            </div>
+           
+            <div id="EquipmentNamedivedit" style="display: none">
+                @Html.TextBoxFor(model => model.EquipmentName, new {  @placeholder = "Equipment Name", @maxlength = "50", @class = "required", @id = "epname", @title = "We do not have Equipment Names for the selected Lab, please specify your own 'Name of the Equipment' in the textbox shown" })
+            </div>
+              
+                @Html.HiddenFor(model => model.EquipmentNo)
+                @Html.HiddenFor(model => model.EquipmentID)
+            </div>
+       
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.Make)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.Make, new { @placeholder = "Make", @maxlength = "50" })
+            @Html.ValidationMessageFor(model => model.Make)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.Model)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.Model, new { @placeholder = "Model", @maxlength = "50" })
+            @Html.ValidationMessageFor(model => model.Model)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.EquipmentUniqueID)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.EquipmentUniqueID, new { @placeholder = "Unique ID", @maxlength = "50" })
+            @Html.ValidationMessageFor(model => model.EquipmentUniqueID)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.AvailableUnits)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.AvailableUnits, new { @placeholder = "AvailableUnits" })
+            @Html.ValidationMessageFor(model => model.AvailableUnits)
+        </div>
+
+        <div class="editor-label" style="width: 250px">
+            @*@Html.LabelFor(model => model.EquipmentDateOfPurchasing )*@
+            @Html.Label("Date of Payment Invoice(dd/MM/yyyy)")
+        </div>
+        <div class="editor-field" style="width: 400px;">
+
+
+            @Html.TextBoxFor(model => model.EquipmentDateOfPurchasing1, "{0:dd/MM/yyyy}", new { @class = "required", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Date Of Payment" })
+            @Html.ValidationMessageFor(model => model.EquipmentDateOfPurchasing1)
+
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @*@Html.LabelFor(model => model.EquipmentDateOfPurchasing )*@
+            @Html.Label("Date of Delivery Challan(dd/MM/yyyy)")
+        </div>
+    <div class="editor-field" style="width: 400px;">
+        @Html.TextBoxFor(model => model.DelivaryChalanaDate1, "{0:dd/MM/yyyy}", new { @class = "required", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Date of Delivery Challan" })
+        @Html.ValidationMessageFor(model => model.DelivaryChalanaDate1)
+    </div>
+
+        @*<div class="editor-label" style="width: 250px;height:57px">
+            @Html.Label("Delivery Chalana Statement ")
+            <br /><span style="color: blue;">(Pdf should be less than 1 MB size)</span>
+
+        </div>
+    <div class="editor-field deliverychalanafiles" style="width: 400px; height: 57px">
+        <div style="width: 70%; float: left">
+            @Html.TextBoxFor(model => model.DelivaryChalanaImage, new {type = "file", @class = "deliverychalanafile"})
+
+            <span style="color: red;"></span>
+        </div>
+        <div style="width: 30%;float:right">
+            <div id="DelivaryChalanaImagediv" style="display: none">
+                @Html.HiddenFor(model => model.ViewDelivaryChalanaImage)
+                <a href="" id="DelivaryChalanaImagesrc" target="_blank">
+                    <img src="~/Content/images/pdf.png" align="right"  />
+                </a>
+   
+            </div>
+        </div>
+        </div>
+
+
+
+        <div class="editor-label" style="width: 250px;height:57px">
+            @Html.Label("Purchase Order Statement ")
+            <br /><span style="color: blue;">(Pdf should be less than 1 MB size)</span>
+
+        </div>
+        <div class="editor-field purchaseorderfiles" style="width: 400px; height: 57px">
+            <div style="width: 70%; float: left">
+                @Html.TextBoxFor(model => model.PurchaseOrderImage, new { type = "file", @class = "purchaseorderfile" })
+
+                <span style="color: red;"></span>
+            </div>
+            <div style="width: 30%;float:right">
+                <div id="PurchaseOrderImagediv" style="display: none">
+                    @Html.HiddenFor(model => model.ViewPurchaseOrderImage)
+                    <a href="" id="PurchaseOrderImagesrc" target="_blank">
+                        <img src="~/Content/images/pdf.png" align="right" />
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    <div class="editor-label" style="width: 250px;height:57px ">
+            @Html.Label("Bank Statement ")<br /><span style="color:blue;"> (Pdf should be less than 1 MB size)</span>
+        </div>
+    <div class="editor-field bankstatementfiles" style="width: 400px; height: 57px">
+        <div style="width: 70%; float: left">
+            @Html.TextBoxFor(model => model.BankStatementImage, new {type = "file", @class = "bankstatementfile"})
+
+            <span style="color: red;"></span>
+        </div>
+        <div style="width: 30%;float:right">
+            <div id="BankStatementImagediv" style="display: none">
+                @Html.HiddenFor(model => model.ViewBankStatementImage)
+                <a href="" id="BankStatementImagesrc" target="_blank">
+                    <img src="~/Content/images/pdf.png"  align="right"  />
+                </a>
+       </div>
+        </div>
+        </div>
+
+        <div class="editor-label" style="width: 250px;height:57px ">
+            @Html.Label("Stock Register Entry Statement ")<br /><span style="color:blue;"> (Pdf should be less than 1 MB size)</span>
+        </div>
+        <div class="editor-field stockRegisterfiles" style="width: 400px; height: 57px">
+            <div style="width: 70%; float: left">
+                @Html.TextBoxFor(model => model.StockRegisterEntryImage, new { type = "file", @class = "stockRegisterfile"})
+
+                <span style="color: red;"></span>
+            </div>
+            <div style="width: 30%;float:right">
+                <div id="StockRegisterEntryImagediv" style="display: none">
+                    @Html.HiddenFor(model => model.ViewStockRegisterEntryImage)
+                    <a href="" id="StockRegisterEntryImagesrc" target="_blank">
+                        <img src="~/Content/images/pdf.png" id="StockRegisterEntryImagesrc" align="right" />
+                    </a>
+                </div>
+            </div>
+        </div>*@
+        
+        <div class="editor-label" style="width: 250px; ">
+            @Html.Label("Equipment Photo ")
+            <br />
+            <span style="color:red;">Image size: Min 50kb & Max 300kb. Image format:"JPEG OR PNG"</span>
+        </div>
+    <div class="editor-field files" style="width: 400px; height: 56px;">
+        <div style="width: 70%; float: left">
+            @Html.TextBoxFor(model => model.EquipmentPhoto, new {type = "file", @class = "file"})
+            <span style="color: red;"></span>
+        </div>
+        <div style="width: 30%; float: right">
+            <div id="EquipmentPhotodiv" style="display: none">
+                @Html.HiddenFor(model => model.ViewEquipmentPhoto)
+                <img src="" id="equimentsrc" align="right" style="height: 50px"/>
+            </div>
+        </div>
+    </div>
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.createdBy)
+       <div style="text-align: left;width:500px">
+              
+                <input type="button" value="Update" id="btnUpdate" style="background-color: #024b74;display: none" name="cmd" class="submit button_class" />
+              
+                <input type="button" value="Save" id="btnSave" name="cmd" style="background-color: #024b74; display: none" class="submit button_class" />
+                    
+        </div>
+    </div>
+    }
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+    #example_wrapper .row {
+        border: none;
+    }
+
+    #example_filter input[type=search] {
+        border: solid 1px #c0c0c0;
+        padding: 2px;
+    }
+
+    #example thead tr th, #example tfoot tr th {
+        border: 1px solid #d3d3d3;
+    }
+
+    /*#example tbody tr td {
+        text-align: center;
+    }*/
+
+    /*#example {
+        padding-top: 10px;
+    }*/
+
+    .dataTables_length {
+        padding-bottom: 10px;
+    }
+    #example_wrapper {
+        border: 1px solid #C0C0C0;
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@if (ViewBag.NotUpload == true)
+{
+    <b>Laboratories</b><br />
+    <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+}
+else
+{
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <br />
+    if (ViewBag.Pages != null)
+    {
+        for (int i = 1; i <= ViewBag.Pages; i++)
+        {
+            <span>@Html.ActionLink("PageNo", "Index", "Labs", new { pageNumber = i }, null) @i &nbsp &nbsp &nbsp</span>
+        }
+    }
+    <br />
+
+    <table class="webGrid" style="width: 100%;">
+        <tr style="font-weight: bold;" class="gridHeader">
+            <td style="text-align: center; width: 5%;">S.No</td>
+            <td style="text-align: left; width: 10%;">Degree</td>
+            <td style="text-align: left; width: 10%;">Department</td>
+            <td style="text-align: left;">Specialization</td>
+            <td style="text-align: center; width: 5%;">year</td>
+            <td style="text-align: left;">Semester</td>
+            <td style="text-align: left;">Lab Code</td>
+            <td style="text-align: left;">Lab Name</td>
+            <td style="text-align: left; width: 10%;">Equipment Name</td>
+            <td style="text-align: left; width: 10%;">Equipment Photo</td>
+            <td style="text-align: left; width: 20%;">Available</td>
+        </tr>
+       
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            <tr>
+                <td style="text-align: center; width: 5%; background-color: #FCF1D1" class="col1">
+                    @Html.HiddenFor(m => m[i].id)
+                    @Html.HiddenFor(m => m[i].degreeId)
+                    @Html.HiddenFor(m => m[i].departmentId)
+                    @Html.HiddenFor(m => m[i].specializationId)
+                    @Html.HiddenFor(m => m[i].year)
+                    @Html.HiddenFor(m => m[i].LabName)
+                    @Html.HiddenFor(m => m[i].EquipmentName)
+                    @Html.HiddenFor(m => m[i].uploadFile)
+                    @Html.HiddenFor(m => m[i].EquipmentNo)
+                    @(i + 1)
+                </td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].degree)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].department)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].specializationName)</td>
+                @if (Model[i].year != 0)
+                {
+                    <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].year)</td>
+                }
+                else
+                {
+                    <td style="background-color: #FCF1D1"></td>
+                }
+                @if (Model[i].Semester != 0)
+                {
+                    <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].Semester)</td>
+                }
+                else
+                {
+                    <td style="background-color: #FCF1D1"></td>
+                }
+
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].Labcode)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].LabName)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].EquipmentName)</td>
+                <td style="background-color: #FCF1D1">
+                    @if (@Html.DisplayFor(m => m[i].uploadFile) != null && @Html.DisplayFor(m => m[i].uploadFile).ToString() != "")
+                    {
+                       
+                        <span><a href="../Content/Upload/EquipmentsPhotos/@Html.DisplayFor(m => m[i].uploadFile)" style="height: 50px;" class="viewFileData" target="_blank "><span style="font-weight:bold;color:red">View</span></a></span>
+                    }
+                    else
+                    {
+                        <img src="../Content/Images/no-photo.gif" style="height: 50px;" />
+                    }
+
+                  
+                </td>
+                @{
+                    var eqid = Model[i].EquipmentID;
+                    var id = Model[i].id;
+                    var EquipmentNo = Model[i].EquipmentNo;
+                    var collegeId = Model[i].collegeId;
+                    count = db.jntuh_college_laboratories.Where(l => l.id == id && l.EquipmentNo == EquipmentNo && l.CollegeID == collegeId).Select(l => l.id).Count();
+                }
+
+                @if (count > 0)
+                {
+                    <td style="background-color: #FCF1D1">
+                        @Html.RadioButton("Availability" + i, true, true, new { id = Model[i].id, eqpid = "undefined", eqpno = Model[i].EquipmentNo, @class = "editDialog" }) Yes &nbsp;&nbsp;
+                        @Html.RadioButton("Availability" + i, false, new { id = Model[i].id, eqpid = "undefined", eqpno = Model[i].EquipmentNo, @class = "confirmDialog delete1" }) No
+                    </td>
+
+                }
+                else
+                {
+                    <td style="background-color: #FCF1D1">
+                        @Html.RadioButton("Availability" + i, true, new { eqpid = Model[i].EquipmentID, id = DBNull.Value, eqpno = Model[i].EquipmentNo, @class = "editDialog" }) Yes &nbsp;&nbsp;
+                        @Html.RadioButton("Availability" + i, false, true, new { eqpid = Model[i].EquipmentID, id = DBNull.Value, eqpno = Model[i].EquipmentNo, @class = "confirmDialog delete1" }) No
+                    </td>
+                }
+
+            </tr>
+        }
+    </table>
+
+    if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }
+
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete this lab related details ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+}*@

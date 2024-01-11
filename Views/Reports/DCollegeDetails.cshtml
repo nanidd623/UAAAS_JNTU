@@ -1,0 +1,49 @@
+﻿@model UAAAS.Models.Dashbord
+@{   
+    ViewBag.Title = "Dashbord";
+}
+<h2></h2>
+@using (Html.BeginForm())
+{
+    <table border="1" style="width: 100%; background-color: aqua">
+
+        <tr>
+            <td>College Code</td>
+            <td>
+                @Html.TextBoxFor(model => model.collegeCode)
+            </td>
+        </tr>
+        <tr>
+            <td>College Name</td>
+            <td>
+                @Html.TextBoxFor(model => model.collegeName)
+            </td>
+        </tr>
+        <tr>
+            <td>Landline</td>
+            <td>@Html.TextBoxFor(model => model.landline)
+            </td>
+        </tr>
+        <tr>
+            <td>Mobile</td>
+            <td>@Html.TextBoxFor(model => model.mobile)
+            </td>
+        </tr>
+        <tr>
+            <td>Landline</td>
+            <td>@Html.TextBoxFor(model => model.email)
+            </td>
+        </tr>
+        <tr>
+            <td>Mobile</td>
+            <td>@Html.TextBoxFor(model => model.website)
+            </td>
+        </tr>
+        <tr>
+            <td>Courses</td>
+            <td>@Html.TextBoxFor(model => model.coureses)
+            </td>
+        </tr>
+
+    </table>
+}

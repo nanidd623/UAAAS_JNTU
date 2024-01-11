@@ -1,0 +1,309 @@
+﻿@model UAAAS.Controllers.OnlineRegistration.FacultyDeclaration
+@{
+    ViewBag.Title = "FacultyDeclaration";
+}
+
+<h2>FacultyDeclaration</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function ()
+    {
+        function getDateObj(dateString) {
+            var parts = dateString.split('/');
+            var month = parts[0];
+            var date = parts[1];
+            var year = parts[2];
+            return new Date(year, month, date);
+        }
+        debugger;
+        var date1 = document.getElementById('FacultyDOJ').value;
+        var date2 = document.getElementById('FacultyReleving').value;
+        var dateObjFrom = getDateObj(date1)
+        var dateObjTo = getDateObj(date1)
+        if (dateObjFrom > dateObjTo) {
+            alert('Date From is greater')
+        }
+        $(".Notworking").click(function () {
+            $("#NotWorkingData").attr('style', 'display: block'); 
+            $("#AnyNotWorkingData").attr('style', 'display: none');
+           // $('#haveyouprephdLetter').removeClass('required');
+        });
+
+        $(".Working").click(function () {
+
+            $("#NotWorkingData").attr('style', 'display: none');
+            $("#AnyNotWorkingData").attr('style', 'display: none');
+        });
+
+        $(".NotworkingAnyWhere").click(function () {
+
+            $("#NotWorkingData").attr('style', 'display: none');
+            $("#AnyNotWorkingData").attr('style', 'display: block');
+        });
+        $("#FacultyDOJ").change(function () {
+
+            var facultyid = $("#FacultyId").val();
+
+            var DateOfApp = $(this).val();
+            alert(DateOfApp);
+            var DateOfResign = $("#FacultyReleving").val();
+
+            //var DateOfResign = $(this).val();
+
+            if (facultyid != "" && DateOfApp != "" && DateOfResign != "") {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/NewOnlineRegistration/CheckdeclarationExperienceDates?facultyId=" + facultyid + "&&facultyDateOfAppointment=" + DateOfApp + "&&facultyDateOfResignation=" + DateOfResign + "&&Type=1" + "",
+                    // data: "{'facultyId':'" + facultyid + "', 'facultyDateOfResignation':'" + DateOfApp + "', 'facultyDateOfAppointment':'" + DateOfResign + "'}",
+                    success: function (status) {
+
+                        if (status.status == true) {
+
+                            alert(status.message);
+                            //alert("You have Already selected those Dates");
+                            $("#facultyDateOfAppointment").val('');
+                            $("#facultyDateOfResignation").val('');
+                        }
+                        else {
+                            return false;
+                        }
+                    },
+                    error: function () {
+
+                    }
+                })
+            }
+
+        });
+
+        $("#FacultyReleving").change(function () {
+
+            var facultyid = $("#FacultyId").val();
+            var DateOfApp = $("#FacultyDOJ").val();
+
+            var DateOfResign = $(this).val();
+
+            if (facultyid != "" && DateOfApp != "" && DateOfResign != "") {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/NewOnlineRegistration/CheckdeclarationExperienceDates?facultyId=" + facultyid + "&&facultyDateOfAppointment=" + DateOfApp + "&&facultyDateOfResignation=" + DateOfResign + "&&Type=1" + "",
+                    // data: "{'facultyId':'" + facultyid + "', 'facultyDateOfResignation':'" + DateOfApp + "', 'facultyDateOfAppointment':'" + DateOfResign + "'}",
+                    success: function (status) {
+
+                        if (status.status == true) {
+
+                            alert(status.message);
+                            //alert("You have Already selected those Dates");
+                            $("#facultyDateOfAppointment").val('');
+                            $("#facultyDateOfResignation").val('');
+                        }
+                        else {
+                            return false;
+                        }
+                    },
+                    error: function () {
+
+                    }
+                })
+            }
+
+        });
+
+        $("#FacultyNewleyDOJ").change(function () {
+
+            var facultyid = $("#FacultyId").val();
+            var DateOfApp = $("#FacultyReleving").val();
+
+            var DateOfResign = $(this).val();
+
+            if (facultyid != "" && DateOfApp != "" && DateOfResign != "") {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/NewOnlineRegistration/CheckdeclarationExperienceDates?facultyId=" + facultyid + "&&facultyDateOfAppointment=" + DateOfApp + "&&facultyDateOfResignation=" + DateOfResign + "&&Type=2" + "",
+                    // data: "{'facultyId':'" + facultyid + "', 'facultyDateOfResignation':'" + DateOfApp + "', 'facultyDateOfAppointment':'" + DateOfResign + "'}",
+                    success: function (status) {
+
+                        if (status.status == true) {
+
+                            alert(status.message);
+                            //alert("You have Already selected those Dates");
+                            $("#facultyDateOfAppointment").val('');
+                            $("#facultyDateOfResignation").val('');
+                        }
+                        else {
+                            return false;
+                        }
+                    },
+                    error: function () {
+
+                    }
+                })
+            }
+
+        });
+
+    });
+  
+</script>
+@using (Html.BeginForm("FacultyDeclaration", "NewOnlineRegistration", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        <table class="faculty_table" style="text-align: center; width: 100%">
+            <tr>
+                <td class="col1">
+                    <span>Registration Number</span>
+                </td>
+                <td class="col2">
+                    @Html.DisplayFor(model => model.RegistrationNumber)
+                    @Html.HiddenFor(model => model.RegistrationNumber)
+                    @Html.HiddenFor(model => model.FacultyId)
+                </td>
+                <td class="col3"><span>Faculty Name</span></td>
+                <td class="col4">
+                    &nbsp; @Html.DisplayFor(model => model.Name)
+                    @Html.HiddenFor(model => model.Name)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">Pan Number</td>
+                <td class="col2" style="width:35%;height:18px;">
+                    &nbsp; @Html.DisplayFor(model => model.Pannumber)
+                    @Html.HiddenFor(model => model.Pannumber)
+                </td>
+                <td class="col3">DOJ</td>
+                <td class="col4">
+                    &nbsp; @*@Html.DisplayFor(model => model.FacultyDOJ)
+                    @Html.HiddenFor(model => model.FacultyDOJ)*@
+
+                    @Html.TextBoxFor(model => model.FacultyDOJ, new { @class = "calendar", @style = "width:85%;height:22px;text-transform:uppercase", autofocus = "", @onblur = "IsValidDate(this,event.keyCode,0,0,0)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Select Date Of Joining" })
+                    @Html.ValidationMessageFor(model => model.FacultyDOJ)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">College Name</td>
+                <td class="col2" colspan="3">
+                    &nbsp; @Html.DisplayFor(model => model.collegeName)
+                    @Html.HiddenFor(model => model.Collegeid)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">Department Name</td>
+                <td class="col2">
+                    &nbsp; @Html.DisplayFor(model => model.Department)
+                    @Html.HiddenFor(model => model.Department)
+                </td>
+                <td class="col3">Designation</td>
+                <td class="col4">
+                    &nbsp; @Html.DisplayFor(model => model.Designation)
+                    @Html.HiddenFor(model => model.Designation)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" colspan="4">
+                    <h4 style="text-align:left;"><b>DECLARATION BY THE FACULTY MEMBER</b></h4>
+                    <br />
+                    I, hereby declare that the information furnished by me are true and correct to the best of my knowledge. If any of the information is found to be false / incomplete / misleading and / or that have failed to disclose all the information and / or suppressed any information and / or misrepresent the information, I am liable to be prosecuted by the University.
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    Faculty Type
+                </td>
+                <td class="col2" colspan="3">
+                    <label>@Html.RadioButtonFor(model => model.FacultyStatus, "Working", new { @id = "Working", @class = "Working" }) Declaration to be given if you are WORKING in the SAME College till date where appointed since the last FFC inspection (i.e., A.Y.2019-20)  </label><br />
+                    <label>@Html.RadioButtonFor(model => model.FacultyStatus, "Notworking", new { @id = "Notworking", @class = "Notworking" }) Declaration to be given if you are NOT working in the SAME College where appointed during the last FFC inspection (i.e., A.Y.2019-20) and subsequently, joined another College </label><br /> <br />
+                    <label>@Html.RadioButtonFor(model => model.FacultyStatus, "NotworkingAnyWhere", new { @id = "NotworkingAnyWhere", @class = "NotworkingAnyWhere" })Declaration to be given if you are NOT working in the SAME College where appointed during the last FFC inspection (i.e., A.Y.2019-20)and presently NOT WORKING ANYWHERE. </label><br /><br />
+                    @Html.ValidationMessageFor(model => model.FacultyStatus)
+                </td>
+            </tr>
+        </table>
+        
+</div>
+    
+    <div id="NotWorkingData" style="display:none">
+        <table class="faculty_table" style="text-align: center; width: 100%">
+            <tr>
+                <td class="col1">
+                    Name Of Old College
+
+                </td>
+                <td class="col2">
+                    @*@Html.DropDownListFor(model => model.CurrentlycollegeName, new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "Value", "Text"), "---Select---", new { @style = "width:300px;", @id = "PresentWorkingCollegeid" })
+                    @Html.ValidationMessageFor(model => model.OldcollegeName)*@
+                    @Html.DisplayFor(model => model.collegeName)
+                    @Html.HiddenFor(model => model.Collegeid)
+                </td>
+                <td class="col3">
+                    Date of Releving 
+
+                </td>
+                <td class="col2">
+                    @Html.TextBoxFor(model => model.FacultyReleving, new { @class = "calendar", @style = "width:85%;height:22px;text-transform:uppercase", autofocus = "", @onblur = "IsValidDate(this,event.keyCode,0,0,0)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Select Date Of Releving" })
+                    @Html.ValidationMessageFor(model => model.FacultyReleving)
+                    
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">Name Of New College</td>
+                <td class="col2">
+                    &nbsp; 
+                    @Html.DropDownListFor(model => model.PresentWorkingCollegeid, new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "Value", "Text"), "---Select---", new { @style = "width:300px;", @id = "OldCollegeid" })
+                    @Html.ValidationMessageFor(model => model.PresentWorkingCollegeid)
+                  
+                </td>
+                <td class="col3">New College DOJ</td>
+                <td class="col4">
+                    &nbsp;
+
+                    @Html.TextBoxFor(model => model.FacultyNewleyDOJ, new { @class = "calendar", @style = "width:85%;height:22px;text-transform:uppercase", autofocus = "", @onblur = "IsValidDate(this,event.keyCode,0,0,0)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Select New Date Of Joining" })
+                    @Html.ValidationMessageFor(model => model.FacultyNewleyDOJ)
+                </td>
+            </tr>
+        </table>
+</div>
+    <div id="AnyNotWorkingData" style="display:none">
+        <table class="faculty_table" style="text-align: center; width: 100%">
+            <tr>
+                <td class="col1">
+                    Date of Releving
+
+                </td>
+                <td class="col2">
+                    @Html.TextBoxFor(model => model.FacultyReleving1, new { @class = "calendar", @style = "width:85%;height:22px;text-transform:uppercase", autofocus = "", @onblur = "IsValidDate(this,event.keyCode,0,0,0)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Select Date Of Releving" })
+                    @Html.ValidationMessageFor(model => model.FacultyReleving1)
+
+                </td>
+                </tr>
+            <tr>
+                <td class="col3" colspan="3">
+                    
+                    <label style="text-align:center"><b>REASONS:</b></label><br /><br>
+                    <label>@Html.RadioButtonFor(model => model.Reason,"TERMINATED BY THE COLLEGE AGAINST THE SERVICE RULES OF THE COLLEGE" ) TERMINATED BY THE COLLEGE AGAINST THE SERVICE RULES OF THE COLLEGE </label><br />
+                    <label>@Html.RadioButtonFor(model => model.Reason, "RESIGNED WILLINGFULLY AS PER THE SERVICE RULES OF THE COLLEGE") RESIGNED WILLINGFULLY AS PER THE SERVICE RULES OF THE COLLEGE </label><br />
+                    @*<label>@Html.RadioButtonFor(model => model.Reason  false, new { @id = "Reason1"}) Declaration to be given if you are WORKING in the SAME College till date where appointed since the last FFC inspection (i.e., A.Y.2019-20) </label>
+    <label>@Html.RadioButtonFor(model => model.Reason) Declaration to be given if you are NOT working in the SAME College where appointed during the last FFC inspection (i.e., A.Y.2019-20) and subsequently, joined another College </label>
+    <label>
+        Declaration to be given if you are NOT working in the SAME College where appointed during the last FFC inspection (i.e., A.Y.2019-20)and presently NOT WORKING ANYWHERE.
+        <br /> <b>REASONS</b>
+    </label>
+    <label>@Html.RadioButtonFor(model => model.Reason) TERMINATED BY THE COLLEGE AGAINST THE SERVICE RULES OF THE COLLEGE </label>
+    <label>@Html.RadioButtonFor(model => model.Reason) RESIGNED WILLINGFULLY AS PER THE SERVICE RULES OF THE COLLEGE </label>*@
+                </td>
+            </tr>
+
+        </table>
+</div>
+        <div style="text-align: right">
+            <p style="text-align: right">
+                <input type="submit" value="Submit" id="btnsend" name="cmd" />
+            </p>
+        </div>
+
+        }

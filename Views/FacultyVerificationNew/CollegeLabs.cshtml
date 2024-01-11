@@ -1,0 +1,165 @@
+﻿@model IList<UAAAS.Models.Lab>
+@using UAAAS.Models;
+
+@{
+    ViewBag.Title = "College Labs";
+    uaaasDBContext db = new uaaasDBContext();
+    int count = 0;
+}
+
+<h2>College Labs</h2>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/FacultyVerificationNew/CollegeLabs?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerificationNew/CollegeLabs';
+            }
+        });
+    });
+</script>
+
+<table class="faculty_table">
+    <tr>
+        <td class="col1">
+            College
+        </td>
+        <td class="col2">
+            @Html.DropDownList("collegeId", new SelectList(@ViewBag.Colleges, "collegeId", "collegeName"),
+                "--Select--", new { id = "college", @style = "width:95%" })
+        </td>
+    </tr>
+</table>
+@if (@ViewBag.Status == true)
+{
+    //using (Html.BeginForm())
+    using (Html.BeginForm("SaveLabs", "FacultyVerificationNew", new { collegeId = @ViewBag.collegeId }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        if (TempData["Error"] != null)
+        {
+            <div class="error">
+                <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+            </div>
+        }
+        if (TempData["Success"] != null)
+        {
+            <div class="success">
+                <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+            </div>
+        }
+        <br />
+        <table style="width: 100%">
+            <tr>
+                <td class="create_link_right">
+                    <input type="submit" value="SAVE" class="create_button" />
+                </td>
+            </tr>
+        </table>
+        <table class="webGrid" style="width: 100%;">
+            <tr style="font-weight: bold;" class="gridHeader">
+                <td style="text-align: center; width: 5%;">S.No</td>
+                <td style="text-align: center; width: 5%;">CC</td>
+                <td style="text-align: left; width: 10%;">Degree</td>
+                <td style="text-align: left; width: 10%;">Department</td>
+                <td style="text-align: left;">Specialization</td>
+                <td style="text-align: left;">Semester</td>
+                <td style="text-align: center; width: 5%;">year</td>
+                <td style="text-align: left;">Lab Code</td>
+                <td style="text-align: left;">Lab Name</td>
+                <td style="text-align: left; width: 10%;">Equipment Name</td>
+                <td style="text-align: left; width: 20%;">Available</td>
+            </tr>
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <tr>
+                    <td style="text-align: center; width: 5%; background-color: #FCF1D1" class="col1">
+                        @Html.HiddenFor(m => m[i].id)
+                        @Html.HiddenFor(m => m[i].collegeId)
+                        @Html.HiddenFor(m => m[i].EquipmentID)
+                        @Html.HiddenFor(m => m[i].degreeId)
+                        @Html.HiddenFor(m => m[i].departmentId)
+                        @Html.HiddenFor(m => m[i].specializationId)
+                        @Html.HiddenFor(m => m[i].year)
+                        @Html.HiddenFor(m => m[i].LabName)
+                        @Html.HiddenFor(m => m[i].EquipmentName)
+                        @Html.HiddenFor(m => m[i].EquipmentNo)
+                        @(i + 1)
+                    </td>
+                    <td style="text-align: center;background-color: #FCF1D1">@Html.DisplayFor(m => m[i].RandomCode)</td>
+                    <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].degree)</td>
+                    <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].department)</td>
+                    <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].specializationName)</td>
+                    @if (Model[i].Semester != 0)
+                    {
+                        <td style="text-align: center;background-color: #FCF1D1">@Html.DisplayFor(m => m[i].Semester)</td>
+                    }
+                    else
+                    {
+                        <td style="background-color: #FCF1D1"></td>
+                    }
+                    @if (Model[i].year != 0)
+                    {
+                        <td style="text-align: center;background-color: #FCF1D1">@Html.DisplayFor(m => m[i].year)</td>
+                    }
+                    else
+                    {
+                        <td style="background-color: #FCF1D1"></td>
+                    }
+                    <td style="text-align: center;background-color: #FCF1D1">@Html.DisplayFor(m => m[i].Labcode)</td>
+                    <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].LabName)</td>
+                    <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].EquipmentName)</td>
+                    @{
+                    var eqid = Model[i].EquipmentID;
+                    var id = Model[i].id;
+                    var EquipmentNo = Model[i].EquipmentNo;
+                    var collegeId = Model[i].collegeId;
+                    count = db.jntuh_college_laboratories.Where(l => l.id == id && l.EquipmentNo == EquipmentNo && l.CollegeID == collegeId).Select(l => l.id).Count();
+                    }
+
+                    <td style="width: 80px; text-align: center; padding: 0; vertical-align: top;">
+                        @if (Model[i].isAffiliated)
+                        {
+                            <div style="width: 100%; background-color: green; color: white; padding: 5px 0;">
+                                <label>@Html.RadioButtonFor(m => m[i].isAffiliated, true, Model[i].isAffiliated ? true : false) YES</label>
+                                <label>@Html.RadioButtonFor(m => m[i].isAffiliated, false, Model[i].isAffiliated ? false : true) NO</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="width: 100%; background-color: red; color: white; padding: 5px 0;">
+                                <label>@Html.RadioButtonFor(m => m[i].isAffiliated, true, Model[i].isAffiliated ? true : false) YES</label>
+                                <label>@Html.RadioButtonFor(m => m[i].isAffiliated, false, Model[i].isAffiliated ? false : true) NO</label>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+
+        if (ViewBag.Count == 0)
+        {
+            <div class="warning" style="width: 200px; margin: 0 auto;">
+                <p>No records found</p>
+            </div>
+        }
+
+        <div id="dialog-confirm" style="display: none">
+            <p>
+                <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+                Are you sure to delete this lab related details ?
+            </p>
+        </div>
+        <div id="dialog-edit" style="display: none">
+        </div>
+        <div id="dialog-view" style="display: none">
+        </div>
+    }
+}

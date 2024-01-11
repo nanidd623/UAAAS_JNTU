@@ -1,0 +1,83 @@
+﻿@model IList<UAAAS.Models.CollegeIntakeExisting>
+@{
+    ViewBag.Title = "Appeal Supporting Documents";
+    int index = 1;
+}
+
+<h2>Appeal Supporting Documents</h2>
+
+
+<table class="four_columns">
+    <tr>
+        <td class="col1">
+            <span>College</span>
+        </td>
+        <td class="col2" colspan="4">
+            @Html.DropDownList("collegeId",
+                                  new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"),
+                                  "--Select--", new { id = "collegeId" })
+        </td>
+    </tr>
+
+</table>
+<br />
+
+<table cellspacing="0" style="width:100%;border:1px">
+    <thead>
+        <tr>
+            <th class="col1" style="text-align: center;">S.No</th>
+            <th class="col1" style="text-align: left;">Degree</th>
+            <th class="col1" style="text-align: left;">Department</th>
+            <th class="col1" style="text-align: left;">Specialization</th>
+            <th class="col1" style="text-align: left;">SCM</th>
+            <th class="col1" style="text-align: left;">Form16</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        { 
+        <tr>
+            <td class="col2" style="width: 30px; text-align: center;">
+                @(index++)
+            </td>
+            <td class="col2" style="width: 60px;">@item.Degree</td>
+            <td class="col2" style="width: 50px;">@item.Department</td>
+            <td class="col2" style="width: 50px;">@item.Specialization</td>
+            <td class="col2" style="width: 50px; text-align: center;">
+                @if (Model != null && item.ViewSCMApprovalLetter != null)
+                {
+                    string Scmpath = "~/Content/Upload/OnlineAppealDocuments/Intake/IntakeSCMApprovalReports/" + item.ViewSCMApprovalLetter+".pdf";
+                    <a href="@Scmpath.Replace("~", "")" target="_blank">View</a>
+                }
+               
+            </td>
+            <td class="col2" style="width: 50px; text-align: center;">
+                                @if (Model != null && item.ViewForm16ApprovalLetter != null)
+                {
+                    string Form16Path = "~/Content/Upload/OnlineAppealDocuments/Intake/IntakeForm16ApprovalReports/" + item.ViewForm16ApprovalLetter+".pdf";
+                   <a href="@Form16Path.Replace("~", "")" target="_blank">View</a>
+                }
+                
+            </td>
+</tr>
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+
+        $("#collegeId option:first").attr('selected', 'selected');
+
+
+    });
+    $('#collegeId').change(function () {
+        var collegeId = $(this).val();
+        if ($('#collegeId').val() != '') {
+            window.location = '/AppealFormat/ViewSupportingDocuments?collegeId=' + collegeId;
+        }
+        else {
+            window.location = '/AppealFormat/ViewSupportingDocuments';
+        }
+    });
+
+</script>

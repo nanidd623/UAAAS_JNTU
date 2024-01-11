@@ -1,0 +1,116 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeIntakeExisting>
+@{
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    ViewBag.Title = "Existing Intake";
+    int num = 1;
+}
+<h2>Existing Intake</h2>
+<table class="four_columns" style="width: 100%; font-size: 0.7rem;">
+    <tr>
+        <th style="text-align: center;" rowspan="3" class="col11">S.No
+        </th>
+        <th rowspan="3" class="col11">Degree
+        </th>
+        <th style="text-align: center;" rowspan="3" class="col11">Dept.
+        </th>
+        <th style="text-align: center;" rowspan="3" class="col11">Specialization
+        </th>
+        <th style="text-align: center;" rowspan="3" class="col11">Shift
+        </th>
+        <th style="text-align: center;" colspan="10" class="col11">Approved & Actual Admitted Intake as per Academic Year
+        </th>
+        @*<th style="text-align: center;" colspan="2" class="col11">NBA Accreditation Period (if exists)
+        </th>*@
+    </tr>
+    <tr>
+        <th style="text-align: center;" colspan="2" class="col11">@ViewBag.FifthYear
+        </th>
+        <th style="text-align: center;" colspan="2" class="col11">@ViewBag.FourthYear
+        </th>
+        <th style="text-align: center;" colspan="2" class="col11">@ViewBag.ThirdYear
+        </th>
+        <th style="text-align: center;" colspan="2" class="col11">@ViewBag.SecondYear
+        </th>
+        <th style="text-align: center;" colspan="2" class="col11">@ViewBag.FirstYear
+        </th>
+        @*<th style="text-align: center;" colspan="2" class="col11">(DD/MM/YYYY)
+        </th>*@
+    </tr>
+    <tr style="">
+        <th style="text-align: center;" class="col11">
+            <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+        </th>
+        <th style="text-align: center;" class="col11">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+        </th>
+        <th style="text-align: center;" class="col11">
+            <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+        </th>
+        <th style="text-align: center;" class="col11">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+        </th>
+        <th style="text-align: center;" class="col11">
+            <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+        </th>
+        <th style="text-align: center;" class="col11">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+        </th>
+        <th style="text-align: center;" class="col11">
+            <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+        </th>
+        <th style="text-align: center;" class="col11">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+        </th>
+        <th style="text-align: center;" class="col11">
+            <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+        </th>
+        <th style="text-align: center;" class="col11">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+        </th>
+        @*<th style="text-align: center;" class="col11">From
+        </th>
+        <th style="text-align: center;" class="col11">To
+        </th>*@
+    </tr>
+    @foreach (var item in ViewBag.ExistingIntake as List<UAAAS.Models.CollegeIntakeExisting>)
+    {
+        <tr>
+            <td style="width: 30px; text-align: center;" class="col21">
+                @(num++)
+            </td>
+            <td style="width: 60px;" class="col21">@item.Degree</td>
+            <td style="width: 50px;" class="col21">@item.Department</td>
+            <td class="col21">@item.Specialization</td>
+            <td style="width: 30px;" class="col21">@item.Shift</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.approvedIntake5</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.admittedIntake5</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.approvedIntake4</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.admittedIntake4</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.approvedIntake3</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.admittedIntake3</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.approvedIntake2</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.admittedIntake2</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.approvedIntake1</td>
+            <td style="width: 30px; text-align: center;" class="col21">@item.admittedIntake1</td>
+            @*<td style="width: 65px; text-align: center;" class="col21">
+                @if (item.nbaFrom != null)
+                {
+                    @item.nbaFromDate.ToString().Split(' ')[0]
+                }
+            </td>
+            <td style="width: 65px; text-align: center;" class="col21">
+                @if (item.nbaTo != null)
+                {
+                    @item.nbaToDate.ToString().Split(' ')[0]
+                }
+            </td>*@
+        </tr>
+    }
+</table>
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+

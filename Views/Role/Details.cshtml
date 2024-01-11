@@ -1,0 +1,28 @@
+﻿@model UAAAS.Models.my_aspnet_roles
+@{
+    ViewBag.Title = "Role Details";
+}
+
+<h2>Role Details</h2>
+
+<div class="details_table">
+    @*<div class="display-label">applicationId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.applicationId)
+    </div>*@
+
+    <div class="display-label">Role Name</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.name)
+    </div>
+    <div class="display-label last-row">
+        &nbsp;
+    </div>
+    <div class="display-field last-row">
+        <p>
+            @Html.ActionLink("Back", "Index", null, new { @class = "back_button" })
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }, new { @class = "submit_button" })
+        </p>
+    </div>
+    <div class="clear"></div>
+</div>

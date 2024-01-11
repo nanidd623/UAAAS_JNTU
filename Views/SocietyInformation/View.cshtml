@@ -1,0 +1,329 @@
+﻿@model UAAAS.Models.SocietyInformation
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "Society Information";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+@if (ViewBag.IsEditable == true)
+{
+    <h2>Society / Trust / Company Information</h2>
+    <p class="create_link_right">
+        @Html.ActionLink("Edit", "Edit", "SocietyInformation", new { @class = "create_button" /* id=Model.PrimaryKey */ })
+    </p>
+}
+else
+{
+    @*<p class="create_link_right">
+            <input name="btnPrint" type="button" onclick="printdiv('div_print');" class="create_button" value=" Print ">
+        </p>*@
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".calendar, .year").css("width", "75px");
+
+        if ($("#state").val() > 0) {
+            GetDistricts($("#state").val());
+        }
+
+        $("#state").change(function () {
+            var stateID = $(this).val();
+            GetDistricts(stateID);
+        });
+
+        function GetDistricts(stateID) {
+            $.getJSON("/SocietyInformation/GetDistrictList", { id: stateID },
+                   function (myData) {
+                       var select = $("#district");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: '',
+                           text: '-- Select --'
+                       }));
+                       $.each(myData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text,
+                               selected : (itemData.Value == @Model.districtId ? true : false)
+                           }));
+                       });
+                   });
+        }
+    });
+    function printdiv(printpage)
+    {
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        return false;
+    }
+
+</script>
+<div id="div_print">
+    @if (ViewBag.IsEditable == false)
+    {
+        <h2>Society / Trust / Company Information</h2>
+    }
+    @using (Html.BeginForm())
+    {
+        if (ViewBag.Norecords == true)
+        {
+            <div class="warning" style="width: 200px; margin: 0 auto;">
+                <p>No Data found</p>
+            </div>
+        }
+        else
+        {
+            <table class="four_columns">
+                <tr>
+                    <td class="col11" colspan="4">
+                        <b>Name & Address of the Educational Society / Trust / Company</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11" width="150px">
+                        @Html.LabelFor(model => model.societyEstablishmentYear)
+                    </td>
+                    <td class="col21 focus" width="200px">
+                        @Html.DisplayFor(model => model.societyEstablishmentYear, new { Value = @Model.societyEstablishmentYear == 0 ? "" : @Model.societyEstablishmentYear.ToString(), @maxlength = "4" })
+                    </td>
+
+                    <td class="col31" width="150px">
+                        @Html.LabelFor(model => model.societyRegisterNumber)
+                    </td>
+                    <td class="col41">
+                        @Html.DisplayFor(model => model.societyRegisterNumber)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.societyName)
+                    </td>
+                    <td class="col21" colspan="3">
+                        @Html.DisplayFor(model => model.societyName)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.OldSocietyName)
+                    </td>
+                    <td class="col21" colspan="3">
+                        @Html.DisplayFor(model => model.OldSocietyName)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.address)
+                    </td>
+                    <td class="col21" colspan="3">
+                        @Html.DisplayFor(model => model.address)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.townOrCity)
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.townOrCity)
+                    </td>
+                    <td class="col31">
+                        @Html.LabelFor(model => model.mandal)
+                    </td>
+                    <td class="col41">
+                        @Html.DisplayFor(model => model.mandal)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.stateId)
+                    </td>
+                    <td class="col21">
+                        @* @Html.DropDownListFor(model => model.stateId,
+                            new SelectList(ViewBag.State as System.Collections.IEnumerable, "id", "stateName"),
+                            "-- Select --", new { id = "state" })*@
+                        @ViewBag.StateName
+
+                        @Html.HiddenFor(model => model.stateId)
+                    </td>
+                    <td class="col31">
+                        @Html.LabelFor(model => model.districtId)
+                    </td>
+                    <td class="col41">
+                        @*@Html.DropDownListFor(model => model.districtId,
+                            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "districtName"),
+                            "-- Select --", new { id = "district" })*@
+                        @ViewBag.DistrictName
+                        @Html.HiddenFor(model => model.districtId)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.pincode)
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.pincode, new { Value = Model.pincode == 0 ? "" : Model.pincode.ToString() })
+                    </td>
+
+                    <td class="col31">
+                        @Html.LabelFor(model => model.fax)
+                    </td>
+                    <td class="col41">
+                        @Html.DisplayFor(model => model.fax)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.landline)
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.landline)
+                    </td>
+                    <td class="col31">
+                        @Html.LabelFor(model => model.mobile)
+                    </td>
+                    <td class="col41">
+                        @Html.DisplayFor(model => model.mobile)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.email)
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.email)
+                    </td>
+                    <td class="col31">
+                        @Html.LabelFor(model => model.website)
+                    </td>
+                    <td class="col41">
+                        @Html.DisplayFor(model => model.website)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.RegistrationDocument)
+                    </td>
+                    <td class="col21">
+                        @if (!String.IsNullOrEmpty(@Model.RegistrationDocumentfile))
+                        {
+                            <a href="~/Content/Upload/College/SocietyDocument/@Model.RegistrationDocumentfile" target="_blank">
+                                <span style="color: red;"><b>View</b></span>
+                            </a>
+                        }
+                    </td>
+                    <td class="col31">
+                        @Html.LabelFor(model => model.MembersDetailsDocument)
+                    </td>
+                    <td class="col41">
+                        @if (!String.IsNullOrEmpty(@Model.MembersDetailsDocumentfile))
+                        {
+                            <a href="~/Content/Upload/College/SocietyDocument/@Model.MembersDetailsDocumentfile" target="_blank">
+                                <span style="color: red;"><b>View</b></span>
+                            </a>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.Societymoudoc)
+                    </td>
+                    <td class="col2">
+                        @if (!String.IsNullOrEmpty(@Model.Societymoufile))
+                        {
+                            <a href="~/Content/Upload/College/SocietyMOU/@Model.Societymoufile" target="_blank">
+                                <span style="color: red;"><b>View</b></span>
+                            </a>
+                        }
+                    </td>
+                    <td class="col3">
+                        @Html.LabelFor(model => model.Societybyelawsdoc)
+                    </td>
+                    <td class="col4">
+                        @if (!String.IsNullOrEmpty(@Model.Societybylawsfile))
+                        {
+                            <a href="~/Content/Upload/College/SocietyByelaws/@Model.Societybylawsfile" target="_blank">
+                                <span style="color: red;"><b>View</b></span>
+                            </a>
+                        }
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table class="four_columns">
+
+                @*<tr>
+                        <td class="col11" colspan="2">
+                            <b>Information on Establishment of the Institution :</b> (for existing colleges only)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col11" style="width: 340px;">
+                            @Html.LabelFor(model => model.instituteEstablishedYear)
+                        </td>
+                        <td class="col41">
+                            @Html.DisplayFor(model => model.instituteEstablishedYear, new { @class = "year", Value = @Model.instituteEstablishedYear == 0 ? "" : @Model.instituteEstablishedYear.ToString(), @maxlength = "4" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col11">
+                            @Html.LabelFor(model => model.firstApprovalDateByAICTE)
+                        </td>
+                        <td class="col41">
+                            @Html.DisplayFor(model => model.firstApprovalDateByAICTE, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col11">
+                            @Html.LabelFor(model => model.firstAffiliationDateByJNTU)
+                        </td>
+                        <td class="col41">
+                            @Html.DisplayFor(model => model.firstAffiliationDateByJNTU, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col11">
+                            @Html.LabelFor(model => model.firstBatchCommencementYear)
+                        </td>
+                        <td class="col41">
+                            @Html.DisplayFor(model => model.firstBatchCommencementYear, new { @class = "year", Value = @Model.firstBatchCommencementYear == 0 ? "" : @Model.firstBatchCommencementYear.ToString(), @maxlength = "4" })
+                        </td>
+                    </tr>*@
+                <tr>
+                    <td>
+                        @Html.HiddenFor(model => model.addressTye, new { Value = "SOCIETY" })
+                        @Html.HiddenFor(model => model.collegeId)
+                        @Html.HiddenFor(model => model.createdOn, new { Value = DateTime.Now })
+                    </td>
+
+                </tr>
+            </table>
+        }
+    }
+</div>

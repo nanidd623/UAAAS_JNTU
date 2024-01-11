@@ -1,0 +1,314 @@
+﻿@model UAAAS.Controllers.College_Noc
+@using UAAAS.Models
+@{
+    ViewBag.Title = "College_NocAction";
+    int index = 1;
+    int ClosureCourseCount = 0;
+    if (Model.IntakeDetails != null)
+    {
+        ClosureCourseCount = Model.IntakeDetails.Where(z => z.Noc_SpecId != 0).Select(a => a.Noc_SpecId).Count();
+    }
+}
+
+<h2>College NOC Screen</h2>
+<br />
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#NocTypeId").change(function () {
+            var NocId = $(this).val();
+            var Cid = @Model.CollegeId;
+            if (NocId != null && NocId != "") {
+                window.location = '/CollegeNOC/College_NocAction?noc_typeId=' + NocId;
+            }
+            else {
+                window.location = '/CollegeNOC/College_NocAction';
+            }
+        });
+
+        $(".CourseClose").click(function(e){
+            debugger;
+            var url = $(this).attr('id');
+            var splitUrl = url.split('/')[2].split('=');
+            var departid = splitUrl[1].split('&&')[0];
+            var specId = splitUrl[2].split('&&')[0];
+            var intake = splitUrl[3].split('&&')[0];
+            var shiftid = splitUrl[4].split('&&')[0];
+            var NocId = $("#NocTypeId").val();
+            if((departid != null || departid != 0) &&(specId != null || specId != 0))
+            {
+                var data = "departmentId="+ departid+"&specializationId="+specId+"&ApprovedIntake="+intake+"&NocTypeId="+NocId+"&&ShiftId="+shiftid;
+                $.ajax({
+                    url: "/CollegeNOC/College_NocAction",
+                    type: "POST",
+                    contentType: "application/x-www-form-urlencoded",
+                    data: data,
+                    success :function(data)
+                    {
+                        if(data != null)
+                        {
+                            window.location = '/CollegeNOC/College_NocAction?noc_typeId='+NocId ;
+                            // $(".SuccessText").html(@TempData["SUCCESS"]);
+                        }
+                    },
+                    error: function (event) {
+                    }
+                });
+            }
+        });
+
+        $('#Pay').click(function (e) {
+            var data = "challanNumber=@ViewBag.challnNumber&txnAmount=@ViewBag.totalFee&collegeCode=@ViewBag.collegeCode&noctype=@ViewBag.noctype";
+            $.ajax({
+                url: "/CollegeNOC/SavePaymentRequest",
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                data: data,
+                success: function (data) {
+                    //$('#paymentform').submit();
+                },
+                error: function (event) {
+                    // $(this).prop("checked", false);
+                }
+            });
+        });
+
+        // Delete Confirmation
+        $(".confirmDialog").live("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: "Delete Closure College Request",
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+    });
+</script>
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success">
+        <p class="SuccessText" style="text-align: center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+
+@using (Html.BeginForm("College_NocAction", "CollegeNOC"))
+{
+    <div>
+        <table width="100%">
+            <tr>
+                <td class="col1" width="25%" style="height:30%;text-align:left;font-weight:bold;vertical-align:initial;">NOC for : </td>
+                <td class="col2" width="75%" style="height:30%;text-align:left;">
+                    @Html.DropDownListFor(model => model.NocTypeId, new SelectList(ViewBag.NocTypes as System.Collections.IEnumerable, "TypeId", "Type"), "---Select---", new { Id = "NocTypeId", @style = "height:25px;width:50%;" })
+                </td>
+            </tr>
+        </table>
+        <br />
+        <br />
+        <div>
+            @if (Model.NocTypeId == null || Model.NocTypeId == 0)
+            {
+
+            }
+            else if (Model.NocTypeId == Model.CollegeNocId)
+            {
+                <table class="webGrid" border="0" width="100%">
+                    <tr style="background-color: #C1D4E6;">
+                        <th>S.No</th>
+                        <th>CollegeCode</th>
+                        <th>CollegeName</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr style="background-color: #FCF1D1;">
+                        <td>1</td>
+                        <td>@Model.CollegeCode</td>
+                        <td>@Model.CollegeName<span>&nbsp;(Applied NOC for Closure)</span></td>
+                        <td>@Model.Noc_Status</td>
+                        <td>
+                            @if (Model.Noc_DataId == 0 || Model.Noc_DataId == null)
+                            {
+
+                            }
+                            else if (Model.Noc_DataId != 0 && Model.PaymentStatus == false)
+                            {
+                                <p style="text-align:center;">
+                                    <a href="/CollegeNOC/Delete?Id=@Model.Noc_DataId" class="confirmDialog create_button" style="color:white;">
+                                        <span>Delete</span>
+                                    </a>
+                                </p>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            }
+            else if (Model.NocTypeId == Model.CoursesNocId)
+            {
+                @Html.HiddenFor(model => model.CollegeId)
+                <table width="100%" border="0" class="webGrid">
+                    <thead>
+                        <tr style="background-color: #C1D4E6;">
+                            <th>S.No</th>
+                            <th>Degree</th>
+                            <th>Department</th>
+                            <th>Specialization</th>
+                            <th>Approved Intake</th>
+                            <th>Activity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.IntakeDetails.Count != null && Model.IntakeDetails.Count != 0)
+                        {
+                            for (int i = 0; i < Model.IntakeDetails.Count; i++)
+                            {
+                                <tr style="background-color: #FCF1D1;">
+                                    <td>@(index++)</td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.IntakeDetails[i].Degree)
+                                    </td>
+                                    <td>
+                                        @Html.HiddenFor(model => model.IntakeDetails[i].DepartmentId)
+                                        @Html.DisplayFor(model => model.IntakeDetails[i].Department)
+                                    </td>
+                                    <td>
+                                        @Html.HiddenFor(model => model.IntakeDetails[i].SpecializationId)
+                                        @if (Model.IntakeDetails[i].shiftId == 2)
+                                        {
+                                            @Html.DisplayFor(model => model.IntakeDetails[i].Specialization)<span>-2</span>
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(model => model.IntakeDetails[i].Specialization)
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.HiddenFor(model => model.IntakeDetails[i].ApprovedIntake)
+                                        @Html.DisplayFor(model => model.IntakeDetails[i].ApprovedIntake)
+                                    </td>
+                                    @if (Model.IntakeDetails[i].Noc_SpecId == null || Model.IntakeDetails[i].Noc_SpecId == 0)
+                                    {
+                                        <td>
+                                            <p style="text-align:center;">
+                                                <input type="button" value="Close Course" class="CourseClose" id="/CollegeNOC/College_NocAction?departmentId=@Model.IntakeDetails[i].DepartmentId&&specializationId=@Model.IntakeDetails[i].SpecializationId&&ApprovedIntake=@Model.IntakeDetails[i].ApprovedIntake&&ShiftId=@Model.IntakeDetails[i].shiftId" style="background:#024b74;color:white;width:92px;height:21px;" />
+                                                @*<a href="/CollegeNOC/College_NocAction?departmentId=@Model.IntakeDetails[i].DepartmentId&&specializationId=@Model.IntakeDetails[i].SpecializationId&&ApprovedIntake=@Model.IntakeDetails[i].ApprovedIntake&&ShiftId=@Model.IntakeDetails[i].shiftId" class="CourseClose create_button" style="color:white;">
+                                                    <span>Close Course</span>
+                                                </a>*@
+                                            </p>
+                                        </td>
+                                    }
+                                    else if (Model.IntakeDetails[i].Noc_SpecId != null || Model.IntakeDetails[i].Noc_SpecId != 0)
+                                    {
+                                        <td>
+                                            <p style="text-align:center;"><span></span></p>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <div>
+            @if (Model.NocTypeId == 0 || Model.NocTypeId == null)
+            {
+                
+            }
+            else if (Model.NocTypeId == Model.CollegeNocId)
+            {
+                if (Model.Noc_DataId == 0 || Model.Noc_DataId == null && Model.PaymentStatus == false)
+                {
+                    <br />
+                    <div style="width:100%;display:inline-flex;height:60px;">
+                        <div class="col1" style="width:15%;float:right;text-align:end;font-weight:bold;">
+                            Remarks :
+                        </div>
+                        <div class="col2" style="width:85%;">
+                            @Html.TextAreaFor(model => model.Remarks, new { @style = "width:99%;height:41px;" })
+                            @Html.ValidationMessageFor(model => model.Remarks)
+                        </div>
+                    </div><br />
+                    <p style="float:right">
+                        <input type="submit" value="College Closure" name="CollegeClosure" />
+                    </p><br />
+                }
+                else if ((Model.Noc_DataId != null || Model.Noc_DataId != 0) && (Model.PaymentAmount == null || Model.PaymentAmount == 0))
+                {
+                    <form method="post" id="paymentform" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment">
+                        <br />
+                        <p style="float:right">
+                            <a href="/CollegeNOC/FeeDetailsandPayment?CollegeId=@Utilities.EncryptString(Model.CollegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"])&&nocTypeId=@Model.CollegeNocId" class="CourseClose create_button" style="color:white;">
+                                <span>Go to Closure College</span>
+                            </a>
+                        </p><br />
+                    </form>
+                }
+                else if ((Model.Noc_DataId != null || Model.Noc_DataId != 0) && Model.PaymentAmount >= 45000)
+                {
+                    <p class="create_link_right">
+                        <span style="color: red; font-style: italic; font-weight: bold;">
+                            <a href="/CollegeNOC/DownloadAcknowlegement?noctypeid=@Model.CollegeNocId" style="font-weight: bold;font-size:15px;">
+                                Download
+                            </a>
+                        </span>
+                    </p>
+                }
+            }
+            else if (Model.NocTypeId == Model.CoursesNocId)
+            {
+                if (ClosureCourseCount == 0)
+                {
+                    <br />
+                    <p style="float:right">
+                        <a href="/CollegeNOC/FeeDetailsandPayment?CollegeId=@Utilities.EncryptString(Model.CollegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"])&nocTypeId=@Model.CoursesNocId" class="CourseClose create_button" style="color:white;">
+                            <span>Go to Closure Courses</span>
+                        </a>
+                    </p><br />
+                }
+                else
+                {
+                    <br />
+                    <p style="float:right">
+                        <a href="/CollegeNOC/FeeDetailsandPayment?CollegeId=@Utilities.EncryptString(Model.CollegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"])&nocTypeId=@Model.CoursesNocId" class="CourseClose create_button" style="color:white;">
+                            <span>Go to Closure Courses</span>
+                        </a>
+                    </p><br />
+                }
+            }
+        </div>
+    </div>
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>

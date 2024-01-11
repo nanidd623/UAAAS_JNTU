@@ -1,0 +1,36 @@
+﻿@model UAAAS.Controllers.FacultyController.Aadhar
+@{
+    ViewBag.Title = "CheckAadharNumber";
+}
+
+<h2>CheckAadharNumber</h2>
+
+@using(Html.BeginForm())
+{
+    <div>
+        <div>
+            @Html.LabelFor(model=>model.Number)
+        </div>
+        <div>
+            @Html.TextBoxFor(model=>model.Number)
+        </div>
+    </div>
+    <div>
+        <input type="submit" value="submit" />
+    </div>
+    if (IsPost == true)
+    {
+        <div>
+            @if (Model.status != null)
+            {
+                @Html.Label(Model.status)
+            }
+            else
+            {
+                @Html.Label(Model.status, new { @style = "display:none;" })
+            }
+
+        </div>
+    }
+
+}

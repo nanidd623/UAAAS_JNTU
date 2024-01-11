@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewBag.Title = "AicteIntakeApproval";
+}
+<script type="text/javascript">
+    $(document).ready(function() {
+        var mainUrl = window.location;
+        var url;
+
+
+        $('.subtUpload').click(function() {
+
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+
+        });
+        function GetselectioncommitteeFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb 
+                    // fileSize = fileSize / 1048576; //size in mb 
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#filepicker")[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb 
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+        $(function () {
+            $(".aictepdffile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    alert('You can upload only  PDF files');
+                    //$(".selectionfiles > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetselectioncommitteeFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        alert('Document should not exceed 1 MB in Size');
+                        //$(".selectionfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        //$(".selectionfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+    });
+    </script>
+        <h2>Aicte eoa</h2>
+ @using (Html.BeginForm("AICTEFileUpload", "PA_CollegeIntakeExisting", FormMethod.Post, new { enctype = "multipart/form-data" }))
+ {
+     <table class="webGrid" style="width: 100%;">
+                <tr>
+                    <td colspan="2" class="col1">
+                        <span>Approved Intake for the A.Y. 2018-19 (as per AICTE/PCI)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;" class="col1">
+                        <span>Upload Approval Letter:</span>
+                    </td>
+                    <td class="col2">
+                        <input type="file" name="fileUploader" id="filepicker" class="file fileUploadcheck aictepdffile"/>
+        @*@{
+                foreach (var item in Model.Take(1).ToList())
+                {
+                    AICTEApprovalLettr = item.AICTEApprovalLettr;
+                }
+            }*@
+                 @if(ViewBag.AICTEApprovalLettr != null && ViewBag.AICTEApprovalLettr!=string.Empty)
+                 {
+                     <span><a href="../Content/Upload/CollegeEnclosures/@ViewBag.AICTEApprovalLettr" class="viewFileData" target="_blank"><span style="font-weight:bold;color:red">View</span></a></span>
+                 }
+                 @*<span><a href="../Content/Upload/CollegeEnclosures/@AICTEApprovalLettr" class="viewFileData" target="_blank"><span style="font-weight:bold;color:red">View</span></a></span>*@
+                 @*@Html.Hidden("hiddenfile", new { @Value = @AICTEApprovalLettr })*@
+
+
+        <input type="submit" value="Upload" name="fileUploader" class="subtUpload"/>
+        @*  @Html.ActionLink("Upload", "FileUpload", "PA_CollegeIntakeExisting", new { collegeId = @ViewBag.collegeId,@name="fileUploader" }, new {enctype = "multipart/form-data", @class = "create_button" })*@
+    </td>
+</tr>
+</table>
+ }

@@ -1,0 +1,51 @@
+﻿@using (Html.BeginForm())
+{
+    int count = 0;     
+    <table border="1" style="width: 100%">
+            <tr>
+                <th style="text-align: center; background-color:yellow; width: 5%">S.No
+                </th>
+                <th style="text-align: center;background-color:yellow; width: 5%">College Code
+                </th>
+                <th style="text-align: center;background-color:yellow; width: 40%;">College Name
+                </th>
+                <th style="text-align: center;background-color:yellow; width: 20%">Princiapl Name
+                </th>
+                <th style="text-align: center;background-color:yellow; width: 10%">Phone Number
+                </th>
+                <th style="text-align: center;background-color:yellow; width: 10%">Mobile Number
+                </th>
+                <th style="text-align: center;background-color:yellow; width: 10%">Email
+                </th>
+            </tr>
+            @if (ViewBag.PrincipalDetails != null)
+            {
+                foreach (var item in ViewBag.PrincipalDetails)
+                {
+                <tr>
+                    <td style="text-align: center;">
+                        @(count = count + 1)
+                    </td>
+                    <td style="text-align: center;">
+                        <label style="text-transform: uppercase">@item.CollegeCode</label>
+                    </td>
+                    <td style="text-align: left;">
+                        <label>@item.CollegeName</label>
+                    </td>
+                    <td style="text-align: left;">
+                        <label>@item.PrincipalName</label>
+                    </td>
+                    <td style="text-align: center;">
+                        <label>@item.PhoneNumber</label>
+                    </td>
+                    <td style="text-align: center;">
+                        <label>@item.MobileNumber</label>
+                    </td>
+                    <td style="text-align: left;">
+                        <label>@item.Email</label>
+                    </td>
+                </tr>
+                }
+            }
+    </table>
+}

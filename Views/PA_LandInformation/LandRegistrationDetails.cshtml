@@ -1,0 +1,40 @@
+﻿@model UAAAS.Models.LandRegistrationDetails
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+    ViewBag.Title = "Land Registration Details";
+}
+
+<h2>Land Registration Details</h2>
+
+<div class="details_table">
+
+    <div class="display-label" style="width: 150px">landRegistraionDate</div>
+    <div class="display-field" style="width: 380px">
+        @Html.DisplayFor(model => model.landRegistraionDate)
+    </div>
+
+    <div class="display-label" style="width: 150px">landAreaInAcres</div>
+    <div class="display-field" style="width: 380px">
+        @Html.DisplayFor(model => model.landAreaInAcres)
+    </div>
+
+    <div class="display-label" style="width: 150px">landDocumentNumber</div>
+    <div class="display-field" style="width: 380px">
+        @Html.DisplayFor(model => model.landDocumentNumber)
+    </div>
+
+    <div class="display-label" style="width: 150px">landSurveyNumber</div>
+    <div class="display-field" style="width: 380px">
+        @Html.DisplayFor(model => model.landSurveyNumber)
+    </div>
+
+    <div class="display-label" style="width: 150px">landLocation</div>
+    <div class="display-field" style="width: 380px">
+        @Html.DisplayFor(model => model.landLocation)
+    </div>
+
+</div>

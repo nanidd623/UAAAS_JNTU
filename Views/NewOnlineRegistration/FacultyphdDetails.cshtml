@@ -1,0 +1,1467 @@
+﻿@model UAAAS.Models.FacultyphdDetails
+@{
+    ViewBag.Title = "FacultyphdDetails";
+}
+<h2>Faculty ph.D Details</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('.calendar').datepicker({
+            dateFormat: 'mm/dd/yy',
+            changeMonth: true,
+            changeYear: true,
+            //minDate:'-2016/01/02', //yesterday is minimum date
+            //maxDate: "+2Y", //tomorrow is maximum date
+            maxDate: "+180M",
+            yearRange: '2000:2050',
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+        });
+
+        var universitys = @Html.Raw(Json.Encode(Model.Universitys.Distinct()));
+        var places = @Html.Raw(Json.Encode(Model.Places.Distinct()));
+        var depts = @Html.Raw(Json.Encode(Model.PhdDepts.Distinct()));
+        var specs = @Html.Raw(Json.Encode(Model.PhdSpecs.Distinct()));
+        $("#PlaceofUniversity").on("keydown", function(event) {
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            } else if (event.keyCode == 188) {
+                return false;
+            }
+        }).autocomplete({
+            minLength: 0,
+            source: function(request, response) {
+                // delegate back to autocomplete, but extract the last term
+                var results = $.ui.autocomplete.filter(places, extractLast(request.term));
+                response(results);
+            },
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function(event, ui) {
+
+                var CurrentPlace = $(this).val();
+                var terms = split(this.value);
+                if (terms.length <= 1) {
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push(ui.item.value);
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push("");
+                    this.value = terms.join("");
+                    //this.value = terms;
+                    $('#' + CurrentPlace).focus();
+
+                    return false;
+                } else {
+                    var last = terms.pop();
+                    $(this).val(this.value.substr(0, this.value.length - last.length - 2)); // removes text from input
+                    $(this).effect("highlight", {}, 1000);
+                    $(this).addClass("red");
+                    $("#warnings").html("<span style='color:red;'>Max people reached</span>");
+                    return false;
+                }
+            }
+        });
+
+        $("#University").on("keydown", function(event) {
+            debugger;
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            } else if (event.keyCode == 188) {
+                return false;
+            }
+        }).autocomplete({
+            minLength: 0,
+            source: function(request, response) {
+                // delegate back to autocomplete, but extract the last term
+                var results = $.ui.autocomplete.filter(universitys, extractLast(request.term));
+                response(results);
+            },
+            scroll: true,
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function(event, ui) {
+                var CurrentUniversity = $(this).val();
+                var terms = split(this.value);
+                if (terms.length <= 1) {
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push(ui.item.value);
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push("");
+                    this.value = terms.join("");
+                    //this.value = terms;
+                    $('#' + CurrentUniversity).focus();
+
+                    return false;
+                } else {
+                    var last = terms.pop();
+                    $(this).val(this.value.substr(0, this.value.length - last.length - 2)); // removes text from input
+                    $(this).effect("highlight", {}, 1000);
+                    $(this).addClass("red");
+                    $("#warnings").html("<span style='color:red;'>Max people reached</span>");
+                    return false;
+                }
+            }
+        });
+
+        $("#PhdofferingDepartment").on("keydown", function(event) {
+            debugger;
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            } else if (event.keyCode == 188) {
+                return false;
+            }
+        }).autocomplete({
+            minLength: 0,
+            source: function(request, response) {
+                // delegate back to autocomplete, but extract the last term
+                var results = $.ui.autocomplete.filter(depts, extractLast(request.term));
+                response(results);
+            },
+            scroll: true,
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function(event, ui) {
+                var CurrentDept = $(this).val();
+                var terms = split(this.value);
+                if (terms.length <= 1) {
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push(ui.item.value);
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push("");
+                    this.value = terms.join("");
+                    //this.value = terms;
+                    $('#' + CurrentDept).focus();
+
+                    return false;
+                } else {
+                    var last = terms.pop();
+                    $(this).val(this.value.substr(0, this.value.length - last.length - 2)); // removes text from input
+                    $(this).effect("highlight", {}, 1000);
+                    $(this).addClass("red");
+                    $("#warnings").html("<span style='color:red;'>Max people reached</span>");
+                    return false;
+                }
+            }
+        });
+
+        $("#PhdSpecialization").on("keydown", function(event) {
+            debugger;
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            } else if (event.keyCode == 188) {
+                return false;
+            }
+        }).autocomplete({
+            minLength: 0,
+            source: function(request, response) {
+                // delegate back to autocomplete, but extract the last term
+                var results = $.ui.autocomplete.filter(specs, extractLast(request.term));
+                response(results);
+            },
+            scroll: true,
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function(event, ui) {
+                var CurrentSpec = $(this).val();
+                var terms = split(this.value);
+                if (terms.length <= 1) {
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push(ui.item.value);
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push("");
+                    this.value = terms.join("");
+                    //this.value = terms;
+                    $('#' + CurrentSpec).focus();
+
+                    return false;
+                } else {
+                    var last = terms.pop();
+                    $(this).val(this.value.substr(0, this.value.length - last.length - 2)); // removes text from input
+                    $(this).effect("highlight", {}, 1000);
+                    $(this).addClass("red");
+                    $("#warnings").html("<span style='color:red;'>Max people reached</span>");
+                    return false;
+                }
+            }
+        });
+
+        function split(val) {
+            return val.split(/,\s*/);
+        }
+
+        function extractLast(term) {
+            return split(term).pop();
+        }
+
+        function checkSpcialChar(event) {
+
+            var e = window.event || event
+            var keyunicode = e.charCode || e.keyCode
+            //Allow alphabetical keys, plus BACKSPACE and SPACE
+            return ((keyunicode >= 65 && keyunicode <= 122) || (keyunicode >= 48 && keyunicode <= 57) || keyunicode == 8 || keyunicode == 32) ? true : false
+            return;
+            event.returnValue = true;
+        }
+
+        //get pdf file size
+        function GetNotificationFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $(".admissionletterfile")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+
+        //Admission Letter pdf doc
+        $(function() {
+            $(".admissionletterfile").change(function() {
+                $("#admissionletterid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#admissionletterid").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#admissionletterid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#admissionletterid").text("");
+                    }
+                }
+
+            });
+        });
+
+        //Pre-Ph.D Letter pdf Doc
+        $(function() {
+            $(".PrephdLetterfile").change(function() {
+                $("#PrephdLetterid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#PrephdLetterid").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#PrephdLetterid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#PrephdLetterid").text("");
+                    }
+                }
+
+            });
+        });
+
+        //Genuineness Letter pdf Doc
+        $(function() {
+            $(".GenuinenessLetterfile").change(function() {
+                $("#GenuinenessLetterid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#GenuinenessLetterid").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#GenuinenessLetterid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#GenuinenessLetterid").text("");
+                    }
+                }
+
+            });
+        });
+
+        //College Authentication Letter pdf Doc
+        $(function() {
+            $(".CollegeAuthenticationLetterfile").change(function() {
+                $("#CollegeAuthenticationLetterid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#CollegeAuthenticationLetterid").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#CollegeAuthenticationLetterid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#CollegeAuthenticationLetterid").text("");
+                    }
+                }
+
+            });
+        });
+
+        //Thesis Cover Page pdf Doc
+        $(function() {
+            $(".ThesiscoverPagefile").change(function() {
+                $("#ThesiscoverPageid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#ThesiscoverPageid").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#ThesiscoverPageid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#ThesiscoverPageid").text("");
+                    }
+                }
+
+            });
+        });
+
+        //OtherLetter pdf Doc
+        $(function() {
+            $(".OtherLetterfile").change(function() {
+                $("#OtherLetterid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#OtherLetterid").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#OtherLetterid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#OtherLetterid").text("");
+                    }
+                }
+
+            });
+        });
+
+        //Ph.D OD pdf Doc
+        $(function() {
+            $(".Phdodfile").change(function() {
+                $("#Phdodid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#Phdodid").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#Phdodid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#Phdodid").text("");
+                    }
+                }
+
+            });
+        });
+
+        //NOC Letter  pdf doc
+        $(function() {
+            $(".NoCletter").change(function() {
+                $("#NoCformthecollegeid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#NoCformthecollegeid").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#NoCformthecollegeid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#NoCformthecollegeid").text("");
+                    }
+                }
+
+            });
+        });
+
+        //get International Journals pdf file size
+        function GetInterntJrnlsFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $(".interntjrnlsletterfile")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //International Journals Letter pdf doc
+        $(function() {
+            $(".interntjrnlsletterfile").change(function() {
+                $("#interntjrnlsletterid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#interntjrnlsletterid").text("You can upload only PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetInterntJrnlsFileSize(file);
+                    //alert(size);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#interntjrnlsletterid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#interntjrnlsletterid").text("");
+                    }
+                }
+            });
+        });
+
+        //get National Journals pdf file size
+        function GetNatJrnlsFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $(".natjrnlsletterfile")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //National Journals Letter pdf doc
+        $(function() {
+            $(".natjrnlsletterfile").change(function() {
+                $("#natjrnlsletterid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#natjrnlsletterid").text("You can upload only PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNatJrnlsFileSize(file);
+                    //alert(size);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#natjrnlsletterid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#natjrnlsletterid").text("");
+                    }
+                }
+            });
+        });
+
+        //get International Conferences pdf file size
+        function GetInterntCnfsFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $(".intnatcnfsletterfile")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //International Conferences Letter pdf doc
+        $(function() {
+            $(".intnatcnfsletterfile").change(function() {
+                $("#intnatcnfsletterid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#intnatcnfsletterid").text("You can upload only PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetInterntCnfsFileSize(file);
+                    //alert(size);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#intnatcnfsletterid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#intnatcnfsletterid").text("");
+                    }
+                }
+            });
+        });
+
+        //get National Conferences pdf file size
+        function GetNatConferencesFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $(".natcnfsletterfile")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //National Conferences Letter pdf doc
+        $(function() {
+            $(".natcnfsletterfile").change(function() {
+                $("#natcnfsletterid").text("");
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $("#natcnfsletterid").text("You can upload only PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNatConferencesFileSize(file);
+                    //alert(size);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $("#natcnfsletterid").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $("#natcnfsletterid").text("");
+                    }
+                }
+            });
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 600,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        //$('form').submit(function (e) {
+        //    e.preventDefault();
+        //    if (!$(this).valid()) {
+        //        //$("#dialog-view").dialog('open');
+        //        //return false;
+        //    }
+        //});
+
+        $(".Terms").click(function () {
+
+            if ($(this).val() == "True") {
+                $(".submitButton").show();
+                $(".rbtn").css("background-color", "#E8EFF3");
+            }
+            else {
+                $(".submitButton").hide();
+            }
+        });
+
+        $('#btnsend').click(function () {
+            //var terms = $('input[name=Terms]:checked').val();
+            //if (terms == undefined) {
+            //    var terms = $('input[name=Terms]:checked').val();
+
+            //    if (terms == undefined) {
+            //        // alert('You must agree Terms & Conditions before Register');
+            //        $(".rbtn").css("background-color", "red");
+            //        return false;
+            //    }
+            //    else {
+            //        $(".rbtn").css("background-color", "#E8EFF3");
+            //    }
+            //}
+        });
+
+        $(function(){
+            $('#NationalJrnls').on('change', function(event) {
+                //alert($(this).val());
+                if ($(this).val() >= 1)
+                    $("#natjrnls").attr('style', 'display: block');
+                else
+                    $("#natjrnls").attr('style', 'display: none');
+            });
+        });
+
+        $(function(){
+            $('#InterNationalJrnls').on('change', function(event) {
+                //alert($(this).val());
+                if ($(this).val() >= 1)
+                    $("#interntjrnls").attr('style', 'display: block');
+                else
+                    $("#interntjrnls").attr('style', 'display: none');
+            });
+        });
+
+        $(function(){
+            $('#NationalCnfrs').on('change', function(event) {
+                //alert($(this).val());
+                if ($(this).val() >= 1)
+                    $("#natcnfs").attr('style', 'display: block');
+                else
+                    $("#natcnfs").attr('style', 'display: none');
+            });
+        });
+
+        $(function(){
+            $('#InterNationalCnfrs').on('change', function(event) {
+                //alert($(this).val());
+                if ($(this).val() >= 1)
+                    $("#intnatcnfs").attr('style', 'display: block');
+                else
+                    $("#intnatcnfs").attr('style', 'display: none');
+            });
+        });
+
+        $("#PhdType").change(function() {
+            var PhdType = $('option:selected', this).text();
+            if (PhdType == "Part Time/ External") {
+                $("#NoCformthecollege").prop('required',true);
+            }
+            else {
+                $("#NoCformthecollege").prop('required',false);
+            }
+        });
+
+        if ($('#HaveyouprephdLetteryes').val() == "True") {
+            $("#prephdresult").attr('style', 'display: block');
+            $('#haveyouprephdLetter').addClass('required');
+        }
+
+        $(".haveyouprephdLetteryes").click(function () {
+            $("#prephdresult").attr('style', 'display: block');
+            $('#haveyouprephdLetter').addClass('required');
+        });
+
+        $(".haveyouprephdLetterno").click(function () {
+            $("#prephdresult").attr('style', 'display: none');
+            $('#haveyouprephdLetter').removeClass('required');
+        });
+    });
+</script>
+
+<br />
+<div class="error">
+    <p><b>Note 1: Don't Mention short forms.</b></p>
+    @*<p><b>Note 2: It is to inform all the faculty members and Principals of affiliated Colleges, that the University is intending to create a database pertaining to the faculty members working in various affiliated Colleges with Ph.D. qualifications. For uploading the details of the faculty members who have been working in the affiliated colleges and are in possession of Ph.D. degree, the last date is extended and the last date will be intimated later.
+
+However, the faculty members, who are willing to apply for the forthcoming selection process have to upload their Ph.D. details on or before 12-03-2020 (5.00 P.M.), failing which the faculty members’ candidature will be considered with PG qualification only for the selection process. </b></p>*@
+</div>
+<br />
+<div class="alerttext" style="background-color: #864949; border: 1px solid #f49820; color: white">
+    <p>
+        <b>Note 3:&nbsp;The details once submitted here, with regard to Experience / Ph.D. are not editable at later stage. Hence, the faculty member is advised to be very cautious while submitting the details.</b>
+    </p>
+</div>
+<br />
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success" style="background-color: gold; border: 1px solid #f49820;">
+        <p style="text-align: center;font-weight: bold"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error" style="background-color: red; border: 1px solid #f49820;">
+        <p style="text-align: center;font-weight: bold;color:white;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+
+@using (Html.BeginForm("FacultyphdDetails", "NewOnlineRegistration", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        <table class="faculty_table" style="text-align: center; width: 100%">
+            <tr>
+                <td class="col1">
+                    <span>Faculty Registration Numner</span>
+                </td>
+                <td class="col2">
+                    @Html.DisplayFor(model => model.RegistrationNumber)
+                    @Html.HiddenFor(model => model.FacultyId)
+                    @Html.HiddenFor(model => model.RegistrationNumber)
+                </td>
+                <td class="col3">
+                    <span>Name of the Faculty</span>
+                </td>
+                <td class="col4">
+                    @Html.DisplayFor(model => model.FirstName)
+                    @Html.DisplayFor(model => model.MiddleName)
+                    @Html.DisplayFor(model => model.LastName)
+                    @Html.HiddenFor(model => model.FirstName)
+                    @Html.HiddenFor(model => model.MiddleName)
+                    @Html.HiddenFor(model => model.LastName)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">College Name</td>
+                <td class="col2" colspan="3">
+                    <span style="color: blueviolet">@Html.DisplayFor(model => model.CollegeName) - (@Html.DisplayFor(model => model.CollegeCode))</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br />
+    <div>
+        <table class="faculty_table" style="text-align: center; width: 100%">
+            <tr>
+                <td class="col1">
+                    <span style="font-weight: bold">1. </span><span>Course Type</span>
+                </td>
+                <td class="col2">
+                    @Html.DropDownListFor(model => model.PhdType,
+                        new SelectList(ViewBag.phdtype as System.Collections.IEnumerable, "value", "text"), "-- Select --", new { id = "PhdType", style = "width: 95%", @class = "required" })
+                </td>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">2. </span><span>Year of Admission</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    @Html.DropDownListFor(model => model.PhdAdmissionYear,
+                        new SelectList(ViewBag.years as System.Collections.IEnumerable, "value", "text"), "-- Select --", new { id = "PhdAdmissionYear", style = "width: 95%", @class = "required" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="vertical-align: top;">
+                    <span style="font-weight: bold">3. </span><span>Name of the University/ Institute from where Ph.D. obtained (Don't Mention short forms)</span>
+                </td>
+                <td class="col2" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.University, new { style = "width: 95%", @maxlength = "200", @class = "required", @placeholder = "University" })@*, @onkeypress = "return checkSpcialChar(event)"*@
+                </td>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">4. </span><span>University Address</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.UniversityAddress, new { style = "width: 95%", @maxlength = "200", @class = "required", @placeholder = "University Address" })@*, @onkeypress = "return checkSpcialChar(event)"*@
+                </td>
+            </tr>
+            <tr>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">5. </span><span>University Website</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.UniversityWebsite, new { style = "width: 95%", @maxlength = "50", @class = "required", @placeholder = "University Website" })@*, @onkeypress = "return checkSpcialChar(event)"*@
+                </td>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">6. </span><span>Place of University</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.PlaceofUniversity, new { style = "width: 95%", @maxlength = "50", @class = "required", @placeholder = "Place of University" })@*, @onkeypress = "return checkSpcialChar(event)"*@
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <span style="font-weight: bold">7. </span><span>Department Offering Ph.D.</span>
+                </td>
+                <td class="col2">
+                    @*@Html.DropDownListFor(model => model.PhdofferingDepartment,
+                        new SelectList(ViewBag.phdofferingDepartmentsList as System.Collections.IEnumerable, "text", "text"),
+                                                  "-- Select --", new { style = "", @class = "required" })*@
+                    @Html.TextBoxFor(model => model.PhdofferingDepartment, new { style = "width: 95%", @maxlength = "50", @class = "required", @placeholder = "Department" })@*, @onkeypress = "return checkSpcialChar(event)"*@
+                </td>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">8. </span><span>Ph.D. Specialization</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    @*@Html.DropDownListFor(model => model.PhdSpecialization,
+                        new SelectList(ViewBag.phdofferingSpecList as System.Collections.IEnumerable, "text", "text"),
+                                                    "-- Select --", new { style = "", @class = "required" })*@
+                    @Html.TextBoxFor(model => model.PhdSpecialization, new { style = "width: 95%", @maxlength = "50", @class = "required", @placeholder = "Specialization" })@*, @onkeypress = "return checkSpcialChar(event)"*@
+                </td>
+            </tr>
+            <tr>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">9. </span><span>Thesis Title</span>
+                </td>
+                <td class="col4" colspan="3" style="vertical-align: top;">
+                    @Html.TextAreaFor(model => model.PhdTitle, new { style = "width: 95%", @maxlength = "1000", @class = "required", @placeholder = "Enter Thesis Title" })@*, @onkeypress = "return checkSpcialChar(event)"*@
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <span style="font-weight: bold">10. </span><span>University/Institute Type from which Ph.D. Degree is awarded  </span>
+                </td>
+                <td class="col2">
+                    @Html.DropDownListFor(model => model.UniversityType,
+                        new SelectList(ViewBag.universitytype as System.Collections.IEnumerable, "value", "text"),
+  "-- Select --", new { id = "UniversityType", style = "width: 95%", @class = "required" })
+                </td>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">11. </span><span>Year of Award of Degree</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    @Html.DropDownListFor(model => model.PhdawardYear,
+                        new SelectList(ViewBag.years as System.Collections.IEnumerable, "value", "text"),
+  "-- Select --", new { id = "PhdawardYear", style = "width: 95%", @class = "required" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <span style="font-weight: bold">12. </span><span>Supervisor Name1</span>
+                </td>
+                <td class="col2">
+                    @Html.TextBoxFor(model => model.SupervisorName1, new { style = "width: 95%", @class = "required", @required = "true", @maxlength = "50", @placeholder = "Enter Supervisor Name1" })
+                </td>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">13. </span><span>Supervisor Name2 (Optional)</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.SupervisorName2, new { style = "width: 95%", @maxlength = "50", @placeholder = "Enter Supervisor Name2" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <span style="font-weight: bold">14. </span><span>Supervisor Name3 (Optional)</span>
+                </td>
+                <td class="col2">
+                    @Html.TextBoxFor(model => model.SupervisorName3, new { style = "width: 95%", @maxlength = "50", @placeholder = "Enter Supervisor Name3" })
+                </td>
+                <td class="col1">
+                    <span style="font-weight: bold">15. </span><span>Ph.D. Notification Issued</span>
+                </td>
+                <td class="col2">
+                    @Html.DropDownListFor(model => model.PhdnotificationIssued,
+                            new SelectList(ViewBag.phdnotificationissuedlist as System.Collections.IEnumerable, "value", "text"),
+      "-- Select --", new { id = "PhdnotificationIssued", style = "width: 95%", @class = "required" })
+                </td>
+
+            </tr>
+            <tr>
+                <td class="col1" style="vertical-align: top;">
+                    <span style="font-weight: bold">16. </span><span>Ph.D. Registration Number/ Hall Ticket Number</span>
+                </td>
+                <td class="col2" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.RegistrationNumberOrHallticketNo, new { style = "width: 95%", @class = "required", @required = "true", @maxlength = "50", @placeholder = "Enter Ph.D. Registration Number/ Hall Ticket Number" })
+                </td>
+                <td class="col3">
+                    <span style="font-weight: bold">17. </span><span>Admission Letter,ID Card & Hall Ticket</span>
+                </td>
+                <td class="col4">
+                    @Html.TextBoxFor(model => model.AdmissionLetter, new { type = "file", @class = "admissionletterfile", @required = "true" })
+                    <span id="admissionletterid" style="color: red; font-weight: bold"></span>
+                    @if (@Model.AdmissionLetterpath != null)
+                    {
+                        <a href="../Content/Upload/Faculty/PHDDetails/AdmissionLetters/@Model.AdmissionLetterpath.Replace("~", "")" target="_blank">
+                            <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                        </a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <span style="font-weight: bold">18. </span><span>How Many Review meetings Attended</span>
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.TextBoxFor(model => model.HowmanyreviewsRRMattended, new { style = "width: 98%", @class = "required", @required = "true", @maxlength = "50", @placeholder = "Enter How Many Reviews Attended" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="vertical-align: top;">
+                    <span style="font-weight: bold">19. </span><span>Number of International Publications</span>
+                </td>
+                <td class="col2" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.InterNationalJrnls, new { style = "width: 95%", @class = "required", @required = "true", @maxlength = "5", @placeholder = "Enter International Journals" })
+                    @Html.ValidationMessageFor(model => model.InterNationalJrnls)
+                </td>
+                <td class="col4" colspan="2">
+                    <div id="interntjrnls" style="display:none;">
+                        @Html.TextBoxFor(model => model.InterNationalJrnlsLetter, new { type = "file", @class = "interntjrnlsletterfile", @required = "true" })
+                        <span id="interntjrnlsletterid" style="color: red; font-weight: bold"></span>
+                        @if (@Model.InterNationalJrnlspath != null)
+                        {
+                            <a href="../Content/Upload/Faculty/PHDDetails/InternationalJournalLetters/@Model.InterNationalJrnlspath.Replace("~", "")" target="_blank">
+                                <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                            </a>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="vertical-align: top;">
+                    <span style="font-weight: bold">20. </span><span>Number of National  Publications</span>
+                </td>
+                <td class="col2" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.NationalJrnls, new { style = "width: 95%", @class = "required", @required = "true", @maxlength = "5", @placeholder = "Enter National Journals" })
+                    @Html.ValidationMessageFor(model => model.NationalJrnls)
+                </td>
+                <td class="col4" colspan="2">
+                    <div id="natjrnls" style="display:none;">
+                        @Html.TextBoxFor(model => model.NationalJrnlsLetter, new { type = "file", @class = "natjrnlsletterfile", @required = "true" })
+                        <span id="natjrnlsletterid" style="color: red; font-weight: bold"></span>
+                        @if (@Model.NationalJrnlspath != null)
+                        {
+                            <a href="../Content/Upload/Faculty/PHDDetails/NationalJournalLetters/@Model.NationalJrnlspath.Replace("~", "")" target="_blank">
+                                <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                            </a>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="vertical-align: top;">
+                    <span style="font-weight: bold">21. </span><span>Number of papers presented at International Conferences</span>
+                </td>
+                <td class="col2" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.InterNationalCnfrs, new { style = "width: 95%", @class = "required", @required = "true", @maxlength = "5", @placeholder = "Enter International Conferences" })
+                    @Html.ValidationMessageFor(model => model.InterNationalCnfrs)
+                </td>
+                <td class="col4" colspan="2">
+                    <div id="intnatcnfs" style="display:none;">
+                        @Html.TextBoxFor(model => model.InterNationalCnfrsLetter, new { type = "file", @class = "intnatcnfsletterfile", @required = "true" })
+                        <span id="intnatcnfsletterid" style="color: red; font-weight: bold"></span>
+                        @if (@Model.InterNationalCnfrspath != null)
+                        {
+                            <a href="../Content/Upload/Faculty/PHDDetails/InternationalConferenceLetters/@Model.InterNationalCnfrspath.Replace("~", "")" target="_blank">
+                                <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                            </a>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="vertical-align: top;">
+                    <span style="font-weight: bold">22. </span><span>Number of papers presented at National Conferences</span>
+                </td>
+                <td class="col2" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.NationalCnfrs, new { style = "width: 95%", @class = "required", @required = "true", @maxlength = "5", @placeholder = "Enter National Conferences" })
+                    @Html.ValidationMessageFor(model => model.NationalCnfrs)
+                </td>
+                <td class="col4" colspan="2">
+                    <div id="natcnfs" style="display:none;">
+                        @Html.TextBoxFor(model => model.NationalCnfrsLetter, new { type = "file", @class = "natcnfsletterfile", @required = "true" })
+                        <span id="natcnfsletterid" style="color: red; font-weight: bold"></span>
+                        @if (@Model.NationalCnfrspath != null)
+                        {
+                            <a href="../Content/Upload/Faculty/PHDDetails/NationalConferenceLetters/@Model.NationalCnfrspath.Replace("~", "")" target="_blank">
+                                <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                            </a>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <span style="font-weight: bold">23. </span><span>How many Papers Published During PhD Work</span>
+                </td>
+                <td class="col2">
+                    @Html.TextBoxFor(model => model.HowmanypapersPublishedduringPhdWork, new { style = "width: 95%", @class = "required", @required = "true", @maxlength = "50", @placeholder = "Enter How many Papers Published During PhD Work" })
+                </td>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">24. </span><span>Name of the External Examiner during thesis defence (Optional)</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.Externalexamineratthetimeofdefense, new { style = "width: 95%", @class = "", @maxlength = "50", @placeholder = "Enter Name of the External Examiner during thesis defence" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <span style="font-weight: bold">25. </span><span>Exact Date of Final viva (Optional)</span>
+                </td>
+                <td class="col2">
+                    @Html.TextBoxFor(model => model.Exactdateoffinalviva, new { @class = "calendar", style = "", @placeholder = "Select Date of Final viva" })
+                </td>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">26. </span><span>Name of the BOS Chairperson at the time of Thesis Submission (Optional)</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.BOSChairpersonatthetimeofThesisSubmission, new { style = "width: 95%", @class = "", @maxlength = "50", @placeholder = "Enter Name of the BOS Chairperson at the time of Thesis Submission" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <span style="font-weight: bold">27. </span><span>Date of Ph.D. Notification of the University (Optional)</span>
+                </td>
+                <td class="col2">
+                    @Html.TextBoxFor(model => model.PressnotificationofyourPhDDegree, new { @class = "calendar", style = "", @placeholder = "Select Date of Ph.D. Notification of the University" })
+                </td>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">28. </span><span>Whether attended Convocation in person</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    <label>@Html.RadioButtonFor(model => model.HaveyouattendConvocation, true, new { @id = "HaveyouattendConvocationyes" }) Yes </label>
+                    <label>@Html.RadioButtonFor(model => model.HaveyouattendConvocation, false, new { @id = "HaveyouattendConvocationno" }) No </label>
+                    @Html.ValidationMessageFor(model => model.HaveyouattendConvocation)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    <span style="font-weight: bold">29. </span><span>NOC from the college to pursue Ph.D.</span>
+                </td>
+                <td class="col2" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.NoCformthecollege, new { type = "file", @class = "NoCletter" })@*, @class = "NoCletter required", @required = "true"*@
+                    <span id="NoCformthecollegeid" style="color: red; font-weight: bold"></span>
+                    @if (@Model.NoCformthecollegepath != null)
+                    {
+                        <a href="../Content/Upload/Faculty/PHDDetails/PHDODs/@Model.NoCformthecollegepath.Replace("~", "")" target="_blank">
+                            <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                        </a>
+                    }
+                </td>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">30. </span><span>Pre-Ph.D exam/equivalent result proof</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    <label>@Html.RadioButtonFor(model => model.HaveyouprephdLetter, true, new { @id = "HaveyouprephdLetteryes", @class = "haveyouprephdLetteryes" }) Yes </label>
+                    <label>@Html.RadioButtonFor(model => model.HaveyouprephdLetter, false, new { @id = "HaveyouprephdLetterno", @class = "haveyouprephdLetterno" }) No </label>
+                    @*@Html.ValidationMessageFor(model => model.HaveyouprephdLetter)*@
+                    <div id="prephdresult" style="display: none;">
+                        @Html.TextBoxFor(model => model.PrephdLetter, new { @id = "haveyouprephdLetter", type = "file", @class = "PrephdLetterfile" })
+                        <span id="PrephdLetterid" style="color: red; font-weight: bold"></span>
+                        @if (@Model.PrephdLetterpath != null)
+                        {
+                            <a href="../Content/Upload/Faculty/PHDDetails/PrePHDs/@Model.PrephdLetterpath.Replace("~", "")" target="_blank">
+                                <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                            </a>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="vertical-align: top;">
+                    <span style="font-weight: bold">31. </span><span>Original Degree Certificate</span>
+                </td>
+                <td class="col2" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.Phdod, new { type = "file", @class = "Phdodfile required", @required = "true" })
+                    <span id="Phdodid" style="color: red; font-weight: bold"></span>
+                    @if (@Model.Phdodpath != null)
+                    {
+                        <a href="../Content/Upload/Faculty/PHDDetails/PHDODs/@Model.Phdodpath.Replace("~", "")" ta target=" ta target=" _blank">
+                            <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                        </a>
+                    }
+                </td>
+                <td class="col3">
+                    <span style="font-weight: bold">32. </span><span>Genuineness Letter (obtain through proper channel)</span>
+                </td>
+                <td class="col4">
+                    @Html.TextBoxFor(model => model.GenuinenessLetter, new { type = "file", @class = "GenuinenessLetterfile required", @required = "true" })
+                    <span id="GenuinenessLetterid" style="color: red; font-weight: bold"></span>
+                    @if (@Model.GenuinenessLetterpath != null)
+                    {
+                        <a href="../Content/Upload/Faculty/PHDDetails/GenuinenessLetters/@Model.GenuinenessLetterpath.Replace("~", "")" ta target="_blank">
+                            <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                        </a>
+                    }
+                </td>
+
+            </tr>
+            <tr>
+                <td class="col1" style="vertical-align: top;">
+                    <span style="font-weight: bold">33. </span><span>College Certified Letter (Duly Signed by the Principal where the faculty member is presently working)</span>
+                </td>
+                <td class="col2" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.CollegeAuthenticationLetter, new { type = "file", @class = "CollegeAuthenticationLetterfile required", @required = "true" })
+                    <span id="CollegeAuthenticationLetterid" style="color: red; font-weight: bold"></span>
+                    @if (@Model.CollegeAuthenticationLetterpath != null)
+                    {
+                        <a href="../Content/Upload/Faculty/PHDDetails/CollegeAuthenticationLetters/@Model.CollegeAuthenticationLetterpath.Replace("~", "")" ta target="_blank">
+                            <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                        </a>
+                    }
+                </td>
+                <td class="col3" style="vertical-align: top;">
+                    <span style="font-weight: bold">34. </span><span>Thesis Cover Pages(including Examiner Signed Certificates)</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.ThesiscoverPage, new { type = "file", @class = "ThesiscoverPagefile required", @required = "true" })
+                    <span id="ThesiscoverPageid" style="color: red; font-weight: bold"></span>
+                    @if (@Model.ThesiscoverPagepath != null)
+                    {
+                        <a href="../Content/Upload/Faculty/PHDDetails/ThesisPages/@Model.ThesiscoverPagepath.Replace("~", "")" ta target=" ta target=" _blank">
+                            <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                        </a>
+                    }
+                </td>
+
+            </tr>
+            <tr>
+                <td class="col1">
+                    <span style="font-weight: bold">35. </span><span>Other Supporting Documents (Optional)</span>
+                </td>
+                <td class="col2">
+                    @Html.TextBoxFor(model => model.OtherLetter, new { type = "file", @class = "OtherLetterfile" })
+                    <span id="OtherLetterid" style="color: red; font-weight: bold"></span>
+                    @if (@Model.OtherLetterpath != null)
+                    {
+                        <a href="../Content/Upload/Faculty/PHDDetails/OtherLetters/@Model.OtherLetterpath.Replace("~", "")" ta target=" ta target=" _blank">
+                            <img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">
+                        </a>
+                    }
+                </td>
+                @*<td class="col3">
+                        <span>Other Letter (Optional)</span>
+                    </td>
+                    <td class="col4">
+                        @Html.TextBoxFor(model => model.OtherLetter, new { type = "file", @class = "OtherLetterfile" })
+                    </td>*@
+            </tr>
+            <tr style="display:none;">
+                <td class="col3" style="vertical-align: top;">
+                    <span>How many Papers Published during Ph.D. work</span>
+                </td>
+                <td class="col4" style="vertical-align: top;">
+                    @Html.TextBoxFor(model => model.HowmanypapersPublished, new { @class = "required", @required = "true", @maxlength = "50" })
+                </td>
+            </tr>
+        </table>
+        <br />
+        <div class="col1" style="width: 99%; display: none;">
+            <h4 style="text-align:center;"><b>DECLARATION BY THE FACULTY MEMBER</b></h4>
+            <br />
+            <div class="rbtn">
+                <label>@Html.RadioButton("Terms", true, new { @id = "Agree", @class = "Terms Agree" })</label>
+                I, hereby declare that the information furnished by me are true and correct to the best of my knowledge. If any of the information is found to be false / incomplete / misleading and / or that have failed to disclose all the information and / or suppressed any information and / or misrepresent the information, I am liable to be prosecuted by the University.
+            </div>
+            <br />
+            <p style="display: block;">
+                <b>Name&nbsp; :</b>
+                @Html.DisplayFor(model => model.FirstName)
+                @Html.DisplayFor(model => model.MiddleName)
+                @Html.DisplayFor(model => model.LastName)
+            </p>
+            <p style="display: block;"><b>Date &nbsp;&nbsp; :</b> @DateTime.Now.Date.ToString("dd-MM-yyyy")</p>
+            <div style="text-align: center; font-weight: bold;">
+                * * *
+            </div>
+        </div>
+        <div style="text-align: right">
+            <p style="text-align: right">
+                <input type="submit" value="Submit" id="btnsend" name="cmd" />
+            </p>
+        </div>
+    </div>
+}

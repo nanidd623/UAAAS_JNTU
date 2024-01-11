@@ -1,0 +1,81 @@
+﻿@model IList<UAAAS.Models.Lab>
+@using UAAAS.Models;
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "Laboratories";   
+    int count = 0;
+    int i = 1;
+}
+@using(Html.BeginForm())
+{   
+    <table border="1" style="width: 100%;">
+        <tr style="font-weight: bold;">
+            <td style="text-align: center;background-color:yellow;vertical-align:top;">S.No</td>
+            <td style="text-align: center;background-color:yellow;vertical-align:top;">CC</td>
+            <td style="text-align: left; background-color:yellow;vertical-align:top;">Degree</td>
+            <td style="text-align: left; background-color:yellow;vertical-align:top;">Department</td>
+            <td style="text-align: left;background-color:yellow;vertical-align:top;">Specialization</td>
+            <td style="text-align: center;background-color:yellow;vertical-align:top;">year</td>
+            <td style="text-align: center;background-color:yellow;vertical-align:top;">Semester</td>
+            <td style="text-align: center;background-color:yellow;vertical-align:top;">Lab Code</td>
+            <td style="text-align: left;background-color:yellow;vertical-align:top;">Lab Name</td>
+            <td style="text-align: left;background-color:yellow;vertical-align:top;">Equipment Name</td>
+            <td style="text-align: center;background-color:yellow;vertical-align:top;">Available</td>
+        </tr>    
+        @*@for (int i = 1; i <= Model.Count()-1; i++)*@
+            @foreach (var item in Model)
+            {
+                
+            <tr>
+                <td style="text-align: center;vertical-align:top;">                    
+                    @(Model.IndexOf(item)+1)
+                </td>
+                 <td style="text-align: center;vertical-align:top;">@item.RandomCode</td>
+                <td style="text-align: left;vertical-align:top;">@item.degree</td>
+                <td style="text-align: left;vertical-align:top;">@item.department</td>
+                <td style="text-align: left;vertical-align:top;">@item.specializationName</td>
+                @if (@item.year != 0)
+                {
+                    <td style="text-align: center;vertical-align:top;">@item.year</td>
+                }
+                else
+                {
+                      <td></td>
+                }
+
+                @if (@item.Semester != 0)
+                {
+                    <td style="text-align: center;vertical-align:top;">@item.Semester</td>
+                }
+                else
+                {
+                      <td></td>
+                }
+                
+                <td style="text-align: center;vertical-align:top;">@item.Labcode</td>
+                <td style="text-align: left;vertical-align:top;">@item.LabName</td>
+                <td style="text-align: left;vertical-align:top;">@item.EquipmentName</td>
+                @{
+                var eqid = @item.EquipmentID;
+                var id = @item.id;
+                var EquipmentNo = @item.EquipmentNo;
+                var collegeId = @item.collegeId;
+                    count = db.jntuh_college_laboratories.Where(l => l.id == id && l.EquipmentNo == EquipmentNo && l.CollegeID == collegeId).Select(l => l.id).Count();
+                }
+
+                @if (count > 0)
+                {
+                    <td style="text-align:center">
+                        Yes                    
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align:center">
+                        No                     
+                    </td>
+                }              
+            </tr>
+        }
+    </table>
+}

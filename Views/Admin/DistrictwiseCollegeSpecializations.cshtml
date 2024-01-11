@@ -1,0 +1,60 @@
+﻿@model List<UAAAS.Models.Districts>
+@{
+    ViewBag.Title = "DistrictwiseCollegeSpecializations";
+    int index = 1;
+}
+<h2>District Wise College Specializations</h2>
+
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "bStateSave": false,
+                              "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null ]
+                           });
+}
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th style="width: 40px; text-align: center;">S.No</th>
+            <th style="width: 60px; text-align: left;">District</th>
+            <th class="ui-state-default" style="width: 60px; text-align: center;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 20px; text-align: center;">
+                    @(index++)
+                </td>
+                <td style="width: 200px; text-align: left; text-transform: uppercase;">
+                    @Html.DisplayFor(model => item.name)
+                </td>
+                <td style="width: 40px; text-align: center;">
+                   @* <a href='@Url.Action("CollegeSpecializations", "AuditScheduleReport", new { districtid = item.id })' target="_blank" title="Specialization">
+                        <img src="../../Content/images/pdf.png" />
+                    </a>*@                    
+                     <a href='@Url.Action("CollegeSpecializations", "CollegeWiseReport", new { districtid = item.id })' target="_blank" title="Specialization">
+                        <img src="../../Content/images/pdf.png" />
+                    </a>
+                    @*<a href='@Url.Action("GetCollegeSpecializations", "DistrictwiseCollegeSpecialization", new { districtID = item.id })' target="_blank" title="Specialization">GetSpecializations
+                    </a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+

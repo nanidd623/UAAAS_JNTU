@@ -1,0 +1,140 @@
+﻿@model UAAAS.Models.FacultyRegistration
+
+@{
+    ViewBag.Title = "AddDeleteFaculty";
+}
+
+<h2>Add Faculty Details</h2>
+ @if (ViewBag.Error != null)
+ {
+     <div class="error">
+    <p><strong>Error:</strong> @ViewBag.Error.ToString()</p>
+    </div>
+ }
+ @if (ViewBag.Success != null)
+ {
+     <div class="success">
+    <p><strong>Success:</strong> @ViewBag.Success.ToString()</p>
+     </div>
+ }
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="details_table">
+
+        <div class="editor-label">
+            @Html.LabelFor(m => m.RegistrationNumber)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.RegistrationNumber, new { @required = "required" })
+            @Html.ValidationMessageFor(m => m.RegistrationNumber)
+        </div>
+        <div class="display-label last-row">
+            &nbsp;
+        </div>
+        <div class="display-field last-row">
+            <p>
+                <input type="submit" value="Submit" />
+            </p>
+        </div>
+        <div class="clear"></div>
+    </div>
+    if (Model.FacultyEducation != null)
+    {
+        <table class="faculty_table education" id="tblQualification" style="border: solid 1px #ccc;">
+            <thead>
+                <tr>
+                    <td class="row" colspan="9">
+                        <b>Educational Qualifications</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row" style="text-align: center; width: 100px;"></td>
+                    <td class="row" style="text-align: center; width: 125px;">Course Studied</td>
+                    <td class="row" style="text-align: center; width: 125px;">Branch / Specialization</td>
+                    <td class="row" style="text-align: center; width: 100px;">Year of Passing (YYYY)</td>
+                    <td class="row" style="text-align: center; width: 80px;">
+                        % of
+                        <br />
+                        Marks / CGPA
+                    </td>
+                    <td class="row" style="text-align: center; width: 80px;">Division</td>
+                    <td class="row" style="text-align: center;">Board/University</td>
+                    <td class="row" style="text-align: center; width: 180px;">Place</td>
+                    <td class="row" style="text-align: center; width: 200px !important;">
+                        Scanned Certificate<br />
+                        <span style="color: blue;">
+                            (Minimum 600x800 pixels
+                            <br />
+                            and less than 100 KB size)
+                        </span>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.FacultyEducation.Count(); i++)
+                {
+                    <tr>
+                        <td class="col21" style="text-align: left; vertical-align: top;">
+                            @Html.DisplayFor(model => model.FacultyEducation[i].educationName)
+                        </td>
+
+                        <td class="col21" style="text-align: left; vertical-align: top;">
+                            @Html.DisplayFor(model => model.FacultyEducation[i].studiedEducation)
+                        </td>
+
+
+                        <td class="col21" style="text-align: left; vertical-align: top;">
+                            @Html.DisplayFor(model => model.FacultyEducation[i].specialization)
+                        </td>
+
+
+                        <td class="col21" style="text-align: left; vertical-align: top;">
+                            @Html.DisplayFor(model => model.FacultyEducation[i].passedYear)
+                        </td>
+
+
+                        <td class="col21" style="text-align: left; vertical-align: top;">
+                            @if (Model.FacultyEducation[i].percentage != 0)
+                            {
+                                @Html.DisplayFor(model => model.FacultyEducation[i].percentage)
+                            }
+                            else
+                            {
+
+                            }
+                        </td>
+                        <td class="col21" style="text-align: left; vertical-align: top;">
+                            @Html.DisplayFor(model => model.FacultyEducation[i].division)
+                        </td>
+                        <td class="col21" style="text-align: left; vertical-align: top;">
+                            @Html.DisplayFor(model => model.FacultyEducation[i].university)
+                        </td>
+
+
+                        <td class="col21" style="text-align: left; vertical-align: top;">
+                            @Html.DisplayFor(model => model.FacultyEducation[i].place)
+                        </td>
+
+                        <td class="col21" style="text-align: left; vertical-align: top;">
+                            @*@Html.DisplayFor(model => model.FacultyEducation[i].facultyCertificate)*@
+                            @*@Html.DisplayFor(modelItem => item.relivingletter)*@
+                            @if (!string.IsNullOrEmpty(Model.FacultyEducation[i].facultyCertificate))
+                            {
+                                <a href="../Content/Upload/Faculty/Certificates/@Model.FacultyEducation[i].facultyCertificate.Replace(" ~", "")" target="_blank">
+                                    <span style="font-weight:bold;color:red">View</span>
+                                </a>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(model => model.FacultyEducation[i].facultyCertificate)
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}

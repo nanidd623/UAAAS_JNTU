@@ -1,0 +1,201 @@
+﻿@model UAAAS.Models.jntuh_affiliation_requests
+@{
+    ViewBag.Title = "Affiliation Request";
+}
+
+<h2>Affiliation Request</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnsave').click(function () {
+           // alert('a');
+            var a = $('#rbtnapprove:checked').val();
+            var j = $('#rbtnreject:checked').val();
+            if (a ==undefined && j ==undefined) {
+               // alert('a');
+                alert('Please Select Approval Status');
+                return false;
+            }
+            else {
+                return true;
+            }
+           
+
+        });
+    });
+
+</script>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    
+    <div class="details_table">
+        <div class="display-label">College Name</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.collegeName)
+            @Html.HiddenFor(model => model.collegeName)
+
+        </div>
+        <div class="editor-label">SocietyName</div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.societyName)
+             @Html.HiddenFor(model => model.societyName)
+        </div>
+        <div class="display-label">College Address</div>
+        <div class="display-field">
+              @Html.DisplayFor(model => model.collegeAddress)
+            @Html.HiddenFor(model => model.collegeAddress)
+          
+        </div>
+
+        <div class="display-label">City</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.townOrCity)
+            @Html.HiddenFor(model => model.townOrCity)
+        </div>
+
+        <div class="display-label">Mandal</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.mandal)
+            @Html.HiddenFor(model => model.mandal)
+        </div>
+
+        <div class="display-label">District</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.jntuh_district.districtName)
+            @Html.HiddenFor(model => model.districtId)
+        </div>
+
+        <div class="display-label">State</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.jntuh_state.stateName)
+            @Html.HiddenFor(model => model.stateId)
+        </div>
+
+        <div class="display-label">Pincode</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.pincode)
+            @Html.HiddenFor(model => model.pincode)
+        </div>
+
+        <div class="display-label">Fax</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.fax)
+            @Html.HiddenFor(model => model.fax)
+        </div>
+
+        <div class="display-label">Landline</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.landline)
+            @Html.HiddenFor(model => model.landline)
+        </div>
+
+        <div class="display-label">Mobile</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.mobile)
+            @Html.HiddenFor(model => model.mobile)
+        </div>
+
+        <div class="display-label">Email</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.email)
+            @Html.HiddenFor(model => model.email)
+        </div>
+
+        <div class="display-label">Website</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.website)
+            @Html.HiddenFor(model => model.website)
+        </div>
+
+        <div class="display-label">College Type</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.jntuh_college_type.collegeType)
+            @Html.HiddenFor(model => model.collegeTypeId)
+        </div>
+
+        <div class="display-label">College Status</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.jntuh_college_status.collegeStatus)
+            @Html.HiddenFor(model => model.collegeStatusId)
+        </div>
+
+        <div class="display-label">Accredited By NAAC</div>
+        <div class="display-field">
+            @*@Html.LabelFor(model => model.isAccreditedByNAAC)*@
+            @if (this.Model.isAccreditedByNAAC == true)
+            { <label>Yes</label>}
+            else
+            {<label>No</label>}
+        </div>
+
+        <div class="display-label">Present Affiliated University</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.presentAffiliatedUniversity)
+            @Html.HiddenFor(model => model.presentAffiliatedUniversity)
+        </div>
+
+        <div class="display-label">Comments</div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.comments)
+            @Html.HiddenFor(model => model.comments)
+        </div>
+
+        <div class="display-label">Status</div>
+        <div class="display-field">
+            @*@Html.DisplayFor(model => model.isActive)*@
+            @if (this.Model.isActive == true)
+            { <label>Active</label>
+                @Html.HiddenFor(model => model.isActive)
+            }
+            else
+            {<label>Inactive</label>
+                @Html.HiddenFor(model => model.isActive)
+            }
+        </div>
+        <div class="display-label">Approval Status</div>
+        <div class="editor-field">
+
+            <label>@Html.RadioButtonFor(model => model.isApproved, true, new { @id = "rbtnapprove" }) Approved</label>
+            <label>@Html.RadioButtonFor(model => model.isApproved, false,new { @id = "rbtnreject" }) Rejected</label>
+            @Html.ValidationMessageFor(model => model.isApproved)
+
+        </div>
+        @Html.HiddenFor(model => model.createdOn)
+
+        @Html.HiddenFor(model => model.createdBy)
+
+        @Html.HiddenFor(model => model.updatedOn)
+
+        @Html.HiddenFor(model => model.updatedBy)
+
+        @Html.HiddenFor(model => model.id)
+
+
+        <div class="display-label last-row">
+            &nbsp;
+        </div>
+        <div class="display-field last-row">
+            <p>
+                @Html.ActionLink("Back", "Index", null, new { @class = "back_button" })
+                @*@Html.ActionLink("Approve", "Details", new { id = Model.id }, new { @class = "submit_button" })*@
+                <input type="submit" id="btnsave" value="Save" />
+            </p>
+        </div>
+        <div class="clear"></div>
+    </div>
+}

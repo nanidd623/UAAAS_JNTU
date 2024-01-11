@@ -1,0 +1,244 @@
+﻿@model UAAAS.Models.RemedialTeaching
+
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    ViewBag.Title = "Books and Journals";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div><br />
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div><br />
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $(".calendarnew").css("width", "160px");
+
+        $('.calendarnew').attr("readonly", "true");
+        $('.calendarnew').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: "-180M",
+            maxDate: "+180M",
+            yearRange: '2000:2050',
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+        });
+
+        $(".Supportingfile").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "Documentfile");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: '',
+            autoOpen: false,
+            resizable: false,
+            height: 500,
+            //height: 550,
+            //width: 820,
+            width: 720,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Court Case',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $("#activitySelectedyes").click(function () {
+            $("#activityFile").removeAttr('style');
+            $("#remarkstxt").removeAttr('style');
+            $("#btnupload").removeAttr('style');
+            $("#a_view").removeAttr('style');
+        });
+
+        if ($("#activitySelectedyes").is(":checked")) {
+            $("#activityFile").removeAttr('style');
+            $("#remarkstxt").removeAttr('style');
+            $("#btnupload").removeAttr('style');
+            $("#a_view").removeAttr('style');
+        }
+
+        $("#activitySelectedno").click(function () {
+            $("#activityFile").attr('style', 'display: none');
+            $("#remarkstxt").attr('style', 'display: none');
+            $("#a_view").attr('style', 'display: none');
+        });
+
+        $('#btnupload').click(function () {
+            if ($("#activitySelectedyes").is(":checked")) {
+                var filename = $('#activityFile').val();
+                if ((filename == '' || filename == undefined)) {
+                    alert('Please select file');
+                    return false;
+                }
+            }
+            else {
+                return true;
+            }
+
+        });
+    });
+</script>
+<h2>Remedial teaching for weaker students</h2>
+<br />
+@using (Html.BeginForm("FileUpload", "PA_CollegePlacement", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table class="webGrid" style="width: 100%;">
+        <tr>
+            <td class="col1" style="width: 30%">
+                @ViewBag.ActivityDescription
+            </td>
+            @Html.HiddenFor(model => model.ActivityId)
+            <td class="col2" style="width:10%">
+                <div style="text-align:center;">
+                    <label>@Html.RadioButtonFor(model => model.ActivitySelected, true, new { @id = "activitySelectedyes" }) Yes </label>
+                    <label>@Html.RadioButtonFor(model => model.ActivitySelected, false, new { @id = "activitySelectedno" }) No</label>
+                    @Html.ValidationMessageFor(model => model.ActivitySelected)
+                </div>
+            </td>
+            <td class="col2 readonly" style="width: 50%">
+                @Html.TextAreaFor(model => model.Remarks, new { @id = "remarkstxt", @type = "text", @style = "display: none;", @class = "required", @placeholder = "Enter Remarks" })
+                @if (Model.ActivityDocumentPath != null)
+                {
+                    @Html.Label("Supporting Document :- ", new { @style = "color: red;" })
+                    @Html.TextBoxFor(model => model.ActivityDocument, new { type = "file", @id = "activityFile", @name = "fileUploader", @class = "Supportingfile", @style = "display:none;" })
+                    <a href="~/Content/Upload/College/RemedialTeaching/@Model.ActivityDocumentPath" target="_blank" id="a_view" style="display: none">
+                        <span style="color: red;"><b>View</b></span><br />
+                    </a>
+                    @Html.HiddenFor(model => model.ActivityDocumentPath)
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.ActivityDocument, new { type = "file", @id = "activityFile", @name = "fileUploader", @class = "required Supportingfile", @style = "display:none;" })
+                }
+
+            </td>
+        </tr>
+    </table>
+    <div style="text-align: right">
+        <p>
+            <input type="submit" value="Save" name="fileUploader" class="btnclass" /> @*id="btnupload"*@
+        </p>
+    </div>
+    <br />
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert"></span>
+        Are you sure to delete this Book / Journal ?
+    </p>
+</div>

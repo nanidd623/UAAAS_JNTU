@@ -1,0 +1,258 @@
+﻿@{
+    ViewBag.Title = "List of Directors";
+    Layout = "~/Views/Shared/_AcademicAuditCellLayoutPage1.cshtml";
+}
+
+<h2>Succession List of Directors</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            //"iDisplayLength": 10,
+            //"bStateSave": false,
+            //"sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"oLanguage": {
+            //    "sSearch": "Search all columns:",
+            //    "oPaginate": {
+            //        "sFirst": "",
+            //        "sLast": "",
+            //        "sNext": "",
+            //        "sPrevious": ""
+            //    }
+            //},
+            //"fnInitComplete": function () {
+            //    var oSettings = $('#example').dataTable().fnSettings();
+            //    for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+            //        if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+            //            $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+            //            $("tfoot input")[i].className = "";
+            //        }
+            //    }
+            //},
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, { "bSortable": false, "bSearchable": true }, { "bSortable": false, "bSearchable": true }, { "bSortable": false, "bSearchable": true }, { "bSortable": false, "bSearchable": true }],
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        //$("tfoot input").each(function (i) {
+        //    asInitVals[i] = this.value;
+        //});
+        //$("tfoot input").focus(function () {
+        //    if (this.className == "search_init") {
+        //        this.className = "";
+        //        this.value = "";
+        //    }
+        //});
+        //$("tfoot input").blur(function (i) {
+        //    if (this.value == "") {
+        //        this.className = "search_init";
+        //        this.value = asInitVals[$("tfoot input").index(this)];
+        //    }
+        //});
+
+        //$("tfoot input").keyup(function () {
+        //    /* Filter on the column (the index) of this element */
+        //    oTable.fnFilter(this.value, $("tfoot input").index(this));
+        //});
+    });
+</script>
+
+<br />
+<table id="example" class="display" style="width: 100%;">
+    <thead>
+        <tr>
+            <th rowspan="2" style="text-align: center;width: 80px;">
+                S. No.
+            </th>
+            <th rowspan="2" style="text-align: center;width: 80px;">
+                Name of the Director
+            </th>
+            <th colspan="2" style="text-align: center;" class=" ui-state-default">
+                Period
+            </th>
+            <th rowspan="2" style="text-align: center;">
+                Photo
+            </th>
+        </tr>
+        <tr>
+            <th style="text-align: center;">
+                From
+            </th>
+            <th style="text-align: center;">
+                To
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center;">
+                &nbsp;1&nbsp; &nbsp;&nbsp;
+            </td>
+            <td>
+                <strong>Dr. Duggirala Srinivasa Rao</strong><br />
+                Professor of Electronics & Communication Engineering
+            </td>
+            <td style="text-align: center;">
+                24.06.2021
+            </td>
+            <td style="text-align: center;">
+                Till Date
+            </td>
+            <td align="center" valign="middle" width="225">
+                <img src="~/Content/images/DirectorsImages/Dr.D.Srinivasa_Rao.jpg" style="border: #999 1px solid; height: 137px;" width="100" />
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                &nbsp;2&nbsp; &nbsp;&nbsp;
+            </td>
+            <td>
+                <strong>Dr. K. Ramamohan Reddy (I/c)</strong><br />
+                Professor of Water Resources
+            </td>
+            <td style="text-align: center;">
+                01.07.2019
+            </td>
+            <td style="text-align: center;">
+                23.06.2021
+            </td>
+            <td align="center" valign="middle" width="225">
+                <img src="~/Content/images/DirectorsImages/Dr.K.RamamohanReddy(Ic).jpeg" style="border: #999 1px solid;" width="100" />
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                &nbsp;3&nbsp; &nbsp;&nbsp;
+            </td>
+            <td>
+                <strong>Dr. M. Sreenivasa Rao</strong> <br />
+                Professor of&nbsp; Computer Science and Engineering
+            </td>
+            <td style="text-align: center;">
+                30.01.2016
+            </td>
+            <td style="text-align: center;">
+                30.06.2019
+            </td>
+            <td align="center" valign="middle" width="225">
+                <img src="~/Content/images/DirectorsImages/Dr.M.SreenivasaRao.jpg" style="border: #999 1px solid;" width="100" />
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                &nbsp;4&nbsp; &nbsp; &nbsp;&nbsp;
+            </td>
+            <td>
+                <strong>Dr. G. VijayaKumari</strong><br />
+                Professor of&nbsp; Computer Science and Engineering
+            </td>
+            <td style="text-align: center;">
+                07.02.2015
+            </td>
+            <td style="text-align: center;">
+                29.01.2016
+            </td>
+            <td align="center" valign="middle" width="225">
+                <img src="~/Content/images/DirectorsImages/Dr.G.VijayaKumari.jpg" style="border: #999 1px solid;" width="100" />
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                &nbsp;5&nbsp; &nbsp; &nbsp;&nbsp;
+            </td>
+            <td>
+                <strong>Dr. A. Damodaram</strong><br />
+                Professor of&nbsp; Computer Science and Engineering
+            </td>
+            <td style="text-align: center;">
+                18.06.2012
+            </td>
+            <td style="text-align: center;">
+                06.02.2015
+            </td>
+            <td align="center" valign="middle" width="225">
+                <img src="~/Content/images/DirectorsImages/Dr.A.Damodaram.jpg" style="border: #999 1px solid;" width="100" />
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                &nbsp;6&nbsp; &nbsp; &nbsp;&nbsp;
+            </td>
+            <td>
+                <strong>Dr. E. Saibaba Reddy</strong><br />
+                Professor of&nbsp; Civil Engineering
+            </td>
+            <td style="text-align: center;">
+                19.05.2012
+            </td>
+            <td style="text-align: center;">
+                17.06.2012
+            </td>
+            <td align="center" valign="middle" width="225">
+                <img src="~/Content/images/DirectorsImages/Dr.E.SaibabaReddy.png" style="border: #999 1px solid;" width="100" />
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                &nbsp;7&nbsp; &nbsp; &nbsp;&nbsp;
+            </td>
+            <td>
+                <strong>Dr. E. Saibaba Reddy (I/c)</strong><br />
+                Professor of&nbsp; Civil Engineering
+            </td>
+            <td style="text-align: center;">
+                19.01.2012
+            </td>
+            <td style="text-align: center;">
+                18.05.2012
+            </td>
+            <td align="center" valign="middle" width="225">
+                <img src="~/Content/images/DirectorsImages/Dr.E.SaibabaReddy.png" style="border: #999 1px solid;" width="100" />
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                &nbsp;8&nbsp; &nbsp; &nbsp;&nbsp;
+            </td>
+            <td>
+                <strong>Dr. T. Kishen Kumar Reddy (I/c)</strong><br />
+                Professor of Mechanical Engineering
+            </td>
+            <td style="text-align: center;">
+                01.07.2009
+            </td>
+            <td style="text-align: center;">
+                18.01.2012
+            </td>
+            <td align="center" valign="middle" width="225">
+                <img src="~/Content/images/DirectorsImages/Dr.T.KishenKumarReddy(Ic).jpg" style="border: #999 1px solid;" width="100" />
+            </td>
+        </tr>
+    </tbody>
+
+    @*<tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+            </tr>
+        </tfoot>*@
+</table>
+

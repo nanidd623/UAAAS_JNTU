@@ -1,0 +1,129 @@
+﻿@model UAAAS.Models.ApprovedAdmittedIntake
+@{
+    ViewBag.Title = "GetApprovedAdmittedIntakeReport";
+}
+<h2>Intake Report</h2>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSubmit").click(function () {
+            debugger;
+            var CollegeId = $("#CollegeId").val();
+            if (CollegeId == null || CollegeId == "")
+                return false;
+        });
+    });
+</script>
+<style type="text/css">
+    .col1 {
+        width: 4%;
+    }
+
+    .col2 {
+        width: 12%;
+    }
+     .tdright span {
+        font-weight: bold;
+    }
+
+    .tdright {
+        width: 22%;
+        text-align: center;
+    }
+
+    .tdcenter {
+        width: 10%;
+        text-align: center;
+    }
+
+    .tdleft {
+        width: 70%;
+    }
+     input[type="checkbox"] {
+        width: 15px; /*Desired width*/
+        height: 15px; /*Desired height*/
+    } 
+</style>
+
+@using (Html.BeginForm())
+{
+    <div style="width:50%;border:solid 1px #e6e6e6;border-top:5px solid #F2552C;box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);margin:auto;">
+        <table cellspacing="6px;" width="90%" style="margin:auto;padding:7px;">
+            <tr>
+                <td class="tdright">
+                    <span style="float:right;">Colleges</span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    @Html.DropDownListFor(model => model.CollegeId, new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"), "---Select---", new { @style = "width:80%;",@class = "required" })
+                </td>
+            </tr>
+            <tr>
+                <td class="tdright">
+                    <span style="float:right;">Proposed Intake</span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    @Html.CheckBoxFor(model => model.PresentYear, new { @class = "" }) @ViewBag.PresentYear
+                </td>
+            </tr>
+        </table>
+        <br />
+
+        @*<table width="100%">
+            <tr>
+                @*<td class="col1" style="">@Html.CheckBoxFor(model => model.PresentYear, new { @class = "Item" })</td>
+                    <td class="col2" style="">@ViewBag.PresentYear</td>
+                <td class="col1" style="">@Html.CheckBoxFor(model => model.FirstYear, new { @class = "Item" })</td>
+                <td class="col2" style="">@ViewBag.FirstYear</td>
+                <td class="col1" style="">@Html.CheckBoxFor(model => model.SecondYear, new { @class = "Item" }) </td>
+                <td class="col2" style=""> @ViewBag.SecondYear</td>
+                <td class="col1" style="">@Html.CheckBoxFor(model => model.ThirdYear, new { @class = "Item" })</td>
+                <td class="col2" style="">@ViewBag.ThirdYear</td>
+                <td class="col1" style="">@Html.CheckBoxFor(model => model.FourYear, new { @class = "Item" })</td>
+                <td class="col2" style="">@ViewBag.FourthYear</td>
+                <td class="col1" style="">@Html.CheckBoxFor(model => model.FifthYear, new { @class = "Item" }) </td>
+                <td class="col2" style="">@ViewBag.FifthYear </td>
+                <td class="col1" style="">@Html.CheckBoxFor(model => model.SixYear, new { @class = "Item" }) </td>
+                <td class="col2" style="">@ViewBag.SixYear</td>
+            </tr>
+            <tr>
+                <td class="col1" style="">@Html.CheckBoxFor(model => model.AICTEApprovedIntake, new { @class = "Item" })</td>
+                <td class="col2" style="">AICTE Approved Intake</td>
+                <td class="col1" style="">@Html.CheckBoxFor(model => model.JntuApprovedIntake, new { @class = "Item" }) </td>
+                <td class="col2" style="">Jntu Approved Intake</td>
+                <td class="col1" style="">@Html.CheckBoxFor(model => model.ExamsAdmittedIntakeR, new { @class = "Item" })</td>
+                <td class="col2" style="">Examination AdmittedIntake Regular</td>
+                <td class="col1" style="">@Html.CheckBoxFor(model => model.ExamsAdmittedIntakeL, new { @class = "Item" })</td>
+                <td class="col2" style="">Examination AdmittedIntake Lateral</td>
+                <td class="col1" style="">@Html.CheckBoxFor(model => model.CollegeAdmittedIntake, new { @class = "Item" }) </td>
+                <td class="col2" style="">College Admitted Intake</td>
+            </tr>
+
+        </table>*@
+    </div>
+    <br/><br/>
+    <div style="width:60%;border:solid 1px #e6e6e6;border-bottom:3px solid #F2552C;box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);margin:auto;">
+        <ul style="list-style:none;padding: 0px;margin: 0px;width: 77%;-webkit-column-count: 2;-webkit-column-gap: 15px;font-weight:bold;padding:10px;margin:auto;font-size:15px;">
+            <li>@Html.CheckBoxFor(model => model.FirstYear, new { @class = "Item" }) @ViewBag.FirstYear</li>
+            <li>@Html.CheckBoxFor(model => model.SecondYear, new { @class = "Item" }) @ViewBag.SecondYear</li>
+            <li>@Html.CheckBoxFor(model => model.ThirdYear, new { @class = "Item" }) @ViewBag.ThirdYear</li>
+            <li>@Html.CheckBoxFor(model => model.FourYear, new { @class = "Item" }) @ViewBag.FourthYear</li>
+            <li>@Html.CheckBoxFor(model => model.FifthYear, new { @class = "Item" }) @ViewBag.FifthYear</li>
+            <li>@Html.CheckBoxFor(model => model.SixYear, new { @class = "Item" }) @ViewBag.SixYear</li>
+            <li>@Html.CheckBoxFor(model => model.AICTEApprovedIntake, new { @class = "Item" }) AICTE Approved Intake</li>
+            <li>@Html.CheckBoxFor(model => model.JntuApprovedIntake, new { @class = "Item" }) Jntu Approved Intake</li>
+            <li>@Html.CheckBoxFor(model => model.ExamsAdmittedIntakeR, new { @class = "Item" }) Examination AdmittedIntake Regular</li>
+            <li>@Html.CheckBoxFor(model => model.ExamsAdmittedIntakeL, new { @class = "Item" }) Examination AdmittedIntake Lateral</li>
+            <li>@Html.CheckBoxFor(model => model.CollegeAdmittedIntake, new { @class = "Item" }) College Admitted Intake</li>
+        </ul>
+    </div>
+    <br />
+    <br />
+    <div style="float:right;">
+        <div>
+            <input type="submit" id="btnSubmit" value="Export" class="create_button" name="command" />
+        </div>
+    </div>
+
+}

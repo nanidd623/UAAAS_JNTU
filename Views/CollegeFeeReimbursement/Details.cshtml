@@ -1,0 +1,81 @@
+﻿@model UAAAS.Models.CollegeFeeReimbursement
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+    ViewBag.Title = "College Fee Reimbursement Details";
+}
+
+<h2>College Fee Reimbursement Details</h2>
+
+<div class="details_table">
+
+    <div class="display-label" style="width:270px">Degree</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.degree)        
+        @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    </div>
+
+    <div class="display-label" style="width:270px">Department</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.department)
+    </div>
+
+    <div class="display-label" style="width:270px">Specialization</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.specialization)
+    </div>
+
+    <div class="display-label" style="width:270px">Shift</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.shift)
+    </div>
+
+    <div class="display-label" style="width:270px">Year in degree</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.yearInDegree)
+    </div>
+
+    <div class="display-label" style="width:270px">Without Re-imbursement Seats</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.seatsWithoutReimbursement)
+    </div>
+
+    <div class="display-label" style="width:270px">Without Re-imbursement Total Fee(Rs.)</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.feeWithoutReimbursement)
+    </div>
+
+    <div class="display-label" style="width:270px">With Re-imbursement Seats</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.seatsWithReimbursement)
+    </div>
+
+    <div class="display-label" style="width:270px">With Re-imbursement Total Fee(Rs.)</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.feeWithReimbursement)
+    </div>
+
+    <div class="display-label" style="width:270px">NRI Seats</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.NRISeats)
+    </div>
+
+    <div class="display-label" style="width:270px">NRI Seats Total Fee(Rs.)</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.totalNRIFee)
+    </div>
+
+    <div class="display-label" style="width:270px">PIO Seats</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.PIOSeats)
+    </div>
+
+    <div class="display-label" style="width:270px">PIO Seats Total Fee(Rs.)</div>
+    <div class="display-field" style="width:310px">
+        @Html.DisplayFor(model => model.totalPIOFee)
+    </div>
+
+</div>

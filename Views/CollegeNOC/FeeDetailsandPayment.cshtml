@@ -1,0 +1,179 @@
+﻿@using UAAAS.Models
+@model List<UAAAS.Controllers.IntakeExisting>
+@{
+    ViewBag.Title = "GetClosureCourses";
+    int index = 1;
+    uaaasDBContext db = new uaaasDBContext();
+    var NOCTypes = db.jntuh_college_paymentoffee_type.Where(a => (a.FeeType == "NOC For Closure of College" || a.FeeType == "NOC For Closure of Course") && a.isActive == true).Select(s => new { TypeId = s.id, Type = s.FeeType }).ToList();
+    int CollegeNocId = NOCTypes.Where(e => e.Type == "NOC For Closure of College").Select(a => a.TypeId).FirstOrDefault();
+    int CoursesNocId = NOCTypes.Where(e => e.Type == "NOC For Closure of Course").Select(a => a.TypeId).FirstOrDefault();
+}
+
+<h2>Closure Courses</h2>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Pay').click(function (e) {
+            debugger;
+            var data = "challanNumber=@ViewBag.challnNumber&txnAmount=@ViewBag.totalFee&collegeCode=@ViewBag.collegeCode&noctype=@ViewBag.noctype";
+            $.ajax({
+                url: "/CollegeNOC/SavePaymentRequest",
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                data: data,
+                success: function (data) {
+                    //$('#paymentform').submit();
+                },
+                error: function (event) {
+                    // $(this).prop("checked", false);
+                }
+            });
+        });
+
+        // Delete Confirmation
+        $(".confirmDialog").live("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: "Delete Closure Course Request",
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+    });
+</script>
+<p><b style="color:red;font-size:12px;">*Note: </b><span style="font-weight:bold;color:red;font-size:12px;">Please use Internet Explorer 11+ Version for successful payments.</span></p>
+<br />
+<div>
+    @if (TempData["SUCCESS"] != null)
+    {
+        <div class="success" style="background-color: gold; border: 1px solid #f49820;height:12px;text-align:center;">
+            <p style="text-align:center;font-weight: bold;margin-top:-3px;"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+        </div>
+    }
+    else if (TempData["ERROR"] != null)
+    {
+        <div class="error" style="background-color: red; border: 1px solid #f49820;height:12px;text-align:center;">
+            <p style="text-align: center;font-weight: bold;color:white;margin-top:-3px;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+        </div>
+    }
+</div>
+<br />
+
+
+<table width="100%" border="0" class="webGrid">
+    <thead>
+        <tr style="background-color: #C1D4E6;">
+            <th>S.No</th>
+            <th>Degree</th>
+            <th>Department</th>
+            <th>Specialization</th>
+            <th>Approved Intake</th>
+            <th>Closure Intake</th>
+            <th>Status</th>
+            @if (ViewBag.noctype == CoursesNocId)
+            {
+                <th style="text-align:center;">Action</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.Courses != null)
+        {
+            foreach (var item in ViewBag.Courses)
+            {
+                <tr style="background-color: #FCF1D1;">
+                    <td>@(index++)</td>
+                    <td>@item.Degree</td>
+                    <td>@item.Department</td>
+                    <td>
+                        @if (item.shiftId == 2)
+                        {
+                            <p>@item.Specialization <span>-2</span></p>
+                        }
+                        else
+                        {
+                            <p>@item.Specialization</p>
+                        }
+                    </td>
+                    <td>@item.ApprovedIntake</td>
+                    <td>0</td>
+                    <td>@item.CourseStatus</td>
+                    @if (ViewBag.noctype == CoursesNocId)
+                    {
+                        <td>
+                            @if (ViewBag.IsPaymentDone == false && item.CourseStatus != "Submitted")
+                            {
+                                <p style="text-align:center;">
+                                    <a href="/CollegeNOC/Delete?Id=@item.nocid" class="confirmDialog create_button" style="color:white;">
+                                        <span>Delete</span>
+                                    </a>
+                                </p>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<form method="post" id="paymentform" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment">
+    <input name="msg" type="hidden" value=@ViewBag.msg>
+    <br />
+
+    <div style="float:right">
+        @if (ViewBag.IsPaymentDone == true)
+        {
+            if (ViewBag.noctype == CollegeNocId)
+            {
+                <p class="create_link_right">
+                    <span style="color: red; font-style: italic; font-weight: bold;">
+                        <a href="/CollegeNOC/DownloadAcknowlegement?noctypeid=@CollegeNocId" style="font-weight: bold;font-size:15px;" class="create_button">
+                            Download Request Letter
+                        </a>
+                    </span>
+                </p>
+            }
+            else if (ViewBag.noctype == CoursesNocId && TempData["CoursesCount"] == "true")
+            {
+                <p class="create_link_right">
+                    <span style="color: red; font-style: italic; font-weight: bold;">
+                        <a href="/CollegeNOC/DownloadAcknowlegement?noctypeid=@CoursesNocId" style="font-weight: bold;font-size:15px;" class="create_button">
+                            Download Request Letter
+                        </a>
+                    </span>
+                </p>
+            }
+        }
+        else if (TempData["CoursesCount"].ToString() != "false")
+        {
+            <input type="submit" value="Pay" id="Pay" />
+        }
+
+    </div>
+    <br />
+</form>
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>

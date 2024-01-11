@@ -1,0 +1,248 @@
+﻿@model List<UAAAS.Controllers.EditLabsList>
+@{
+    ViewBag.Title = "ViewLabmasterrecords";
+    int count = 1;
+}
+
+<h2>Code Wise Lab master records</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null, null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+       
+        $(".EditDialog").live('click', function () {
+            debugger;
+            var url = $(this).attr('href');
+            $("#editDialog").dialog({
+                title: 'Edit Lab Master Single record',
+                autoOpen: false,
+                model: true,
+                resizable: false,
+                width: 770,
+                height: 430,
+                effect: { effect: 'drop', direction: "up" },
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            })
+            $("#editDialog").dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Lab',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+    });
+</script>
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success" style="height:15px;">
+        <p style="text-align: center;font-weight: bold"><span style="color:green;font-weight:bold;">Success : </span>@TempData["SUCCESS"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;"><span style="color:red;font-weight:bold;">Error : </span>@TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+<div>
+
+    <table id="example" class="display" style="width: 100%;">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">
+                    S.No
+                </th>
+                <th style="width: 80px; text-align: center;">
+                    Degree
+                </th>
+                <th style="text-align: left;width: 100px;">
+                    Department
+                </th>
+                <th style="width: 120px; text-align: center;">Specialization</th>
+                <th style="width: 50px; text-align: center;">Year</th>
+                <th style="width: 50px; text-align: center;">Semester</th>
+                <th style="width: 50px; text-align: center;">LabCode</th>
+                <th style="width: 180px; text-align: center;">LabName</th>
+                <th style="width: 180px; text-align: center;">EquipmentName</th>
+                <th style="width: 30px; text-align: center;">NoofUnits</th>
+                <th style="width: 30px; text-align: center;">Edit</th>
+                <th style="width: 30px; text-align: center;">View</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(count++)</td>
+                        <td>
+                            @item.Degree
+                        </td>
+                        <td>
+                            @item.Department
+                        </td>
+                        <td>
+                            @item.Specialization
+                        </td>
+                        <td style="text-align:center;">
+                            @item.Year
+                        </td>
+                        <td style="text-align:center;">
+                            @item.Semister
+                        </td>
+                        <td>
+                            @item.Labcode
+                        </td>
+                        <td>
+                            @item.LabName
+                        </td>
+                        <td>
+                            @item.EquipmentName
+                        </td>
+                        <td style="text-align:center;">
+                            @item.noofUnits
+                        </td>
+                        <td style="text-align:center;">
+                            <a href="/LabsInsertAndDeletion/EditLabmasterSinglerecord?id=@item.Id" class="EditDialog edit_button">Edit</a>
+                        </td>
+                        <td style="text-align:center;">
+                            <a href="/LabsInsertAndDeletion/DeleteLabmasterrecord?id=@item.Id" class="confirmDialog delete_button">View</a>
+                        </td>
+                    </tr>
+                }
+            }         
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th width="120px">
+                    <input type="text" id="i-1" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th width="100px">
+                    <input type="text" id="i-1" style="width: 70%; text-align: left;" class="search_init">
+                </th>
+                <th width="100px">
+                    <input type="text" id="i-2" style="width: 70%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" width="130px">
+                    <input type="text" id="i-3" style="width: 70%; text-align: left;" class="search_init">
+                </th>
+                <th class="ui-state-default" width="125px">
+                    <input type="text" id="i-4" style="width: 70%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-6" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-7" style="width: 90%; text-align: left;display:none " class="search_init">
+                </th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-8" style="width: 90%; text-align: left;display:none " class="search_init">
+                </th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-9" style="width: 90%; text-align: left;display:none " class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<div id="editDialog" style="display: none">
+
+</div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>

@@ -1,0 +1,130 @@
+﻿@{
+   
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "BalanceAmmount";
+}
+
+<h2>Balance Ammount</h2>
+
+
+<table class="full_table" style="width: 100%; font-size: 0.7rem;">
+    <tr>
+
+        <th style="text-align: center;" rowspan="3">
+            Processing Fee
+        </th>
+
+        <th style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">
+            Total Fee
+            <br/>
+        </th>
+        <th style="text-align: center;" rowspan="3">
+            Payment
+        </th>
+
+    </tr>
+    <tr>
+
+    </tr>
+    <tr>
+
+    </tr>
+    <tr>
+
+        <td style="text-align: center;" colspan="1"><label>Rs</label> @ViewBag.lateFee </td>
+        <td style="width: 60px; text-align: center; background-color: lightgreen; font-weight: bold;">
+            <label>Rs</label> @ViewBag.totalFee
+        </td>
+        <td class="create_link_right" style="text-align: center;">
+        <html>
+        <body>
+        <form method="post" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment">
+            <input name="msg" type="hidden" value=@ViewBag.msg>
+
+
+
+            @if (ViewBag.totalFee == 0)
+            {
+                <input type="submit" value="Paid" id="pay" class="create_button not-active ">
+            }
+            else
+            {
+                <input type="checkbox" id="continuePayment"/>
+                <span>I Agree</span>
+                <br/>
+                <text>Once payment is done colleges can not add<br/> new courses please confirm before making payment</text>
+                <input type="submit" value="Pay" id="pay" class="create_button">
+            }
+        </form>
+        </body>
+        </html>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+        $.ajaxSetup({ cache: false });
+
+        $("#openDialog").live("click", function (e) {
+            //e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Pay',
+                height: 300,
+                width: 650
+            });
+            url = $("#openDialog").attr('href');
+            return false;
+        });
+        $('#pay').click(function (e) {
+            var data = "challanNumber=@ViewBag.challnNumber&txnAmount=@ViewBag.totalFee&collegeCode=@ViewBag.collegeCode";
+            //alert(data);
+            //e.preventDefault();
+            $.ajax({
+                url: "/SubmitData/SavePaymentRequest",
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                data: data,
+                success: function (data) {
+                    //$('#paymentform').submit();
+                },
+                error: function (event) {
+                    // $(this).prop("checked", false);
+                }
+            });
+        });
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+    });
+</script>
+
+<script>
+    function DisplayMessage(e) {
+        var retVal = confirm("Do you want to continue ?");
+        if (!retVal) {
+            e.preventDefault();
+        }
+        else {
+            alert('payment');
+            $('#paymentform').submit();
+        }
+
+    }
+    $(document).ready(function () {
+        $('#continuePayment').click(function () {
+            if ($(this).attr("checked")) {
+                $('#pay').removeClass('not-active');
+            }
+            else $('#pay').addClass('not-active');
+            //if ($(this).is(":checked")) {
+            //    alert($(this.val()));
+            //}
+        });
+    })
+</script>

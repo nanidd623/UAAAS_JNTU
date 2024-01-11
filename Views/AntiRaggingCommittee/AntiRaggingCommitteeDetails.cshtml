@@ -1,0 +1,26 @@
+﻿@model UAAAS.Models.AntiRaggingCommittee
+@{
+    ViewBag.Title = "AntiRagging Committee Details";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+}
+
+<h2>AntiRagging Committee Details</h2>
+<div class="details_table">
+    <div class="display-label" style="width: 40%;">Actual Designation</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.actualDesignation)
+    </div>
+
+    <div class="display-label" style="width: 40%;">Designation</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.designationName)
+    </div>
+    <div class="display-label" style="width: 40%;">Name</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.memberName)
+    </div>
+</div>

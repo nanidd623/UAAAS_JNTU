@@ -1,0 +1,719 @@
+﻿@model UAAAS.Models.CollegeInformation
+@{
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Information";
+}
+<h2>College Information</h2>
+@using (Html.BeginForm())
+{
+    int otherCategoeryCount = 0;
+    int DegreeCount = 0;
+    <table class="four_columns">
+        <tr>
+            <td class="col11" colspan="4">
+                <b>@Html.LabelFor(model => model.collegeAffiliationTypeID)</b>
+                @Html.ValidationMessageFor(model => model.collegeAffiliationTypeID)
+            </td>
+        </tr>
+        <tr>
+            <td class="col21" colspan="4">
+                @Html.HiddenFor(model => model.collegeAffiliationTypeID)
+                @foreach (var item in Model.collegeAffiliationType)
+                {
+                    var optionValue = "CAType_" + item.id;
+                    var selectValue = item.selected;
+                    if (@selectValue == 1)
+                    {
+                    <label for="@optionValue">@item.name</label>
+                    }
+                    if (optionValue == "CAType_11" && @selectValue == 1)
+                    {
+                        otherCategoeryCount = otherCategoeryCount + 1;
+                    }
+                }
+                @if (otherCategoeryCount > 0)
+                {
+                    if (Model.otherCategory != null || Model.otherCategory != string.Empty)
+                    {
+                    <b>: &nbsp;
+                    </b>
+                    @Html.DisplayFor(model => model.otherCategory, new { @class = "txtOtherCategory" })
+                    }
+                }
+            </td>
+        </tr>
+    </table>
+    <br />
+    <table class="four_columns">
+        <tr>
+            <td class="col11" colspan="4">
+                <b>College Information</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.collegeName)
+            </td>
+            <td class="col21" colspan="3">
+                @Html.DisplayFor(model => model.collegeName, new { @class = "focus" })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11" width="180px">
+                @Html.LabelFor(model => model.collegeCode)
+            </td>
+            <td class="col21" width="180px">
+                @Html.DisplayFor(model => model.collegeCode)
+            </td>
+            <td class="col31" width="110px">
+                @Html.LabelFor(model => model.eamcetCode)
+            </td>
+            <td class="col41">
+                @Html.DisplayFor(model => model.eamcetCode)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.collegeStatusID)
+            </td>
+            <td class="col21">
+                @ViewBag.StatusName
+                @Html.HiddenFor(model => model.collegeStatusID)
+            </td>
+            <td class="col31">
+                @Html.LabelFor(model => model.icetCode)
+            </td>
+            <td class="col41">
+                @Html.DisplayFor(model => model.icetCode)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.address)
+            </td>
+            <td class="col21" colspan="3">
+                @Html.DisplayFor(model => model.address)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.townOrCity)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.townOrCity)
+            </td>
+            <td class="col31">
+                @Html.LabelFor(model => model.mandal)
+            </td>
+            <td class="col41">
+                @Html.DisplayFor(model => model.mandal)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.stateId)
+            </td>
+            <td class="col21">
+                @ViewBag.StateName
+                @Html.HiddenFor(model => model.stateId)
+            </td>
+            <td class="col31">
+                @Html.LabelFor(model => model.districtId)
+            </td>
+            <td class="col41">
+                @ViewBag.DistrictName
+                @Html.HiddenFor(model => model.districtId)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.pincode)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.pincode, new { @Value = Model.pincode == 0 ? "" : Model.pincode.ToString() })
+            </td>
+            <td class="col31">
+                @Html.LabelFor(model => model.fax)
+            </td>
+            <td class="col41">
+                @Html.DisplayFor(model => model.fax)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.landline)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.landline)
+            </td>
+            <td class="col31">
+                @Html.LabelFor(model => model.mobile)
+            </td>
+            <td class="col41">
+                @Html.DisplayFor(model => model.mobile)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.email)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.email)
+            </td>
+            <td class="col31">
+                @Html.LabelFor(model => model.website)
+            </td>
+            <td class="col41">
+                @Html.DisplayFor(model => model.website)
+            </td>
+        </tr>
+        @{int rowNo = 1;}
+        @foreach (var item in Model.affiliationType)
+        {
+            var txtFromId = "txtfrom_" + @rowNo;
+            var txtToId = "txtto_" + @rowNo;
+            var txtDuration = "txtDuration_" + @rowNo;
+            var rdoAffilitionId = "rdoAffilitionId_" + @rowNo;
+            var lblAffilitionId = "lblAffilitionId_" + @rowNo;
+            var fieldAffilitionId = "fieldAffilitionId_" + @rowNo;
+            var selectedAffiliation = "affiliationTypeId" + @rowNo;
+            var selectedAffiliationNew = "affiliationTypeIdNew" + @rowNo;
+            var fromDate = "affiliationFromDate" + @rowNo;
+            var toDate = "affiliationToDate" + @rowNo;
+            var duration = "affiliationDuration" + @rowNo++;            
+            <tr>
+                <td class="col1">
+                    @item.name
+                </td>
+                <td class="col2" id="@rdoAffilitionId">
+                    @if (@selectedAffiliation == "affiliationTypeId1")
+                    {
+                        if (Model.affiliationSelected1 == 1)
+                        {
+                        <label>Yes</label>
+                        }
+                        else
+                        {
+                        <label>No</label>
+                        }
+                    }
+                    else if (@selectedAffiliation == "affiliationTypeId2")
+                    {
+                        if (Model.affiliationSelected2 == 1)
+                        {
+                        <label>Yes</label>
+                        }
+                        else
+                        {
+                        <label>No</label>
+                        }
+                    }
+                    else if (@selectedAffiliation == "affiliationTypeId3")
+                    {
+                        if (Model.affiliationSelected3 == 1)
+                        {
+                        <label>Yes</label>
+                        }
+                        else
+                        {
+                        <label>No</label>
+                        }
+                    }
+                    else if (@selectedAffiliation == "affiliationTypeId4")
+                    {
+                        if (Model.affiliationSelected4 == 1)
+                        {
+                        <label>Conferred</label>
+                        }
+                        else if (Model.affiliationSelected4 == 2)
+                        {
+                        <label>Applied</label>
+                        }
+                        else
+                        {
+                        <label>Not Yet Applied</label>
+                        }
+                    }
+                    else if (@selectedAffiliation == "affiliationTypeId5")
+                    {
+                        if (Model.affiliationSelected5 == 1)
+                        {
+                        <label>Conferred</label>
+                        }
+                        else if (Model.affiliationSelected5 == 2)
+                        {
+                        <label>Applied</label>
+                        }
+                        else
+                        {
+                        <label>Not Yet Applied</label>
+                        }
+                    }
+                </td>
+                <td class="col3" id="@lblAffilitionId" style="width:18%">
+                    <table style="width: 100%">
+                        <tr>
+                            <td>Affiliation Period</td>
+                            <td style="height: 25px; text-align: right; width: 55px;">From :</td>
+                        </tr>
+                        @if (@item.name != "NBA Status")
+                        {
+                            <tr>
+                                <td></td>
+                                <td style="height: 25px; text-align: right; width: 60px;">To :</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td></td>
+                            <td style="height: 25px; text-align: right; width: 60px;">Duration :</td>
+                        </tr>
+                        @if (@item.name.Contains("NAAC"))
+                        {
+                            <tr>
+                                <td></td>
+                                <td style="height: 25px; text-align: right;">
+                                    @Html.LabelFor(model => model.affiliationGrade) :
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </td>
+                <td class="col4 readonly" id="@fieldAffilitionId">
+                    <table style="width: 100%">
+                        <tr>
+                            <td>
+                                @if (@selectedAffiliation == "affiliationTypeId1")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationFromDate1 != null)
+                                    {
+                                        if (Model.affiliationFromDate1.First().Equals(string.Empty)) { value = string.Empty; }
+                                        else
+                                        {
+                                            if (Model.affiliationFromDate1.First().Contains(' '))
+                                            {
+                                                value = Model.affiliationFromDate1.First().Remove(Model.affiliationFromDate1.First().IndexOf(' '));
+                                            }
+                                            else
+                                            {
+                                                value = Model.affiliationFromDate1.First();
+                                            }
+                                        }
+                                    }
+                                    @Html.DisplayFor(model => model.affiliationFromDate1)<span> (DD/MM/YYYY)</span>
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId2")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationFromDate2 != null)
+                                    {
+                                        if (Model.affiliationFromDate2.First().Equals(string.Empty)) { value = string.Empty; }
+                                        else
+                                        {
+                                            if (Model.affiliationFromDate2.First().Contains(' '))
+                                            {
+                                                value = Model.affiliationFromDate2.First().Remove(Model.affiliationFromDate2.First().IndexOf(' '));
+                                            }
+                                            else
+                                            {
+                                                value = Model.affiliationFromDate2.First();
+                                            }
+                                        }
+                                    }
+                                    @Html.DisplayFor(model => model.affiliationFromDate2)<span> (DD/MM/YYYY)</span>
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId3")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationFromDate3 != null)
+                                    {
+                                        if (Model.affiliationFromDate3.First().Equals(string.Empty)) { value = string.Empty; }
+                                        else
+                                        {
+                                            if (Model.affiliationFromDate3.First().Contains(' '))
+                                            {
+                                                value = Model.affiliationFromDate3.First().Remove(Model.affiliationFromDate3.First().IndexOf(' '));
+                                            }
+                                            else
+                                            {
+                                                value = Model.affiliationFromDate3.First();
+                                            }
+                                        }
+                                    }
+                                    @Html.DisplayFor(model => model.affiliationFromDate3)<span> (DD/MM/YYYY)</span>
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId4")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationFromDate4 != null)
+                                    {
+                                        if (Model.affiliationFromDate4.First().Equals(string.Empty)) { value = string.Empty; }
+                                        else
+                                        {
+                                            if (Model.affiliationFromDate4.First().Contains(' '))
+                                            {
+                                                value = Model.affiliationFromDate4.First().Remove(Model.affiliationFromDate4.First().IndexOf(' '));
+                                            }
+                                            else
+                                            {
+                                                value = Model.affiliationFromDate4.First();
+                                            }
+                                        }
+                                    }
+                                    @Html.DisplayFor(model => model.affiliationFromDate4)<span> (DD/MM/YYYY)</span>
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId5")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationFromDate5 != null)
+                                    {
+                                        if (Model.affiliationFromDate5.First().Equals(string.Empty)) { value = string.Empty; }
+                                        else
+                                        {
+                                            if (Model.affiliationFromDate5.First().Contains(' '))
+                                            {
+                                                value = Model.affiliationFromDate5.First().Remove(Model.affiliationFromDate5.First().IndexOf(' '));
+                                            }
+                                            else
+                                            {
+                                                value = Model.affiliationFromDate5.First();
+                                            }
+                                        }
+                                    }
+                                    @Html.DisplayFor(model => model.affiliationFromDate5)<span> (DD/MM/YYYY)</span>
+                                }
+                                @if (@selectedAffiliation != "affiliationTypeId4")
+                                {
+                                    <br />
+                                    <div style="height: 3px;"></div>
+                                    if (@selectedAffiliation == "affiliationTypeId1")
+                                    {
+                                        var value = string.Empty;
+                                        if (Model.affiliationToDate1 != null)
+                                        {
+                                            if (Model.affiliationToDate1.First().Equals(string.Empty)) { value = string.Empty; }
+                                            else
+                                            {
+                                                if (Model.affiliationToDate1.First().Contains(' '))
+                                                {
+                                                    value = Model.affiliationToDate1.First().Remove(Model.affiliationToDate1.First().IndexOf(' '));
+                                                }
+                                                else
+                                                {
+                                                    value = Model.affiliationToDate1.First();
+                                                }
+                                            }
+                                        }
+                                    @Html.DisplayFor(model => model.affiliationToDate1)<span> (DD/MM/YYYY)</span>
+                                    }
+                                    else if (@selectedAffiliation == "affiliationTypeId2")
+                                    {
+                                        var value = string.Empty;
+                                        if (Model.affiliationToDate2 != null)
+                                        {
+                                            if (Model.affiliationToDate2.First().Equals(string.Empty)) { value = string.Empty; }
+                                            else
+                                            {
+                                                if (Model.affiliationToDate2.First().Contains(' '))
+                                                {
+                                                    value = Model.affiliationToDate2.First().Remove(Model.affiliationToDate2.First().IndexOf(' '));
+                                                }
+                                                else
+                                                {
+                                                    value = Model.affiliationToDate2.First();
+                                                }
+                                            }
+                                        }
+                                    @Html.DisplayFor(model => model.affiliationToDate2)<span> (DD/MM/YYYY)</span>
+                                    }
+                                    else if (@selectedAffiliation == "affiliationTypeId3")
+                                    {
+                                        var value = string.Empty;
+                                        if (Model.affiliationToDate3 != null)
+                                        {
+                                            if (Model.affiliationToDate3.First().Equals(string.Empty)) { value = string.Empty; }
+                                            else
+                                            {
+                                                if (Model.affiliationToDate3.First().Contains(' '))
+                                                {
+                                                    value = Model.affiliationToDate3.First().Remove(Model.affiliationToDate3.First().IndexOf(' '));
+                                                }
+                                                else
+                                                {
+                                                    value = Model.affiliationToDate3.First();
+                                                }
+                                            }
+                                        }
+                                    @Html.DisplayFor(model => model.affiliationToDate3)<span> (DD/MM/YYYY)</span>
+                                    }
+                                    else if (@selectedAffiliation == "affiliationTypeId5")
+                                    {
+                                        var value = string.Empty;
+                                        if (Model.affiliationToDate5 != null)
+                                        {
+                                            if (Model.affiliationToDate5.First().Equals(string.Empty)) { value = string.Empty; }
+                                            else
+                                            {
+                                                if (Model.affiliationToDate5.First().Contains(' '))
+                                                {
+                                                    value = Model.affiliationToDate5.First().Remove(Model.affiliationToDate5.First().IndexOf(' '));
+                                                }
+                                                else
+                                                {
+                                                    value = Model.affiliationToDate5.First();
+                                                }
+                                            }
+                                        }
+                                    @Html.DisplayFor(model => model.affiliationToDate5)<span> (DD/MM/YYYY)</span>
+                                    }
+                                }
+                                <br />
+                                <div style="height: 3px;"></div>
+                                @*<input type="text" id="@txtToId" name="@toDate" class="calendar" />*@
+                                @if (@selectedAffiliation == "affiliationTypeId1")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationDuration1 != null)
+                                    {
+                                        if (Model.affiliationDuration1.First().Equals(string.Empty)) { value = string.Empty; }
+                                        else
+                                        {
+                                            if (Model.affiliationDuration1.First().Contains(' '))
+                                            {
+                                                value = Model.affiliationDuration1.First().Remove(Model.affiliationDuration1.First().IndexOf(' '));
+                                            }
+                                            else
+                                            {
+                                                value = Model.affiliationDuration1.First();
+                                            }
+                                        }
+                                    }
+                                    @Html.DisplayFor(model => model.affiliationDuration1)
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId2")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationDuration2 != null)
+                                    {
+                                        if (Model.affiliationDuration2.First().Equals(string.Empty)) { value = string.Empty; }
+                                        else
+                                        {
+                                            if (Model.affiliationDuration2.First().Contains(' '))
+                                            {
+                                                value = Model.affiliationDuration2.First().Remove(Model.affiliationDuration2.First().IndexOf(' '));
+                                            }
+                                            else
+                                            {
+                                                value = Model.affiliationDuration2.First();
+                                            }
+                                        }
+                                    }
+                                    @Html.DisplayFor(model => model.affiliationDuration2)
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId3")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationDuration3 != null)
+                                    {
+                                        if (Model.affiliationDuration3.First().Equals(string.Empty)) { value = string.Empty; }
+                                        else
+                                        {
+                                            if (Model.affiliationDuration3.First().Contains(' '))
+                                            {
+                                                value = Model.affiliationDuration3.First().Remove(Model.affiliationDuration3.First().IndexOf(' '));
+                                            }
+                                            else
+                                            {
+                                                value = Model.affiliationDuration3.First();
+                                            }
+                                        }
+                                    }
+                                    @Html.DisplayFor(model => model.affiliationDuration3)
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId4")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationDuration4 != null)
+                                    {
+                                        if (Model.affiliationDuration4.First().Equals(string.Empty)) { value = string.Empty; }
+                                        else
+                                        {
+                                            if (Model.affiliationDuration4.First().Contains(' '))
+                                            {
+                                                value = Model.affiliationDuration4.First().Remove(Model.affiliationDuration4.First().IndexOf(' '));
+                                            }
+                                            else
+                                            {
+                                                value = Model.affiliationDuration4.First();
+                                            }
+                                        }
+                                    }
+                                    @Html.DisplayFor(model => model.affiliationDuration4)
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId5")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationDuration5 != null)
+                                    {
+                                        if (Model.affiliationDuration5.First().Equals(string.Empty)) { value = string.Empty; }
+                                        else
+                                        {
+                                            if (Model.affiliationDuration5.First().Contains(' '))
+                                            {
+                                                value = Model.affiliationDuration5.First().Remove(Model.affiliationDuration5.First().IndexOf(' '));
+                                            }
+                                            else
+                                            {
+                                                value = Model.affiliationDuration5.First();
+                                            }
+                                        }
+                                    }
+                                    @Html.DisplayFor(model => model.affiliationDuration5)
+                                }
+                                @if (@item.name.Contains("NAAC"))
+                                {
+                                    <div style="height: 3px;"></div>
+                                    @Html.DisplayFor(model => model.affiliationGrade, new { style = "width:100px" })
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>            
+        }
+        <script type="text/javascript">
+            if(@Model.affiliationSelected1 == 1)
+            {
+                $("#lblAffilitionId_1 table").attr('style', 'display: block');
+                $("#fieldAffilitionId_1 table").attr('style', 'display: block');
+            }
+            else
+            {
+                $("#lblAffilitionId_1 table").attr('style', 'display: none');
+                $("#fieldAffilitionId_1 table").attr('style', 'display: none');
+                $("#txtfrom_1").val(""); 
+                $("#txtto_1").val(""); 
+                $("#txtDuration_1").val("");  
+            }   
+            if(@Model.affiliationSelected2 == 1)
+            {
+                $("#lblAffilitionId_2 table").attr('style', 'display: block');
+                $("#fieldAffilitionId_2 table").attr('style', 'display: block');
+            }
+            else
+            {
+                $("#lblAffilitionId_2 table").attr('style', 'display: none');
+                $("#fieldAffilitionId_2 table").attr('style', 'display: none');
+                $("#txtfrom_2").val(""); 
+                $("#txtto_2").val(""); 
+                $("#txtDuration_2").val(""); 
+            }   
+            if(@Model.affiliationSelected3 == 1)
+            {
+                $("#lblAffilitionId_3 table").attr('style', 'display: block');
+                $("#fieldAffilitionId_3 table").attr('style', 'display: block');
+            }
+            else
+            {
+                $("#lblAffilitionId_3 table").attr('style', 'display: none');
+                $("#fieldAffilitionId_3 table").attr('style', 'display: none');
+                $("#txtfrom_3").val(""); 
+                $("#txtto_3").val(""); 
+                $("#txtDuration_3").val("");  
+            }
+            if(@Model.affiliationSelected4 == 1)
+            {
+                $("#lblAffilitionId_4 table").attr('style', 'display: block');
+                $("#fieldAffilitionId_4 table").attr('style', 'display: block');
+            }
+            else if(@Model.affiliationSelected4 == 2)
+            {
+                $("#lblAffilitionId_4 table").attr('style', 'display: none');
+                $("#fieldAffilitionId_4 table").attr('style', 'display: none');
+                $("#txtfrom_4").val(""); 
+                $("#txtto_4").val(""); 
+                $("#txtDuration_4").val("");  
+            }
+            else
+            {
+                $("#lblAffilitionId_4 table").attr('style', 'display: none');
+                $("#fieldAffilitionId_4 table").attr('style', 'display: none');
+                $("#txtfrom_4").val(""); 
+                $("#txtto_4").val(""); 
+                $("#txtDuration_4").val("");  
+            }
+            if(@Model.affiliationSelected5 == 1)
+            {
+                $("#lblAffilitionId_5 table").attr('style', 'display: block');
+                $("#fieldAffilitionId_5 table").attr('style', 'display: block');
+            }
+            else if(@Model.affiliationSelected5 == 2)
+            {
+                $("#lblAffilitionId_5 table").attr('style', 'display: none');
+                $("#fieldAffilitionId_5 table").attr('style', 'display: none');
+                $("#txtfrom_5").val(""); 
+                $("#txtto_5").val(""); 
+                $("#txtDuration_5").val("");  
+                $("#affiliationGrade").val("");
+            }
+            else
+            {
+                $("#lblAffilitionId_5 table").attr('style', 'display: none');
+                $("#fieldAffilitionId_5 table").attr('style', 'display: none');
+                $("#txtfrom_5").val(""); 
+                $("#txtto_5").val(""); 
+                $("#txtDuration_5").val("");  
+                $("#affiliationGrade").val("");
+            }
+        </script>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.collegeTypeID)
+            </td>
+            <td class="col21" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.collegeTypeID)
+                @foreach (var item in Model.collegeType)
+                {
+                    var optionValue = "CType_" + item.id;
+                    var selectValue = item.selected;
+                    if (@selectValue == 1)
+                    {
+                    <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.degreeId)
+            </td>
+            <td class="col21" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.degreeId)
+                @foreach (var item in Model.degree)
+                {
+                    var optionValue = "degree_" + item.id;
+                    var selectValue = item.selected;
+                    if (@selectValue == 1)
+                    {
+                        if (DegreeCount > 0)
+                        {
+                    <label>,&nbsp;</label>
+                        }
+                    @item.name
+                        DegreeCount = DegreeCount + 1;
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.HiddenFor(model => model.addressTye, new { Value = "COLLEGE" })
+                @Html.HiddenFor(model => model.createdOn, new { Value = DateTime.Now })
+            </td>
+        </tr>
+    </table>
+}
+
+
+
+

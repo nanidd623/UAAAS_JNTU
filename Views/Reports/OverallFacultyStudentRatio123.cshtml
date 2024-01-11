@@ -1,0 +1,240 @@
+﻿@model UAAAS.Models.OverallStudentRatio
+@{
+    ViewBag.Title = "OverallFacultyStudentRatio";
+}
+
+<h2>OverallFacultyStudentRatio</h2>
+@using (Html.BeginForm())
+{
+    <table class="downloads_table" style="width: 100%;">
+        <tr>
+            <th style="text-align: left;" class="editor-label1">Program
+            </th>
+            <th style="text-align: left;" class="editor-label1">Branch / Specialization Name
+            </th>
+            <th style="text-align: left;" class="editor-label1">Total Student Sanctioned Strength
+            </th>
+            <th style="text-align: left;" class="editor-label1">Committee Findings (Total Student Sanctioned Strength)
+            </th>
+            <th style="text-align: left;" class="editor-label1">Total Faculty Required
+            </th>
+             <th style="text-align: left;" class="editor-label1">Committee Findings (Total Faculty)
+            </th>
+             <th style="text-align: left;" class="editor-label1">Faculty Student Ratio Available
+            </th>
+             <th style="text-align: left;" class="editor-label1">Total Faculty Ratified
+            </th>
+        </tr>
+        <tr>
+            <td class="editor-field1">First Year UG Engg</td>
+            <td class="editor-field1">All Branches</td>
+            <td class="editor-field1">@Model.totalStength</td>
+            <td>
+                @Html.TextBox("txtcommitteeFindingStrength")
+            </td>
+            <td>
+                @Html.TextBox("txtRequiredFaculty")
+            </td>
+             <td>
+                @Html.TextBox("txtCommitteeFindingFaculty")
+            </td>
+               <td>
+                @Html.TextBox("txtFacultyStudentRatioAvailable")
+            </td>
+               <td>
+                @Html.TextBox("txtFacultyRatified")
+            </td>
+        </tr>
+        <tr>
+            <td>B.Tech II, III, IV Yrs</td>
+            <td>
+                <table>
+                    @foreach (var item in Model.specializations)
+                    {
+                        <tr>
+                            <td class="editor-field1">
+                                @item.specializationName
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    @foreach (var item in Model.specializations)
+                    {
+                        <tr>
+                            @foreach (var strength in Model.studentStrength)
+                            {
+                                if (@item.specializationId == strength.specializationId && @item.shiftId==strength.shiftId)
+                                {
+                                <td class="editor-field1">@strength.approvedIntake</td>
+                                }
+                            }
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    @for (int i = 1; i <= Model.specializations.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.TextBox("txtcommitteeFindingStrength" + i)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+
+            <td>
+                <table>
+                    @for (int i = 1; i <= Model.specializations.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.TextBox("txtRequiredFaculty" + i)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    @for (int i = 1; i <= Model.specializations.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.TextBox("txtCommitteeFindingFaculty" + i)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    @for (int i = 1; i <= Model.specializations.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.TextBox("txtFacultyStudentRatioAvailable" + i)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    @for (int i = 1; i <= Model.specializations.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.TextBox("txtFacultyRatified" + i)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+
+    </table>
+    <hr />
+    
+    <table class="downloads_table" style="width: 100%;">       
+     
+        <tr>
+            <td>M.Tech I, II Yrs</td>
+            <td>
+                <table>
+                    @foreach (var item in Model.specializations)
+                    {
+                        <tr>
+                            <td class="editor-field1">
+                                @item.specializationName
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    @foreach (var item in Model.specializations)
+                    {
+                        <tr>
+                            @foreach (var strength in Model.studentStrength)
+                            {
+                                if (@item.specializationId == strength.specializationId && @item.shiftId==strength.shiftId)
+                                {
+                                <td class="editor-field1">@strength.approvedIntake</td>
+                                }
+                            }
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    @for (int i = 1; i <= Model.specializations.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.TextBox("txtcommitteeFindingStrength" + i)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+
+            <td>
+                <table>
+                    @for (int i = 1; i <= Model.specializations.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.TextBox("txtRequiredFaculty" + i)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    @for (int i = 1; i <= Model.specializations.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.TextBox("txtCommitteeFindingFaculty" + i)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    @for (int i = 1; i <= Model.specializations.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.TextBox("txtFacultyStudentRatioAvailable" + i)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    @for (int i = 1; i <= Model.specializations.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.TextBox("txtFacultyRatified" + i)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+
+    </table>
+}

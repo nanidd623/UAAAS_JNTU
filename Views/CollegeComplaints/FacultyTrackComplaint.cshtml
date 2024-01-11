@@ -1,0 +1,206 @@
+﻿@model UAAAS.Models.FacultyComplaintsClass
+@{
+    ViewBag.Title = "Faculty Track Complaint";
+}
+
+<h2>Track Grievance</h2>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnbutton").click(function () {
+            debugger;
+            $(".PreviewDiv").dialog({
+                title: "Complaint Details",
+                width: 700,
+                height: 450,
+                autoOpen: false,
+                model: true,
+                resizable: true,
+                show: { effect: "drop", direction: "up" },
+                draggable: true
+            });
+
+            $(".PreviewDiv").dialog('open');
+            return false;
+        });
+    });
+</script>
+@using (Html.BeginForm("FacultyTrackComplaint", "FacultyComplaints"))
+{
+    <table width="50%" style="padding-left:100px;">
+        <tr>
+            <td>
+                Enter Your Grievance ID :
+            </td>
+            <td>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </td>
+            <td>
+                @Html.TextBox("ticketid", null, new { required = "required" })
+            </td>
+            <td>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </td>
+            <td>
+                <input type="submit" value="Get Complaint" />
+            </td>
+        </tr>
+    </table>
+
+    <br /><br />
+    if (Model != null)
+    {
+        <table width="100%">
+            <thead style="background-color:brown;color:white;font-weight:bold;text-align:center;">
+                <tr>
+                    <td>Ticket Id</td>
+                    <td>Name</td>
+                    <td>Grievance Date</td>
+                    <td>Grievance File</td>
+                    <td>Grievance Status</td>
+                    <td>View</td>
+                </tr>
+            </thead>
+            <tbody style="background-color:moccasin;font-weight:bold;">
+                <tr>
+                    <td>@Model.TicketId</td>
+                    <td>@Model.Facultyname</td>
+                    <td>@Model.complaintdate</td>
+                    <td style="text-align: center;">
+                        <a href="/Content/Upload/ComplaintsGivenbyFaculty/ComplaintFile/@Model.complaintFileview" target="_blank" title="Lab Deficiency">
+                            <span style="color:red;">View</span>
+                        </a>
+                    </td>
+                    <td>
+                        @if (Model.complaintStatus == 1)
+                        {
+                            <span>Processing</span>
+                        }
+                        else if (Model.complaintStatus == 2)
+                        {
+                            <span>Approved</span>
+                        }
+                        else if (Model.complaintStatus == 3)
+                        {
+                            <span>Finshed</span>
+                        }
+                    </td>
+                    <td style="text-align:center;">
+                        <button id="btnbutton" value="View" style="background:#024b74;color:white;">View</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+
+    if (Model != null)
+    {
+        <div class="PreviewDiv" style="display:none;">
+            <table cellpadding="0" cellspacing="0" width="100%" align="center" style="line-height: 27px;">
+                <tbody>
+                    <tr>
+                        <td style="width: 290px;">
+                            <b><span>Name</span></b>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <span id="sname">@Model.Facultyname</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 290px;">
+                            <b><span>Gender</span></b>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <span id="sgender">@Model.gender</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 290px;">
+                            <b><span>Email</span></b>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <span id="semail">@Model.Email</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 290px;">
+                            <b><span>Mobile</span></b>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <span id="smobile">@Model.Moblie</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 290px;">
+                            <b><span>Address</span></b>
+                        </td>
+                        <td>:</td>
+                        <td style="border: 1px solid black;padding: 3px;height: auto;text-align: justify;">
+                            <span id="saddress">@Model.FacultyAddress</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 290px;">
+                            <b><span>Registration Number</span></b>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <span id="shallticketno">@Model.RegistrationNumber</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 290px;">
+                            <b><span>College</span></b>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <span id="scollege">@Model.Collegename</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 290px;">
+                            <b><span>Grievance Type</span></b>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <span id="sctype">@Model.complaintname</span>
+                        </td>
+                    </tr>
+                    @if (Model.complaintname == "Others")
+                    {
+                        <tr>
+                            <td style="width: 290px;">
+                                <b><span>Others Grievance</span></b>
+                            </td>
+                            <td>:</td>
+                            <td>
+                                <span id="sctype">@Model.otherscomplaint</span>
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td style="width: 290px;">
+                            <b><span>Grievance Date</span></b>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <span id="scdate">@Model.complaintdate</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 290px;">
+                            <b><span>Grievance Description</span></b>
+                        </td>
+                        <td>:</td>
+                        <td style="border: 1px solid black;padding: 3px;height: auto;text-align: justify;">
+                            <span id="scdesc">@Model.ComplaintDesc</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+}

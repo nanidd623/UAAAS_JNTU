@@ -1,0 +1,192 @@
+﻿@model UAAAS.Models.CommitteeObservations
+@{
+    ViewBag.Title = "Committee Observations";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+
+
+@if (ViewBag.IsEditable == true)
+{
+    <h2>Committee Observations</h2>
+
+    <p class="create_link_right">
+        @Html.ActionLink("Edit", "CommitteeObservationsEdit", "CommitteeObservations", new { @class = "create_button" /* id=Model.PrimaryKey */ })
+    </p>
+}
+else
+{
+    <p class="create_link_right">
+        <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+    </p>
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+</script>
+<div id="div_print">
+    @if (ViewBag.IsEditable == false)
+    {
+        <h2>Committee Observations</h2>
+    }
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        if (ViewBag.Norecords == true)
+        {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No Data found</p>
+        </div>
+        }
+        else
+        {
+        <table class="four_columns" style="width:100%">
+            <tr>
+                <td class="col11" colspan="4" >
+                    <b>a) Interaction with Faculty Members in the absence of Management members and Principal</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="col11" style="width:3%" >
+                    1.
+                </td>
+                <td class="col21" >
+                    @Html.DisplayFor(model => model.committeeObservations1)
+                </td>
+            </tr>
+            <tr>
+                <td class="col31">
+                    2.
+                </td>
+                <td class="col41">
+                    @Html.DisplayFor(model => model.committeeObservations2)
+                </td>
+            </tr>
+            <tr>
+                <td class="col11" colspan="4">
+                    <b>b) Response on the Complaints received on the College</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    1.
+                </td>
+                <td class="col21" >
+                    @Html.DisplayFor(model => model.committeeObservations3, new { style = "width: 930px; resize: none;" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col31">
+                    2.
+                </td>
+                <td class="col41">
+                    @Html.DisplayFor(model => model.committeeObservations4, new { style = "width: 930px; resize: none;" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col11" colspan="4">
+                    <b>c) Interaction with Students in the absence of Management members, Principal, Faculty and Staff</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    1.
+                </td>
+                <td class="col21" >
+                    @Html.DisplayFor(model => model.committeeObservations5, new { style = "width: 930px; resize: none;" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col31">
+                    2.
+                </td>
+                <td class="col41">
+                    @Html.DisplayFor(model => model.committeeObservations6, new { style = "width: 930px; resize: none;" })
+                </td>
+            </tr>
+            </table>
+            <table class="four_columns" style="width:100%">
+            <tr>
+                <td class="col11" colspan="4">
+                    <b>d) The Committee may specify clearly all the deficiencies </b>(if necessary on a separate sheet)
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    Built up Area:
+                </td>
+                <td class="col21" >
+                    @Html.DisplayFor(model => model.committeeObservations5, new { style = "width: 930px; resize: none;" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col31">
+                    Principal:
+                </td>
+                <td class="col41">
+                    @Html.DisplayFor(model => model.committeeObservations6, new { style = "width: 930px; resize: none;" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    Teaching Staff:
+                </td>
+                <td class="col21" >
+                    @Html.DisplayFor(model => model.committeeObservations5, new { style = "width: 930px; resize: none;" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col31" style="width:23%">
+                    Technical / Non-Teaching Staff: 
+                </td>
+                <td class="col41">
+                    @Html.DisplayFor(model => model.committeeObservations6, new { style = "width: 930px; resize: none;" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    Computers:
+                </td>
+                <td class="col21" >
+                    @Html.DisplayFor(model => model.committeeObservations5, new { style = "width: 930px; resize: none;" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col31">
+                     Labs:
+                </td>
+                <td class="col41">
+                    @Html.DisplayFor(model => model.committeeObservations6, new { style = "width: 930px; resize: none;" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    Library: 
+                </td>
+                <td class="col21" >
+                    @Html.DisplayFor(model => model.committeeObservations5, new { style = "width: 930px; resize: none;" })
+                </td>
+            </tr>
+        </table>
+        }
+    }
+</div>

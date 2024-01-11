@@ -1,0 +1,251 @@
+﻿@model UAAAS.Models.ScmDashboard
+@{
+    ViewBag.Title = "SCM Home";
+}
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["corechart"] });
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+
+        var b = $('#activeColleges').val();
+        // alert(b);
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Colleges Char'],
+          ['Active', parseInt(b)],
+          ['Colsed', parseInt($('#closerColleges').val())],
+          ['Deleted', parseInt($('#inActiveColleges').val())],
+          ['Permanent', parseInt($('#permanentColleges').val())],
+          ['New', parseInt($('#newColleges').val())]
+        ]);
+
+        var options = {
+            title: '',
+            is3D: true,
+            backgroundColor: '#E5ECEA',
+            pieSliceText: 'value'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+    }
+    google.setOnLoadCallback(drawdataentryChart);
+    function drawdataentryChart() {
+
+        var b = $('#activeColleges').val();
+        // alert(b);
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'DataEntry'],
+          ['Submitted', parseInt($('#committeeSubmittedCollegesCount').val())],
+          ['Pending', parseInt($('#CommitteePendingSubmittedCollegesCount').val())],
+          ['Asigned', parseInt($('#dataentryAssignedCollegesCount').val())],
+          ['Completed', parseInt($('#dataentryCompletedCollegesCount').val())],
+          ['Verified', parseInt($('#dataentryVerifiedCollegesCount').val())]
+        ]);
+
+        var options = {
+            title: '',
+            is3D: true,
+            backgroundColor: '#EEEBE8',
+            pieSliceText: 'value'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('dataentrypiechart'));
+        chart.draw(data, options);
+    }
+
+    google.load("visualization", "1", { packages: ["corechart"] });
+    google.setOnLoadCallback(drawbarChart);
+    function drawbarChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2004', 1000, 400],
+          ['2005', 1170, 460],
+          ['2006', 660, 1120],
+          ['2007', 1030, 540]
+        ]);
+
+        var options = {
+            title: 'Company Performance',
+            vAxis: { title: 'Year', titleTextStyle: { color: 'red' } }
+        };
+
+        var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+
+
+</script>
+<style>
+    .facultyscmstyle {
+        color: deeppink;
+        font-weight: bold;
+    }
+</style>
+<table border="1" style="width: 100%; display: none;">
+    <tr>
+
+        <td style="width: 33%">
+            <div id="chart_div"></div>
+        </td>
+    </tr>
+</table>
+
+<h2>SCM DASHBOARD</h2>
+<table border="1" style="width: 100%">
+    <tr>
+        <td style="width: 33%; background-color: #E6EAEE; padding: 5px;" class="rounded_corners_box">
+            <table border="1" style="width: 100%" class="facultyscmstyle">
+                <tr>
+                    <td colspan="2" style="text-align: left;"><b><u>Faculty SCM</u> &nbsp;(<span style="color: green;font-weight: bold">@Html.DisplayFor(model => model.Fscmfromdate)</span>--<span style="color: green;font-weight: bold">@Html.DisplayFor(model => model.Fscmtodate)</span>)</b></td>
+                </tr>
+                <tr>
+                    <td>Submitted Colleges</td>
+                    <td style="width: 20%; text-align: right;">
+                        @Html.DisplayFor(model => model.Frequestsubmitcollegecount)
+                    </td>
+                </tr>
+                <tr>
+                    <td>Not Submitted Colleges</td>
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(model => model.Frequestnotsubmitcollegecount)
+                    </td>
+                </tr>
+                <tr>
+                    <td>Submitted Faculty Count</td>
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(model => model.submitfacultycount)
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Not Submitted Faculty Count</td>
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(model => model.notsubmitfacultycount)
+                    </td>
+                </tr>
+
+                <tr></tr>
+            </table>
+            @*<div id="piechart" style="border-top: solid 1px #fff; margin-top: 15px;"></div>*@
+        </td>
+        <td style="width: 33%; background-color: #E6EAEE; padding: 5px;" class="rounded_corners_box">
+            <table border="1" style="width: 100%;">
+                <tr>
+                    <th style="text-align: left;"><u><b>Users</b></u></th>
+                    <th style="text-align: center;">Total</th>
+                    <th style="text-align: center;">Active</th>
+                    <th style="text-align: center;">In-Active</th>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Admin</td>
+                  
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Committee</td>
+                    
+                </tr>
+                <tr>
+                    <td style="text-align: left;">College</td>
+                    
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Data Entry</td>
+                   
+                </tr>
+            </table>
+        </td>
+        <td style="width: 33%; background-color: #E6EAEE; padding: 5px;" class="rounded_corners_box">
+            <table border="1" style="width: 100%">
+                <tr>
+                    <td colspan="2" style="text-align: left"><b><u>Alerts</u>..!</b></td>
+                </tr>
+                <tr style="color: red; font-weight: normal;">
+                    <td>
+                      
+                    </td>
+                    <td style="text-align: right;">
+                    
+                    </td>
+                </tr>
+                <tr style="color: red;">
+                    <td>
+                     
+                    </td>
+                    <td style="text-align: right;">
+                     
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr style="display: none;">
+      
+        <td style="width: 33%; padding: 5px; background-color: #E6EAEE" class="rounded_corners_box">
+           
+        </td>
+        <td style="width: 33%; padding: 5px; background-color: #E6EAEE" class="rounded_corners_box"></td>
+    </tr>
+    <tr>
+        <td style="width: 33%; padding: 5px; background-color: #E6EAEE" class="rounded_corners_box">
+
+            <table border="1" style="width: 100%">
+                <tr>
+                    <th colspan="4" style="text-align: left;">
+                       
+                    </th>
+                </tr>
+                <tr>
+                    <th style="text-align: left;">Courses</th>
+                    <th style="text-align: right;">Proposed</th>
+                    <th style="text-align: right;">Approved</th>
+                    <th style="text-align: right;">Admitted</th>
+                </tr>
+            
+            </table>
+
+        </td>
+        <td style="width: 33%; padding: 5px; background-color: #E6EAEE" class="rounded_corners_box">
+            <table border="1" style="width: 100%">
+                <tr>
+                    <th colspan="4" style="text-align: left;">
+                        <b><u>SCM Requests</u></b>
+                    </th>
+                </tr>
+                <tr>
+                    <th style="text-align: left;"></th>
+                    <th style="text-align: right;">Not Submitted<br />Colleges</th>
+                    <th style="text-align: right;">Submitted<br />Colleges</th>
+                    <th style="text-align: right;">Facultycount</th>
+                    @*<th style="text-align: right;">Admitted</th>*@
+                </tr>
+                <tr>
+
+                    <td style="text-align: left; width: 25%; color: deeppink; font-weight: bold">
+                       
+                    </td>
+                   
+                </tr>
+                <tr>
+
+                    <td style="text-align: left; width: 25%; color: deeppink; font-weight: bold">Principal SCM</td>
+
+                </tr>
+            </table>
+            <br />
+            <br />
+            <table border="1" style="width: 100%">
+              
+            </table>
+        </td>
+        <td style="width: 33%; padding: 5px; background-color: #E6EAEE" class="rounded_corners_box">
+            <div style="color:red;">
+                <b><u>Links</u></b>
+            </div>
+                  
+        </td>
+    </tr>
+</table>
+
+

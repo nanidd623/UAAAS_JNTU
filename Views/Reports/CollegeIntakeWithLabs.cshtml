@@ -1,0 +1,273 @@
+﻿@model List<UAAAS.Models.Lab>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "CollegeIntakeWithLabs";
+    int Sno = 1;
+    int? collegeidnew = Model.Select(e => e.collegeId).Distinct().FirstOrDefault();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>College Intake With Labs</h2>
+@*<script src="~/Scripts/jquery-1.7.1.min.js"></script>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#college").change(function () {
+            debugger;
+            var collegeId = $(this).val();
+
+            if (collegeId != null || collegeId != "") {
+
+                window.location = '/AllCollegesIntake/AllCollegesIntakeWithLabsDetailsNew?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/AllCollegesIntake/AllCollegesIntakeWithLabsDetailsNew';
+            }
+
+
+        })
+
+        var mainUrl = window.location;
+        var url; var equipmentId;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Lab',
+            autoOpen: false,
+            resizable: false,
+            height: 750,
+            width: 740,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Lab'
+            });
+            url = $("#openDialog").attr('href');
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+
+        $('.webGrid').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr("id");
+            url = "/AllCollegesIntake/AddEditRecord?id=" + url + "&eqpid=" + $(this).find(".editDialog").attr("eqpid") + "&eqpno=" + $(this).find(".editDialog").attr("eqpno") + "&collegeId=" + $(this).find(".editDialog").attr("collegeId");
+            // alert(url);
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit Lab'
+            });
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+            var url = $(this).attr('id');
+            url = "/AllCollegesIntake/DeleteRecord?id=" + url;
+            //alert(url);
+            $("#dialog-confirm").dialog({
+                title: 'Delete Lab',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'Lab Details',
+                autoOpen: false,
+                resizable: false,
+                height: 620,
+                width: 720,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+</script>
+<p style="font-weight:bold; float: right;">
+    @*@Html.ActionLink("Physical Labs", "AllCollegePhysicalLabs", "AllCollegesIntake", new { @class = "create_button" })*@
+    @Html.ActionLink("Physical Labs", "AllCollegePhysicalLabs", "AllCollegesIntake", new { }, new { @class = "create_button" })
+</p>
+
+<br /><br />
+@using (Html.BeginForm())
+{
+
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success : </strong>@TempData["Success"].ToString()</p>
+        </div>
+    }
+    if (collegeidnew != null && collegeidnew != 0)
+    {
+        <div style="background-color:lightpink;float:right;border:2px solid turquoise; display: none;">
+            @Html.ActionLink("College NotUpload Labs", "CollegeWiseNotUploadedLabs", "AllCollegesIntake", new { collegeId = collegeidnew }, new { @target = "_blank", @style = "color:inherit;font-weight:bold;padding-left:14px;padding-right:14px;" })
+        </div>
+
+    }
+    <div>
+        <table width="100%">
+            <tr>
+                <td class="col1" width="15%">
+                    Colleges
+                </td>
+                <td class="col2" width="85%">
+                    @Html.DropDownList("collegeId", new SelectList(ViewBag.Colleges, "collegeId", "collegeName"), "---Select---", new { id = "college", @style = "width:60%" })
+                </td>
+            </tr>
+        </table>
+
+
+    </div>
+    <br />
+
+    <table class="webGrid" style="width:100%;">
+        <tr style="font-weight: bold;" class="gridHeader">
+            <td style="text-align: center; width: 5%;">S.No</td>
+            @*<td style="text-align: center; width: 5%;">CC</td>*@
+            <td style="text-align: left; width: 10%;">Degree</td>
+            <td style="text-align: left; width: 10%;">Department</td>
+            <td style="text-align: left; width: 10%;">Specialization</td>
+            <td style="text-align: center; width:4%;">year</td>
+            <td style="text-align: left; width: 6%;">Semester</td>
+
+            <td style="text-align: left; width: 8%;">Lab Code</td>
+            <td style="text-align: left; width: 17%;">Lab Name</td>
+            <td style="text-align: left; width: 20%;">Equipment Name</td>
+            <td style="text-align: left; width: 10%;">Available</td>
+        </tr>
+
+        @if (Model.Count() != null || Model.Count() != 0 || Model.Count != 0)
+        {
+
+            for (int i = 0; i < Model.Count; i++)
+            {
+                @Html.HiddenFor(model => model[i].EquipmentID)
+
+
+                var count = Model[i].LabName.Count();
+                <tr>
+                    <td style="background-color: #FCF1D1; width:5%;">@(Sno++)</td>
+                    <td style="background-color: #FCF1D1; width: 10%;">
+                        @Html.DisplayFor(model => model[i].degree)
+                    </td>
+                    <td style="background-color: #FCF1D1; width: 10%;">
+                        @Html.DisplayFor(model => Model[i].department)
+                    </td>
+                    <td style="background-color: #FCF1D1; width: 10%;">
+                        @Html.DisplayFor(model => Model[i].specializationName)
+                    </td>
+                    <td style="background-color: #FCF1D1; width: 4%;">
+                        @Html.DisplayFor(model => Model[i].year)
+                    </td>
+                    <td style="background-color: #FCF1D1; width: 6%;">
+                        @Html.DisplayFor(model => Model[i].Semester)
+                    </td>
+
+                    <td style="background-color: #FCF1D1; width: 8%;">
+                        @Html.DisplayFor(model => Model[i].Labcode)
+                    </td>
+                    <td style="background-color: #FCF1D1; width: 17%;">
+                        @Html.DisplayFor(model => Model[i].LabName)
+                    </td>
+                    <td style="background-color: #FCF1D1; width: 20%;">
+                        @Html.DisplayFor(model => Model[i].EquipmentName)
+                    </td>
+                    @if (Model[i].Make == string.Empty)
+                    {
+                        <td style="background-color:red; width: 10%;">
+
+                            @Html.RadioButton("Availability" + i, true, new { id = Model[i].id, eqpid = Model[i].EquipmentID, eqpno = Model[i].EquipmentNo, collegeId = Model[i].collegeId, @class = "editDialog" }) Edit &nbsp;&nbsp;
+                            @Html.RadioButton("Availability" + i, false, true, new { id = Model[i].id, eqpid = Model[i].EquipmentID, eqpno = Model[i].EquipmentNo, collegeId = Model[i].collegeId, @class = "confirmDialog delete1" }) No
+
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="background-color:greenyellow; width: 10%;">
+
+                            @Html.RadioButton("Availability" + i, true, true, new { id = Model[i].id, eqpid = "undefined", eqpno = Model[i].EquipmentNo, collegeId = Model[i].collegeId, @class = "editDialog" }) Edit &nbsp;&nbsp;
+                            @Html.RadioButton("Availability" + i, false, new { id = Model[i].id, eqpid = "undefined", eqpno = Model[i].EquipmentNo, collegeId = Model[i].collegeId, @class = "confirmDialog delete1" }) No
+
+                        </td>
+                    }
+
+                </tr>
+            }
+        }
+
+    </table>
+}
+
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete this lab related details ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+<div id="dialog-view" style="display: none">
+</div>

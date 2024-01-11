@@ -1,0 +1,173 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_registered_faculty>
+@{
+    ViewBag.Title = "Teaching Faculty - " + ViewBag.CollegeCode + " - " + ViewBag.CollegeName;
+    var index = 1;
+}
+
+<h2>Teaching Faculty -  @ViewBag.CollegeCode - @ViewBag.CollegeName</h2>
+
+
+
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        $('#DistrictId').removeClass('input-validation-error');
+        $('#DegreeId').removeClass('input-validation-error');
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null,null,null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+@using (Html.BeginForm())
+{  
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No
+                </th>
+                <th>Name
+                </th>
+                <th style="width: 150px; text-align: left;">Designation
+                </th>
+                <th style="width: 150px; text-align: left;">Department
+                </th>
+                <th class="ui-state-default" style="width: 150px; text-align: center;">Date of Appointment
+                </th>
+                <th class="ui-state-default" style="width: 150px; text-align: center;">Photo
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="width: 50px; text-align: center;">
+                        @(index++)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                        @Html.DisplayFor(modelItem => item.LastName)
+                        @Html.DisplayFor(modelItem => item.MiddleName)
+
+                    </td>
+                    <td style="text-align: left;">
+                        @if (item.DesignationId != null)
+                        {
+                            @item.jntuh_designation.designation
+                        }
+                        else
+                        {
+                            @item.OtherDesignation
+                        }
+                    </td>
+                    <td style="text-align: left;">
+                        @if (item.DepartmentId != null)
+                        {
+                            @item.jntuh_department.departmentName
+                        }
+                        else
+                        {
+                            @item.OtherDepartment
+                        }
+                    </td>
+                    <td style="text-align: center;">
+                        @if (item.DateOfAppointment != null)
+                        {
+                            @UAAAS.Models.Utilities.MMDDYY2DDMMYY(item.DateOfAppointment.ToString());
+                        }
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        @if (@item.Photo != null)
+                        {
+                            <img src="../Content/Upload/Faculty/Photos/@item.Photo" style="height: 50px;"/>
+                        }
+                        else
+                        {
+                            <img src="../Content/Images/no-photo.gif" style="height: 50px;" />
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th style="width: 50px;">
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="width: 50px;">
+                    <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    
+                </th>
+                <th>
+                   
+                </th>
+            </tr>
+        </tfoot>
+    </table> 
+}
+

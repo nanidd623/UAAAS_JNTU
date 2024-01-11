@@ -1,0 +1,655 @@
+﻿@model IList<UAAAS.Controllers.FacultyVerificationController.CollegeFacultyWithIntakeReport>
+
+@using UAAAS.Models;
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "SUBMISSION OF ONLINE APPEAL";
+    int sno = 1;
+    int num = 1;
+    int intakenum = 1;
+    int Labscount = 0;
+    int collegeid = 0;
+    string Reveficationscreenshot = string.Empty;
+    string SCMApprovalLetter = string.Empty;
+    string Form16ApprovalLetter = string.Empty;
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var SCMFileSize = 0;
+        var Form16FileSize = 0;
+        var mainUrl = window.location;
+        var url;
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake';
+            }
+        });
+
+        //For collegeintake scripts
+
+        $('.subtUpload').click(function () {
+
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+
+        });
+
+
+        var $myIntakeDialog = $("#dialog-appeal-edit").dialog({
+            title: 'Add/Edit Existing Intake',
+            autoOpen: false,
+            resizable: false,
+            height: 610,
+            width: 800,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+
+        $('.full_table').find('tr').click(function () {
+            url = $(this).find(".editintakeDialog").attr('href');
+        });
+
+        $(".editintakeDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-appeal-edit").dialog({
+                title: 'Edit Existing Intake'
+            });
+
+            $myIntakeDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmIntakeDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-appeal-edit").dialog("close");
+        });
+
+        $($myIntakeDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        //For appeal SCM DOCS
+
+        function GetAppealSCMApprovalLetterfileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#SCMApprovalLetter")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+
+        $(function () {
+            $(".AppealSCMApprovalLetterfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    //$(".AppealSCMApprovalLetterfiles > span").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = SCMFileSize;//GetAppealSCMApprovalLetterfileSize(file)
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".AppealSCMApprovalLetterfiles > span").text("Document should not exceed 1 MB in Size");
+                        alert('Pdf should be less than 1 MB size');
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".AppealSCMApprovalLetterfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+        $('.AppealSCMApprovalLetterfile').bind('change', function () {
+
+            SCMFileSize = this.files[0].size;
+            //alert(this.files[0].size);
+        });
+        //For appeal Form16 DOCS
+
+        function GetAppealForm16ApprovalLetterfileSize(fileid) {
+            debugger;
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#Form16ApprovalLetter")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        $(function () {
+            $(".AppealForm16ApprovalLetterfile").change(function () {
+                debugger;
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    //$(".AppealForm16ApprovalLetterfiles > span").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    debugger;
+                    var size = Form16FileSize;//GetAppealForm16ApprovalLetterfileSize(file)
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".AppealForm16ApprovalLetterfiles > span").text("Document should not exceed 1 MB in Size");
+                        alert('Pdf should be less than 1 MB size');
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".AppealForm16ApprovalLetterfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+        $('.AppealForm16ApprovalLetterfile').bind('change', function () {
+
+            Form16FileSize = this.files[0].size;
+            //alert(this.files[0].size);
+        });
+        //$("#tabla").find('tfoot').append($('<td><b>Total</b></td><td>a</td><td>b</td>'));
+
+    });
+
+
+
+
+
+
+    var mainUrl = window.location;
+
+    $('.webGrid').find('tr').click(function () {
+        //url = $(this).find(".editDialog").attr("typei");
+        url = "/FacultyVerification/FacultyRegistrationNumber" ;
+        alert(url);
+    });
+
+    $(".editDialog").live("click", function (e) {
+        e.preventDefault();
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/FacultyRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Faculty Appeal For Compliance',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editdefDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        $("#dialog-edit").dialog({
+            title: 'Appeal for Reverification ',
+            resizable: false,
+            height: 150,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+
+    $(".editreverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        var CollegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverificationFaculty?collegeId=" + CollegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        window.open(url);
+        //$("#dialog-edit").dialog({
+        //    title: 'Appeal for Reverification ',
+        //    resizable: false,
+        //    height: 150,
+        //    width: 850,
+        //    show: { effect: 'drop', direction: "up" },
+        //    modal: true,
+        //    draggable: true,
+        //    closeOnEscape: true,
+        //    open: function (event, ui) {
+        //        $(this).load(url);
+        //    },
+        //    close: function (event, ui) {
+        //        $(this).dialog("close");
+        //    }
+        //});
+        //$myDialog.dialog('open');
+        //return false;
+    });
+
+
+    $(".editlabDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecord?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#dialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+    $(".editAppcmpDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecordReverification?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#Appealcpldialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+    $(".editprinpalcomplicanceDialog").live("click", function (e) {
+        e.preventDefault();
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/PrincipalFacultyRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal For Complicance',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editprincipalverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var registrationnumber=  '@ViewBag.PrincipalRegno';
+        var url = "/FacultyVerification/PrincipalAppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&registrationnumber=" + registrationnumber;
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal for Reverification ',
+            resizable: false,
+            height: 200,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    var $myDialog = $("#dialog-edit").dialog({
+        title: 'Add/Edit Lab',
+        autoOpen: false,
+        resizable: false,
+        height: 700,
+        width: 720,
+        show: { effect: 'drop', direction: "up" },
+        modal: true,
+        draggable: true,
+        closeOnEscape: true,
+        open: function (event, ui) {
+            debugger;
+            $(this).load(url);
+        },
+        close: function (event, ui) {
+            $(this).dialog("close");
+
+        }
+    });
+
+    $($myDialog).bind("dialogclose", function () {
+        window.location = mainUrl;
+    });
+
+
+
+
+
+
+</script>
+<h2 style="text-align: center"><b>SUBMISSION OF ONLINE APPEAL (SUPPORTING DOCUMENTS- step 5/5)</b></h2><br />
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+
+
+<h2>EXISTING & PROPOSED INTAKE SUPPORTING DOCUMENTS</h2>
+
+@using (Html.BeginForm("AppealDepartmentWiseDocs", "FacultyVerification", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <table style="width: 100%; border: 1px; border-color: red" class="full_table" id="tabla">
+        @*<tr>
+                <th class="col1" colspan="7" style="text-align: center; font-weight: bold;">EXISTING & PROPOSED INTAKE SUPPORTING DOCUMENTS</th>
+            </tr>*@
+        <tr>
+            <th class="col1" style="text-align: left;">S.No</th>
+            <th class="col1" style="text-align: left;">Degree</th>
+            <th class="col1" style="text-align: left;">Department</th>
+            <th class="col1" style="text-align: left;">Specialization</th>
+            <th class="col1" style="text-align: left;">
+                SCM<br />
+                <span style="color: blue;">
+                    (Pdf should be less than 1 MB size)
+                </span>
+            </th>
+            <th class="col1" style="text-align: left;">
+                Form16 <br />
+                <span style="color: blue;">
+                    (Pdf should be less than 1 MB size)
+                </span>
+            </th>
+            @*<th class="col1" style="text-align: center;">Save</th>*@
+        </tr>
+
+        @for (var i = 0; i < Model.FirstOrDefault().CollegeIntakeExistings.Count; i++)
+        {
+            <tr>
+                <td class="col2" style="width: 30px; text-align: center;">
+                    @(intakenum++)
+                </td>
+                <td class="col2" style="width: 60px;">@Model.FirstOrDefault().CollegeIntakeExistings[i].Degree</td>
+                <td class="col2" style="width: 50px;">@Model.FirstOrDefault().CollegeIntakeExistings[i].Department</td>
+                <td class="col2">@Model.FirstOrDefault().CollegeIntakeExistings[i].Specialization</td>
+                <td class="col2 AppealSCMApprovalLetterfiles" style="width: 30px; text-align: center;">
+                    @Html.TextBoxFor(model => Model.FirstOrDefault().CollegeIntakeExistings[i].SCMApprovalLetter, new { type = "file", @class = "AppealSCMApprovalLetterfile" })<br />
+                </td>
+                <td class="col2 AppealForm16ApprovalLetterfiles" style="width: 30px; text-align: center;">
+                    @Html.TextBoxFor(model => Model.FirstOrDefault().CollegeIntakeExistings[i].Form16ApprovalLetter, new {type = "file", @class = "AppealForm16ApprovalLetterfile"})<br/>
+                </td>
+                @Html.HiddenFor(model=>model.FirstOrDefault().collegeId)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].Degree)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].Department)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].Specialization)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].academicYearId)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].collegeId)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].specializationId)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].DepartmentID)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].nbaFromDate)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].nbaToDate)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].letterPath)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].shiftId)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].courseStatus)
+            </tr>
+        }
+
+        <tr>
+            <td style="text-align: right" colspan="6"><input type="submit" value="Submit Intake Documents" /></td>
+        </tr>
+
+    </table>
+}
+<br />
+<p style="text-align:right">@Html.ActionLink("Proceed For Appeal Submission", "AppealSubmission", new { collegeId = collegeid }, new { @class = "create_button" })</p>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+<div id="dialog-appeal-edit" style="display: none">
+</div>
+<div id="Appealcpldialog-edit" style="display: none">
+</div>

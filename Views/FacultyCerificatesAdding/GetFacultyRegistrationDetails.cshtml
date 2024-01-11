@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "GetFacultyRegistrationDetails";
+}
+
+<h2>Get Faculty Registration Details</h2>
+<br/>
+@using (Html.BeginForm("Index", "FacultyCerificatesAdding"))
+{
+    <table>
+        <tr>
+            <td class="col1">Faculty Registration ID</td>
+            <td class="col2">
+                @Html.TextBox("RegistrationNumber")
+            </td>
+        </tr>
+        <tr style="line-height:2px;">
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="Get Details"/>
+            </td>
+        </tr>
+    </table>
+}

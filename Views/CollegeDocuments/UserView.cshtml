@@ -1,0 +1,37 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeDocuments>
+@{
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Photos";
+}
+<h2>College Photos</h2>
+<br />
+@using (Html.BeginForm())
+{
+    foreach (var item in ViewBag.CollegeDocuments as List<UAAAS.Models.CollegeDocuments>)
+    {
+        <table>
+            <tr>
+                <th>
+                    <label style="font-size: 18px">@item.documentName</label>
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @if (item.scannedCopy != null)
+                    {
+                        <img src="@item.scannedCopy.Replace("~", "")" style="height:300px" />
+                    }
+                </td>
+            </tr>
+        </table>
+        <br />
+    <br />                
+    }
+    if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }
+}
+

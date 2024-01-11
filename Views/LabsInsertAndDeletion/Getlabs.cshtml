@@ -1,0 +1,73 @@
+﻿@model List<Excelupload.Models.LabsList>
+
+@{
+    ViewBag.Title = "Getlabs";
+    int sno = 1;
+}
+
+<h2>Getlabs</h2>
+
+
+@using (Html.BeginForm("DeleteBylab", "Account"))
+{
+    <table class="table">
+        <tr>
+            <th>
+                S No
+            </th>
+            <th>
+                year
+            </th>
+            <th>
+                Semester
+            </th>
+            <th>
+                Labcode
+            </th>
+            <th>
+                LabName
+            </th>
+            <th>
+                EquipmentName
+            </th>
+
+
+        </tr>
+
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            <tr>
+                <td>
+                    @(sno++)
+                    @Html.HiddenFor(m => m[i].Id)
+                </td>
+                <td style="text-align: center;">
+                    @Html.DisplayFor(m => m[i].Year)
+                    @Html.HiddenFor(m => m[i].Year)
+
+                </td>
+                <td>
+                    @Html.HiddenFor(m => m[i].Semester)
+                    @Html.DisplayFor(m => m[i].Semester)
+                </td>
+                <td>
+                    @Html.HiddenFor(m => m[i].Labcode)
+                    @Html.DisplayFor(m => m[i].Labcode)
+                </td>
+                <td>
+                    @Html.HiddenFor(m => m[i].LabName)
+                    @Html.DisplayFor(m => m[i].LabName)
+                </td>
+                <td>
+                    @Html.HiddenFor(m => m[i].EquipmentName)
+                    @Html.DisplayFor(m => m[i].EquipmentName)
+                </td>
+            </tr>
+        }
+
+        }
+
+    </table>
+
+    <input type="submit" value="submit" />
+}

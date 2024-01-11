@@ -1,0 +1,112 @@
+﻿@model UAAAS.Models.CollegeLibrary
+@{
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Library";
+}
+
+<h2>College Library</h2>
+@using (Html.BeginForm())
+{
+    if (ViewBag.Norecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+    }
+    else
+    {
+    <table class="four_columns" style="width:100%">
+        <tr>
+            <td class="col11" style="width:50%">
+                @Html.LabelFor(model => model.librarianName)
+            </td>
+            <td class="col21" style="width:50%">
+                @Html.DisplayFor(model => model.librarianName)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.librarianQualifications)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.librarianQualifications)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.libraryPhoneNumber)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.libraryPhoneNumber)
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.totalSupportingStaff)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.totalSupportingStaff, new { @Value = Model.totalSupportingStaff == 0 ? "" : Model.totalSupportingStaff.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.totalTitles)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.totalTitles, new { @Value = Model.totalTitles == 0 ? "" : Model.totalTitles.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.totalVolumes)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.totalVolumes, new { @Value = Model.totalVolumes == 0 ? "" : Model.totalVolumes.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.totalNationalJournals)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.totalNationalJournals, new { @Value = Model.totalNationalJournals == 0 ? "" : Model.totalNationalJournals.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.totalInternationalJournals)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.totalInternationalJournals, new { @Value = Model.totalInternationalJournals == 0 ? "" : Model.totalInternationalJournals.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.totalEJournals)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.totalEJournals, new { @Value = Model.totalEJournals == 0 ? "" : Model.totalEJournals.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.librarySeatingCapacity)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.librarySeatingCapacity, new { @Value = Model.librarySeatingCapacity == 0 ? "" : Model.librarySeatingCapacity.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col11">
+                @Html.LabelFor(model => model.libraryWorkingHoursFrom)
+            </td>
+            <td class="col21">
+                @Html.DisplayFor(model => model.libraryWorkingHoursFrom, new { @Value = Model.libraryWorkingHoursFrom == 0 ? "" : Model.libraryWorkingHoursFrom.ToString(), style = "width:60px" })
+                @Html.LabelFor(model => model.libraryWorkingHoursTo)
+                @Html.DisplayFor(model => model.libraryWorkingHoursTo, new { @Value = Model.libraryWorkingHoursTo == 0 ? "" : Model.libraryWorkingHoursTo.ToString(), style = "width:60px" })
+            </td>
+        </tr>
+    </table>
+    }
+}
+

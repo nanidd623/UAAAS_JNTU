@@ -1,0 +1,52 @@
+﻿@model UAAAS.Models.my_aspnet_users
+@{
+    ViewBag.Title = "User login details";
+}
+
+<h2>User login details</h2>
+
+<div class="details_table">
+
+    <div class="display-label">
+        @Html.LabelFor(m => m.name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(m => m.name)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(m => m.email)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(m => m.email)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(m => m.Roles)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(m => m.SelectedRole)
+    </div>
+
+    <div class="display-label">
+        @Html.LabelFor(m => m.isApproved)
+    </div>
+    <div class="display-field">
+        @*@Html.DisplayFor(m => m.isApproved)*@
+        @if (this.Model.isApproved == true)
+        { <label>Active</label>}
+        else
+        {<label>Inactive</label>}
+    </div>
+
+    <div class="display-label last-row">
+        &nbsp;
+    </div>
+    <div class="display-field last-row">
+        <p>
+            @Html.ActionLink("Back", "Index", null, new { @class = "back_button" })
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }, new { @class = "submit_button" })
+        </p>
+    </div>
+    <div class="clear"></div>
+</div>

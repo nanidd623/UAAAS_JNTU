@@ -1,0 +1,230 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeInformation>
+@{
+    ViewBag.Title = "RTI_AllCollegesInformation";
+    var index = 1;
+}
+
+@using (Html.BeginForm())
+{
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    S.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Code
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Name
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">CollegeStatus</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">EAMCET Code</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">I-CET Code</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Address</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Town (or) City</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Mandal</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">State</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">District</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Pincode</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Fax</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Landline</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Mobile</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Email</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Website Address</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Permanent Affiliation by JNTUH</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Autonomous Status by JNTUH</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Autonomous Status by UGC</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">NAAC</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">College Type</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Courses</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center;vertical-align: top">
+                        @(index++)
+                    </td>
+                    <td style="text-align: center;vertical-align: top; text-transform: uppercase;">
+                        @Html.DisplayFor(modelItem => item.collegeCode)
+                    </td>
+                    <td style="text-align: left;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.collegeName)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.statusName)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.eamcetCode)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.icetCode)
+                    </td>
+                    <td style="text-align: left;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.address)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.townOrCity)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.mandal)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.stateName)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.districtName)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.pincode, new { @Value = item.pincode == 0 ? "" : item.pincode.ToString() })
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.fax)
+                    </td>
+
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.landline)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.mobile)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.email)
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.DisplayFor(modelItem => item.website)
+                    </td>
+                    @{int rowNo = 1;}
+                    @foreach (var item1 in item.affiliationType)
+                    {
+                        var txtFromId = "txtfrom_" + @rowNo;
+                        var txtToId = "txtto_" + @rowNo;
+                        var txtDuration = "txtDuration_" + @rowNo;
+                        var rdoAffilitionId = "rdoAffilitionId_" + @rowNo;
+                        var lblAffilitionId = "lblAffilitionId_" + @rowNo;
+                        var fieldAffilitionId = "fieldAffilitionId_" + @rowNo;
+                        var selectedAffiliation = "affiliationTypeId" + @rowNo;
+                        var selectedAffiliationNew = "affiliationTypeIdNew" + @rowNo;
+                        var fromDate = "affiliationFromDate" + @rowNo;
+                        var toDate = "affiliationToDate" + @rowNo;
+                        var duration = "affiliationDuration" + @rowNo++;
+
+                        <td style="text-align: center;vertical-align: top">
+                            @if (@selectedAffiliation == "affiliationTypeId1")
+                            {
+                                if (item.affiliationSelected1 == 1)
+                                {
+                                    <label>Yes</label>
+                                }
+                                else
+                                {
+                                    <label>No</label>
+                                }
+                            }
+                            else if (@selectedAffiliation == "affiliationTypeId2")
+                            {
+                                if (item.affiliationSelected2 == 1)
+                                {
+                                    <label>Yes</label>
+                                }
+                                else
+                                {
+                                    <label>No</label>
+                                }
+                            }
+                            else if (@selectedAffiliation == "affiliationTypeId3")
+                            {
+                                if (item.affiliationSelected3 == 1)
+                                {
+                                    <label>Yes</label>
+                                }
+                                else
+                                {
+                                    <label>No</label>
+                                }
+                            }
+                            else if (@selectedAffiliation == "affiliationTypeId4")
+                            {
+                                if (item.affiliationSelected4 == 1)
+                                {
+                                    <label>Conferred</label>
+                                }
+                                else if (item.affiliationSelected4 == 2)
+                                {
+                                    <label>Applied</label>
+                                }
+                                else
+                                {
+                                    <label>Not Yet Applied</label>
+                                }
+                            }
+                            else if (@selectedAffiliation == "affiliationTypeId5")
+                            {
+                                if (item.affiliationSelected5 == 1)
+                                {
+                                    <label>Conferred</label>
+                                }
+                                else if (item.affiliationSelected5 == 2)
+                                {
+                                    <label>Applied</label>
+                                }
+                                else
+                                {
+                                    <label>Not Yet Applied</label>
+                                }
+                            }
+                        </td>
+                        @*<td style="text-align: center;" class=" ui-state-default">
+                                @if (item1.name.Contains("NAAC"))
+                                {
+                                    <div style="height: 5px;"></div>
+                                    @Html.DisplayFor(model => item.affiliationGrade, new { style = "width:100px" })
+                                    <br />
+                                    <div style="height: 5px;"></div>
+                                    @Html.DisplayFor(model => item.affiliationCGPA, new { style = "width:100px" })
+                                }
+                            </td>*@
+                    }
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.HiddenFor(modelItem => item.collegeTypeID)
+                        @foreach (var item1 in item.collegeType)
+                        {
+                            var optionValue = "CType_" + item.id;
+                            var selectValue = item1.selected;
+                            if (@selectValue == 1)
+                            {
+                                <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item1.name</label>
+                            }
+                        }
+                    </td>
+                    <td style="text-align: center;vertical-align: top">
+                        @Html.HiddenFor(modelItem => item.degreeId)
+                        @foreach (var item2 in item.degree)
+                        {
+                            var optionValue = "degree_" + item.id;
+                            var selectValue = item2.selected;
+                            if (@selectValue == 1)
+                            {
+                                <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item2.name, </label>
+                            }
+                        }
+                        @Html.HiddenFor(modelItem => item.addressTye, new { Value = "COLLEGE" })
+                        @Html.HiddenFor(modelItem => item.createdOn, new { Value = DateTime.Now })
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+
+
+

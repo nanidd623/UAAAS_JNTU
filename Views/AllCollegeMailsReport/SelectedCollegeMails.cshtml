@@ -1,0 +1,210 @@
+﻿@model UAAAS.Models.CollegeMails
+@using UAAAS.Models
+@{
+    
+    ViewBag.Title = "SelectedCollegeMails";
+    int sno = 1;
+  
+}
+
+
+
+<style type="text/css">
+    .top {
+        display: none;
+    }
+</style>
+@*<script src="../../Scripts/jquery-te-1.4.0.min.js" type="text/javascript"></script>
+<link href="../../Content/jquery-te-1.4.0.css" rel="stylesheet" type="text/css" />*@
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 5000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+
+
+        $('#chkselectall').click(function () {
+            // add multiple select / deselect functionality
+            $('.forcheckbox').attr('checked', this.checked);
+        });
+        $('#btnsubmit').click(function () {
+            var ValidFile = true;
+            var ValidCheckBox = true;
+            var ValidMessage = true;
+            var ValidSubject = true;
+            var ValidSMS = true;
+            var file = $('#filepicker').val();
+            var CheckedCount = $("[type='checkbox']:checked").length;
+
+            if (CheckedCount == 0) {
+                alert('Please select atleast one college to send a mail');
+                return false;
+            }
+            if (ValidCheckBox == true) {
+                if ($('#Subject').val() != '') {
+                    if ($('#Message').val() == '') {
+                        alert('Please enter Message Details');
+                        return false;
+                    }
+                }
+            }
+            if ($('#Subject').val() == '' && $('#Subject').val() == '' && $('#SMS').val() == '') {
+
+                alert('Please enter SMS or email related details');
+                return false;
+            }
+
+        });
+        $('#SMS').keyup(function () {
+            var SMSLength = ($(this).val()).length;
+            var SMSCalculation = (SMSLength / 160);
+            var ResultMessage = SMSLength + '-(' + Math.ceil(SMSCalculation) + ')' + 'Message(s)';
+            $('#SMSText').html(ResultMessage);
+        })
+        //$("#Message").jqte();
+    });
+
+</script>
+<h2>Email And SMS To All Colleges (With Attachment)</h2>
+<br />
+
+@using (Html.BeginForm("SelectedCollegeMailsNew", "AllCollegeMailsReport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div style="float:right;">
+        <input type="submit" id="btnsubmit" value="Next" style="padding: 4px 15px; font-size: 15px" />
+    </div>
+    <br />
+    <br />
+    <table id="example" class="display" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No</th>
+                <th style="width: 80px; text-align: center;">College Code</th>
+                <th style="text-align: left;">College Name</th>
+                <th style="text-align: left;">Email</th>
+                <th style="text-align: center; width: 80px;" class="ui-state-default">Mobile No</th>
+                <th class="ui-state-default" style="width: 60px; text-align: center;">Select</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.collegeMails.Count(); i++)
+            {
+
+                <tr>
+                    <td style="text-align: center;">
+                        @(sno++)
+                    </td>
+                    <td style="text-align: center;">
+                        @Html.DisplayFor(m => m.collegeMails[i].collegeCode)
+                        @Html.HiddenFor(m => m.collegeMails[i].collegeCode)
+                        @Html.HiddenFor(m => m.collegeMails[i].collegeTypeId)
+                    </td>
+                    <td style="text-align: left;">
+                        @Html.DisplayFor(m => m.collegeMails[i].collegeName)
+                        @Html.HiddenFor(m => m.collegeMails[i].collegeName, new { Value = Model.collegeMails[i].collegeName })
+                    </td>
+                    <td style="text-align: left;">
+                        @Html.DisplayFor(m => m.collegeMails[i].email)
+                        @Html.HiddenFor(m => m.collegeMails[i].email, new { Value = Model.collegeMails[i].email })
+                    </td>
+                    <td style="text-align: center;">
+                        @Html.DisplayFor(m => m.collegeMails[i].mobileNo)
+                        @Html.HiddenFor(m => m.collegeMails[i].mobileNo, new { Value = Model.collegeMails[i].mobileNo })
+                    </td>
+
+                    <td style="text-align: center;" id="tdcheck">
+                        @Html.CheckBoxFor(m => m.collegeMails[i].isSelect, new { id = "chkall", @class = "forcheckbox" })
+                        @Html.HiddenFor(m => m.collegeMails[i].collegeId, new { Value = Model.collegeMails[i].collegeId })
+                    </td>
+
+                </tr>
+
+
+
+            }
+        </tbody>
+        <tfoot>
+
+            <tr>
+                <th style="">
+                    <input type="text" id="i-0" style="width: 30%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="">
+                    <input type="text" id="i-1" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default">
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left">
+                    <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="">
+                    <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+
+                <th class=" ui-state-default" style="text-align: left">
+                    <input type="checkbox" id="chkselectall" style="width: 85%; text-align: left;" class="forcheckbox">
+                </th>
+
+            </tr>
+        </tfoot>
+    </table>
+}
+

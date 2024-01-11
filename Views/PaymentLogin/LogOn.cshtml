@@ -1,0 +1,129 @@
+﻿@model UAAAS.Models.LogOnModel
+@{
+    ViewBag.Title = "Login";
+    //var url = HttpContext.Current.Request.Url.Scheme + System.Uri.SchemeDelimiter + HttpContext.Current.Request.Url.Host + (HttpContext.Current.Request.Url.IsDefaultPort ? "" : ":" + HttpContext.Current.Request.Url.Port);
+}
+
+<div class="login">
+    <h2>Online Payment Login</h2>
+    <br />
+    @*<p>
+            Please enter your Username & Password.
+        </p>
+        <br />*@
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+    @Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
+
+    @using (Html.BeginForm())
+    {
+        @*<span>@HttpContext.Current.Request.UserHostAddress</span>*@
+
+        <div class="login_box">
+            @if (TempData["Error"] != null)
+            {
+                <div class="error">
+                    <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+                </div>
+            }
+            @if (TempData["Success"] != null)
+            {
+                <div class="success">
+                    <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+                </div>
+            }
+            @if (ViewBag.Multiple == true)
+            {
+                <div class="error" style="text-align: left;">
+                    @*<span><strong>Multiple logins with same username is not allowed.</strong></span>*@
+                    <span>
+                        Your last session was terminated incorrectly or is currently active . Please try logging in again after some time.
+                        <br />
+                        <br />
+                        <div style="color: blue;">
+                            <strong>For successful login : </strong>
+                            <br />
+                            <ul style="margin-left: 18px;">
+                                <li>Do not try "<b>Login</b>" in multiple browsers / systems at a time.</li>
+                                <li>Always close your browser after "<b>Logout</b>" only.</li>
+                            </ul>
+                        </div>
+                    </span>
+                </div>
+            }
+            <div class="editor-label">
+                @Html.LabelFor(m => m.UserName)
+            </div>
+            <div class="editor-field focus">
+                <div style="width: 175px; float: left;">
+                    @Html.TextBoxFor(m => m.UserName)
+                </div>
+                <div style="width: 75px; float: left;">
+                    @Html.ValidationMessageFor(m => m.UserName)
+                </div>
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(m => m.Password)
+            </div>
+            <div class="editor-field">
+                <div style="width: 175px; float: left;">
+                    @Html.PasswordFor(m => m.Password)
+                </div>
+                <div style="width: 75px; float: left;">
+                    @Html.ValidationMessageFor(m => m.Password)
+                </div>
+            </div>
+
+
+
+            @*<div class="editor-label">
+                    @Html.CheckBoxFor(m => m.RememberMe)
+                    @Html.LabelFor(m => m.RememberMe)
+                </div>*@
+
+            <div class="editor-label last-row ">
+                &nbsp;
+            </div>
+            <div class="editor-field last-row">
+                <input type="submit" value="Login" />
+                &nbsp; &nbsp; @Html.ActionLink("Forgot Password ?", "ResetPassword", "Account")
+                &nbsp; &nbsp;
+                @*@Html.ActionLink("Forgot Email ?", "FacultyForgotEmail", "Account", new { @class = "create_button" })*@
+            </div>
+            <div class="clear"></div>
+        </div>
+    }
+    <br />
+    @*<p>
+        New college? -
+        <b>@Html.ActionLink("Request", "Create", "AffiliationRequest")</b> affiliation from JNTUH
+    </p>*@
+    <br />
+    <h2 style="color: red;"> Help desk</h2>
+    <div class="login_box">
+        <div class="editor-label">
+            @Html.Label("Email Support")
+        </div>
+        <div class="editor-field focus">
+            <b>supportaac@jntuh.ac.in</b>
+        </div>
+        <div class="editor-label">
+            @Html.Label("Mobile")
+        </div>
+        <div class="editor-field focus">
+            <b>8008421860</b>
+        </div>
+        <div class="editor-label">
+            @Html.Label("Land")
+        </div>
+        <div class="editor-field focus">
+            <b>040 - 23150010</b>
+        </div>
+    </div>
+</div>
+
+
+
+@*<span>@url</span>*@

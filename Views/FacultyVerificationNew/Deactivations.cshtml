@@ -1,0 +1,31 @@
+﻿@model UAAAS.Controllers.FacultyVerificationController.DeactivationReport
+@{
+    ViewBag.Title = "DeactivationReport";
+}
+
+<h2>Deactivation Report</h2>
+
+<table class="display">
+    <tr>
+        <th class="col1" style="text-align: center; vertical-align: top;">Total Faculty</th>
+        <th class="col1" style="text-align: center; vertical-align: top;">Deactivated</th>
+        <th class="col1" style="text-align: center; vertical-align: top;">Name</th>
+        <th class="col1" style="text-align: center; vertical-align: top;">Photo</th>
+        <th class="col1" style="text-align: center; vertical-align: top;">PAN</th>
+        <th class="col1" style="text-align: center; vertical-align: top;">Aadhaar</th>
+        <th class="col1" style="text-align: center; vertical-align: top;">Certificates</th>
+        <th class="col1" style="text-align: center; vertical-align: top;">Absent</th>
+        <th class="col1" style="text-align: center; vertical-align: top;">Multiple</th>
+    </tr>
+    <tr>
+        <td class="col1" style="text-align: center; vertical-align: top;">@Model.Total</td>
+        <td class="col1" style="text-align: center; vertical-align: top;">@Model.Deactivations</td>
+        <td class="col1" style="text-align: center; vertical-align: top;">@Model.Name</td>
+        <td class="col1" style="text-align: center; vertical-align: top;">@Model.Photo</td>
+        <td class="col1" style="text-align: center; vertical-align: top;">@Model.PAN</td>
+        <td class="col1" style="text-align: center; vertical-align: top;">@Model.Aadhaar</td>
+        <td class="col1" style="text-align: center; vertical-align: top;">@Model.Certificates</td>
+        <td class="col1" style="text-align: center; vertical-align: top;">@Model.Absent</td>
+        <td class="col1" style="text-align: center; vertical-align: top;">@Model.Multiple</td>
+    </tr>
+</table>

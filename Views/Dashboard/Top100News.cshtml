@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Top100News";
+}
+
+<h2>Top100News</h2>
+
+<table>
+    @*<tr>
+        <td>News Details</td>
+    </tr>*@
+    @if (ViewBag.NewEvents != null)
+    {
+        <tr>
+            <td style="width: 100%; background-color: #E6EAEE; padding: 5px;" class="rounded_corners_box">
+                <ul class="newstitle">
+                    @foreach (var item in ViewBag.NewEvents)
+                    {
+                        if (!string.IsNullOrEmpty(item.url))
+                        {
+                            <li>
+                                @if(@item.createdDate!=null)
+                                {
+                                    
+                                   // var path = item.url.split('/');
+                                    <a href="@item.url" target="_blank">@item.createdDate.ToString("dd-MM-yyyy"):@item.newstitle</a>
+                                    if(item.createdDate >= DateTime.Now.AddDays(-10))
+                                    {
+                                        <img src="~/Content/images/latest.gif" alt="latest"/>
+                                    }
+                                }
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                @item.createdDate.ToString("dd-MM-yyyy"):@item.newstitle
+                                @if(item.createdDate >= DateTime.Now.AddDays(-10))
+                                {
+                                    <img src="~/Content/images/latest.gif" alt="latest" />
+                                }
+                            </li>
+                          
+                                                                        
+                        }
+
+                    }
+                </ul>
+            </td>
+        </tr>
+    }
+   
+</table>

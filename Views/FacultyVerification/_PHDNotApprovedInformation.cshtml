@@ -1,0 +1,51 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_faculty_deactivation_reason>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+    if ($('#others').val() != "") {
+        $('#remarks').removeClass("required");
+    }
+    $('#btnSave').click(function () {
+        if ($('#remarks').val() == null || $('#others').val() == "") {
+            $('#remarks').addClass("required");
+            //$('#others').addClass("required");
+        } else {
+            $('#remarks').removeClass("required");
+        }
+
+        if ($('#others').val() != "") {
+            $('#remarks').removeClass("required");
+        }
+    });
+</script>
+@using (Ajax.BeginForm("NotApprovedPHDInformation", "FacultyVerification", new { facultyid = TempData["facultyid"], fid = TempData["fid"] }, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "FacultyInformationDialog" }))
+{
+
+    <div class="details_table">
+
+        <div class="editor-label" style="width: 150px">
+            Deactivation Reason :
+        </div>
+        <div class="editor-field" style="width: 250px">
+            @Html.DropDownList("remarks",
+             new SelectList(ViewBag.notapproved as System.Collections.IEnumerable, "reasonForDeactivation", "reasonForDeactivation"),
+            "-- Select --", new { id = "remarks", @class = "width", multiple = true })
+        </div>
+        <div class="editor-label" style="width: 150px">
+            Others :
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.TextBox("others")
+        </div><br /><br />
+        <div style="text-align: center">
+            <p>
+                <input type="submit" value="Save" id="btnSave" name="cmd" class="btnclass" />
+            </p>
+        </div>
+    </div>
+}

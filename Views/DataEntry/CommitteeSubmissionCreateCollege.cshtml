@@ -1,0 +1,137 @@
+﻿@model UAAAS.Models.CommitteeSubmission
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">       
+    $(document).ready(function () {
+           
+        if(@Model.collegeId==0)
+        {
+            fillColleges();    
+        }
+    });   
+    function fillColleges() {        
+        $.getJSON("/CommitteeSubmission/GetColleges",{},
+            function (collegesData) {               
+                var select = $("#collegeName");
+                select.empty();
+                select.append($('<option/>', {
+                    value: '',
+                    text: '-- Select --'
+                }));
+                
+                $.each(collegesData, function (index, itemdata) {
+                    select.append($('<option/>', {
+                        value: itemdata.Value,
+                        text: itemdata.Text,
+                        selected: (itemdata.Value == @Model.collegeId ? true : false)
+                    }));
+                });
+            });
+        }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    if (ViewBag.IsUpdate == true)
+    {
+    @Html.HiddenFor(model => model.id)
+   
+    <div class="editor-label">
+        @Html.LabelFor(model => model.collegeId)
+    </div>
+    <div class="editor-field" style="width: 81%">
+        @Html.HiddenFor(model => model.collegeId)
+        @Html.HiddenFor(model => model.InspectionPhaseId)
+        @Html.DropDownListFor(model => model.collegeId,
+            new SelectList(ViewBag.colleges as System.Collections.IEnumerable, "id", "collegeName"),
+            "-- Select --", new { id = "collegeName", @style = "width:485px", disabled = "false" })
+        @Html.ValidationMessageFor(model => model.collegeId)
+    </div>
+    <div class="editor-label">
+        @*@Html.LabelFor(model => model.submittedDate)*@
+        <span>Date</span>
+    </div>
+    <div class="editor-field" style="width: 81%">
+
+        @Html.TextBoxFor(model => model.strsubmittedDate) <span>(DD/MM/YYYY)</span>
+        @Html.ValidationMessageFor(model => model.strsubmittedDate)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.remarks)
+    </div>
+    <div class="editor-field" style="width: 81%">
+
+        @Html.TextAreaFor(model => model.remarks)
+        @Html.ValidationMessageFor(model => model.remarks)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.isActive)
+    </div>
+    <div class="editor-field">
+        <label>@Html.RadioButtonFor(model => model.isActive, true, new { disabled = "disabled" }) Active</label>
+        <label>@Html.RadioButtonFor(model => model.isActive, false, new { disabled = "disabled" }) In-Active</label>
+        @Html.ValidationMessageFor(model => model.isActive)
+    </div>                 
+    @Html.HiddenFor(model => model.isActive)    
+    @Html.HiddenFor(model => model.collegeName)
+    @Html.HiddenFor(model => model.createdon)
+    @Html.HiddenFor(model => model.createdBy)
+    
+    }
+    else
+    {
+   
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.collegeId)
+    </div>
+    <div class="editor-field" style="width: 81%">
+        @Html.DropDownListFor(model => model.collegeId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "collegeId", "collegeName"),
+            "-- Select --", new { id = "collegeName", @style = "width:485px" })
+        @Html.ValidationMessageFor(model => model.collegeId)
+    </div>  
+    <div class="editor-label">
+        @*@Html.LabelFor(model => model.submittedDate)*@
+        <span>Date</span>
+    </div>
+    <div class="editor-field" style="width: 81%">
+
+        @Html.TextBoxFor(model => model.strsubmittedDate) <span>(DD/MM/YYYY)</span>
+        @Html.ValidationMessageFor(model => model.strsubmittedDate)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.remarks)
+    </div>
+    <div class="editor-field" style="width: 81%">
+
+        @Html.TextAreaFor(model => model.remarks)
+        @Html.ValidationMessageFor(model => model.remarks)
+    </div>
+    
+    
+    @Html.HiddenFor(model => model.collegeName)
+    @Html.HiddenFor(model => model.createdon)
+    @Html.HiddenFor(model => model.createdBy)
+    
+    }
+
+    <div style="text-align: right">
+        <p>
+            @if (ViewBag.IsUpdate == true)
+            {
+                <input type="submit" value="Update" id="btnUpdate" name="cmd" />                    
+            }
+            else
+            {
+                <input type="submit" value="Add" id="btnAdd" name="cmd" />
+            }
+        </p>
+    </div>
+    
+}
+
+

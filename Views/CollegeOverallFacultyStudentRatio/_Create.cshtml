@@ -1,0 +1,360 @@
+﻿@model UAAAS.Models.CollegeOverallFacultyStudentRatio
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<style type="text/css">
+    .width {
+        width: 80%;
+    }
+
+    .text_width {
+        width: 38%;
+        text-align: center;
+    }
+</style>
+<script type="text/javascript">  
+    $(document).ready(function () {      
+             
+        GetSpecialization(@Model.DepartmentID);
+        $('.calendar').attr("readonly", "true");
+        $('.calendar').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true         
+        });
+    
+
+        if ($("#Degree").val() > 0) {
+            GetDepartments($("#Degree").val());
+        }
+        
+        
+        $("#Degree").change(function () {
+            var DegreeID = $(this).val();
+            GetDepartments(DegreeID);
+        });
+        if($("#Department").val() > 0)
+        {
+            GetSpecialization($("#Department").val());
+        }
+        $("#Department").change(function(){
+            var DepartmentID = $(this).val();
+            GetSpecialization(DepartmentID);
+        });
+        function GetDepartments(DegreeID){
+            $.getJSON("/CollegeIntakeProposed/GetDepartments",{ id : DegreeID},
+                function(DepartmentsData){
+                    var select = $("#Department");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(DepartmentsData,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.DepartmentID ? true : false)
+                        }));
+                    });
+                });
+            }
+
+        function GetSpecialization(DepartmantID){
+            $.getJSON("/CollegeIntakeProposed/GetSpecialization" ,{id : DepartmantID},
+                function(Specializationdata){
+                    var select = $("#Specialization");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(Specializationdata,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.specializationId ? true : false)
+                        }));
+                    });
+                });
+            }
+
+
+        
+        $("#Specialization").change(function(){           
+            if($("#Degree").val()!='' && $("#Department").val()!='' && $("#Specialization").val()!='' && $("#Shift").val()!='')
+            {
+                var DegreeId= $("#Degree").val();
+                var DepartmentId=$("#Department").val();
+                var SpecializationId=$("#Specialization").val();              
+                var ShiftId=$("#Shift").val();
+                var collegeid=@Model.collegeId
+                //alert(DegreeId);
+                //alert(DepartmentId);
+                //alert(SpecializationId)
+                //alert(ShiftId);
+                //alert(collegeid);
+                GetSanctionedStrength(DegreeId,DepartmentId,SpecializationId,ShiftId,collegeid)              
+            }
+
+        });
+
+        $("#Shift").change(function(){           
+            if($("#Degree").val()!='' && $("#Department").val()!='' && $("#Specialization").val()!='' && $("#Shift").val()!='')
+            {
+                var DegreeId= $("#Degree").val();
+                var DepartmentId=$("#Department").val();
+                var SpecializationId=$("#Specialization").val();              
+                var ShiftId=$("#Shift").val();
+                var collegeid=@Model.collegeId               
+                GetSanctionedStrength(DegreeId,DepartmentId,SpecializationId,ShiftId,collegeid)                
+            }
+
+        });
+
+
+
+        function GetSanctionedStrength(DegreeId,DepartmentId,SpecializationId,ShiftId,collegeid){
+            $.getJSON("/CollegeOverallFacultyStudentRatio/GetSanctionedStrength" ,{DegreeId : DegreeId,DepartmentId : DepartmentId,SpecializationId : SpecializationId,ShiftId : ShiftId,collegeid:collegeid},
+                function(Specializationdata){    
+                    $('#api1').val(Specializationdata.propossedIntake);
+                    var duration=Specializationdata.degreeduration
+                    
+                    var b= Specializationdata.approveIntakeYearWise.length;
+                    
+                    for (var i = 0; i < b; i++) {               
+                        if(Specializationdata.approveIntakeYearWise[i].approvedIntake!=0)
+                        {
+                            $('#api'+ (i+2) +'').val(Specializationdata.approveIntakeYearWise[i].approvedIntake);  
+                        }
+                        else{
+                            $('#api'+ (i+2) +'').val('');
+                        }
+                        $('#divlbl'+ (i+2) +'').show();
+                        $('#divtxt'+ (i+2) +'').show();
+                    }
+                    for (var i = 6; i > b+1; i--) {
+                        // $('#api'+ (i) +'').val('');
+                        $('#divlbl'+ (i) +'').hide();
+                        $('#divtxt'+ (i) +'').hide();
+                    }                   
+                });
+        }
+
+    });
+
+</script>
+
+@using (Ajax.BeginForm("AddEditRecord", "CollegeOverallFacultyStudentRatio", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "CollegeIntakeDialog" }))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    if (ViewBag.Count == 0)
+    {
+    <div class="warning" style="width: 550px; margin: 0 auto;">
+        <p>Please select your courses in "College Information" page before filling up this page.</p>
+    </div>
+    }
+    <div class="details_table">
+        @if (@ViewBag.duration != null)
+        {
+            @Html.Hidden("Duration", (int)(@ViewBag.duration))            
+            <script type="text/javascript">
+                var d = $("#Duration").val();
+                for (var i = 6; i > d; i--) {
+                    $('#divlbl'+ (i) +'').hide();
+                    $('#divtxt'+ (i) +'').hide();
+                }               
+            </script>
+        }
+        @if (ViewBag.IsUpdate == true)
+        {
+            @Html.HiddenFor(model => model.id)           
+        }
+        @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+
+        <div class="editor-label" style="width: 280px">
+            @Html.LabelFor(model => model.degreeID)
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @if (ViewBag.IsUpdate == true)
+            {
+                @Html.HiddenFor(model => model.degreeID)
+                @Html.DropDownListFor(model => model.degreeID,
+            new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "degreeId", "degree"),
+            "-- Select --", new { id = "Degree", @class = "width", disabled = "true" })
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.degreeID,
+            new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "degreeId", "degree"),
+            "-- Select --", new { id = "Degree", @class = "width" })
+            }
+            @Html.ValidationMessageFor(model => model.degreeID)
+        </div>
+
+        <div class="editor-label" style="width: 280px">
+            @Html.LabelFor(model => model.DepartmentID)
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @if (ViewBag.IsUpdate == true)
+            {
+                @Html.HiddenFor(model => model.DepartmentID)
+                @Html.DropDownListFor(model => model.DepartmentID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+            "-- Select --", new { id = "Department", @class = "width", disabled = "true" })
+                @Html.ValidationMessageFor(model => model.DepartmentID)
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.DepartmentID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+            "-- Select --", new { id = "Department", @class = "width" })
+            }
+            @Html.ValidationMessageFor(model => model.DepartmentID)
+        </div>
+
+        <div class="editor-label" style="width: 280px">
+            @Html.LabelFor(model => model.specializationId)
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @if (ViewBag.IsUpdate == true)
+            {            
+                @Html.DropDownListFor(model => model.specializationId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "specializationName"),
+            "-- Select --", new { id = "Specialization", @class = "width", disabled = "true" })
+                @Html.ValidationMessageFor(model => model.specializationId)
+                @Html.HiddenFor(model => model.specializationId)            
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.specializationId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "specializationName"),
+            "-- Select --", new { id = "Specialization", @class = "width" })
+                @Html.ValidationMessageFor(model => model.specializationId)
+            }
+        </div>
+
+        <div class="editor-label" style="width: 280px">
+            @Html.LabelFor(model => model.shiftId)
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @if (ViewBag.IsUpdate == true)
+            {            
+                @Html.DropDownListFor(model => model.shiftId,
+            new SelectList(ViewBag.Shift as System.Collections.IEnumerable, "id", "shiftName"),
+            new { id = "Shift", @style = "width: 50px", disabled = "true" })
+                @Html.ValidationMessageFor(model => model.shiftId) 
+                @Html.HiddenFor(model => model.shiftId)    
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.shiftId,
+            new SelectList(ViewBag.Shift as System.Collections.IEnumerable, "id", "shiftName"),
+            new { id = "Shift", @style = "width: 50px" })
+                @Html.ValidationMessageFor(model => model.shiftId)   
+            }
+
+        </div>
+
+        <div class="editor-label" style="width: 280px">
+            @Html.LabelFor(model => model.totalFaculty)
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @Html.TextBoxFor(model => model.totalFaculty, new { @class = "text_width", Value = Model.totalFaculty.Equals(0) ? "" : Model.totalFaculty.ToString() })
+        </div>
+
+        <div class="editor-label" style="width: 280px">
+            @Html.LabelFor(model => model.ratifiedFaculty)
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @Html.TextBoxFor(model => model.ratifiedFaculty, new { @class = "text_width", Value = Model.ratifiedFaculty.Equals(0) ? "" : Model.ratifiedFaculty.ToString() })
+        </div>
+
+    </div>
+    <br />
+    <div>
+        <div class="editor-label" style="width: 280px; background-color: transparent; padding: 0; margin: 0;">
+        </div>
+        <div class="editor-field" style="width: 360px; background-color: transparent; padding: 0; margin: 0;">
+            <div style="float: left; width: 45%; text-align: center;"><b>Sanctioned Strength</b></div>
+        </div>
+
+        <div class="editor-label" style="width: 280px" id="divlbl1">
+            @Html.LabelFor(model => model.approvedIntake1) @ViewBag.FirstYear
+        </div>
+        <div class="editor-field" style="width: 360px" id="divtxt1">
+            @Html.TextBoxFor(model => model.approvedIntake1, new { @class = "text_width", @id = "api1" })
+        </div>
+
+        <div class="editor-label" style="width: 280px" id="divlbl2">
+            @Html.LabelFor(model => model.approvedIntake2) @ViewBag.SecondYear
+        </div>
+        <div class="editor-field" style="width: 360px" id="divtxt2">
+            @Html.TextBoxFor(model => model.approvedIntake2, new { @class = "text_width", @id = "api2" })
+        </div>
+
+        <div class="editor-label" style="width: 280px" id="divlbl3">
+            @Html.LabelFor(model => model.approvedIntake3) @ViewBag.ThirdYear
+        </div>
+        <div class="editor-field" style="width: 360px" id="divtxt3">
+            @Html.TextBoxFor(model => model.approvedIntake3, new { @class = "text_width", @id = "api3" })
+        </div>
+
+        <div class="editor-label" style="width: 280px" id="divlbl4">
+            @Html.LabelFor(model => model.approvedIntake4) @ViewBag.FourthYear
+        </div>
+        <div class="editor-field" style="width: 360px" id="divtxt4">
+            @Html.TextBoxFor(model => model.approvedIntake4, new { @class = "text_width", @id = "api4" })
+        </div>
+
+        <div class="editor-label" style="width: 280px" id="divlbl5">
+            @Html.LabelFor(model => model.approvedIntake5) @ViewBag.FifthYear
+        </div>
+        <div class="editor-field" style="width: 360px" id="divtxt5">
+            @Html.TextBoxFor(model => model.approvedIntake5, new { @class = "text_width", @id = "api5" })
+        </div>
+
+        <div class="editor-label" style="width: 280px" id="divlbl6">
+            @Html.LabelFor(model => model.approvedIntake6) @ViewBag.SixthYear
+        </div>
+        <div class="editor-field" style="width: 360px" id="divtxt6">
+            @Html.TextBoxFor(model => model.approvedIntake6, new { @class = "text_width", @id = "api6" })
+        </div>
+
+
+        @Html.HiddenFor(model => model.createdBy)
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.totalFaculty)
+        @Html.HiddenFor(model => model.ratifiedFaculty)
+
+        <div style="text-align: center">
+            <p>
+                @if (ViewBag.IsUpdate == true)
+                {
+                    <input type="submit" value="Save" id="btnSave" name="cmd" />                    
+                }
+                else
+                {
+                    <input type="submit" value="Add" id="btnAdd" name="cmd" />
+                }
+            </p>
+        </div>
+
+    </div>
+}

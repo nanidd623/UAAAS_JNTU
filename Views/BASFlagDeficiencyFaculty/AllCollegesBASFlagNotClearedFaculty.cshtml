@@ -1,0 +1,202 @@
+﻿@model List<UAAAS.Controllers.BASFlagDeficiencyFacultyController.CollegeWiseBasFlagFaculty>
+@{
+    ViewBag.Title = "AllCollegesBASFlagNotClearedFaculty";
+    int sno = 1;
+}
+
+<h2>AllCollegesBASFlagNotClearedFaculty</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null, null, null, null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $('#example').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $("#collegeId").change(function () {
+            debugger;
+            var collegeid = $(this).val();
+
+            if (collegeid != null && collegeid != " ")
+            {
+                window.location = '/BASFlagDeficiencyFaculty/CollegeWiseBASFlagCleared?collegeId=' + collegeid;
+
+            }
+            else {
+                window.location = '/BASFlagDeficiencyFaculty/CollegeWiseBASFlagCleared';
+            }
+        });
+
+        $("#Export").click(function () {
+            debugger;
+          //  var collegeid = $("#collegeId").val();
+            var command = $(this).val();
+            if (command != null && command != " ") {
+                window.location = '/BASFlagDeficiencyFaculty/AllCollegesBASFlagNotClearedFaculty?command=' + command;
+
+            }
+            else {
+                window.location = '/BASFlagDeficiencyFaculty/AllCollegesBASFlagNotClearedFaculty';
+            }
+
+        })
+
+    });
+</script>
+<div style="float:right;">
+    <input type="button" value="Print" id="Export" style="padding: 4px 15px; font-size: 15px;background-color:#024b74;color:white" name="command" />
+</div>
+
+<br/><br />
+<table id="example" class="display" width="100%">
+    <thead>
+        <tr>
+            <th style="width: 50px; text-align: center;">S.No</th>
+            <th style="width: 50px; text-align: center;">CollegeCode</th>
+            <th style="width: 450px; text-align: center;">CollegeName</th>
+            <th style="width: 150px; text-align: center;">RegistrationNumber</th>
+            <th style="width: 150px; text-align: center;">BAS JoiningDate</th>
+            <th style="width: 100px; text-align: center;">July</th>
+            <th style="width: 100px; text-align: center;">August</th>
+            <th style="width: 100px; text-align: center;">September</th>
+            <th style="width: 100px; text-align: center;">October</th>
+            <th style="width: 100px; text-align: center;">November</th>
+            <th style="width: 100px; text-align: center;">December</th>
+            <th style="width: 100px; text-align: center;">January</th>
+            <th style="width: 100px; text-align: center;">February</th>
+            <th style="width: 100px; text-align: center;">Status</th>
+
+        </tr>
+
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+
+                    <td style="text-align: left; vertical-align: middle;">@(sno++)</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.CollegeCode</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.CollegeName</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.Registraionnumber</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.BASJoiningDate</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.August</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.September</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.October</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.November</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.December</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.January</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.February</td>
+                    <td style="text-align: left; vertical-align: middle;">@item.March</td>
+                    <td style="text-align: left; vertical-align: middle;color:red;">@item.Cleared</td>
+
+                </tr>
+            }
+        }
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>
+                <input type="text" id="i-0" style="width: 50%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-1" style="width: 50%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-5" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-6" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-7" style="width: 90%; text-align: left; " class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-8" style="width: 90%; text-align: left; " class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-9" style="width: 90%; text-align: left; " class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-10" style="width: 90%; text-align: left; " class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-10" style="width: 90%; text-align: left; " class="search_init">
+            </th>
+        </tr>
+    </tfoot>
+</table>

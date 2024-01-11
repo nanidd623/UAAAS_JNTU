@@ -1,0 +1,295 @@
+﻿@model IEnumerable<UAAAS.Controllers.ComplaintsColleges>
+@{
+    ViewBag.Title = "Colleges";
+    var index = 1;
+   
+}
+
+<h2>College Complaints</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function() {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 25,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function() {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null,null,null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function(i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function() {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function(i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function() {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        //Update collegestatus popup
+
+
+        $("#Dialog_NotApproved").click(function() {
+            debugger;
+            var url = $(this).attr('href');
+
+            $("#NotApprovedflags").dialog({
+                title: 'College Complaints',
+                width: 750,
+                height: 300,
+                model: true,
+                resizable: false,
+                autoOpen: false,
+                show: { effect: 'drop', direction: 'up' },
+                draggable: true,
+                open: function(event, ui) {
+                    $(this).load(url);
+                },
+                close: function(event, ui) {
+                    // $(this).dialog("close");
+                    window.location.href = "/CollegeComplaints/Index";
+                }
+
+            });
+            $("#NotApprovedflags").dialog('open');
+            return false;
+        });
+
+
+//$('.display').find('tr').click(function () {
+        //    debugger;
+        //    url = $(this).find("#Dialog_NotApproved").attr('href');       
+
+        //        $("#NotApprovedflags").dialog({
+        //            title: 'Not-Approved Flags',
+        //            width: 750,
+        //            height: 300,
+        //            model: true,
+        //            resizable: false,
+        //            autoOpen: false,
+        //            show: { effect: 'drop', direction: 'up' },
+        //            draggable: true,
+        //            open: function (event, ui) {
+        //                $(this).load(url);
+        //            },
+        //            close: function (event, ui) {
+        //                debugger;
+        //                window.location.href = "/CollegeComplaints/Index";
+        //            }
+        //        });
+
+        //        $("#NotApprovedflags").dialog('open');
+        //    return false;
+
+        //});
+
+        //$(".editDialog").live("click", function(e) {
+        //    debugger;
+        //    e.preventDefault();
+        //    var url = $(this).attr('href');
+        //    $("#NotApprovedflags").dialog({
+        //        title: 'View College Complaints',
+        //        width: 750,
+        //        height: 300,
+        //        model: true,
+        //        resizable: false,
+        //        autoOpen: false,
+        //        show: { effect: 'drop', direction: 'up' },
+        //        draggable: true,
+        //        closeOnEscape: true,
+        //        open: function(event, ui) {
+        //            $(this).load(url);
+        //        },
+        //        close: function(event, ui) {
+        //            debugger;
+        //            window.location.href = "/CollegeComplaints/Index";
+        //        }
+        //    });
+
+        //    $("#NotApprovedflags").dialog('open');
+        //    return false;
+        //});
+
+        //$("#btncancel").live("click", function (e) {
+        //    debugger;
+        //    $("#dialog-edit").dialog("close");
+        //});
+
+        //$($myDialog).bind("dialogclose", function () {
+        //    debugger;
+        //    window.location = mainUrl;
+        //});
+    });
+</script>
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success">
+        <p style="text-align: center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+    </div>
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div>
+}
+<br />
+<table id="example" class="display" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="width: 80px; text-align: center;">
+                S.No
+            </th>
+            <th style="width: 80px; text-align: center;">
+                Code
+            </th>
+            <th style="text-align: left;">
+                College Name
+            </th>
+            <th style="text-align: left;">
+                NoofComplaints
+            </th>
+            <th style="text-align: left;">
+                NoofnotpathComplaints
+            </th>
+            <th style="text-align: left;">
+                Complaints
+            </th>
+            <th style="text-align: left;">
+                View
+            </th>
+        </tr>
+      
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+           
+            var colorstatus = string.Empty;
+            if (item.complaintcount !=0)
+            {
+                colorstatus = "Red";
+            }
+            <tr>
+                <td style="text-align: center; background-color: @colorstatus">
+                    @(index++)
+                </td>
+                <td style="text-align: center; text-transform: uppercase;">
+                    @Html.DisplayFor(modelItem => item.collegecode)
+                </td>
+                <td style="text-align: left;">
+                    @if (item.isActive == false)
+                    {
+                        <span style="color: red;">@Html.DisplayFor(modelItem => item.collegename)</span>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.collegename)
+                    }
+                </td>
+                <td style="text-align: center;">
+                    @if (item.complaintcount != 0)
+                    {
+                        @Html.DisplayFor(modelItem => item.complaintcount)
+                    }
+                    else
+                    {
+                        <span>--</span>
+                    }
+                </td>
+                <td style="text-align: center;">
+                    @if (item.nocomplaintpathcount != 0)
+                    {
+                        @Html.DisplayFor(modelItem => item.nocomplaintpathcount)
+                    }
+                    else
+                    {
+                        <span>--</span>
+                    }
+                </td>
+                <td style="text-align: center; text-transform: uppercase;">
+                    @Html.ActionLink("Edit", "CollegeComplaint", "CollegeComplaints", new {collegeid = @item.id}, new {@class = "edit_button", target = "_blank"})
+                    @*@Html.ActionLink("Complaint", "CollegeComplaint", "CollegeComplaints", new { collegeid = item.id }, new { @id = "Dialog_NotApproved", @class = "editDialog edit_button" })*@
+                </td>
+                <td style="text-align: center; text-transform: uppercase;">
+                    @Html.ActionLink("Edit", "ViewCollegeComplaint", "CollegeComplaints", new { collegeid = @item.id }, new { @class = "view_button", target = "_blank" })                    
+                </td>
+            </tr>
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th>
+                <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+         
+        </tr>
+    </tfoot>
+</table>
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+<div id="NotApprovedflags" style="display: none">
+
+</div>
+<div id="dialog-edit" style="display: none"></div>

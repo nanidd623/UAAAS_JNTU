@@ -1,0 +1,1424 @@
+﻿@{
+    if(@User.IsInRole("College") == true)
+    {
+        Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "Validate College Data";
+}
+
+<h2>Validate College Data</h2>
+
+<table class="full_table" style="width: 800px; font-size: 13px">
+    <thead>
+        <tr>
+            <th style="text-align: center; width: 50px;">S.No
+            </th>
+            <th style="text-align: center; width: 250px;">Page
+            </th>
+            <th style="text-align: center;">Section
+            </th>
+            <th style="text-align: center; width: 80px;">Status
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center">1
+            </td>
+            <td style="text-align: center;">College Information
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">College Details
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">College Address Details
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">College Degree Details
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">College Affiliation Details
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.CollegeInformationCollegeDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.CollegeInformationCollegeAddressDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.CollegeInformationCollegeDegreeDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.CollegeInformationCollegeAffiliationDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">2
+            </td>
+            <td style="text-align: center;">Educational Society
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Establishment Details
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Address Details
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.EstablishMentDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.SocietyAddressDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">3
+            </td>
+            <td style="text-align: center;">Principal / Director
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Principal Details
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Director Details
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.PrincipalDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.DirectorDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">4
+            </td>
+            <td style="text-align: center;">Chairperson
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Chairperson Details
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Address Details
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.ChairpersonDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.ChairpersonAddressDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">5
+            </td>
+            <td style="text-align: center;">Other Colleges & Other Courses
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Other Colleges 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Other Courses
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.OtherColleges == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.OtherCourses == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">6
+            </td>
+            <td style="text-align: center;">Land Information
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Land Information
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Land Registration Information
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.LandInformation == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.LandRegistrationInformation == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">7
+            </td>
+            <td style="text-align: center;">Administrative Land
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Administrative Land
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.AdministrativeLand == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">8
+            </td>
+            <td style="text-align: center; text-align: center">Instructional Land
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Instructional Land
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center; text-align: center">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.InstructionalLand == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">9
+            </td>
+            <td style="text-align: center;">Existing Intake
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Existing Intake
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.ExistingIntake == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">10
+            </td>
+            <td style="text-align: center;">Proposed Intake
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Proposed Intake
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.ProposedIntake == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">11
+            </td>
+            <td style="text-align: center;">Academic Performance
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Academic Performance
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.AcademicPerformance == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">12
+            </td>
+            <td style="text-align: center;">Teaching Faculty
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Faculty Details
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Educational Qualifications
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Subjects being taught
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.TeachingFacultyDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.TeachingFacultyEucationalQualification == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.TeachingFacultySubjects == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">13
+            </td>
+            <td style="text-align: center;">Non-Teaching Staff
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Faculty Details
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Educational Qualifications
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.NonTeachingFacultyDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.NonTeachingFacultyEucationalQualification == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">14
+            </td>
+            <td style="text-align: center;">Technical Staff
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Faculty Details
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Educational Qualifications
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Subjects being taught
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.TechnicalFacultyDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.TechnicalFacultyEucationalQualification == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.TechnicalFacultySubjects == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">15
+            </td>
+            <td style="text-align: center;">Labs
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Labs
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.Labs == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">16
+            </td>
+            <td style="text-align: center;">Library Information
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Library Information
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.LibraryInformation == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">17
+            </td>
+            <td style="text-align: center;">Library Books (Course Wise)
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Library Books (Course Wise)
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.LibraryBooks == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">18
+            </td>
+            <td style="text-align: center; text-align: center">Computers - Details
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Computers - Details
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.ComputerDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">19
+            </td>
+            <td style="text-align: center;">Computers - Students Ratio
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Computers - Students Ratio
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.ComputerStudentsRatio == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">20
+            </td>
+            <td style="text-align: center;">Internet Bandwidth
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Internet Bandwidth
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.InternetBandwidth == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">21
+            </td>
+            <td style="text-align: center;">Legal Software
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Legal Software
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.LegalSoftware == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">22
+            </td>
+            <td style="text-align: center;">Printers
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Printers
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.Printers == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">23
+            </td>
+            <td style="text-align: center;">Examination Branch
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Examination Branch
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Staff Details
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.ExaminationBranch == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.ExaminationBranchStaff == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">24
+            </td>
+            <td style="text-align: center;">EDEP Equipment
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">EDEP Equipment
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.EDEPEquipment == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">25
+            </td>
+            <td style="text-align: center;">Fee Reimbursement
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Fee Reimbursement
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.FeeReimbursement == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">26
+            </td>
+            <td style="text-align: center;">Grievance Redressal
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Grievance Redressal Committee
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Grievance Redressal Complaints
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.GrievanceRedressalCommittee == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.GrievanceRedressalComplaints == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">27
+            </td>
+            <td style="text-align: center;">Anti-Ragging
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Anti-Ragging Committee
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Anti-Ragging Complaints
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.AntiRaggingCommittee == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.AntiRaggingComplaints == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">28
+            </td>
+            <td style="text-align: center;">Sports & Games
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Indoor Games
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">OutDoor games
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">Other Facilities
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.IndoorGames == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.OutDoorGames == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.otherFacilities == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">29
+            </td>
+            <td style="text-align: center;">Desirable Requirements
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Desirable Requirements
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.DesirableRequirements == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">30
+            </td>
+            <td style="text-align: center;">Campus Hostel
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Campus Hostel
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.CampusHostel == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">31
+            </td>
+            <td style="text-align: center;">Operational Funds
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Operational Funds
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.OperationalFunds == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">32
+            </td>
+            <td style="text-align: center;">Income Details
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Income Details
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.IncomeDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">33
+            </td>
+            <td style="text-align: center;">Expenditure Details
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Expenditure Details
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.ExpenditureDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">34
+            </td>
+            <td style="text-align: center;">Placement Cell
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Placement Cell
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.PlacementCell == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">35
+            </td>
+            <td style="text-align: center;">College Photos
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">College Photos
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.CollegePhotos == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">36
+            </td>
+            <td style="text-align: center;">Payment Details
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Payment Details
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.PaymentDetails == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">37
+            </td>
+            <td style="text-align: center;">Declaration
+            </td>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">Declaration
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align: center;">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="border: none; text-align: center">
+                            @if (ViewBag.Declaration == "Submitted")
+                            {
+                                <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>

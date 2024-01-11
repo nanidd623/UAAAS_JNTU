@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "CollegeCommittees";
+}
+<h2>College Committees</h2>
+@using (@Html.BeginForm())
+{
+    <table>
+        <tr>
+            <td style="width: 140px;">Inspection Phase
+            </td>
+            <td>
+                @Html.DropDownList("ddlPhaseId",
+                new SelectList(@ViewBag.oldInspectionPhases as System.Collections.IEnumerable, "id", "name"),
+                "Select Phase", new { id = "ddlPhaseId" })
+            </td>
+        </tr>
+        <tr>
+            <td>Hide Inspection Date
+            </td>
+            <td>
+                @Html.CheckBox("chkdate")
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right" style="padding-right: 45px;">
+                <input type="submit" value="CollegeCommittees" />
+                @* <input type="submit" value="OrderCopies" />*@
+            </td>
+        </tr>
+    </table>
+}

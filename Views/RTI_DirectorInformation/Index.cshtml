@@ -1,0 +1,182 @@
+﻿@model UAAAS.Models.PrincipalDirector
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#collegeId').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId)
+
+            if ($('#collegeId').val() != '') {
+                window.location = '/RTI_DirectorInformation/Index?collegeid=' + collegeId;
+            }
+            else {
+                window.location = '/RTI_DirectorInformation/Index';
+            }
+        }); 
+    });
+
+</script>
+<table class="four_columns">
+    <tr>
+        <td class="col1">
+            <span>College</span>
+        </td>
+        <td class="col2" colspan="5">
+            @Html.DropDownList("collegeId",
+                              new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"),
+                              "--Select--", new { id = "collegeId" }) &nbsp;&nbsp;&nbsp;&nbsp;
+            @Html.ActionLink("ExportALLDirectors", "RTI_AllDirectorsInformationReport", "RTI_DirectorInformation", new { @class = "create_button", @style = "width=50px;" })
+        </td> 
+    </tr> 
+</table> 
+<br /> 
+<div id="div_print"> 
+    @using (Html.BeginForm())
+    {
+        if (ViewBag.Norecords == true)
+        {
+            <div class="warning" style="width: 200px; margin: 0 auto;">
+                <p>No Data found</p>
+            </div>
+        }
+        else
+        {
+            if (Model.collegeId != null && Model.firstName != null && Model.type == "DIRECTOR")
+            {
+                <div class="details_table">
+                    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+                    @Html.HiddenFor(model => model.type, new { Value = "DIRECTOR" })
+
+                    <table class="four_columns">
+                        <tr>
+                            <td class="col11" colspan="4">
+                                <b>Director Information</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col11" width="180px">
+                                @Html.LabelFor(model => model.firstName)
+                            </td>
+                            <td class="col21 focus" width="180px">
+                                @Html.DisplayFor(model => model.firstName)
+                            </td>
+                            <td class="col31" width="280px">
+                                @Html.LabelFor(model => model.lastName)
+                            </td>
+                            <td class="col41">
+                                @Html.DisplayFor(model => model.lastName)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col11">
+                                @Html.LabelFor(model => model.surname)
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.surname)
+                            </td>
+                            <td class="col31">
+                                @Html.LabelFor(model => model.dateOfBirth)
+                            </td>
+                            <td class="col41">
+                                @Html.DisplayFor(model => model.dateOfBirth)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col11">
+                                @Html.LabelFor(model => model.qualificationId)
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.qualification)
+                            </td>
+                            <td class="col11">
+                                @Html.LabelFor(model => model.dateOfAppointment)
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.dateOfAppointment)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col11">
+                                @Html.LabelFor(model => model.fax)
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.fax)
+                            </td>
+                            <td class="col31">
+                                @Html.LabelFor(model => model.landline)
+                            </td>
+                            <td class="col41">
+                                @Html.DisplayFor(model => model.landline)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col11">
+                                @Html.LabelFor(model => model.mobile)
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.mobile)
+                            </td>
+                            <td class="col31">
+                                @Html.LabelFor(model => model.email)
+                            </td>
+                            <td class="col41">
+                                @Html.DisplayFor(model => model.email)
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td class="col11">
+                                @Html.LabelFor(model => model.departmentId)
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.departmentName)
+                            </td>
+                            <td class="col31">
+                                @Html.LabelFor(model => model.phdId)
+                            </td>
+                            <td class="col41">
+                                @Html.DisplayFor(model => model.phdSubjectName)
+                            </td>
+
+                        </tr>
+                        <tr>
+
+                            <td class="col31">
+                                @Html.LabelFor(model => model.phdFromUniversity)
+                            </td>
+                            <td class="col41">
+                                @Html.DisplayFor(model => model.phdFromUniversity)
+                            </td>
+                            <td class="col31">
+                                @Html.LabelFor(model => model.phdYear)
+                            </td>
+                            <td class="col41">
+                                @Html.DisplayFor(model => model.phdYear)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col11">
+                                @Html.LabelFor(model => model.ratificationPeriodFrom)
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.ratificationPeriodFrom)
+                            </td>
+                            <td class="col11">
+                                @Html.LabelFor(model => model.ratificationPeriodTo)
+                            </td>
+                            <td class="col21">
+                                @Html.DisplayFor(model => model.ratificationPeriodTo)
+                            </td>
+                        </tr>
+                    </table>
+                    @Html.Hidden("IsRatified", (string)ViewBag.OtherDesignation, new { id = "OtherDesignation" })
+                </div>
+            }
+        }
+    }
+</div>

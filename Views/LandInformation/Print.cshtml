@@ -1,0 +1,506 @@
+﻿@model UAAAS.Models.LandInformation
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Land Registration Details',
+                autoOpen: false,
+                resizable: false,
+                height: 300,
+                width: 600,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+</script>
+    <table>
+        <tr>
+            <td class="col1" colspan="4">
+                <b>Land Details of the College:</b>(Please specify in CAPITAL LETTERS)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.areaInAcres) (in Acres)
+            </td>
+            <td class="col2 focus">
+                @Html.DisplayFor(model => model.areaInAcres, new { @Value = Model.areaInAcres == 0 ? "" : @Model.areaInAcres.ToString() })
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.landTypeID)
+            </td>
+            <td class="col2" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.landTypeID)
+                @foreach (var item in Model.landType)
+                {
+                    var optionValue = "landType_" + item.id;
+                    var selectValue = item.selected;
+                    @*<input type="radio"
+                        id="@optionValue"
+                        name="landTypeID"
+                        value="@item.id" />
+                    <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    <script type="text/javascript">
+                        if(@selectValue == '1')
+                            $("#@optionValue").attr('checked','checked');
+                    </script>*@
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                        <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.landRegistrationTypeId)
+            </td>
+            <td class="col2" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.landRegistrationTypeId)
+                @foreach (var item in Model.landRegistrationType)
+                {
+                    var optionValue1 = "landRegistrationType_" + item.id;
+                    var selectValue = item.selected;
+                   @* <input type="radio"
+                        id="@optionValue1"
+                        name="landRegistrationTypeId"
+                        value="@item.id" />
+                    <label for="@optionValue1" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.name</label>
+                    <script type="text/javascript">
+                        if(@selectValue=='1')
+                            $("#@optionValue1").attr('checked','checked');
+                    </script>*@
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                        <label for="@optionValue1" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue1" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 3)
+                    {
+                    <label for="@optionValue1" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.landCategoryId)
+            </td>
+            <td class="col2" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.landCategoryId)
+                @foreach (var item in Model.landCategory)
+                {
+                    var optionValue2 = "landCategory_" + item.id;
+                    var selectValue = item.selected;
+                   @* <input type="radio"
+                        id="@optionValue2"
+                        name="landCategoryId"
+                        value="@item.id" />
+                    <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.name</label>
+                    <script type="text/javascript">
+                        if(@selectValue == '1')
+                            $("#@optionValue2").attr('checked','checked');
+                    </script>*@
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                        <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 3)
+                    {
+                    <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 3)
+                    {
+                    <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col1" colspan="4">
+                <b>Registration Details :</b>
+            </td>
+        </tr>
+    </table>   
+                if (TempData["RegistrationError"] != null)
+                {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["RegistrationError"].ToString()</p>
+    </div>
+                }
+                if (TempData["RegistrationSuccess"] != null)
+                {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["RegistrationSuccess"].ToString()</p>
+    </div>
+                }    
+   
+    <div id="gridContent">
+
+        @{            
+                var grid = new WebGrid(ViewBag.RegistrationDetails,
+                canPage: false,
+                    //rowsPerPage: 10,
+                selectionFieldName: "selectedRow",
+                ajaxUpdateContainerId: "gridContent"
+                );
+                //grid.Pager(WebGridPagerModes.NextPrevious);
+                var count = 1; 
+        }
+        @grid.GetHtml(tableStyle: "webGrid",
+                headerStyle: "gridHeader",
+                alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: grid.Columns(
+                grid.Column("ID", "S.No.", format: p => count++, style: "row_number", canSort: true),
+                grid.Column("landRegistraionDate", "Registraion Date", format: @<text> @if (item.landRegistraionDate != null)
+                                                                                       { <span>@Convert.ToDateTime(item.landRegistraionDate).ToString("dd/MM/yyyy")</span> } </text>, style: "align_left", canSort: true),
+                grid.Column("landAreaInAcres", "Area in Acres", null, style: "align_left", canSort: true),
+                grid.Column("landDocumentNumber", "Document Number", null, style: "align_left", canSort: true),
+                grid.Column("landSurveyNumber", "Survey Number", null, style: "align_left", canSort: true),
+                grid.Column("landLocation", "Location/Village", null, style: "align_left", canSort: true),
+                grid.Column("Details", "Details", format: @<text>@Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "viewDialog view_button" }) </text>, style: "view", canSort: true)
+         ))
+    </div> 
+                if (ViewBag.Count == 0)
+                {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+                }
+    <br />
+    
+    <div id="dialog-view" style="display: none">
+    </div>  
+    <table>
+        <tr>
+            <td class="col1" colspan="4">
+                <b>Land Conversion Certificate :</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.conversionCertificateIssuedBy)
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DisplayFor(model => model.conversionCertificateIssuedBy)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.conversionCertificateIssuedDate)
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DisplayFor(model => model.conversionCertificateIssuedDate, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.conversionCertificateIssuedPurpose)
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DisplayFor(model => model.conversionCertificateIssuedPurpose)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1" colspan="4">
+                <b>Building Plan</b>in the name of the proposed institution prepared by Architect and Approved by Competent Authority :
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.buildingPlanIssuedBy)
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DisplayFor(model => model.buildingPlanIssuedBy)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.buildingPlanIssuedDate)
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DisplayFor(model => model.buildingPlanIssuedDate, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1" colspan="4">
+                <b>Master Plan</b>in the name of the proposed institution prepared by Architect and Approved by Competent Authority :
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.masterPlanIssuedBy)
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DisplayFor(model => model.masterPlanIssuedBy)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.masterPlanIssuedDate)
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DisplayFor(model => model.masterPlanIssuedDate, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.compoundWall)
+            </td>
+            <td class="col2" colspan="3">
+               @* <label>@Html.RadioButtonFor(model => model.compoundWall, true) Yes</label>
+                <label>@Html.RadioButtonFor(model => model.compoundWall, false) No</label>*@
+                @if (Model.compoundWall == true)
+                {
+                    <label>Yes</label>
+                }
+                else
+                {
+                    <label>No</label>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.approachRoadId)
+            </td>
+            <td class="col2" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.approachRoadId)
+                @foreach (var item in Model.approachRoad)
+                {
+                    var optionValue3 = "approachRoad_" + item.id;
+                    var selectedValue = item.selected;
+                    @*<input type="radio"
+                        id="@optionValue3"
+                        name="approachRoadId" 
+                        value="@item.id" />
+                    <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    <script type="text/javascript">
+                        if(@selectedValue == '1')
+                            $("#@optionValue3").attr('checked','checked');
+                    </script> *@
+                    
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                        <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 3)
+                    {
+                    <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 4)
+                    {
+                    <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+
+
+
+
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.powerSupplyId)
+            </td>
+            <td class="col2" colspan="3">
+                @Html.HiddenFor(model => model.powerSupplyId)
+                @foreach (var item in Model.powerSupply)
+                {
+                    var optionValue4 = "powerSupply_" + item.id;
+                    var selectedValue = item.selected;
+                    @*<input type="radio"
+                        id="@optionValue4"
+                        name="powerSupplyId"
+                        value="@item.id" />
+                    <label for="@optionValue4" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    <script type="text/javascript">
+                        if(@selectedValue == '1')
+                            $("#@optionValue4").attr('checked','checked');
+                    </script>*@
+                    
+                    
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                        <label for="@optionValue4" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue4" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.WaterSupplyId)
+            </td>
+            <td class="col2" colspan="3">
+                @Html.HiddenFor(model => model.WaterSupplyId)
+                @foreach (var item in Model.WaterSupply)
+                {
+                    var optionValue5 = "waterSupply_" + item.id;
+                    var selectedValue = item.selected;
+                    @*<input type="radio"
+                        id="@optionValue5"
+                        name="WaterSupplyId"
+                        value="@item.id" />
+                    <label for="@optionValue5" style="padding-right: 10px !important;text-align: left;display: inline-block;" >@item.name</label>
+                    <script type="text/javascript">
+                        if(@selectedValue == '1')
+                            $("#@optionValue5").attr('checked','checked');
+                    </script>*@
+                    
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                        <label for="@optionValue5" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue5" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.drinkingWaterId)
+            </td>
+            <td class="col2" colspan="3">
+                @Html.HiddenFor(model => model.drinkingWaterId)
+                @foreach (var item in Model.DrinkingWater)
+                {
+                    var optionValue6 = "drinkingWater_" + item.id;
+                    var selectedValue = @item.selected;
+                    @*<input type="radio"
+                        id="@optionValue6"
+                        name="drinkingWaterId"
+                        value="@item.id" />
+                    <label for="@optionValue6" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                    <script type="text/javascript">
+                        if(@selectedValue == '1')
+                            $("#@optionValue6").attr('checked','checked');
+                    </script>*@
+                    
+                    if (item.selected == 1 && item.id == 1)
+                    {
+                        <label for="@optionValue6" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+                    if (item.selected == 1 && item.id == 2)
+                    {
+                    <label for="@optionValue6" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+
+                    }
+
+
+
+
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.IsPurifiedWater)
+            </td>
+            <td class="col2" colspan="3">
+                @*<label>@Html.RadioButtonFor(model => model.IsPurifiedWater, true) Yes</label>
+                <label>@Html.RadioButtonFor(model => model.IsPurifiedWater, false) No</label>*@
+                @if (Model.IsPurifiedWater == true)
+                {
+                    <label>Yes</label>
+                }
+                else
+                {
+                    <label>No</label>
+                }
+                    
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.potableWaterPerDay)
+                <label>(in Liters per day)</label>
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DisplayFor(model => model.potableWaterPerDay, new { Value = @Model.potableWaterPerDay == 0 ? "" : Model.potableWaterPerDay.ToString() })
+            </td>
+        </tr>
+    </table>
+    
+    @Html.HiddenFor(model => model.collegeId)
+    @Html.HiddenFor(model => model.createdOn)
+    @Html.HiddenFor(model => model.createdBy)
+    
+  

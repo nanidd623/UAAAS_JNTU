@@ -1,0 +1,221 @@
+﻿@model IEnumerable<UAAAS.Models.FacultyRegistration>
+@{
+    ViewBag.Title = "Faculty Verification Status";
+
+    var index = 1;
+}
+<table border="1" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="background-color: yellow; vertical-align: top; text-align: center;">S.No
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: center;">CC
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Registration ID
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Type
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">First Name
+            </th>
+             <th style="background-color: yellow; vertical-align: top; text-align: left;">Middle Name
+            </th>
+             <th style="background-color: yellow; vertical-align: top; text-align: left;">Last Name
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Gender
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Father\HusbandName
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Mother Name
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">DOB
+            </th>
+              <th style="background-color: yellow; vertical-align: top; text-align: left;">PAN Number
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Aadhaar Number
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Mobile
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Email
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Designation
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Other Designation
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Department
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Other Department
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: center;">Gross Salary
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">DOA
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Ratified By JNTU
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Date Of Ratification
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">Proceedings No
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: left;">AICTE Faculty Id
+            </th>
+            <th style="background-color: yellow; vertical-align: top; text-align: center;">Total Experience
+            </th>
+
+
+          
+
+            @*  <th style="background-color: yellow; vertical-align: top; text-align: center;">Photo
+            </th>*@
+            <th style="background-color: yellow; vertical-align: top; text-align: center;">Status
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(m => m.isActive == true).OrderByDescending(m => m.id).ToList())
+        {
+            <tr>
+                <td style="text-align: center; vertical-align: top;">
+                    @(index++)
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    @item.CollegeCode
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.RegistrationNumber
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @if (item.Type.ToUpper() == "EXISTFACULTY")
+                    { <span style="color: green;">Existing</span>}
+                    else
+                    { <span style="color: red;">New</span>}
+                </td>
+                <td style="text-align:left;vertical-align: top; text-transform: uppercase;">
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td style="text-align:left;vertical-align: top; text-transform: uppercase;">
+                    @Html.DisplayFor(modelItem => item.MiddleName)
+                </td>
+                <td style="text-align:left;vertical-align: top; text-transform: uppercase;">
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    @if (item.GenderId == 1)
+                    {
+                        <span>M</span>
+                    }
+                    else
+                    {
+                        <span>F</span>
+                    }
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                   @item.FatherOrhusbandName
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                     @item.MotherName
+                </td>
+                <td style="text-align: left; vertical-align: top;">                  
+                       <span>@UAAAS.Models.Utilities.MMDDYY2DDMMYY(@item.DateOfBirth.ToString())</span>
+                </td>
+                 @if (item.SamePANNumberCount > 1)
+                {
+                    <td style="text-align: left; vertical-align: top; color: red;">
+                        @Html.DisplayFor(modelItem => item.PANNumber)
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align: left; vertical-align: top;">
+                        @Html.DisplayFor(modelItem => item.PANNumber)
+                    </td>
+                }
+                @if (item.SameAadhaarNumberCount > 1)
+                {
+                    <td style="text-align: left; vertical-align: top; color: red;">
+                        @Html.DisplayFor(modelItem => item.AadhaarNumber)
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align: left; vertical-align: top;">
+                        @Html.DisplayFor(modelItem => item.AadhaarNumber)
+                    </td>
+                }
+                 <td style="text-align: left; text-transform: uppercase; vertical-align: top;">
+                     @item.Mobile
+                </td>
+                 <td style="text-align: left; text-transform: uppercase; vertical-align: top;">
+                     @item.Email
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                     @item.designation
+                </td>
+                 <td style="text-align: left; vertical-align: top;">
+                     @item.OtherDesignation
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                     @item.department
+                </td>
+                 <td style="text-align: left; vertical-align: top;">
+                     @item.OtherDepartment
+                </td>
+                <td style="text-align: right; vertical-align: top;">
+                     @item.GrossSalary
+                </td>
+                <td style="text-align: left; text-transform: uppercase; vertical-align: top;">
+                   @if (item.DateOfAppointment == null)
+                   {
+                       <span>@UAAAS.Models.Utilities.MMDDYY2DDMMYY(@item.DateOfAppointment.ToString())</span>                    
+                   }
+                </td>
+                  <td style="text-align: left; text-transform: uppercase; vertical-align: top;">
+                      @if (item.isFacultyRatifiedByJNTU == true)
+                    {
+                        <span>Yes</span>
+                    }
+                    else
+                    {
+                        <span>No</span>
+                    }
+                </td>
+                 <td style="text-align: left; text-transform: uppercase; vertical-align: top;">  
+                       <span>@UAAAS.Models.Utilities.MMDDYY2DDMMYY(@item.DateOfRatification.ToString())</span>
+                </td>
+                  <td style="text-align: left; text-transform: uppercase; vertical-align: top;">
+                     @item.ProceedingsNo
+                </td>
+                 <td style="text-align: left; text-transform: uppercase; vertical-align: top;">
+                     @item.AICTEFacultyId
+                </td>
+                 <td style="text-align: right; text-transform: uppercase; vertical-align: top;">
+                     @item.TotalExperience
+                </td>
+               
+                @*      <td style="text-align: center; vertical-align: top; height: 70px;">
+                    @if (@item.facultyPhoto != null)
+                    {
+                        <img  align="center" valign="top" height="60" src="http://112.133.193.228:75//Content/Upload/Faculty/Photos/@item.facultyPhoto.Replace("~", "")" style="height: 50px;"/>
+                        <img  align="center" valign="top" height="60" src="../Content/Upload/Faculty/Photos/@item.facultyPhoto.Replace("~", "")" style="height: 50px;"/>
+                    }
+                    else
+                    {
+                        <img src="../Content/Images/no-photo.gif" style="height: 50px;" />
+                    }
+                </td>*@
+                <td style="text-align: left; vertical-align: top;">
+                    @if (@item.isValid == true)
+                    {
+                        <span style="color: green;">Approved</span>
+                    }
+                    else
+                    {
+                        <span style="color: red;">Not Approved</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+

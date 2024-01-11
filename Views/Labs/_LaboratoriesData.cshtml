@@ -1,0 +1,443 @@
+﻿@model UAAAS.Models.Lab
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="~/Scripts/CustomScript.js"></script>
+@*Calender and File Upload Written by Srinivas*@
+<script type="text/javascript">
+    function ValidateAddmissions() {
+        $('#EquipmentDateOfPurchasing').removeClass('input-validation-error');
+        $('#DelivaryChalanaDate').removeClass('input-validation-error');
+    }
+    $(document).ready(function () {
+        $('.calendar').attr("readonly", "true");
+        $('.calendar').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+        buttonImageOnly: true
+        //showButtonPanel: true
+    });
+        // Form Validation  Checking with Jquery
+
+        //$("#LabsFrom").validate({
+        //    rules: {
+        //        AvailableArea: "required"
+        //    },
+        //    messages: {
+        //        AvailableArea: "Please Enter Available Floor Area "
+        //    }
+        //});
+   
+
+
+        $('.submit').click(function (event, args) {
+            debugger;
+            
+            $("#LabsFrom").valid();
+            var validationcheck= $("#LabsFrom").valid();
+            if ($('#scannedCopy').val() == undefined && $('#EquipmentPhoto').val() == '' && $('#ViewEquipmentPhoto').val() == undefined)
+            {
+                alert("Please select photo");
+            }
+
+            var command = $(".submit").val();
+            var formData = new FormData();
+            var file = $("#EquipmentPhoto").prop("files");
+            formData.append("EquipmentPhoto", file[0]);
+            var DegreeId = $("#degreeId").val();
+            var DepartmentId = $("#departmentId").val();
+
+            if (validationcheck) {
+                var laboratories = {
+                    collegeId: $("#collegeId").val(),
+                    EquipmentUniqueID: $("#EquipmentID").val(),
+                    EquipmentID: $("#EquipmentID").val(),
+                    LabName: $("#LabName").val(),
+                    Make: $("#Make").val(),
+                    Model: $("#Model").val(),
+                    EquipmentName: $("#EquipmentName").val(),
+                    AvailableUnits: $("#AvailableUnits").val(),
+                    AvailableArea: $("#AvailableArea").val(),
+                    RoomNumber: $("#RoomNumber").val(),
+                    EquipmentNo: $("#EquipmentNo").val(),
+                    EquipmentDateOfPurchasing1: $("#EquipmentDateOfPurchasing1").val(),
+                    DelivaryChalanaDate1: $("#DelivaryChalanaDate1").val(),
+                    //EquipmentPhoto: file[0],
+
+                    id: $("#id").val()
+
+                };
+                console.log(laboratories);
+
+                $.ajax({
+                    type: "POST",
+                    url: "Labs/AddEditRecord",// + laboratories + "&cmd=" + command,
+                    contentType: "application/json;",
+                   // dataType: "json",
+                    data: JSON.stringify({ laboratories: laboratories, cmd: command }),
+                    success: function (d) {
+                        if (d != null) {
+                            $("#dialog-edit").dialog("close");
+                            alert(d);
+                            DataTable(DegreeId, DepartmentId);
+                        }
+                    }
+                });
+            }
+        });
+        //get file size
+        function GetFileSize(fileid) {
+            //debugger;
+            try {
+                var fileSize = 0;
+
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    var FileName1 = $("#EquipmentPhoto")[0].files[0].value;
+                    //alert('Hai1');
+                    //alert(FileName1);
+                    fileSize = $("#EquipmentPhoto")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                    //alert('Hai');
+                    // alert(fileSize);
+
+
+                    //alert('hai3');
+
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+
+        $(function () {
+            $(".file").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'png':
+                        case 'PNG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'bmp':
+                        case 'BMP':
+                        case 'gif':
+                        case 'GIF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".files > span").text("You can upload only JPEG / JPG / GIF / PNG / BMP files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetFileSize(file);
+
+                    if (size > 307200) {
+                        $(".files > span").text("Photo should not exceed 300 KB in Size");
+                        $(this).val('');
+                    }
+                    else {
+                        $(".files > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+       
+    });
+</script>
+
+
+
+@using (Ajax.BeginForm("AddEditRecord", "Labs", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "LaboratoriesDialog" }, new {@id="LabsFrom", enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 550px; margin: 0 auto;">
+            <p>Please select your courses in "College Information" page before filling up this page.</p>
+        </div>
+    }
+    <div class="details_table">
+        @if (ViewBag.IsUpdate == true)
+        {
+            @Html.HiddenFor(model => model.id)
+            @Html.HiddenFor(model => model.createdBy)
+            @Html.HiddenFor(model => model.createdOn)
+            @Html.HiddenFor(model => model.EquipmentID)
+            @Html.HiddenFor(model => model.LabName)
+            @Html.HiddenFor(model => model.Make)
+            @Html.HiddenFor(model => model.Model)
+            @Html.HiddenFor(model => model.EquipmentName)
+            @Html.HiddenFor(model => model.AvailableUnits)
+            @Html.HiddenFor(model => model.AvailableArea)
+            @Html.HiddenFor(model => model.RoomNumber)
+            @Html.HiddenFor(model => model.EquipmentNo)
+            @Html.HiddenFor(model => model.EquipmentDateOfPurchasing1)
+            @Html.HiddenFor(model => model.DelivaryChalanaDate1)
+            @Html.HiddenFor(model => model.EquipmentPhoto)
+            @Html.HiddenFor(model => model.ViewEquipmentPhoto)
+            @Html.HiddenFor(model => model.id)
+        }
+        @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+        
+       
+
+    <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.degreeId)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.DisplayFor(model => model.degree)
+            @Html.ValidationMessageFor(model => model.degreeId)
+            @Html.HiddenFor(model => model.degreeId)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.departmentId)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.DisplayFor(model => model.department)
+            @Html.HiddenFor(model => model.departmentId)
+        </div>
+
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.specializationId)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.DisplayFor(model => model.specializationName)
+        </div>
+        @if (Model.degree == "B.Tech" || Model.degree == "B.Pharmacy")
+        {
+            <div class="editor-label" style="width: 250px">
+                @Html.LabelFor(model => model.yearInDegreeId)
+            </div>
+            <div class="editor-field" style="width: 400px">
+                @Html.DisplayFor(model => model.year)
+            </div>
+            <div class="editor-label" style="width: 250px">
+                @Html.LabelFor(model => model.Semester)
+            </div>
+            <div class="editor-field" style="width: 400px">
+                @Html.DisplayFor(model => model.Semester)
+            </div>
+        }
+        else
+        {
+            @Html.HiddenFor(model => model.year)
+            @Html.HiddenFor(model => model.Semester)
+        }
+
+        @* <div class="editor-label" style="width: 250px">
+                @Html.LabelFor(model => model.Labcode)
+            </div>
+            <div class="editor-field" style="width: 420px">
+                @Html.DisplayFor(model => model.Labcode)
+            </div>*@
+
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.LabName)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @if (Model.Labcode != "TMP-CL" && Model.LabName != "" && Model.LabName != null)
+            {
+                @Html.DisplayFor(model => model.LabName)
+                @Html.HiddenFor(model => model.LabName)
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.LabName, new { @Value = Model.LabName, @placeholder = "Lab Name", @maxlength = "50", @class = "required", @id = "Labpname", @title = "We do not have Lab Names for the selected Lab, please specify your own 'Name of the Equipment' in the textbox shown" })
+            }
+          
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.AvailableArea)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.AvailableArea, new { @placeholder = "Floor Area" })
+            @Html.ValidationMessageFor(model => model.AvailableArea)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.RoomNumber)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.RoomNumber, new { @placeholder = "Room No", @maxlength = "25" })
+            @Html.ValidationMessageFor(model => model.RoomNumber)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.EquipmentID)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @if (Model.Labcode != "TMP-CL" && Model.EquipmentName != "" && Model.EquipmentName != null)
+            {
+                @Html.DisplayFor(model => model.EquipmentName)
+                @Html.HiddenFor(model => model.EquipmentName)
+            }
+            else
+            {
+                @Html.TextBoxFor(model => model.EquipmentName, new { @Value = Model.LabEquipmentName, @placeholder = "Equipment Name", @maxlength = "50", @class = "required", @id = "eqpname", @title = "We do not have Equipment Names for the selected Lab, please specify your own 'Name of the Equipment' in the textbox shown" })
+            }
+            @*@Html.DisplayFor(model => model.EquipmentNo)  *@
+            @Html.HiddenFor(model => model.EquipmentNo)
+            @Html.HiddenFor(model => model.EquipmentID)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.EquipmentIds)
+        </div>
+        <div class="editor-field" style="width: 400px; height:40px;">
+            @Html.DisplayFor(model => model.EquipmentIds)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.Make)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.Make, new { @placeholder = "Make", @maxlength = "50" })
+            @Html.ValidationMessageFor(model => model.Make)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.Model)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.Model, new { @placeholder = "Model", @maxlength = "50" })
+            @Html.ValidationMessageFor(model => model.Model)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.EquipmentUniqueID)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.EquipmentUniqueID, new { @placeholder = "Unique ID", @maxlength = "50" })
+            @Html.ValidationMessageFor(model => model.EquipmentUniqueID)
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @Html.LabelFor(model => model.AvailableUnits)
+        </div>
+        <div class="editor-field" style="width: 400px">
+            @Html.TextBoxFor(model => model.AvailableUnits, new { @placeholder = "AvailableUnits" })
+            @Html.ValidationMessageFor(model => model.AvailableUnits)
+        </div>
+
+        <div class="editor-label" style="width: 250px">
+            @*@Html.LabelFor(model => model.EquipmentDateOfPurchasing )*@
+            @Html.Label("Date of Payment Invoice(dd/MM/yyyy)")
+        </div>
+        <div class="editor-field" style="width: 400px;">
+
+
+            @Html.TextBoxFor(model => model.EquipmentDateOfPurchasing1, "{0:dd/MM/yyyy}", new { @class = "calendar required", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Date Of Payment" })
+            @Html.ValidationMessageFor(model => model.EquipmentDateOfPurchasing1)
+
+        </div>
+        <div class="editor-label" style="width: 250px">
+            @*@Html.LabelFor(model => model.EquipmentDateOfPurchasing )*@
+            @Html.Label("Date of Delivery Challan(dd/MM/yyyy)")
+        </div>
+        <div class="editor-field" style="width: 400px;">
+            @Html.TextBoxFor(model => model.DelivaryChalanaDate1, "{0:dd/MM/yyyy}", new { @class = "calendar required", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)", @placeholder = "Date of Delivery Challan" })
+            @Html.ValidationMessageFor(model => model.DelivaryChalanaDate1)
+        </div>
+        <div class="editor-label" style="width: 250px; ">
+            @*@Html.LabelFor(model => model.EquipmentPhoto)*@
+
+            @Html.Label("Equipment Photo ")
+            <br />
+            <span style="color:red;">Image size: Min 50kb & Max 300kb. Image format:"JPEG OR PNG"</span>
+        </div>
+        <div class="editor-field files" style="width: 400px; height: 56px;">
+            @Html.TextBoxFor(model => model.EquipmentPhoto, new { type = "file", @class = "file" })
+            <br />
+            <span style="color: red;"></span><br />
+            @if (@Html.DisplayFor(model => model.ViewEquipmentPhoto) != null && @Html.DisplayFor(model => model.ViewEquipmentPhoto).ToString() != "")
+            {
+                @Html.HiddenFor(model => model.ViewEquipmentPhoto)
+                <img src="../Content/Upload/EquipmentsPhotos/@Html.DisplayFor(model => model.ViewEquipmentPhoto)" style="height: 50px;" />
+            }
+
+            @*@Html.HiddenFor(model => model.uploadFile, new { @Value = Model.uploadFile })*@
+        </div>
+
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.createdBy)
+        <div style="text-align: left">
+            <br/>
+            <p>
+                @if (ViewBag.IsUpdate == true)
+                {
+                    <input type="button" value="Update" id="btnUpdate" style="background-color: #024b74" name="cmd" class="submit"/>
+                }
+                else
+                {
+                    <input type="button" value="Save" id="btnSave" name="cmd" style="background-color: #024b74" class="submit"/>
+                    //onclick=" return Validate(); "
+                }
+            </p>
+        </div>
+    </div>
+
+}
+
+
+<style>
+    #btnUpdate, #btnSave {
+        background-color: #024b74;
+        padding: 2px 15px;
+        border: 0px solid #f49820;
+        color: #ffffff;
+        margin: 10px 0;
+    }
+</style>
+
+
+
+
+

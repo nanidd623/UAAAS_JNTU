@@ -1,0 +1,90 @@
+﻿@model IEnumerable<UAAAS.Models.CollegePayment>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Payment Details";
+    int num = 1;
+}
+
+
+@*<p class="create_link_right">
+    <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+</p>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".view_hide").show();        
+    });
+
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+</script>
+
+<div id="div_print">
+    <h2>College Payment Details</h2>
+
+    <table class="four_columns" style="width: 100%;">
+        <tr>
+            <th style="text-align: center;" class="col11">S.No
+            </th>
+            <th style="text-align: center;" class="col11">Payment Date
+            </th>
+            <th style="text-align: center;" class="col11">Payment Type
+            </th>
+            <th style="text-align: center;" class="col11">Cheque/DD No.
+            </th>
+            <th style="text-align: left;" class="col11">Branch
+            </th>
+            <th style="text-align: center;" class="col11">Payment Status
+            </th>
+            <th style="text-align: center;" class="col11">Total Amount (Lakhs)
+            </th>
+        </tr>
+
+        @foreach (var item in ViewBag.CollegePayment as List<UAAAS.Models.CollegePayment>)
+        {
+            <tr>
+                <td style="width: 30px; text-align: center; vertical-align: top;" class="col21">
+                    @(num++)
+                </td>
+                <td style="width: 110px; text-align: center; vertical-align: top;" class="col21">@item.paymentDate.ToString("dd/MM/yyyy")</td>
+                <td style="width: 100px; text-align: center; vertical-align: top;" class="col21"><label>DD</label></td>
+                <td style="width: 160px; text-align: center; vertical-align: top;" class="col21">@item.paymentNumber</td>
+                <td style="text-align: left; vertical-align: top;" class="col21">@item.paymentBranch, @item.paymentLocation</td>
+                <td style="width: 120px; text-align: center; vertical-align: top;" class="col21">
+                    @if (item.paymentStatus == 1)
+                    { <span>Paid</span>}
+                    else
+                    {<span>Pending</span>}
+                </td>
+                <td style="width: 150px; text-align: center; vertical-align: top;" class="col21">@item.paymentAmount</td>
+            </tr>
+        }
+
+    </table>
+
+    @if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }
+</div>
+

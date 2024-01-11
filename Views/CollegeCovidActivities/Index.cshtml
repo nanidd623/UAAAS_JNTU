@@ -1,0 +1,322 @@
+﻿@using UAAAS.Models;
+@model List<UAAAS.Models.CollegeCovidActivites>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    var radiobtnyes_id = string.Empty;
+    var radiobtnno_id = string.Empty;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <link href="~/Scripts/Jquerydatatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Jquerydatatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/Jquerydatatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    @*<script type="text/javascript" src="http://beneposto.pl/jqueryrotate/js/jQueryRotateCompressed.js"></script>*@
+    @*<script src="~/Scripts/RotateImage.js" type="text/javascript"></script>*@
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".isactivitystatusyes").click(function () {
+                var radiobtnyess_id = "#txtFile_" + $(this).attr('id').split('_')[1];
+                var actitityID = $(this).attr('id').split('_')[1];
+                //alert($(this).attr('id').split('_')[1]);
+                //$("#lblAffilitionId_@radiobtnyes_id table").attr('style', 'display: block');
+                //$("#fieldAffilitionId_@radiobtnyes_id table").attr('style', 'display: block');
+                if (actitityID == 5) {
+                    //var radioyess_id = "#isactivitystatusyes_" + $(this).attr('id').split('_')[1];
+                    //alert(radioyess_id);
+                    $('#isactivitystatusyes_6').attr('disabled', false);
+                    $('#isactivitystatusno_6').attr('disabled', false);
+                    $('#isactivitystatusyes_7').attr('disabled', false);
+                    $('#isactivitystatusno_7').attr('disabled', false);
+                }
+                else if (actitityID == 4) {
+                    $('.excelformatlink').attr('style', 'display: block');
+                    $(radiobtnyess_id).attr('style', 'display: block');
+                }
+                else if (actitityID == 7) {
+                    $(radiobtnyess_id).attr('style', 'display: none');
+                } else if (actitityID == 8 || actitityID == 9) {
+                    //$(radiobtnyess_id).attr('style', 'display: block');
+                    var remarks = "#remarkstxt_" + $(this).attr('id').split('_')[1];
+                    //alert(remarks);
+                    $(remarks).attr('style', 'display: block');
+                    $(remarks).attr('style', 'width: 300px');
+                } else {
+                    $(radiobtnyess_id).attr('style', 'display: block');
+                }
+            });
+            $(".isactivitystatusno").click(function () {
+                var radiobtnnoo_id = "#txtFile_" + $(this).attr('id').split('_')[1];
+                var actitityID = $(this).attr('id').split('_')[1];
+                //alert(radiobtnno_id);
+                //$("#lblAffilitionId_@radiobtnno_id table").attr('style', 'display: none');
+                //$("#fieldAffilitionId_@radiobtnno_id table").attr('style', 'display: none');
+                $(radiobtnnoo_id).attr('style', 'display: none');
+                if (actitityID == 5) {
+                    $("#isactivitystatusno_6").prop("checked", true);
+                    $("#isactivitystatusyes_7").prop("checked", true);
+                    $('#isactivitystatusyes_6').attr('disabled', true);
+                    $('#isactivitystatusno_6').attr('disabled', true);
+                    $('#isactivitystatusyes_7').attr('disabled', true);
+                    $('#isactivitystatusno_7').attr('disabled', true);
+                    $('#txtFile_6').attr('style', 'display: none');
+                    $('#txtFile_7').attr('style', 'display: none');
+                }
+                else if (actitityID == 4) {
+                    $('.excelformatlink').attr('style', 'display: none');
+                }
+                else if (actitityID == 8 || actitityID == 9) {
+                    //$(radiobtnyess_id).attr('style', 'display: block');
+                    var remarks = "#remarkstxt_" + $(this).attr('id').split('_')[1];
+                    //alert(remarks);
+                    $(remarks).attr('style', 'display: none');
+                    //$(remarks).attr('style', 'width: 300px');
+                } else if (actitityID == 7) {
+                    $(radiobtnnoo_id).attr('style', 'display: block');
+                }
+            });
+
+            $(".Supportingfile").change(function () {
+                var rdid = $(this).attr('id').split('_')[1];
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetFileSize(file, "Documentfile");
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".SupportingfileSpan_" + rdid).text("Document should not exceed 1 MB in Size");
+                        $(".SupportingfileSpan_" + rdid).css("color", "red");
+                        $(this).val('');
+                    } else {
+                        $(".SupportingfileSpan_" + rdid).text("");
+                    }
+                }
+            });
+
+
+            //get file path from client system
+            function getNameFromPath(strFilepath) {
+                var objRE = new RegExp(/([^\/\\]+)$/);
+                var strName = objRE.exec(strFilepath);
+
+                if (strName == null) {
+                    return null;
+                } else {
+                    return strName[0];
+                }
+            }
+
+            //get file size
+            function GetFileSize(fileid, title) {
+
+                try {
+                    var fileSize = 0;
+                    //for IE
+                    if ($.browser.msie) {
+                        //before making an object of ActiveXObject,
+                        //please make sure ActiveX is enabled in your IE browser
+                        var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                        var filePath = $("#" + fileid)[0].value;
+                        var objFile = objFSO.getFile(filePath);
+                        var fileSize = objFile.size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+                        //for FF, Safari, Opeara and Others
+                    else {
+                        fileSize = $(".Supportingfile")[0].files[0].size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+
+                    return fileSize;
+                } catch (e) {
+
+                    //alert("Error is : " + e);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <h2>@*Format for obtaining online Compliance Report (COVID-19) from the Constituent and Affiliated Colleges on daily basis*@ </h2>
+    <div class="alerttext" style="background-color: #008000; border: 1px solid #f49820; color: white">
+        <p>
+            <b>Note:&nbsp;Please upload all the relevant supporting documents on the College letter head only.</b>
+        </p>
+    </div>
+    <br />
+    <div class="alerttext" style="background-color: #f49820; border: 1px solid #f49820; color: white">
+        <p>
+            <b>Note:&nbsp;Please submit the following details for both yesterday (17-03-2020) and today (18-03-2020).</b>
+        </p>
+    </div>
+    <br />
+    <div class="alerttext" style="background-color: #864949; border: 1px solid #f49820; color: white">
+        <p>
+            <b>Note:&nbsp;The following details are to be submitted at 11.30AM on daily basis without fail till 31st March, 2020.</b>
+        </p>
+    </div>
+    <br />
+    @if (ViewBag.submit != true)
+    {
+
+        using (Html.BeginForm("Create", "CollegeCovidActivities", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.ValidationSummary(true)
+            <div>
+                @{int rowNo = 0;}
+                @for (int i = 0; i < ViewBag.extraactivities.Count; i++)
+                {
+                    var sno = @i;
+                    var rdoAffilitionId = "rdoAffilitionId_" + @rowNo;
+                    var lblAffilitionId = "lblAffilitionId_" + @rowNo;
+                    var fieldAffilitionId = "fieldAffilitionId_" + @rowNo;
+                    var txtFile = "txtFile" + @rowNo;
+                    <table class="faculty_table">
+                        @Html.HiddenFor(model => model[i].activityid, new { @Value = @ViewBag.extraactivities[i].id })
+                        @if (i != 0)
+                        {
+                            <tr>
+                            <td class="col1" style="width: 5%">@sno</td>
+                            <td class="col1" colspan="3" style="width: 50%">
+                                @if (i == 2)
+                                {
+                                    <span>Whether the College is functioning on @DateTime.Now.Date.ToString("dd-MM-yyyy")?</span>
+                                }
+                                else
+                                {
+                                    @ViewBag.extraactivities[i].activitydescription
+                                }
+
+                            </td>
+                            @if (i == 6)
+                            {
+                                <td class="col4" style="width: 10%">
+                                    <div class="Identified" style="text-align: center;">
+                                        <label>@Html.RadioButtonFor(model => model[i].activitystatus, true, new { @id = "isactivitystatusyes_" + i, @class = "isactivitystatusyes", @disabled = true }) Yes </label>
+                                        <label>@Html.RadioButtonFor(model => model[i].activitystatus, false, new { @id = "isactivitystatusno_" + i, @class = "isactivitystatusno", @disabled = true }) No</label>
+                                        @Html.ValidationMessageFor(model => model[i].activitystatus)
+                                    </div>
+                                </td>
+                            }
+                            else if (i == 7)
+                            {
+                                <td class="col4" style="width: 10%">
+                                    <div class="Identified" style="text-align: center;">
+                                        <label>@Html.RadioButtonFor(model => model[i].activitystatus, true, new { @id = "isactivitystatusyes_" + i, @class = "isactivitystatusyes", @disabled = true }) Yes </label>
+                                        <label>@Html.RadioButtonFor(model => model[i].activitystatus, false, new { @id = "isactivitystatusno_" + i, @class = "isactivitystatusno", @disabled = true }) No</label>
+                                        @Html.ValidationMessageFor(model => model[i].activitystatus)
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="col4" style="width: 10%">
+                                    <div class="Identified" style="text-align: center;">
+                                        <label>@Html.RadioButtonFor(model => model[i].activitystatus, true, new { @id = "isactivitystatusyes_" + i, @class = "isactivitystatusyes" }) Yes </label>
+                                        <label>@Html.RadioButtonFor(model => model[i].activitystatus, false, new { @id = "isactivitystatusno_" + i, @class = "isactivitystatusno" }) No</label>
+                                        @Html.ValidationMessageFor(model => model[i].activitystatus)
+                                    </div>
+                                </td>
+                            }
+
+                            <td class="col4 readonly" style="width: 40%">
+                                <table>
+                                    @if (i == 4)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.TextBoxFor(model => model[i].activitydoc, new { type = "file", @id = "txtFile_" + i, @name = "@file", @class = "required Supportingfile", @style = "display:none;" }) @*, @disabled = "disabled"*@
+                                                @Html.HiddenFor(model => model[i].activitydocpath)
+                                                @Html.TextAreaFor(model => model[i].remarks, new { @id = "remarkstxt_" + i, @type = "text", @style = "display: none;", @class = "required", @maxlength = "999" })
+                                                <span class="SupportingfileSpan_@i" style="color: red;"></span>
+                                            </td>
+                                        </tr>
+                                        <p class="excelformatlink" style="display: none;">
+                                            <span style="color: red; font-style: italic; font-weight: bold;">
+                                                <a href="../../Content/format.docx">Download Sample Format</a>
+                                            </span>
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.TextBoxFor(model => model[i].activitydoc, new { type = "file", @id = "txtFile_" + i, @name = "@file", @class = "required Supportingfile", @style = "display:none;" }) @*, @disabled = "disabled"*@
+                                                @Html.HiddenFor(model => model[i].activitydocpath)
+                                                @Html.TextAreaFor(model => model[i].remarks, new { @id = "remarkstxt_" + i, @type = "text", @style = "display: none;", @class = "required", @maxlength = "999" })
+                                                <span class="SupportingfileSpan_@i" style="color: red;"></span>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </td>
+                        </tr>
+                        }
+                        
+                    </table>
+                }
+
+                <div style="text-align: right">
+                    <p>
+                        <input type="submit" value="Submit" id="btnSubmit" name="cmd" />
+                    </p>
+                </div>
+
+            </div>
+        }
+    }
+
+</body>
+</html>
+@if (ViewBag.collgeextraactivities.Count > 0)
+{
+    <div style="margin-top:50px;">
+        <h2>Daily Basis History</h2>
+        <table class="webGrid">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Submitted Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in ((List<UAAAS.Controllers.College.CollegeCovidActivitiesController.CovidData>)ViewBag.collgeextraactivities).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr>
+                        <td>@pay.i </td>
+                        <td>@pay.value.Date</td>
+                        <td><span>Submitted</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+

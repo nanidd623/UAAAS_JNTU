@@ -1,0 +1,192 @@
+﻿@model UAAAS.Models.jntuh_menu
+@{
+    ViewBag.Title = "Add Menu Item";
+}
+
+<h2>Add Menu Item</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/MicrosoftAjax.js")"></script>
+<script src="@Url.Content("~/Scripts/MicrosoftMvcAjax.js")"></script>
+<script src="@Url.Content("~/Scripts/MicrosoftMvcValidation.js")"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        GetMenuItems(0, $("#ParentMenu"));
+
+        $("#ParentMenu").change(function () {
+            GetMenuItems($("#ParentMenu").val(), $("#SubMenu1"));
+        });
+
+        function GetMenuItems(menuID, select) {
+            $.getJSON("GetMenu", { id: menuID },
+                 function (myData) {
+                     select.empty();
+                     select.append($('<option/>', {
+                         value: '',
+                         text: '-- Select --'
+                     }));
+
+                     var rows = 0;
+                     $.each(myData, function (index, itemData) {
+                         select.append($('<option/>', {
+                             value: itemData.Value,
+                             text: itemData.Text
+                         }));
+                         rows++;
+                     });
+
+                     if (rows > 0) {
+                         $(select).attr("class", "Display");
+                     }
+                 });
+        }
+    });
+</script>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    <div class="details_table">
+        <div class="editor-label">
+            @Html.LabelFor(model => model.menuParentID)
+        </div>
+        <div class="editor-field">
+            @*@Html.EditorFor(model => model.menuParentID)*@
+            @Html.DropDownListFor(model => model.menuParentID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "menuName"),
+            "-- Select --", new { id = "ParentMenu" })
+            @Html.ValidationMessageFor(model => model.menuParentID)
+
+            @Html.DropDownListFor(model => model.subMenuID1,
+                new SelectList(Enumerable.Empty<SelectListItem>(), "id", "menuName"),
+                "-- Select --", new { id = "SubMenu1", @class = "None" })
+            @Html.ValidationMessageFor(model => model.subMenuID1)
+
+            @Html.DropDownListFor(model => model.subMenuID2,
+                new SelectList(Enumerable.Empty<SelectListItem>(), "id", "menuName"),
+                "-- Select --", new { id = "SubMenu2", @class = "None" })
+            @Html.ValidationMessageFor(model => model.subMenuID2)
+
+            @Html.DropDownListFor(model => model.subMenuID3,
+                new SelectList(Enumerable.Empty<SelectListItem>(), "id", "menuName"),
+                "-- Select --", new { id = "SubMenu3", @class = "None" })
+            @Html.ValidationMessageFor(model => model.subMenuID3)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.menuName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.menuName)
+            @Html.ValidationMessageFor(model => model.menuName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.menuActionName)
+        </div>
+        <div class="editor-field">
+            @*@Html.EditorFor(model => model.menuActionName)*@
+            @Html.DropDownListFor(model => model.menuActionName, ViewData["Actions"] as SelectList, "-- Select --", new { id = "Actions" })
+            @Html.ValidationMessageFor(model => model.menuActionName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.menuControllerName)
+        </div>
+        <div class="editor-field">
+            @*@Html.EditorFor(model => model.menuControllerName)*@
+            @Html.DropDownListFor(model => model.menuControllerName, ViewData["Controllers"] as SelectList, "-- Select --", new { id = "Controllers" })
+            @Html.ValidationMessageFor(model => model.menuControllerName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Roles)
+        </div>
+        <div class="editor-field">
+            @*@Html.EditorFor(model => model.Roles)*@
+            @Html.ListBoxFor(model => model.SelectedRoles, ViewData["Roles"] as MultiSelectList, new {Multiple = "multiple"}) 
+            @Html.ValidationMessageFor(model => model.SelectedRoles)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.menuOrder)
+        </div>
+        <div class="editor-field">
+            @*@Html.EditorFor(model => model.menuOrder)*@
+            @Html.DropDownListFor(model => model.menuOrder, ViewData["MenuOrder"] as SelectList, null, new { id = "MenuOrder" })
+            @*@Html.DropDownListFor(model => model.menuOrder, ViewData["MenuOrder"] as SelectList, "-- Select --", new { id = "MenuOrder" })*@
+            @Html.ValidationMessageFor(model => model.menuOrder)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.isActive)
+        </div>
+        <div class="editor-field">
+            @*@Html.EditorFor(model => model.isActive)*@
+            <label>@Html.RadioButtonFor(model => model.isActive, true) Active</label>
+            <label>@Html.RadioButtonFor(model => model.isActive, false) Inactive</label>
+            @Html.ValidationMessageFor(model => model.isActive)
+        </div>
+
+        @Html.HiddenFor(model => model.createdOn, new { Value = DateTime.Now })
+        @Html.HiddenFor(model => model.createdBy, new { Value = Convert.ToInt32(Membership.GetUser(HttpContext.Current.User.Identity.Name).ProviderUserKey) })
+
+        @*<div class="editor-label">
+            @Html.LabelFor(model => model.createdOn)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.createdOn)
+            @Html.ValidationMessageFor(model => model.createdOn)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.createdBy, "my_aspnet_users")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("createdBy", String.Empty)
+            @Html.ValidationMessageFor(model => model.createdBy)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.updatedOn)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.updatedOn)
+            @Html.ValidationMessageFor(model => model.updatedOn)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.updatedBy, "my_aspnet_users1")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("updatedBy", String.Empty)
+            @Html.ValidationMessageFor(model => model.updatedBy)
+        </div>*@
+
+        <div class="editor-label last-row">
+            &nbsp;
+        </div>
+        <div class="editor-field last-row">
+            <p>
+                @Html.ActionLink("Back", "Index", null, new { @class = "back_button" })
+                <input type="submit" value="Add" />
+            </p>
+        </div>
+        <div class="clear"></div>
+    </div>
+}
+

@@ -1,0 +1,318 @@
+﻿@model UAAAS.Models.CounsellingReport
+@{
+    ViewBag.Title = "CounsellingReport";
+}
+<h2>@ViewBag.Name Counselling Report</h2>
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        $('#dvData').hide();
+        $('#CollegeName').removeClass('input-validation-error');
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#UgWithDeficiency').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 20,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#UgWithDeficiency').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null],
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+        $('#btnExport').click(function () {
+            var name = 'report';
+            $('#dvData').show();
+            window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#dvData').html()) + '&name=' + name);
+            $('#dvData').hide();
+            e.preventDefault();
+
+        });
+    });
+</script>
+<br />
+@using (Html.BeginForm())
+{
+    int count = 0;
+    @*<div class="details_table">
+        <div class="details_table">
+            <div class="editor-label" style="width: 15%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="B.Tech/B.Pharm" name="cmd" style="width: 175px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 15%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="M.Tech/M.Pharm" name="cmd" style="width: 175px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 15%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="MBA/MCA" name="cmd" style="width: 175px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 18%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Pharm.D/Pharm.D PB" name="cmd" style="width: 200px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 15%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="MAM/MTM" name="cmd" style="width: 175px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 15%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="ALL" name="cmd" style="width: 175px; padding: 4px 15px" />
+            </div>
+        </div>
+        <div class="details_table">
+            <div class="editor-label" style="width: 15%; text-align: center; padding-bottom: 0px; padding-top: 0px;">
+                <input type="submit" value="Export B.Tech/B.Pharm" name="cmd" style="width: 175px; padding: 4px 10px;" />
+            </div>
+            <div class="editor-label" style="width: 15%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export M.Tech/M.Pharm" name="cmd" style="width: 175px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 15%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export MBA/MCA" name="cmd" style="width: 175px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 18%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export Pharm.D/Pharm.D PB" name="cmd" style="width: 200px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 15%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export MAM/MTM" name="cmd" style="width: 175px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 15%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export ALL" name="cmd" style="width: 175px; padding: 4px 15px" />
+            </div>
+        </div>
+
+    </div>*@
+    <hr />
+    <div class="details_table">
+        <div class="details_table">
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="B.Tech" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            @*<div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="B.Pharm" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="M.Tech" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="M.Pharm" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="MBA" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="MCA" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Pharm.D" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Pharm.D PB" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="MAM" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="MTM" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>*@
+        </div>
+        <div class="details_table" style="font-size: 11px">
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px;">
+                <input type="submit" value="Export B.Tech" name="cmd" style="width: 100px; padding: 4px 10px;" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export M.Tech" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            @*<div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px;">
+                <input type="submit" value="Export B.Pharm" name="cmd" style="width: 100px; padding: 4px 10px;" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export M.Tech" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export M.Pharm" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export MBA" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export MCA" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export Pharm.D" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export Pharm.D PB" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export MAM" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>
+            <div class="editor-label" style="width: 9%; text-align: center; padding-bottom: 0px; padding-top: 0px">
+                <input type="submit" value="Export MTM" name="cmd" style="width: 100px; padding: 4px 10px" />
+            </div>*@
+        </div>
+
+    </div>
+    <br />
+    <table id="UgWithDeficiency" class="display">
+        <thead>
+            <tr class="DataTables_sort_wrapper">
+                <th style="text-align: center;" rowspan="2">
+                    S.No
+                </th>
+                <th rowspan="2" style="text-align: center;">
+                    College Name
+                </th>
+                <th style="text-align: center;" rowspan="2">
+                    College Code And Year
+                </th>
+                <th style="text-align: center;" rowspan="2">
+                    Specializations
+                </th>
+                <th style="text-align: center; width: 50px" rowspan="2">
+                    Grade
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.CollegeSpecializations)
+            {
+                <tr>
+                    <td style="text-align: center;">
+                        @(count = count + 1)
+                    </td>
+                    <td style="text-align: left;">
+                        <label>@item.CollegeName</label>
+                        <br />
+                        <label>@item.CollegeAddress</label>
+                    </td>
+                    <td style="text-align: center;">
+                        <table style="border-collapse: collapse; text-align: left; width: 100%">
+                            <tr>
+                                <td style="border: none; text-align: center">
+                                    <label style="text-transform: uppercase">@item.CollegeCode</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; text-align: center">
+                                    <label style="text-transform: uppercase">@item.Establishyear</label>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="">
+                        @if (item.CollegeSpecializations != null)
+                        {
+                            foreach (var specialization in item.CollegeSpecializations)
+                            {
+                                if (specialization.Intake != null && specialization.Intake != string.Empty &&
+                                     specialization.Specialization != null && specialization.Specialization != string.Empty)
+                                {
+                                    <table style="border-collapse: collapse; width: 100%">
+                                        <tr>
+                                            <td style="border: none; text-align: left">
+                                                @if (specialization.Intake.Contains("#") == true)
+                                                {
+                                                    <label style="font-weight: bold">@specialization.Specialization</label>
+                                                }
+                                                else
+                                                {
+                                                    <label>@specialization.Specialization</label>
+                                                }
+                                            </td>
+                                            <td style="border: none; text-align: right">
+                                                @if (specialization.Intake.Contains("$") == true)
+                                                {
+                                                    string[] specializations = specialization.Intake.Split('$');
+                                                    <label>@specializations[0]</label>
+                                                }
+                                                else if (specialization.Intake.Contains("*") == true)
+                                                {
+                                                    string[] specializations = specialization.Intake.Split('*');
+                                                    <label style="font-weight: bold">@specializations[0]</label>
+                                                }
+                                                else if (specialization.Intake.Contains("#") == true)
+                                                {
+                                                    string[] specializations = specialization.Intake.Split('#');
+                                                    <label style="font-weight: bold">@specializations[0]</label>
+                                                }
+                                                else
+                                                {
+                                                    <label>@specialization.Intake</label>
+                                                }
+                                            </td>
+                                        </tr>
+                                    </table>
+                                }
+                            }
+                        }
+                    </td>
+                    <td style="text-align: center;">
+                        <span></span>
+                        @item.Grade
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="text-align: left; width: 90%;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="text-align: left; width: 90%" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-3" style="text-align: left; width: 90%" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="text-align: left; width: 90%" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+    if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }
+}

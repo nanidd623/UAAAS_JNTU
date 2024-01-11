@@ -1,0 +1,238 @@
+﻿@model List<UAAAS.Models.FacultyComplaintsClass>
+@{
+    ViewBag.Title = "Faculty Grievance";
+    int index = 1;
+}
+
+<h2>Faculty Grievance</h2>
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 5000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $(".EditDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+
+            $("#dialog-edit").dialog({
+                title: 'Edit Grievance',
+                autoOpen: false,
+                resizable: false,
+                height: 500,
+                width: 880,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/FacultyComplaints/FacultyComplaintsList";
+                }
+
+            });
+
+            $("#dialog-edit").dialog('open');
+            return false;
+        });
+    });
+
+</script>
+<table class="display" style="width: 100%">
+    <tr>
+        <td style="text-align:right;">
+            @Html.ActionLink("Download Grievance", "FacultyGrievancedownload", "FacultyComplaints", new { @class = "create_button" })
+
+        </td>
+    </tr>
+</table>
+
+<table id="example" class="display" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="width: 80px; text-align: center;">S.No</th>
+            <th style="width: 80px; text-align: center;">Ticket ID</th>
+            <th style="width: 100px; text-align: center;">Registration Number</th>
+            <th class="ui-state-default" style="width: 100px; text-align: center;">Name</th>
+            <th class="ui-state-default" style="width: 100px; text-align: center;">Grievance Type</th>
+            <th class="ui-state-default" style="width: 100px; text-align: center;">Grievance Date</th>
+            <th class="ui-state-default" style="width: 100px; text-align: center;">Grievance File</th>
+            <th class="ui-state-default" style="width: 100px; text-align: center;">Status</th>
+            <th class="ui-state-default" style="width: 100px; text-align: center;">Reply File</th>
+            <th class="ui-state-default" style="width: 100px; text-align: center;">Reply Remarks</th>
+            <th class="ui-state-default" style="width: 100px; text-align: center;">View</th>
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align: center;">
+                    @(index++)
+                </td>
+                <td style="text-align: center; text-transform: uppercase;">
+                    @Html.DisplayFor(modelItem => item.TicketId)
+                </td>
+                <td style="text-align: center; text-transform: uppercase;">
+                    @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                </td>
+                <td style="text-align: left;">
+                    @Html.DisplayFor(modelItem => item.Facultyname)
+                </td>
+                <td style="text-align: center; font-weight: normal;">
+                    @Html.DisplayFor(modelItem => item.complaintname)
+                </td>
+                <td style="text-align: center; font-weight: normal;">
+                    @Html.DisplayFor(modelItem => item.complaintdate)
+                </td>
+
+                <td style="text-align: center;">
+                    <a href="/Content/Upload/ComplaintsGivenbyFaculty/ComplaintFile/@item.complaintFileview" target="_blank" title="Lab Deficiency">
+                        <span style="color:red;">View</span>
+                    </a>
+                </td>
+                <td style="text-align: center; font-weight: normal;">
+                    @*@if (item.complaintStatus == 1)
+                        {
+                            <span>Processing</span>
+                        }
+                        else if (item.complaintStatus == 2)
+                        {
+                            <span>Approved</span>
+                        }
+                        else if (item.complaintStatus == 3)
+                        {
+                            <span>Finshed</span>
+                        }
+                        else if (item.complaintStatus == 4)
+                        {
+                            <span>Proced to college</span>
+                        }
+                        else if (item.complaintStatus == 5)
+                        {
+                            <span>Closed</span>
+                        }
+                        else
+                        {
+                            <span>Not Included in View (item.complaintStatus)</span>
+                        }*@
+                    <span>@item.complaintStatusName</span>
+                </td>
+                <td style="text-align: center;">
+                    @if (item.Replaycomplaintsfile != null)
+                    {
+                        <a href="/Content/Upload/FacultyComplaints/CollegeGrievancesupportdoc/@item.Replaycomplaintsfile" target="_blank" title="Lab Deficiency">
+                            <span style="color: red;">View</span>
+                        </a>
+                    }
+
+                </td>
+                <td style="text-align: center;">
+                    @if (item.Replayremarks != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.Replayremarks)
+                    }
+
+                </td>
+                <td style="text-align: center;">
+                    @*<a href="/FacultyComplaints/FacultyComplaintsUpdate?id=@item.id" class="EditDialog view_button" style="text-align:center"><span>Edit</span></a>*@
+                    @Html.ActionLink("View", "FacultyComplaintsUpdate", "FacultyComplaints", new { id = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "view_button", @target = "_blank" })
+                </td>
+
+            </tr>
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th>
+                <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-1" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th class=" ui-state-default" style="width: 70px;">
+                <input type="text" id="i-4" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th class=" ui-state-default" style="width: 70px;">
+                <input type="text" id="i-4" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th style="width: 60px;" class=" ui-state-default">
+                <input type="text" id="i-5" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th style="width: 60px;" class=" ui-state-default">
+                <input type="text" id="i-6" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th style="width: 135px;" class=" ui-state-default">
+                <input type="text" id="i-7" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th style="width: 135px;" class=" ui-state-default">
+                <input type="text" id="i-8" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th style="width: 135px;" class=" ui-state-default">
+                <input type="text" id="i-9" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+        </tr>
+    </tfoot>
+</table>
+<div id="dialog-edit" style="display: none">
+</div>

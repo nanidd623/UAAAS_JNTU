@@ -1,0 +1,69 @@
+﻿@model UAAAS.Models.jntuh_newsevents
+@{
+    ViewBag.Title = "News/Events Details";
+}
+
+<h2>News/Events Details</h2>
+
+<div class="details_table">
+
+    <div class="display-label">Type</div>
+    <div class="display-field">
+        @if (this.Model.isNews == true)
+        {<label>News</label>}
+        else
+        {<label>Events</label>}
+    </div>
+
+    <div class="display-label">Title</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.title)
+    </div>
+
+    <div class="display-label">Start Date</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.startDate)
+    </div>
+
+    <div class="display-label">End Date</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.endDate)
+    </div>
+
+    <div class="display-label">Status</div>
+    <div class="display-field">
+        @if (this.Model.isActive == true)
+        {<label>Active</label>}
+        else
+        {<label>Inactive</label>}
+    </div>
+
+    <div class="display-label">Order</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.newsOrder)
+    </div>
+
+    <div class="display-label">Created By</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users.name)
+    </div>
+
+    <div class="display-label">Updated Date</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.updatedOn)
+    </div>
+
+    <div class="display-label">Updated By</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users1.name)
+    </div>
+    <div class="display-label last-row">
+        &nbsp;
+    </div>
+    <div class="display-field last-row">
+        <p>
+            @Html.ActionLink("Back", "Index", null, new { @class = "back_button" })
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }, new { @class = "submit_button" })
+        </p>
+    </div>
+</div>

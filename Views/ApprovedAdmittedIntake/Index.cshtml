@@ -1,0 +1,47 @@
+﻿@model UAAAS.Models.ApprovedAdmittedIntakeModel
+@{
+    ViewBag.Title = "Approved and Admitted Intake List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Scripts/Jquerydatatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Jquerydatatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/Jquerydatatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <script src="~/Scripts/RotateImage.js" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+</head>
+<body>
+    <h2>Approved and Admitted Intake List</h2><br />
+    @using (Html.BeginForm("DownloadReport", "ApprovedAdmittedIntake"))
+    {
+        <table style="width: 100%">
+            <tr>
+                <td class="col1">Academic Year</td>
+                <td class="col2">
+                    @Html.ListBoxFor(model => model.AcademicYears, ViewBag.AcademicYear as MultiSelectList, new { Multiple = "multiple", @class = "required", @style = "width:40%;height:200px" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">College</td>
+                <td class="col2">
+                    @Html.ListBoxFor(model => model.Colleges, ViewBag.Colleges as MultiSelectList, new { Multiple = "multiple", @class = "required", @style = "height:200px;" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col1"></td>
+                <td class="col2">
+                    <input type="submit" value="Export" />
+                </td>
+            </tr>
+        </table>
+    }
+</body>
+</html>

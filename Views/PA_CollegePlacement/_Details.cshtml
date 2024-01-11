@@ -1,0 +1,52 @@
+﻿@model UAAAS.Models.CollegePlacement
+
+<div class="details_table">  
+
+    <div class="display-label" style="width:250px">degree</div>
+    <div class="display-field" style="width:350px">
+        @Html.DisplayFor(model => model.degree)
+    </div>
+
+    
+
+    <div class="display-label" style="width:250px">department</div>
+    <div class="display-field"  style="width:350px">
+        @Html.DisplayFor(model => model.department)
+    </div>
+
+   
+    <div class="display-label" style="width:250px">specialization</div>
+    <div class="display-field"  style="width:350px">
+        @Html.DisplayFor(model => model.specialization)
+    </div>
+
+    <div class="display-label" style="width:250px">Total Students Passed @ViewBag.FirstYear</div>
+    <div class="display-field"  style="width:350px">
+        @Html.DisplayFor(model => model.totalStudentsPassed1)
+    </div>
+
+    <div class="display-label" style="width:250px">Total Students Placed @ViewBag.FirstYear</div>
+    <div class="display-field"  style="width:350px">
+        @Html.DisplayFor(model => model.totalStudentsPlaced1)
+    </div>
+
+    <div class="display-label" style="width:250px">Total Students Passed @ViewBag.SecondYear</div> 
+    <div class="display-field"  style="width:350px">
+        @Html.DisplayFor(model => model.totalStudentsPassed2)
+    </div>
+
+    <div class="display-label" style="width:250px">Total Students Placed @ViewBag.SecondYear</div> 
+    <div class="display-field"  style="width:350px">
+        @Html.DisplayFor(model => model.totalStudentsPlaced2)
+    </div>
+
+    <div class="display-label" style="width:250px">Total Students Passed @ViewBag.ThirdYear</div> 
+    <div class="display-field"  style="width:350px">
+        @Html.DisplayFor(model => model.totalStudentsPassed3)
+    </div>
+
+    <div class="display-label" style="width:250px">Total Students Placed  @ViewBag.ThirdYear</div>
+    <div class="display-field"  style="width:350px">
+        @Html.DisplayFor(model => model.totalStudentsPlaced3)
+    </div>
+</div>

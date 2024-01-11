@@ -1,0 +1,104 @@
+﻿@model IEnumerable<UAAAS.Models.TeachingFacultyPosition>
+@{
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    ViewBag.Title = "Teaching Faculty Position (Department-wise)";
+    int num = 1;
+}
+    <h2>Teaching Faculty Position (Department-wise)</h2>
+    <table class="full_table" style="width: 100%; font-size: 0.7rem;">
+        <tr>
+            <th style="text-align: center;" rowspan="2" colspan="1">S.No
+            </th>
+            <th style="text-align: center;" rowspan="2" colspan="1">Degree
+            </th>
+            <th style="text-align: center;" rowspan="2" colspan="1">Department
+            </th>
+            <th style="text-align: center;" colspan="3">Specialization being offered by the
+                <br />
+                department 
+            </th>
+            <th style="text-align: center; width: 15%" colspan="3">No. of Faculty
+                <br />
+                Members available in
+                <br />
+                the Department on
+                <br />
+                full-time basis
+            </th>
+            <th style="text-align: center;" colspan="1" rowspan="2">No. of
+                <br />
+                faculty
+                <br />
+                ratified
+                <br />
+                by<br />
+                University
+            </th>
+            <th style="text-align: center;" colspan="1" rowspan="2">Faculty
+                <br />
+                Student<br />
+                Ratio
+            </th>
+        </tr>
+        <tr>
+            <th style="text-align: center;" colspan="1">Specialization 
+            </th>
+            <th style="text-align: center;" colspan="1">Shift
+            </th>
+            <th style="text-align: center;" colspan="1">Intake 
+            </th>
+            <th style="text-align: center; width: 5%" colspan="1">Prof. 
+            </th>
+            <th style="text-align: center; width: 5%" colspan="1">Assoc
+                <br />
+                Prof. 
+            </th>
+            <th style="text-align: center; width: 5%" colspan="1">Asst<br />
+                Prof. 
+            </th>
+        </tr>
+        @foreach (var item in ViewBag.TeachingFacultyPosition as List<UAAAS.Models.TeachingFacultyPosition>)
+        {
+            <tr>
+                <td style="text-align: center;" colspan="1">
+                    @(num++)
+                </td>
+                <td style="text-align: left;" colspan="1">
+                    @item.degreeName
+                </td>
+                <td style="text-align: left;" colspan="1">
+                    @item.departmentName
+                </td>
+                <td style="text-align: left;" colspan="1">
+                    @item.specializationName
+                </td>
+                <td style="text-align: center;" colspan="1">
+                    @item.shiftName
+                </td>
+                <td style="text-align: center;" colspan="1">
+                    @item.intake
+                </td>
+                <td style="text-align: center;" colspan="1">
+                    @item.professors
+                </td>
+                <td style="text-align: center;" colspan="1">
+                    @item.assocProfessors
+                </td>
+                <td style="text-align: center;" colspan="1">
+                    @item.asstProfessors
+                </td>
+                <td style="text-align: center;" colspan="1">
+                    @item.ratified
+                </td>
+                <td style="text-align: center;" colspan="1">
+                    @item.facultyStudentRatio
+                </td>
+            </tr>
+        }
+    </table>
+    @if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }

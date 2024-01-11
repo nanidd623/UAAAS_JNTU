@@ -1,0 +1,42 @@
+﻿@model UAAAS.Models.jntuh_download
+@{
+    ViewBag.Title = "Downloads";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+
+<h2>Downloads</h2>
+
+<table class="downloads_table" style="width: 100%;">
+    <tr>
+        <th style="text-align: center;">S.No </th>
+        <th>Title </th>
+        <th colspan="3" style="text-align: center;">Documents </th>
+    </tr>
+    
+    @foreach (var item in ViewBag.Downloads)
+    {
+        <tr>
+            <td style="width: 50px; text-align: center;">@item.rowNumber
+            </td>
+            <td>@item.title</td>
+            <td style="width: 50px; text-align: center;">
+                @if (item.word != null)
+                {<a href="@item.word" target="_blank"><img src="../../Content/images/word.png" /></a> }
+                else
+                {<span>-</span>}
+            </td>
+            <td style="width: 50px; text-align: center;">
+                @if (item.excel != null)
+                {<a href="@item.excel" target="_blank"><img src="../../Content/images/excel.png" /></a> }
+                else
+                {<span>-</span>}
+            </td>
+            <td style="width: 50px; text-align: center;">
+                @if (item.pdf != null)
+                {<a href="@item.pdf" target="_blank"><img src="../../Content/images/pdf.png" /></a> }
+                else
+                {<span>-</span>}
+            </td>
+        </tr>
+    }
+</table>

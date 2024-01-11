@@ -1,0 +1,136 @@
+﻿@model IList<UAAAS.Models.FacultyRegistration>
+@using UAAAS.Models;
+@{
+    //uaaasDBContext db = new uaaasDBContext();
+    int sno = 1;
+}
+
+<table border="1" width="100%">
+    <tr>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">SNo</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">College Code</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">College Name</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">Registration Number</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">Full Name</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">Department</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">Specialization</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">Degree</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">PAN Number</th>
+        @*<th style="text-align: center; background-color: yellow; vertical-align: top;" >Photo</th>*@
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">Identified for PG</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">Specialization for PG</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">Absent</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">Qualified as For AICTE</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">SCM</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">PhD Undertaking</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">PAN</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">BlackList Faculty</th>
+        @*<th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="24">Labs</th>*@
+    </tr>
+    @foreach (var item in Model)
+    {
+        var fullname = item.FirstName + " " + item.LastName + " " + item.MiddleName;
+        var absent = "";
+        var QualifiedasforAicte = "";
+        var scm = "";
+        var phdundertaking = "";
+        var pan = "";
+        var blacklist = "";
+        var identifiedfor = "";
+        var specializationname = "";
+        var degreename = "";
+        var color = "white";
+
+
+        if (item.jntuh_registered_faculty_education.Count() != 0)
+        {
+            specializationname = item.jntuh_registered_faculty_education.Where(e => e.jntuh_education_category.educationCategoryName == "PG").Select(e => new { name = e.courseStudied + "-" + e.specialization }).Select(e => e.name).FirstOrDefault();
+        }
+
+        if (item.jntuh_registered_faculty_education.Count() != 0)
+        {
+            if (item.jntuh_registered_faculty_education.LastOrDefault().educationId == 6)
+            {
+                if (item.jntuh_registered_faculty_education.LastOrDefault().courseStudied == "Ph.D")
+                {
+                    degreename = item.jntuh_registered_faculty_education.LastOrDefault().courseStudied;
+                }
+                else if (item.jntuh_registered_faculty_education.LastOrDefault().courseStudied != "Ph.D")
+                {
+                    degreename = item.jntuh_registered_faculty_education.LastOrDefault().courseStudied + " (Ph.D)";
+                }
+            }
+            else
+            {
+                degreename = item.jntuh_registered_faculty_education.LastOrDefault().courseStudied;
+            }
+
+        }
+
+
+
+
+        if (item.SamePANNumberCount > 1)
+        {
+            if (!string.IsNullOrEmpty(item.PANNumber))
+            {
+                color = "red";
+            }
+        }
+
+        if (item.IdentfiedFor == "PG" || item.IdentfiedFor == "UG&PG")
+        {
+            identifiedfor = item.IdentfiedFor;
+        }
+
+
+        if (item.Absent == true)
+        {
+            absent = "Yes";
+        }
+
+        if (item.NOTQualifiedAsPerAICTE == true || item.DegreeId < 4)
+        {
+            QualifiedasforAicte = "No";
+        }
+
+        if (item.NoSCM == true)
+        {
+            scm = "NO";
+        }
+
+        if (item.PHDundertakingnotsubmitted == true)
+        {
+            phdundertaking = "No";
+        }
+        if (string.IsNullOrEmpty(item.PANNumber))
+        {
+            pan = "No";
+        }
+        if (item.BlacklistFaculty == true)
+        {
+            blacklist = "Yes";
+        }
+
+        <tr>
+            <th style="text-align: center;  vertical-align: top;">@(sno++)</th>
+            <th style="text-align: center;  vertical-align: top;">@item.CollegeCode</th>
+            <th style="text-align: center;  vertical-align: top;">@item.CollegeName</th>
+            <th style="text-align: left;  vertical-align: top;">@item.RegistrationNumber</th>
+            <th style="text-align: left;  vertical-align: top;">@fullname</th>
+            <th style="text-align: left;  vertical-align: top;">@item.department</th>
+            <th style="text-align: left;  vertical-align: top;">@specializationname</th>
+            <th style="text-align: left;  vertical-align: top;">@degreename</th>
+            <th style="text-align: center;  vertical-align: top;background-color:@color">@item.PANNumber</th>
+            @*<th style="text-align: center;  vertical-align: top;">@item.Photo</th>*@
+            <th style="text-align: center;  vertical-align: top;">@identifiedfor</th>
+            <th style="text-align: center;  vertical-align: top;">@item.SpecializationIdentfiedFor</th>
+            <th style="text-align: center;  vertical-align: top;">@absent</th>
+            <th style="text-align: center;  vertical-align: top;">@QualifiedasforAicte</th>
+            <th style="text-align: center;  vertical-align: top;">@scm</th>
+            <th style="text-align: center;  vertical-align: top;">@phdundertaking</th>
+            <th style="text-align: center;  vertical-align: top;">@pan</th>
+            <th style="text-align: center;  vertical-align: top;">@blacklist</th>
+        </tr>
+    }
+</table>

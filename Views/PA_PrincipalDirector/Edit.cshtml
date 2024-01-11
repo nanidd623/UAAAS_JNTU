@@ -1,0 +1,458 @@
+﻿@model Tuple<UAAAS.Models.PrincipalDirector, UAAAS.Models.CollgeDirector>
+@{
+    ViewBag.Title = "Principal & Director Details";
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    UAAAS.Models.PrincipalDirector datafff = new UAAAS.Models.PrincipalDirector();
+}
+
+<h2>Director</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    var val = @Model.Item2.qualificationId
+    $(document).ready(function () {
+        $('.submit').click(function (e) {
+            if ($('.IsPrincipleChecked').is(":checked")) {
+                if ($('#Item1_RegistrationNumber').val() == '') {
+                    alert("Enter Faculty Registration Number for Principal");
+                    return false;
+                }
+            }
+        });
+
+        $("#RegistrationNumber").blur(function () {
+            debugger;
+            var Regno = $("#RegistrationNumber").val();
+            if ((Regno != null && Regno != "")) {
+                $.ajax({
+                    url: "/PA_PrincipalDirector/CheckRegistrationNumber?RegistrationNumber=" + Regno,
+                    type: "post",
+                    datatype: 'json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        debugger;
+                        if (data != null) {
+                            if (data == true) {
+                                var RegNumber = $("#RegistrationNumber").val();
+                                $("#Regspan").css('display', 'none');
+                                $("#RegistrationNumber").css('background-color', 'white').val(RegNumber);
+                            }
+                            else {
+                                $("#Regspan").css('display', 'block');
+                                $("#Regspan").html(data);
+                                $("#RegistrationNumber").val(null).css('background-color', 'white');
+                            }
+                        }
+                        else {
+                            return false;
+                        }
+                    },
+                    error: function (datanew) {
+                        debugger;
+
+                    }
+                });
+            }
+        });
+
+        $("#PrincipalAadhaarNumber").blur(function () {
+            debugger;
+            var aadharno = $(this).val();
+            var Regno = $("#RegistrationNumber").val();
+            if ((Regno != null && Regno != "") && (aadharno != null && aadharno != "")) {
+                $.ajax({
+                    url: "/PA_PrincipalDirector/CheckAadharNumber?PrincipalAadhaarNumber=" + aadharno + "&RegistrationNumber=" + Regno,
+                    type: "post",
+                    datatype: 'json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        debugger;
+                        if (data != null) {
+                            if (data == true) {
+                                var aadhar = $("#PrincipalAadhaarNumber").val();
+                                $("#spannew").css('display', 'none');
+                                $("#PrincipalAadhaarNumber").css('background-color', 'white').val(aadhar);
+                            }
+                            else {
+                                $("#spannew").css('display', 'block');
+                                $("#spannew").html(data);
+                                $("#PrincipalAadhaarNumber").val(null).css('background-color', 'white');
+                            }
+                        }
+                        else {
+                            return false;
+                        }
+                    },
+                    error: function (datanew) {
+                        debugger;
+
+                    }
+                });
+            }
+        });
+  
+        $(".aadhaarfile1").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("Aadhaar Card document should be in JPEG format only");
+                $(this).val('');
+                return false;
+            }
+            else {
+                var size = GetCertificateSize(this.id);
+
+                if (size > 102400) {
+                    alert("Aadhaar Card document size should not exceed 100 KB in Size");
+                    $(this).val('');
+                }
+                else {
+                    //$(".certificates > span").text("");
+                }
+            }
+        });
+
+        //get file size from client system
+        function GetCertificateSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + fileid)[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+
+        $(".Dfile").change(function () {
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+            else {
+                alert('Please select director photo');
+                return false;
+            }
+
+            if (flag == false) {
+                alert("Photo should be in JPEG format only");
+                $(this).val('');
+                return false;
+            }
+            else {
+                var size = GetFileSizeDrector(file);
+                if (size > 51200) {
+                    alert("Photo should not exceed 50 KB in Size");
+                    $(this).val('');
+                }
+                else {
+                    $(".files > span").text("");
+                }
+            }
+        });
+
+        $("#typeId").change(function () {
+            var id = $(this).val();
+            if (id != null && id != "") {
+                if (id == 1) {
+                    $(".Principal").css({ 'display': 'block' });
+                    $(".Director").css({ 'display': 'none' });
+                }
+                else if (id == 2) {
+                    $(".Director").css({ 'display': 'block' });
+                    $(".Principal").css({ 'display': 'none' });
+                }
+                $(".submit").css({ 'display': 'block' });
+            }
+        });
+    });
+
+   
+</script>
+<div>
+    @if (TempData["Success"] != null)
+    {
+        <div class="success" style="background-color: gold; border: 1px solid #f49820;height:12px;text-align:center;">
+            <p style="text-align:center;font-weight: bold;margin-top:-3px;"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+        </div>
+    }
+    else if (TempData["Error"] != null)
+    {
+        <div class="error" style="background-color: red; border: 1px solid #f49820;height:12px;text-align:center;">
+            <p style="text-align: center;font-weight: bold;color:white;margin-top:-3px;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+        </div>
+    }
+</div>
+<br />
+@using (Html.BeginForm("Edit", "PA_PrincipalDirector", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+
+    @*<div style="width:100%">
+        <div class="editor-label" style="width:27%">
+            <span>Principal /Director</span>
+        </div>
+        <div class="editor-field" style="width:70%">
+            @Html.DropDownList("typeId", new SelectList(ViewBag.MemberType as System.Collections.IEnumerable, "typeId", "type"), "---Select---", new { @style = "width:500px;" })
+        </div>
+    </div>*@
+
+
+    @*@Html.HiddenFor(model => model.Item1.type, new { Value = "PRINCIPAL" })*@
+   
+    @*<table class="four_columns Principal" style="display:none;width:100%;">
+        <tr>
+            @Html.HiddenFor(model=>model.Item1.id)
+            @Html.HiddenFor(model => model.Item1.createdOn)
+            @Html.HiddenFor(model => model.Item1.createdBy)
+            <td class="col1">
+                Faculty Registration Number
+            </td>
+            <td class="col2 focus" colspan="3">
+                @Html.TextBoxFor(model => model.Item1.RegistrationNumber, new { @id = "RegistrationNumber", @class = "PrincipalDetails required" })
+                <span id="Regspan" style="display:none;color:red;"></span>
+                @Html.HiddenFor(model => model.Item1.collegeId)
+                @Html.ValidationMessageFor(model => model.Item1.RegistrationNumber)
+
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                <span>AadharNumber</span>
+            </td>
+            <td class="col2 focus" colspan="3">
+                @Html.TextBoxFor(model => model.Item1.PrincipalAadhaarNumber, new { maxlength = "12", onkeypress = "return isNumberKey(event)", @id = "PrincipalAadhaarNumber", @placeholder = "Enter AadhaarNumber", @class = "PrincipalDetails required" })
+                @datafff.PrincipalAadhaarNumber
+                <span id="spannew" style="display:none;color:red;"></span>
+                @Html.ValidationMessageFor(model => model.Item1.PrincipalAadhaarNumber)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                <span>AadharDocument</span>
+            </td>
+            <td class="col2 focus" colspan="3">
+                @if (@Model.Item1.PrincipalAadharDocument != null)
+                {
+                    <a href="../Content/Upload/Faculty/AADHAARCARDS/CollegePrincipalAadhaar/@Model.Item1.PrincipalAadharDocument.Replace("~", "")" target="_blank">
+                        <span style="font-weight: bold; color: red;">View</span>
+                    </a>
+                    if (@Model.Item1.PrincipalAadharDocument != null)
+                    {
+                        @Html.TextBoxFor(model => model.Item1.PrincipalAadharPhotoDocument, new { type = "file", @class = "aadhaarfile1" })
+                        @Html.HiddenFor(model => model.Item1.PrincipalAadharDocument)
+                    }
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.Item1.PrincipalAadharPhotoDocument, new { type = "file", @class = "aadhaarfile1 PrincipalDetails required" })
+                }
+            </td>
+        </tr>
+
+    </table><br />*@
+
+    @*@Html.HiddenFor(model => model.Item2.type, new { Value = "DIRECTOR" })*@
+
+    <table class="four_columns Director" >
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.Item2.firstName)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.Item2.firstName, new { @class = "IsValidDirector DirectorDetails" })
+                @Html.HiddenFor(model => model.Item2.collegeId)
+                @Html.ValidationMessageFor(model => model.Item2.firstName)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.Item2.lastName)
+            </td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.Item2.lastName, new { @class = "DirectorDetails" })
+                @Html.ValidationMessageFor(model => model.Item2.lastName)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.Item2.surname)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.Item2.surname, new { @class = "IsValidDirector DirectorDetails" })
+                @Html.ValidationMessageFor(model => model.Item2.surname)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.Item2.qualificationId)
+            </td>
+            <td class="col4">
+                <label>@Html.RadioButtonFor(model => model.Item2.qualificationId, 1, new { @class = "IsValidDirectorQualificationTrue DirectorDetails" })Doctorate </label>
+                <label>@Html.RadioButtonFor(model => model.Item2.qualificationId, 2, new { @class = "IsValidDirectorQualificationFalse DirectorDetails" }) Non-Doctorate</label>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">@Html.LabelFor(model => model.Item2.phdId)</td>
+            <td class="col2">
+                @Html.DropDownListFor(model => model.Item2.phdId,
+                                     new SelectList(ViewBag.phd as System.Collections.IEnumerable, "id", "phdSubjectName"),
+                                     "-- Select --", new { id = "phd", @class = "DirectorDetails var IsValidPrincipalDepartment" })
+                @Html.ValidationMessageFor(model => model.Item2.phdId)
+            </td>
+            <td class="col3">@Html.LabelFor(model => model.Item2.phdFromUniversity)</td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.Item2.phdFromUniversity, new { @class = "DirectorDetails" })
+                @Html.ValidationMessageFor(model => model.Item2.phdFromUniversity)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">@Html.LabelFor(model => model.Item2.phdYear)</td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.Item2.phdYear, new { Value = Model.Item2.phdYear == 0 ? string.Empty : Model.Item2.phdYear.ToString(), @class = "DirectorDetails" })
+            </td>
+            <td class="col3">@Html.LabelFor(model => model.Item2.departmentId)</td>
+            <td class="col4">
+                @Html.DropDownListFor(model => model.Item2.departmentId,
+                new SelectList(ViewBag.departments as System.Collections.IEnumerable, "DepartmentId", "DepartmentName"),
+                                     "-- Select --", new { id = "DirectorDepartment", @class = "DirectorDetails IsValidDirectorDepartment" })
+                @Html.ValidationMessageFor(model => model.Item2.departmentId)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.Item2.dateOfAppointment)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.Item2.dateOfAppointment, new { @class = "IsValidDirector DirectorDetails", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                @Html.ValidationMessageFor(model => model.Item2.dateOfAppointment)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.Item2.dateOfBirth)
+            </td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.Item2.dateOfBirth, new { @class = "IsValidDirector DirectorDetails", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                @Html.ValidationMessageFor(model => model.Item2.dateOfBirth)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.Item2.fax)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.Item2.fax, new { @class = "IsValidDirector DirectorDetails" })
+                @Html.ValidationMessageFor(model => model.Item2.fax)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.Item2.landline)
+            </td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.Item2.landline, new { @class = "IsValidDirector DirectorDetails" })
+                @Html.ValidationMessageFor(model => model.Item2.landline)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.Item2.mobile)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.Item2.mobile, new { @class = "IsValidDirector DirectorDetails" })
+                @Html.ValidationMessageFor(model => model.Item2.mobile)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.Item2.email)
+            </td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.Item2.email, new { @class = "IsValidDirector DirectorDetails" })
+                @Html.ValidationMessageFor(model => model.Item2.email)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.Item2.DirectorPhotoDocument) <span class="mandatory">*</span>
+                <br />
+                <span style="color: blue;">
+                    (Latest self colour photo with Minimum - 150x150 pixels, Maximum - 200x230 pixels<br />
+                    and less than 50 KB size)
+                </span>
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.Item2.DirectorPhotoDocument, new { type = "file", @class = "Dfile" })
+                @Html.HiddenFor(model => model.Item2.DirectorPhoto)<br />
+                @if (@Model.Item2.DirectorPhoto != null)
+                {
+                <a href="../Content/Upload/PrincipalDirectorPhotos/@Model.Item2.DirectorPhoto.Replace("~", "")" target="_blank">
+                    <img src="../Content/Upload/PrincipalDirectorPhotos/@Model.Item2.DirectorPhoto.Replace("~", "")" style="height: 60px;" />
+                </a>
+                }
+            </td>
+        </tr>
+    </table>
+
+
+    <div style="float:right;">
+        <input type="submit" value="Save" class="submit" onclick="return ValidateDirector();" />
+    </div>
+
+
+}
+
+

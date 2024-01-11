@@ -1,0 +1,222 @@
+﻿@model IList<UAAAS.Models.LibraryDetails>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "College Library Details";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    string filePath = string.Empty;
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+@if (ViewBag.IsEditable == false)
+{
+    <h2>College Library Details</h2>
+}
+@if (ViewBag.IsEditable == true)
+{
+    <h2>College Library Details</h2>
+    <p class="create_link_right">
+        @Html.ActionLink("Edit", "Edit", "CollegeLibrary", new { @class = "create_button" /* id=Model.PrimaryKey */ })
+    </p>
+}
+else
+{
+    @*<p class="create_link_right">
+            <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+        </p>*@
+}
+@if (ViewBag.IsEditable == true)
+{
+    <p class="create_link_right">
+        @Html.ActionLink("Add Books", "Edit", "BooksandJournals", new
+   {
+       collegeId = "",
+
+       essentialTypeId = Utilities.EncryptString(1.ToString(),
+           System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString(),
+
+       BookandJournalId = ""
+   }, new { @class = "create_button", @target = "_blank" })
+
+        @Html.ActionLink("Add Journals", "Edit", "BooksandJournals", new
+   {
+       collegeId = "",
+
+       essentialTypeId = Utilities.EncryptString(2.ToString(),
+           System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString(),
+
+       BookandJournalId = ""
+   }, new { @class = "create_button", @target = "_blank" })
+    </p>
+}
+else
+{
+    <p class="create_link_right">
+        @Html.ActionLink("View Books", "View", "BooksandJournals", new
+   {
+       collegeId = "",
+
+       essentialTypeId = Utilities.EncryptString(1.ToString(),
+           System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString()
+   }, new { @class = "create_button", @target = "_blank" })
+
+        @Html.ActionLink("View Journals", "View", "BooksandJournals", new
+   {
+       collegeId = "",
+
+       essentialTypeId = Utilities.EncryptString(2.ToString(),
+           System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString()
+   }, new { @class = "create_button", @target = "_blank" })
+    </p>
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".view_hide").show();
+    });
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+</script>
+<div id="div_print">
+
+    @using (Html.BeginForm())
+    {
+        if (ViewBag.Norecords == true)
+        {
+            <div class="four_columns" style="width: 200px; margin: 0 auto;">
+                <p>No Data found</p>
+            </div>
+        }
+        else
+        {
+            <table class="four_columns" style="width: 100%;">
+                <tr style="font-weight: bold;">
+                    <td style="text-align: left;" class="col11">Degree</td>
+                    <td style="text-align: center;" class="col11">Number of Titles till the A.Y.2022-23</td>
+                    <td style="text-align: center;" class="col11">Number of Titles added in the A.Y.2023-24</td>
+                    <td style="text-align: center;" class="col11">Number of Volumes till the A.Y.2022-23</td>
+                    <td style="text-align: center;" class="col11">Number of Volumes added in the A.Y.2023-24</td>
+                    <td style="text-align: center;" class="col11">Number of National Print Journals till the A.Y.2022-23</td>
+                    <td style="text-align: center;" class="col11">Number of National Print Journals added in the A.Y.2023-24</td>
+                    <td style="text-align: center;" class="col11">Number of International Print Journals till the A.Y.2022-23</td>
+                    <td style="text-align: center;" class="col11">Number of International Print Journals added in the A.Y.2023-24</td>
+                    <td style="text-align: center;" class="col11">Number of e-Journals till the A.Y.2022-23</td>
+                    <td style="text-align: center;" class="col11">Number of e-Journals added in the A.Y.2023-24</td>
+                    <td style="text-align: center;" class="col11">Valid Subscription Number of e-Journals</td>
+                </tr>
+
+                @for (int i = 0; i < ViewBag.Count; i++)
+                {
+                    <tr>
+                        <td style="text-align: left;" class="col21">
+                            @Html.LabelFor(m => m[i].degree, Model[i].degree == null ? string.Empty : Model[i].degree.ToString())
+                            @Html.HiddenFor(m => m[i].degreeId)
+                        </td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].totalTitles, Model[i].totalTitles == null ? string.Empty : Model[i].totalTitles.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].newTitles, Model[i].newTitles == null ? string.Empty : Model[i].newTitles.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].totalVolumes, Model[i].totalVolumes == null ? string.Empty : Model[i].totalVolumes.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].newVolumes, Model[i].newVolumes == null ? string.Empty : Model[i].newVolumes.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].totalNationalJournals, Model[i].totalNationalJournals == null ? string.Empty : Model[i].totalNationalJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].newNationalJournals, Model[i].newNationalJournals == null ? string.Empty : Model[i].newNationalJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].totalInternationalJournals, Model[i].totalInternationalJournals == null ? string.Empty : Model[i].totalInternationalJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].newInternationalJournals, Model[i].newInternationalJournals == null ? string.Empty : Model[i].newInternationalJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].totalEJournals, Model[i].totalEJournals == null ? string.Empty : Model[i].totalEJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].newEJournals, Model[i].newEJournals == null ? string.Empty : Model[i].newEJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">
+                            @if (Model[i].degree.ToString() == "B.Tech" || Model[i].degree.ToString() == "B.Pharmacy")
+                            {
+                                @Html.HiddenFor(m => m[i].EJournalsSubscriptionNumber, new { @Value = DBNull.Value })
+                            }
+                            else
+                            {
+                                <span>@Model[i].EJournalsSubscriptionNumber</span>
+                                @*
+                                    @Html.TextBoxFor(m => m[i].EJournalsSubscriptionNumber, Model[i].EJournalsSubscriptionNumber == null ? string.Empty : Model[i].EJournalsSubscriptionNumber.ToString())
+                                *@
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        
+            <table class="webGrid" style="width: 100%;">
+                <tr>
+                    <td colspan="2" class="col1">
+                        @*<span>MAC-ADRRESS LIST (Upload MAC-ADDRESSES of all computers in this format <a href="../../Content/MAC-ADDRESSES.xls"><span style="font-weight:bold;color:red">MAC-ADDRESSES.xls</span></a>)</span>*@
+                        @*<pan><b>College Libraray Books LIST</b>: (Upload College Library bokks in this format - <a href="../../Content/MAC-ADDRESSES.xls"><img src="../../Content/images/excel.png" /></a>)</pan>*@
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;" class="col1">
+                        <span>Upload Library Titles: </span>
+                    </td>
+                    <td class="col2 files">
+                        <span style="color: red;"></span>
+                        @{
+                            foreach (var item in Model.Take(1).ToList())
+                            {
+                                filePath = item.LibraryTitlesPath;
+                            }
+                        }
+                        @if (!string.IsNullOrEmpty(filePath))
+                        {
+                            if (filePath.Contains("Content"))
+                            {
+                                <span><a href="../@filePath.Replace("~", "")" style="height: 50px;" class="viewFileData" target="_blank "><span style="font-weight:bold;color:red">View</span></a></span>
+                            }
+                            else
+                            {
+                                <span><a href="../Content/Upload/CollegeEnclosures/@filePath" style="height: 50px;" class="viewFileData" target="_blank "><span style="font-weight:bold;color:red">View</span></a></span>
+                            }
+
+                        }
+
+                        @*fileUploadcheck*@
+                            @*@Html.TextBoxFor(model => model.uploadFile, new { type = "file", @class = "file" })<span style="color: red;"></span><br />*@
+                            @*@if (!string.IsNullOrEmpty(macfile))
+                                    {
+
+                                        <span><a href="../Content/Upload/CollegeEnclosures/@macfile" target="_blank"><span style="font-weight:bold;color:red">View</span></a></span>
+                                        @Html.Hidden("hiddenfile", new { @Value = @macfile })
+                                    }
+                                </td>*@
+                    </tr>
+                </table>
+            if (ViewBag.Count == 0)
+            {
+                <div class="warning" style="width: 550px; margin: 0 auto;">
+                    <p>Please select your courses in "College Information" page before filling up this page.</p>
+                </div>
+            }
+
+        }
+    }
+</div>

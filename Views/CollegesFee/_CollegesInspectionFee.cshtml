@@ -1,0 +1,118 @@
+﻿@model List<UAAAS.Models.CollegesInspectionFee>
+@{
+    int Count = 1;
+}
+<table border="1" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                S.No
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                College Code
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                College Name
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Count of UG Degree
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Count of PG Degree
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Count of Dual Degree
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Count of Degree
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Sum of UG Amount
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Sum of PG Amount
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Sum of Dual Amount
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Sum of Amount
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Appilication Fee
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Grand Total
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Duplicate Amount
+            </th>
+            @*<th style="text-align: center; background-color: yellow; vertical-align: top">
+                    25% Late Fee
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    50% Late Fee
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    100% Late Fee
+                </th>*@
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Late Fee
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Software Amount
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                BillDesk Amount
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Amount Match
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Differnece Amount
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model.OrderBy(a => a.CollegeName).ToList())
+            {
+                <tr>
+                    <td style="text-align: center;">@(Count++)</td>
+                    <td style="text-align: center;">@item.Collegecode</td>
+                    <td>@item.CollegeName</td>
+                    <td>@item.CountofUGDegree</td>
+                    <td>@item.CountofPGDegree</td>
+                    <td>@item.CountofDualDegree</td>
+                    <td>@item.CountofDegree</td>
+                    <td>@item.SumofUGAmount</td>
+                    <td>@item.SumofPGAmount</td>
+                    <td>@item.SumofDualAmount</td>
+                    <td>@item.SumofAmount</td>
+                    <td>@item.ApplicationFee</td>
+                    <td style="text-align: center;">@item.TotalFee</td>
+                    <td style="text-align: center;">@item.DuplicateAmount</td>
+                    @*<td style="text-align: center;">@item.TwentyFivePercentLateFee</td>
+                        <td style="text-align: center;">@item.FiftyPercentLateFee</td>
+                        <td style="text-align: center;">@item.HundredPercentLateFee</td>*@
+                    <td style="text-align: center;">@item.LateFee</td>
+                    <td style="text-align: center;">@(item.TotalFee + item.LateFee + item.DuplicateAmount)</td>
+                    <td style="text-align: center;">@item.BilldeskAmount</td>
+                    <td style="text-align: center;">
+                        @if ((item.TotalFee + item.LateFee + item.DuplicateAmount) == item.BilldeskAmount)
+                        {
+                            <span>Match</span>
+                        }
+                        else
+                        {
+                            <span>Not Match</span>
+                        }
+                    </td>
+                    <td style="text-align: center;">@((item.BilldeskAmount)-(item.TotalFee + item.LateFee + item.DuplicateAmount))</td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>

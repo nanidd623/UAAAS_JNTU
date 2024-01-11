@@ -1,0 +1,195 @@
+﻿@model List<UAAAS.Models.CounsellingReport>
+@{
+    var model = Model;
+}
+@using (Html.BeginForm())
+{
+    int count = 0;
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Sl.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    AICTE Permanent ID
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Name of the Institution
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Institution address
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Dist.
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Name of the course
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Provisional
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    AICTE approved intake for the A.Y 2015-16
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    JNTUH approved intake for the A.Y 2015-16
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item1 in Model)
+            {
+                foreach (var item in item1.CollegeSpecializations)
+                {
+                    <tr>
+                        <td style="text-align: center;vertical-align: top">
+                            @(count = count + 1)
+                        </td>
+                        <td style="text-align: center; vertical-align: top">
+                            @item1.CollegeCode
+                        </td>
+                        <td style="text-align: left; vertical-align: top">
+                            @item1.CollegeName
+                        </td>
+                        <td style="text-align: left; vertical-align: top">
+                            @item1.CollegeAddress
+                        </td>
+                        <td style="text-align: left; vertical-align: top">
+                            @item1.Grade
+                        </td>
+                        <td style="text-align: left; vertical-align: top">
+                            @if (item.Intake.Contains("#") == true)
+                            {
+                                <b>@item.Specialization</b>
+                            }
+                            else
+                            {
+                                <label>@item.Specialization</label>
+                            }
+                            @if (!string.IsNullOrEmpty(item.Provisional))
+                            {
+                                <span> (PROVISIONAL)</span>
+                            }
+                        </td>
+                        <td style="text-align: right; vertical-align: top">
+                            @if (!string.IsNullOrEmpty(item.Provisional))
+                            {
+                                <span>PROVISIONAL</span>
+                            }
+                        </td>
+                        <td style="text-align: right; vertical-align: top">
+                            @if (item.Intake.Contains("$") == true)
+                            {
+                                string[] specializations = item.Intake.Split('$');
+                                <label>@specializations[0]</label>
+                            }
+                            else if (item.Intake.Contains("*") == true)
+                            {
+                                string[] specializations = item.Intake.Split('*');
+                                <b>@specializations[0]</b>
+                            }
+                            else if (item.Intake.Contains("#") == true)
+                            {
+                                string[] specializations = item.Intake.Split('#');
+                                <b>@specializations[0]</b>
+                            }
+                            else
+                            {
+                                <label>@item.Intake</label>
+                            }
+                        </td>
+                        <td style="text-align: right; vertical-align: top">
+                            @if (item.Intake.Contains("$") == true)
+                            {
+                                string[] specializations = item.Intake.Split('$');
+                                <label>@specializations[0]</label>
+                            }
+                            else if (item.Intake.Contains("*") == true)
+                            {
+                                string[] specializations = item.Intake.Split('*');
+                                <b>@specializations[0]</b>
+                            }
+                            else if (item.Intake.Contains("#") == true)
+                            {
+                                string[] specializations = item.Intake.Split('#');
+                                <b>@specializations[0]</b>
+                            }
+                            else
+                            {
+                                <label>@item.Intake</label>
+                            }
+                        </td>
+                    </tr>
+                }
+
+                @*<tr>
+                        <td style="text-align: center;vertical-align: top">
+                            @(count = count + 1)
+                        </td>
+                        <td style="text-align: left;vertical-align: top">
+                            <label>@item.CollegeName.Replace("’", "'")</label>
+                            <br style="mso-data-placement:same-cell;" />
+                            <label>@item.CollegeAddress</label>
+                        </td>
+                        <td style="text-align: center;vertical-align: top">
+
+                            <label style="text-transform: uppercase">@item.CollegeCode</label>
+                            <br style="mso-data-placement:same-cell;" />
+                            <label style="text-transform: uppercase">@item.Establishyear</label>
+
+                        </td>
+                        <td style="">
+                            @if (item.CollegeSpecializations != null)
+                            {
+                                foreach (var specialization in item.CollegeSpecializations)
+                                {
+                                    if (specialization.Intake != null && specialization.Intake != string.Empty &&
+                                         specialization.Specialization != null && specialization.Specialization != string.Empty)
+                                    {
+                                        <table style="border-collapse: collapse; width: 100%">
+                                            <tr>
+                                                <td style="border: none; text-align: left">
+                                                    @if (specialization.Intake.Contains("#") == true)
+                                                    {
+                                                        <b>@specialization.Specialization</b>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label>@specialization.Specialization</label>
+                                                    }
+                                                </td>
+                                                <td style="border: none; text-align: right">
+                                                    @if (specialization.Intake.Contains("$") == true)
+                                                    {
+                                                        string[] specializations = specialization.Intake.Split('$');
+                                                        <label>@specializations[0]</label>
+                                                    }
+                                                    else if (specialization.Intake.Contains("*") == true)
+                                                    {
+                                                        string[] specializations = specialization.Intake.Split('*');
+                                                        <b>@specializations[0]</b>
+                                                    }
+                                                    else if (specialization.Intake.Contains("#") == true)
+                                                    {
+                                                        string[] specializations = specialization.Intake.Split('#');
+                                                        <b>@specializations[0]</b>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label>@specialization.Intake</label>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    }
+                                }
+                            }
+                        </td>
+
+                    </tr>*@
+            }
+        </tbody>
+    </table>
+}

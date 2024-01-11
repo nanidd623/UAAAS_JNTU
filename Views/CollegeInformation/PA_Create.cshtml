@@ -1,0 +1,1016 @@
+﻿@model UAAAS.Models.CollegeInformation
+@using UAAAS.Models
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "College Information";
+    int isSelectedOtherCategory = 1;
+}
+
+<h2 style="display: none;">College Information</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        $(".collegestatustr").attr('style', 'display: none');
+        var csid = $("#status :selected").val();
+        if (csid==1) {
+            $(".collegestatustr").attr('style', 'display: block');
+
+        } else {
+            $(".collegestatustr").attr('style', 'display: none');
+        }
+        //$("#collegestatustr").attr('style', 'display: none');
+        //College Status
+        $("#status").change(function() {
+            debugger;
+            var status = $(this).val();
+            if (status==1) {
+                $(".collegestatustr").attr('style', 'display: block');
+                $("#status :selected").val("1");
+
+            } else {
+                $(".collegestatustr").attr('style', 'display: none');
+                $("#status :selected").val("2");
+            }
+        });
+
+
+        $(".calendarnew").css("width","160px");
+
+        $('.calendarnew').attr("readonly", "true");
+        $('.calendarnew').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate:"-180M",
+            maxDate: "+180M",
+            yearRange:'2000:2050',
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+        });
+
+        if($("#state").val() > 0)
+        {
+            GetDistricts($("#state").val());
+        }
+
+        $("#state").change(function () {
+            var stateID = $(this).val();
+            GetDistricts(stateID);
+        });
+
+        function GetDistricts(stateID){
+            $.getJSON("/CollegeInformation/GetDistrictList", { id: stateID },
+                function (myData) {
+                    var select = $("#district");
+                    select.empty();
+                    select.append($('<option/>', {
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(myData, function (index, itemData) {
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text,
+                            selected : (itemData.Value == @Model.districtId ? true: false)
+                        }));
+                    });
+                });}
+
+        $(".Supportingfile").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "Documentfile");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+    });
+
+    function isNumberKey(evt){
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+        {
+            alert("Allows Only Digits");
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+</script>
+
+@using (Html.BeginForm("Edit", "CollegeInformation", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.Hidden("DisableYourControls", System.Configuration.ConfigurationManager.AppSettings["ShouldFormsBeDisabled"].ToString());
+
+    @Html.ValidationSummary(true)
+    if (ViewBag.NotUpload == true)
+    {
+        <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+    }
+    else
+    {
+        if (TempData["Error"] != null)
+        {
+            <div class="error">
+                <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+            </div>
+        }
+        if (TempData["Success"] != null)
+        {
+            <div class="success">
+                <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+            </div>
+        }
+        if (ViewBag.NotUpload == true)
+        {
+            <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+        }
+        else
+        {
+            <table class="four_columns" style="display: none;">
+                <tr>
+                    <td class="col1" colspan="4">
+                        <b>@Html.LabelFor(model => model.collegeAffiliationTypeID)</b>
+                        @Html.ValidationMessageFor(model => model.collegeAffiliationTypeID)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col2" colspan="4" style="line-height: 1.2rem;">
+                        @Html.HiddenFor(model => model.id)
+
+                        @Html.HiddenFor(model => model.collegeAffiliationTypeID)
+                        @foreach (var item in Model.collegeAffiliationType)
+                        {
+                            var optionValue = "CAType_" + item.id;
+                            if (optionValue == "CAType_11" && item.selected == 1)
+                            {
+                                isSelectedOtherCategory = isSelectedOtherCategory + 1;
+                            }
+                            var selectValue = item.selected;
+                            <input type="radio"
+                                   id="@optionValue"
+                                   name="collegeAffiliationTypeID"
+                                   value="@item.id" disabled="disabled" />
+                            <label for="@optionValue">@item.name</label>
+
+                            if (selectValue == 1)
+                            {
+                                <input type="hidden" name="collegeAffiliationTypeID" value="@item.id" id="@optionValue">
+                            }
+                            <script type="text/javascript">
+                                if(@selectValue == 1)
+                                {
+                                    $("#@optionValue").attr('checked', 'checked');
+                                }
+                                @*else
+                        {
+                            $("#@optionValue").attr('checked', null);
+                        }*@
+
+                                $("input[type='radio']").click(function () {
+                                    var selection=$(this).val();
+                                    if(selection == 11)
+                                    {
+                                        $('.otherCategory').show();
+                                    }
+                                    else
+                                    {
+                                        $('.txtOtherCategory').val('');
+                                        $('.otherCategory').hide();
+                                    }
+                                });
+                            </script>
+                            <br />
+                        }
+                        <br />
+                        <div class="otherCategory">
+                            @Html.LabelFor(model => model.otherCategory)&nbsp;
+                            @Html.TextBoxFor(model => model.otherCategory, new
+               {
+                   @class =
+
+                       "txtOtherCategory"
+               })
+                        </div>
+                        <script type="text/javascript">
+                            if(@isSelectedOtherCategory > 1)
+                            {
+                                $('.otherCategory').show();
+                            }
+                            else
+                            {
+                                $('.txtOtherCategory').val('');
+                                $('.otherCategory').hide();
+                            }
+                        </script>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table class="four_columns" style="display: none;">
+                <tr>
+                    <td class="col1" colspan="4">
+                        <b>College Information</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.collegeName)
+                    </td>
+                    <td class="col2" colspan="3">
+                        @Html.DisplayFor(model => model.collegeName, new { @class = "focus" })
+                        @Html.HiddenFor(model => model.collegeName)
+                        @Html.ValidationMessageFor(model => model.collegeName)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.collegeCode)
+                    </td>
+                    <td class="col2">
+                        @Html.DisplayFor(model => model.collegeCode)
+                        @Html.HiddenFor(model => model.collegeCode)
+                        @Html.ValidationMessageFor(model => model.collegeCode)
+                    </td>
+                    <td class="col3">
+                        @Html.LabelFor(model => model.eamcetCode)
+                    </td>
+                    <td class="col4">
+                        @Html.EditorFor(model => model.eamcetCode)
+                        @Html.ValidationMessageFor(model => model.eamcetCode)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.collegeStatusID)
+                        <span class="collegestatustr">
+                            <br />Minority Status
+                        </span>
+                    </td>
+                    @*<td class="col2">
+                        @Html.DropDownListFor(model => model.collegeStatusID,
+                        new SelectList(ViewBag.Status as System.Collections.IEnumerable, "id", "collegeStatus"),
+                        "-- Select --", new { id = "status" })
+                        <span class="collegestatustr">
+                            @Html.HiddenFor(model => model.minortyid)
+                            <br />@Html.DropDownListFor(model => model.collegesubstatusId,
+                                  new SelectList(ViewBag.SubStatus as System.Collections.IEnumerable, "id", "collegeStatus"),
+                                  "-- Select --", new { id = "substatus" })
+                        </span>
+
+                        @Html.ValidationMessageFor(model => model.collegesubstatusId)
+                    </td>*@
+                    <td class="col1">
+                        <table style="width: 100%" class="collegestatustr">
+                            <tr>
+                                <td style="height: 25px; text-align: left;">From:</td>
+                            </tr>
+                            <tr>
+                                <td style="height: 25px; text-align: left;">To:</td>
+                            </tr>
+                            <tr>
+                                <td style="height: 25px; text-align: left;">Supporting Document:</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="col21">
+                        <table style="width: 100%" class="collegestatustr">
+                            <tr>
+                                <td>
+                                    @Html.TextBoxFor(model => model.collegestatusfromdate, new { @id = "collegestatusfrom", @class = "calendarnew", style = "width=200px" })
+                                    @Html.ValidationMessageFor(model => model.collegestatusfromdate)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="height: 25px; width: 120px;">
+                                    @Html.TextBoxFor(model => model.collegestatustodate, new { @id = "collegestatuto", @class = "calendarnew required" })
+                                    @Html.ValidationMessageFor(model => model.collegestatusfromdate)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="height: 25px; width: 55px;">
+                                    @if (@Model.collegestatusfilepath == null)
+                                    {
+                                        @Html.TextBoxFor(model => model.collegestatusfile, new { @type = "file", @class = "required Supportingfile" })
+                                        @Html.ValidationMessageFor(model => model.collegestatusfile)
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.collegestatusfile, new { @type = "file", @class = "Supportingfile" })
+                                        <a href="~/Content/Upload/College/CollegeStatus/@Model.collegestatusfilepath" target="_blank">
+                                            <span style="color: red;"><b>View</b></span>
+                                        </a>
+                                        @Html.HiddenFor(model => model.collegestatusfilepath)
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.pgcetCode)
+                    </td>
+                    <td class="col2">
+                        @if (ViewBag.pgcetStatus == true)
+                        {
+                            @Html.TextBoxFor(model => model.pgcetCode, new { @maxlength = "10", @class = "required" })
+                            @Html.ValidationMessageFor(model => model.pgcetCode)
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.pgcetCode, new { @maxlength = "10" })
+                        }
+                    </td>
+                    <td class="col3">
+                        @Html.LabelFor(model => model.aicteid)
+                    </td>
+                    <td class="col4">
+                        @Html.TextBoxFor(model => model.aicteid, new { @maxlength = "25" })
+                        @Html.ValidationMessageFor(model => model.aicteid)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.address)
+                    </td>
+                    <td class="col2">
+                        @Html.DisplayFor(model => model.address)
+                        @Html.HiddenFor(model => model.address)
+                        @Html.ValidationMessageFor(model => model.address)
+                    </td>
+                    <td class="col3">
+                        @Html.LabelFor(model => model.icetCode)
+                    </td>
+                    <td class="col4">
+                        @Html.DisplayFor(model => model.icetCode)
+                        @Html.HiddenFor(model => model.icetCode)
+                        @Html.ValidationMessageFor(model => model.icetCode)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.townOrCity)
+                    </td>
+                    <td class="col2">
+                        @Html.DisplayFor(model => model.townOrCity)
+                        @Html.HiddenFor(model => model.townOrCity)
+                        @Html.ValidationMessageFor(model => model.townOrCity)
+                    </td>
+                    <td class="col3">
+                        @Html.LabelFor(model => model.mandal)
+                    </td>
+                    <td class="col4">
+                        @Html.EditorFor(model => model.mandal)
+                        @Html.ValidationMessageFor(model => model.mandal)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.stateId)
+                    </td>
+                    <td class="col2">
+                        @Html.DropDownListFor(model => model.stateId,
+                                                     new SelectList(ViewBag.State as System.Collections.IEnumerable, "id", "stateName"),
+                                                     "-- Select --", new { id = "state" })
+                        @Html.ValidationMessageFor(model => model.stateId)
+                    </td>
+                    <td class="col3">
+                        @Html.LabelFor(model => model.districtId)
+                    </td>
+                    <td class="col4">
+                        @Html.DropDownListFor(model => model.districtId,
+                                                     new SelectList(Enumerable.Empty<SelectListItem>(), "id", "districtName"),
+                                                     "-- Select --", new { id = "district" })
+                        @Html.ValidationMessageFor(model => model.districtId)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.pincode)
+                    </td>
+                    <td class="col2">
+                        @Html.DisplayFor(model => model.pincode, new { @Value = Model.pincode == 0 ? "" : Model.pincode.ToString() })
+                        @Html.HiddenFor(model => model.pincode)
+                        @Html.ValidationMessageFor(model => model.pincode)
+                    </td>
+
+                    <td class="col3">
+                        @Html.LabelFor(model => model.fax)
+                    </td>
+                    <td class="col4">
+                        @Html.DisplayFor(model => model.fax)
+                        @Html.HiddenFor(model => model.fax)
+                        @Html.ValidationMessageFor(model => model.fax)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.landline)
+                    </td>
+                    <td class="col2">
+                        @Html.EditorFor(model => model.landline)
+                        @Html.ValidationMessageFor(model => model.landline)
+                    </td>
+                    <td class="col3">
+                        @Html.LabelFor(model => model.mobile)
+                    </td>
+                    <td class="col4">
+                        @Html.EditorFor(model => model.mobile)
+                        @Html.ValidationMessageFor(model => model.mobile)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.email)
+                    </td>
+                    <td class="col2">
+                        @Html.EditorFor(model => model.email)
+                        @Html.ValidationMessageFor(model => model.email)
+                    </td>
+                    <td class="col3">
+                        @Html.LabelFor(model => model.website)
+                    </td>
+                    <td class="col4">
+                        @Html.EditorFor(model => model.website)
+                        @Html.ValidationMessageFor(model => model.website)
+                    </td>
+                </tr>
+
+                @{int rowNo = 1;}
+                @foreach (var item in Model.affiliationType)
+                {
+                    var txtFromId = "txtfrom_" + @rowNo;
+                    var txtToId = "txtto_" + @rowNo;
+                    var txtDuration = "txtDuration_" + @rowNo;
+                    var rdoAffilitionId = "rdoAffilitionId_" + @rowNo;
+                    var lblAffilitionId = "lblAffilitionId_" + @rowNo;
+                    var fieldAffilitionId = "fieldAffilitionId_" + @rowNo;
+                    var selectedAffiliation = "affiliationTypeId" + @rowNo;
+                    var selectedAffiliationNew = "affiliationTypeIdNew" + @rowNo;
+                    var fromDate = "affiliationFromDate" + @rowNo;
+                    var toDate = "affiliationToDate" + @rowNo;
+                    var duration = "affiliationDuration" + @rowNo++;
+                    var txtFile = "txtFile" + @rowNo;
+                    var file = "affiliationfile" + @rowNo++;
+
+
+                    <tr>
+                        <td class="col1">
+                            @item.name
+                        </td>
+                        <td class="col2" id="@rdoAffilitionId">
+                            @if (@selectedAffiliation == "affiliationTypeId1")
+                            {
+                                @*<label>@Html.RadioButtonFor(model => model.affiliationSelected1, 1, new { @id = "affiliationSelected1Yes"}) Yes</label>
+                                    <label>@Html.RadioButtonFor(model => model.affiliationSelected1, 2, new { @id = "affiliationSelected1No"}) No</label>*@
+                                <label>@Html.RadioButtonFor(model => model.affiliationSelected1, 1, new { @id = "affiliationSelected1Yes" }) Yes</label>
+                                <label>@Html.RadioButtonFor(model => model.affiliationSelected1, 2, new { @id = "affiliationSelected1No" }) No</label>
+                            }
+                            else if (@selectedAffiliation == "affiliationTypeId2")
+                            {
+                                <label>@Html.RadioButtonFor(model => model.affiliationSelected2, 1, new { @id = "affiliationSelected2Yes" }) Yes</label>
+                                <label>@Html.RadioButtonFor(model => model.affiliationSelected2, 2, new { @id = "affiliationSelected2No" }) No</label>
+                            }
+                            else if (@selectedAffiliation == "affiliationTypeId3")
+                            {
+                                <label>@Html.RadioButtonFor(model => model.affiliationSelected3, 1, new { @id = "affiliationSelected3Yes" }) Yes</label>
+                                <label>@Html.RadioButtonFor(model => model.affiliationSelected3, 2, new { @id = "affiliationSelected3No" }) No</label>
+
+                            }
+
+                        </td>
+                        <td class="col3" id="@lblAffilitionId" style="width:18%">
+                            <table style="width: 100%">
+                                <tr>
+                                    @if (@item.name.Contains("NAAC"))
+                                    {
+                                        <td>Validity of NAAC Accreditation</td>
+                                    }
+                                    else
+                                    {
+                                        <td>Validity of Autonomy Status</td>
+                                    }
+
+                                    <td style="height: 25px; text-align: right; width: 55px;">From :</td>
+                                </tr>
+                                <tr>
+                                    @if (@item.name != "NBA Status")
+                                    {
+                                        <td></td>
+                                        <td style="height: 25px; text-align: right; width: 60px;">To :</td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td style="height: 25px; text-align: right; width: 60px;">Duration :</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td style="height: 25px; text-align: right; width: 60px;">Supporting Document:</td>
+                                </tr>
+                                @if (@item.name.Contains("NAAC"))
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td style="height: 25px; text-align: right;">
+                                            @Html.LabelFor(model => model.affiliationGrade) :
+                                            @*@Html.LabelFor(model => model.affiliationGrade) :*@
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td style="height: 25px; text-align: right;">
+                                            @Html.LabelFor(model => model.affiliationCGPA) :
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                        <td class="col4 readonly" id="@fieldAffilitionId">
+                            <table style="width: 100%">
+                                <tr>
+                                    <td>
+                                        @if (@selectedAffiliation == "affiliationTypeId1")
+                                        {
+                                            var value = string.Empty;
+                                            @Html.HiddenFor(model => model.affiliationTypeId1, new { @Value = item.id })
+                                            @Html.TextBoxFor(model => model.affiliationFromDate1, new { @id = "fromDate1", @name = "@fromDate", @class = "calendarnew" })
+                                            @Html.ValidationMessageFor(model => model.affiliationFromDate1)
+                                        }
+                                        else if (@selectedAffiliation == "affiliationTypeId3")
+                                        {
+                                            @Html.HiddenFor(model => model.affiliationTypeId3, new { @Value = item.id })
+                                            @Html.TextBoxFor(model => model.affiliationFromDate3, new { @id = "fromDate3", @name = "@fromDate", @class = "calendarnew" })
+                                            @Html.ValidationMessageFor(model => model.affiliationFromDate3)
+                                        }
+
+                                        <br />
+                                        <div style="height: 3px;"></div>
+
+                                        @if (@selectedAffiliation == "affiliationTypeId1")
+                                        {
+                                            @Html.TextBoxFor(model => model.affiliationToDate1, new { @id = "toDate1", @name = "@fromDate", @class = "calendarnew" })
+                                            @Html.ValidationMessageFor(model => model.affiliationToDate1)
+                                        }
+                                        else if (@selectedAffiliation == "affiliationTypeId3")
+                                        {
+
+                                            @Html.TextBoxFor(model => model.affiliationToDate3, new { @id = "toDat3e", @name = "@fromDate", @class = "calendarnew" })
+
+
+
+                                            @Html.ValidationMessageFor(model => model.affiliationToDate3)
+                                        }
+
+                                        <br />
+                                        <div style="height: 3px;"></div>
+
+                                        @if (@selectedAffiliation == "affiliationTypeId1")
+                                        {
+
+
+                                            @Html.TextBoxFor(model => model.affiliationDuration1, new { @id = "@txtDuration", @name = "@duration" })
+                                            @Html.ValidationMessageFor(model => model.affiliationDuration1)
+                                        }
+                                        else if (@selectedAffiliation == "affiliationTypeId3")
+                                        {
+
+
+                                            @Html.TextBoxFor(model => model.affiliationDuration3, new { @id = "@txtDuration", @name = "@duration" })
+                                            @Html.ValidationMessageFor(model => model.affiliationDuration3)
+                                        }
+
+                                        @*File Taking*@
+                                        <br />
+                                        <div style="height: 3px;"></div>
+                                        @if (@selectedAffiliation == "affiliationTypeId1")
+                                        {
+
+
+                                            if (Model.affiliationfilepath1 != null)
+                                            {
+                                                @Html.TextBoxFor(model => model.affiliationfile1, new { type = "file", @id = "@txtFile", @name = "@file" })
+                                                <a href="~/Content/Upload/College/UGC/@Model.affiliationfilepath1" target="_blank">
+                                                    <span style="color: red;"><b>View</b></span>
+                                                </a>
+                                                @Html.ValidationMessageFor(model => model.affiliationfile1)
+                                                @Html.HiddenFor(model => model.affiliationfilepath1)
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(model => model.affiliationfile1, new { type = "file", @id = "@txtFile", @name = "@file", @class = "required" })
+                                            }
+
+                                        }
+                                        else if (@selectedAffiliation == "affiliationTypeId3")
+                                        {
+                                            if (Model.affiliationfilepath3 != null)
+                                            {
+                                                @Html.TextBoxFor(model => model.affiliationfile3, new { type = "file", @id = "@txtFile", @name = "@file", @class = "Supportingfile" })
+                                                <a href="~/Content/Upload/College/NAAC/@Model.affiliationfilepath3" target="_blank">
+                                                    <span style="color: red;"><b>View</b></span>
+                                                </a>
+                                                @Html.ValidationMessageFor(model => model.affiliationfile3)
+                                                @Html.HiddenFor(model => model.affiliationfilepath3)
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(model => model.affiliationfile3, new { type = "file", @id = "@txtFile", @name = "@file", @class = "required Supportingfile" })
+                                            }
+                                        }
+
+                                        @if (@item.name.Contains("NAAC"))
+                                        {
+                                            <div style="height: 3px;"></div>
+                                            <br /><br />
+                                            @Html.TextBoxFor(model => model.affiliationGrade, new { style = "width:100px" })
+                                            @*@Html.DisplayFor(model => model.affiliationGrade, new { style = "width:100px" })*@
+                                            @Html.ValidationMessageFor(model => model.affiliationGrade)
+
+                                            <div style="height: 3px;"></div>
+                                            @Html.TextBoxFor(model => model.affiliationCGPA, new { style = "width:100px" })
+                                            @Html.ValidationMessageFor(model => model.affiliationCGPA)
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                }
+                <script type="text/javascript">
+                @*if (@Model.collegeStatusID==1) {
+                    $(".collegestatustr").attr('style', 'display: block');
+
+                } else {
+                    $(".collegestatustr").attr('style', 'display: none');
+                }*@
+
+                    if(@Model.affiliationSelected1 == 1)
+                    {
+                        $("#lblAffilitionId_1 table").attr('style', 'display: block');
+                        $("#fieldAffilitionId_1 table").attr('style', 'display: block');
+                    }
+                    else
+                    {
+                        $("#lblAffilitionId_1 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_1 table").attr('style', 'display: none');
+                        $("#txtfrom_1").val("");
+                        $("#txtto_1").val("");
+                        $("#txtDuration_1").val("");
+                    }
+                    if(@Model.affiliationSelected2 == 1)
+                    {
+                        $("#lblAffilitionId_2 table").attr('style', 'display: block');
+                        $("#fieldAffilitionId_2 table").attr('style', 'display: block');
+                    }
+                    else
+                    {
+                        $("#lblAffilitionId_2 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_2 table").attr('style', 'display: none');
+                        $("#txtfrom_2").val("");
+                        $("#txtto_2").val("");
+                        $("#txtDuration_2").val("");
+                    }
+                    if(@Model.affiliationSelected3 == 1)
+                    {
+                        $("#lblAffilitionId_3 table").attr('style', 'display: block');
+                        $("#fieldAffilitionId_3 table").attr('style', 'display: block');
+                    }
+                    else
+                    {
+                        $("#lblAffilitionId_3 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_3 table").attr('style', 'display: none');
+                        $("#txtfrom_3").val("");
+                        $("#txtto_3").val("");
+                        $("#txtDuration_3").val("");
+                    }
+                    if(@Model.affiliationSelected4 == 1)
+                    {
+                        $("#lblAffilitionId_4 table").attr('style', 'display: block');
+                        $("#fieldAffilitionId_4 table").attr('style', 'display: block');
+                    }
+                    else if(@Model.affiliationSelected4 == 2)
+                    {
+                        $("#lblAffilitionId_4 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_4 table").attr('style', 'display: none');
+                        $("#txtfrom_4").val("");
+                        $("#txtto_4").val("");
+                        $("#txtDuration_4").val("");
+                    }
+                    else
+                    {
+                        $("#lblAffilitionId_4 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_4 table").attr('style', 'display: none');
+                        $("#txtfrom_4").val("");
+                        $("#txtto_4").val("");
+                        $("#txtDuration_4").val("");
+                    }
+                    if(@Model.affiliationSelected5 == 1)
+                    {
+                        $("#lblAffilitionId_5 table").attr('style', 'display: block');
+                        $("#fieldAffilitionId_5 table").attr('style', 'display: block');
+                    }
+                    else if(@Model.affiliationSelected5 == 2)
+                    {
+                        $("#lblAffilitionId_5 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_5 table").attr('style', 'display: none');
+                        $("#txtfrom_5").val("");
+                        $("#txtto_5").val("");
+                        $("#txtDuration_5").val("");
+                        $("#affiliationGrade").val("");
+                    }
+                    else
+                    {
+                        $("#lblAffilitionId_5 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_5 table").attr('style', 'display: none');
+                        $("#txtfrom_5").val("");
+                        $("#txtto_5").val("");
+                        $("#txtDuration_5").val("");
+                        //$("#affiliationGrade").val("");
+                    }
+
+                    $("#affiliationSelected1Yes").click(function() {
+                        debugger;
+                        $("#lblAffilitionId_1 table").attr('style', 'display: block');
+                        $("#fieldAffilitionId_1 table").attr('style', 'display: block');
+                    });
+                    $("#affiliationSelected1No").click(function(){
+                        $("#lblAffilitionId_1 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_1 table").attr('style', 'display: none');
+                        $("#txtfrom_1").val("");
+                        $("#txtto_1").val("");
+                        $("#txtDuration_1").val("");
+                    });
+                    $("#affiliationSelected2Yes").click(function(){
+                        $("#lblAffilitionId_2 table").attr('style', 'display: block');
+                        $("#fieldAffilitionId_2 table").attr('style', 'display: block');
+                    });
+                    $("#affiliationSelected2No").click(function(){
+                        $("#lblAffilitionId_2 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_2 table").attr('style', 'display: none');
+                        $("#txtfrom_2").val("");
+                        $("#txtto_2").val("");
+                        $("#txtDuration_2").val("");
+                    });
+                    $("#affiliationSelected3Yes").click(function(){
+                        $("#lblAffilitionId_3 table").attr('style', 'display: block');
+                        $("#fieldAffilitionId_3 table").attr('style', 'display: block');
+                    });
+                    $("#affiliationSelected3No").click(function(){
+                        $("#lblAffilitionId_3 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_3 table").attr('style', 'display: none');
+                        $("#txtfrom_3").val("");
+                        $("#txtto_3").val("");
+                        $("#txtDuration_3").val("");
+                        $("#affiliationGrade").val("");
+                        $("#affiliationCGPA").val("");
+                    });
+                    $("#affiliationSelected4Conferred").click(function(){
+                        $("#lblAffilitionId_4 table").attr('style', 'display: block');
+                        $("#fieldAffilitionId_4 table").attr('style', 'display: block');
+                    });
+                    $("#affiliationSelected4Applied").click(function(){
+                        $("#lblAffilitionId_4 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_4 table").attr('style', 'display: none');
+                        $("#txtfrom_4").val("");
+                        $("#txtto_4").val("");
+                        $("#txtDuration_4").val("");
+                    });
+                    $("#affiliationSelected4NotYetApplied").click(function(){
+                        $("#lblAffilitionId_4 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_4 table").attr('style', 'display: none');
+                        $("#txtfrom_4").val("");
+                        $("#txtto_4").val("");
+                        $("#txtDuration_4").val("");
+                    });
+                    $("#affiliationSelected5Conferred").click(function(){
+                        $("#lblAffilitionId_5 table").attr('style', 'display: block');
+                        $("#fieldAffilitionId_5 table").attr('style', 'display: block');
+                    });
+                    $("#affiliationSelected5Applied").click(function(){
+                        $("#lblAffilitionId_5 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_5 table").attr('style', 'display: none');
+                        $("#txtfrom_5").val("");
+                        $("#txtto_5").val("");
+                        $("#txtDuration_5").val("");
+                        $("#affiliationGrade").val("");
+                        $("#affiliationCGPA").val("");
+
+                    });
+                    $("#affiliationSelected5NotYetApplied").click(function(){
+                        $("#lblAffilitionId_5 table").attr('style', 'display: none');
+                        $("#fieldAffilitionId_5 table").attr('style', 'display: none');
+                        $("#txtfrom_5").val("");
+                        $("#txtto_5").val("");
+                        $("#txtDuration_5").val("");
+                        $("#affiliationGrade").val("");
+                    });
+                </script>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.collegeTypeID)
+                    </td>
+                    <td class="col2" colspan="3" style="line-height: 1.2rem;">
+                        @Html.HiddenFor(model => model.collegeTypeID)
+                        @foreach (var item in Model.collegeType)
+                        {
+                            var optionValue = "CType_" + item.id;
+                            var selectValue = item.selected;
+                            <input type="radio"
+                                   id="@optionValue"
+                                   name="collegeTypeID"
+                                   value="@item.id" disabled="disabled" />
+                            <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+                            if (selectValue == 1)
+                            {
+                                <input type="hidden" name="collegeTypeID" value="@item.id" id="@optionValue">
+                            }
+
+                            <script type="text/javascript">
+                                if(@selectValue == 1)
+                                {
+
+                                    $("#@optionValue").attr('checked', 'checked');
+                                }
+                                @*else
+                            $("#@optionValue").attr('checked', false);*@
+                            </script>
+                        }
+                        @Html.ValidationMessageFor(model => model.collegeTypeID)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        @Html.LabelFor(model => model.degreeId)
+                    </td>
+                    <td class="col2" colspan="3" style="line-height: 1.2rem;">
+                        @Html.HiddenFor(model => model.degreeId)
+                        @foreach (var item in Model.degree)
+                        {
+                            var optionValue = "degree_" + item.id;
+                            var selectValue = item.selected;
+                            <input type="checkbox"
+                                   id="@optionValue"
+                                   name="degreeId"
+                                   value="@item.id" disabled="disabled" />
+                            <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+
+                            if (selectValue == 1)
+                            {
+                                <input type="hidden" name="degreeId" value="@item.id" id="@optionValue">
+                            }
+
+                            <script type="text/javascript">
+                                if(@selectValue == 1)
+                                    $("#@optionValue").attr('checked', 'checked');
+                                else
+                                    $("#@optionValue").attr('checked', null);
+                            </script>
+                        }
+                        @Html.ValidationMessageFor(model => model.degreeId)
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        @Html.HiddenFor(model => model.addressTye, new { Value = "COLLEGE" })
+                        @Html.HiddenFor(model => model.createdOn, new { Value = DateTime.Now })
+
+                    </td>
+                    <td colspan="3" style="line-height: 1.2rem;" class="right_buttons">
+                        <input type="submit" value="Save" onclick="return Validate();" />
+
+                    </td>
+                </tr>
+            </table>
+        }
+    }
+}
+<script type="text/javascript">
+    function Validate() {
+        debugger;
+        var isValid = true;
+        var UGCfrmDt = $("#txtfrom_2").val();
+        var UGCtoDt = $("#txtto_2").val();
+        var frmDt = $("#txtfrom_3").val();
+        var toDt = $("#txtto_3").val();
+        if (UGCfrmDt!=""&UGCtoDt!="") {
+            var UGCfromDate = UGCfrmDt.substr(6, 4) + UGCfrmDt.substr(3, 2) + UGCfrmDt.substr(0, 2);
+            var UGCtoDate = UGCtoDt.substr(6, 4) + UGCtoDt.substr(3, 2) + UGCtoDt.substr(0, 2);
+            if (UGCtoDate < UGCfromDate) {
+                alert("from date should be less than to date.");
+                $("#txtfrom_2").val("");
+                $("#txtfrom_2").focus();
+                return false;
+            }
+        }
+        if (frmDt!=""&toDt!="") {
+            var fromDate = frmDt.substr(6, 4) + frmDt.substr(3, 2) + frmDt.substr(0, 2);
+            var toDate = toDt.substr(6, 4) + toDt.substr(3, 2) + toDt.substr(0, 2);
+            if (toDate < fromDate) {
+                alert("from date should be less than to date.");
+                $("#txtfrom_3").val("");
+                $("#txtfrom_3").focus();
+                return false;
+            }
+        }
+        if ($("#CAType_11").is(":checked")) {
+            var selecetedAffiliation = $("#CAType_11").val();
+            if(selecetedAffiliation == 11)
+            {
+                var otherCategory = $.trim($('#otherCategory').val());
+                if(otherCategory == '')
+                {
+                    isValid = false;
+                    alert("Please enter Other Category");
+                }
+                else
+                {
+                    isValid = true;
+                }
+            }
+            else
+            {
+                isValid = true;
+            }
+        }
+        return isValid;
+    }
+</script>

@@ -1,0 +1,49 @@
+﻿@model UAAAS.Models.CollegeIntakeProposed
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+    ViewBag.Title = "College Proposed Intake Details";
+}
+
+<h2>College Proposed Intake Details</h2>
+
+<div class="details_table">
+
+    <div class="display-label" style="width: 250px">Degree</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.Degree)
+    </div>
+
+    <div class="display-label" style="width: 250px">Department</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.Department)
+    </div>
+
+    <div class="display-label" style="width: 250px">Specialization</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.Specialization)
+    </div>
+    <div class="display-label" style="width: 250px">Shift</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.Shift)
+    </div>
+
+    <div class="display-label" style="width: 250px">Course Affiliation Status Code</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.CourseAffiliationStatusCode)
+    </div>
+
+    @*<div class="display-label" style="width: 250px">ExistingIntake</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.ExistingIntake)
+    </div>*@
+
+    <div class="display-label" style="width: 250px">Proposed Intake For the A.Y  @ViewBag.Year</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.proposedIntake)
+    </div>
+
+</div>

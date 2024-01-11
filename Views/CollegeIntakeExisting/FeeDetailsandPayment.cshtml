@@ -1,0 +1,280 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeIntakeExisting>
+@using System.Web.Configuration
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "FeeDetailsandPayment";
+
+    string AICTEApprovalLettr = string.Empty;
+}
+<h2>Fee Details and Payment</h2>
+
+<style>
+    .not-active {
+        pointer-events: none;
+        cursor: default;
+    }
+</style>
+
+<table class="full_table" style="width: 100%; font-size: 0.7rem;">
+    <tr>
+        <th style="text-align: center;" rowspan="3">
+            Application Processing Fee
+        </th>
+        <th style="text-align: center;" colspan="6">
+            Inspection Fee
+        </th>
+        <th style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">
+            Total Fee
+            <br />
+
+        </th>
+        <th style="text-align: center;" rowspan="3">
+            Payment
+        </th>
+        @*<th colspan="2" style="text-align: center;" rowspan="3"></th>*@
+    </tr>
+    <tr>
+        <th style="text-align: center;" colspan="2">
+            UG Programme
+        </th>
+        <th style="text-align: center;" colspan="2">
+            PG Programme
+        </th>
+        <th style="text-align: center;" colspan="2">
+            Dual Programme
+        </th>
+    </tr>
+    <tr>
+        <th style="text-align: center;" colspan="2">
+            @ViewBag.countofUgcourse
+        </th>
+        <th style="text-align: center;" colspan="2">
+            @ViewBag.countofPgcourse
+        </th>
+        <th style="text-align: center;" colspan="2">
+            @ViewBag.countofDualcourse
+        </th>
+    </tr>
+    <tr>
+        <td style="text-align: center;" colspan="1"><label>Rs</label> @ViewBag.applicationFee </td>
+        <td style="text-align: center;" colspan="2"><label>Rs</label> @ViewBag.ugSpecializationAmmount</td>
+        <td style="text-align: center;" colspan="2"> <label>Rs</label> @ViewBag.pgSpecializationAmmount</td>
+        <td style="text-align: center;" colspan="2"> <label>Rs</label> @ViewBag.DualdegreeSpecializationAmmount</td>
+        <td style="width: 60px; text-align: center; background-color: lightgreen; font-weight: bold;">
+            <label>Rs</label> @ViewBag.totalFee
+        </td>
+
+        <td class="create_link_right" style="text-align:center;">
+            @*@if (ViewBag.IsPaymentDone)
+                {
+                    @Html.ActionLink("Pay", "", "", new { collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button not-active" })
+                }
+                else
+                {
+                    @Html.ActionLink("Pay", "", "", new { collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })
+                }*@
+            <html>
+            <body>
+                @*<form method="post" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment">
+                    <input name="msg" type="hidden" value=@ViewBag.msg>*@
+
+                <form method="post" id="paymentform" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment">
+                    <input name="msg" type="hidden" value=@ViewBag.msg>
+
+
+                    @if (ViewBag.IsPaymentDone)
+                    {
+
+                        <input type="button" value="Paid" id="pay" class="create_button not-active">
+                    }
+                    else if (ViewBag.IsEditable)
+                    {
+                        <input type="checkbox" id="continuePayment" />
+                        <span>I Agree</span>
+                        <br />
+                        <text>Once payment is done colleges can not add<br /> new courses please confirm before making payment</text>
+                        <input type="submit" value="Pay" id="pay" class="create_button not-active">
+                    }
+                    else
+                    {
+                        <input type="button" value="pay" id="pay" class="create_button not-active">
+                    }
+
+                    @*<input type="checkbox" id="continuePayment" /><span>I Aggree</span><br /><text>Once payment is done colleges can not add<br /> new courses please confirm before making payment</text>
+                        <input type="submit" value="Pay" id="pay" class="create_button not-active">*@
+
+                    @* @if (ViewBag.IsPaymentDone)
+                        {
+
+                            <input type="submit" value="Paid" id="pay" class="create_button not-active ">
+                        }
+                        else
+                        {
+                            if (TempData["PaymentStatus1"] != "")
+                            {
+                                <input type="checkbox" id="continuePayment" /><span>I Agree</span><br /><text>Once payment is done colleges can not add<br /> new courses please confirm before making payment</text>
+                                <input type="submit" value="Pay" id="pay" class="create_button not-active">
+                            }
+                            else
+                            {
+                                <span>Colleges are requested to pay the Fee from "Online Payment Portal"<br /> Please logout from Application before login into online payment portal<br /> Payments once done will be soon below.  </span>
+                            }
+
+                        }*@
+
+                </form>
+            </body>
+        </html>
+</tr>
+</table>
+@if (!ViewBag.IsPaymentDone)
+{
+    <p><b style="color:red;font-size:12px;">*Note: </b><span style="font-weight:bold;color:red;font-size:12px;">Please use Internet Explorer 11+ Version for successful payments.</span></p><br />
+}
+<div id="dialog-edit" style="display: none;width:500px !important">
+    @using (Ajax.BeginForm("Payment", "CollegeIntakeExisting", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "CollegeIntakeDialog" }, new { enctype = "multipart/form-data" }))
+    {
+        <div class="details_table">
+
+            <table class="webGrid">
+                <tr>
+                    <td><label> College Code</label></td>
+                    <td>@ViewBag.collegeCode</td>
+                </tr>
+                <tr>
+                    <td><label> Challan No.</label> </td>
+                    <td>@ViewBag.challnNumber</td>
+                </tr>
+                <tr>
+                    <td><label> Fee Type</label></td>
+                    <td>Application & Insepection Fee</td>
+                </tr>
+                <tr>
+                    <td><label>  Amount </label></td>
+                    <td>@ViewBag.totalFee</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <input type="checkbox" />
+                        <text>Once payment is done colleges can not add new courses please confirm before making payment</text>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td colspan="2" style="text-align:center">
+
+                        <input class="create_button" type="submit" value="Make Payment121" onclick="javacript:DisplayMessage()" /> &nbsp;<input class="create_button" type="button" value="Cancel" />
+
+                    </td>
+                </tr>
+            </table>
+
+
+        </div>
+    }
+
+</div>
+<div style="margin-top:50px;">
+    <h2>Payment History</h2>
+    <table class="webGrid">
+        <thead>
+            <tr>
+                <th>S.No.</th>
+                <th>Challan Number</th>
+                <th>Txn Reference No.</th>
+                <th>Txn Amount.</th>
+                <th>Payment Status</th>
+                <th>Payment Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pay in ((List<UAAAS.Models.jntuh_paymentresponse>)ViewBag.Payments).Select((value, i) => new { i = i + 1, value }))
+            {
+                <tr>
+                    <td>@pay.i </td>
+                    <td>@pay.value.CustomerID</td>
+                    <td>@pay.value.TxnReferenceNo</td>
+                    <td>@pay.value.TxnAmount</td>
+                    <td>@pay.value.AuthStatus</td>
+                    <td>@pay.value.ErrorDescription</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+        $.ajaxSetup({ cache: false });
+
+        $("#openDialog").live("click", function (e) {
+            //e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Pay',
+                height: 300,
+                width: 650
+            });
+            url = $("#openDialog").attr('href');
+            return false;
+        });
+        $('#pay').click(function (e) {
+            var data = "challanNumber=@ViewBag.challnNumber&txnAmount=@ViewBag.totalFee&collegeCode=@ViewBag.collegeCode";
+            //alert(data);
+            //e.preventDefault();
+            $.ajax({
+                url: "/CollegeIntakeExisting/SavePaymentRequest",
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                data: data,
+                success: function (data) {
+
+
+                    //$('#paymentform').submit();
+
+                },
+                error: function (event) {
+                    //debugger;
+
+                    // $(this).prop("checked", false);
+
+                }
+
+            });
+        });
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+
+    });
+</script>
+<script>
+    function DisplayMessage(e) {
+        var retVal = confirm("Do you want to continue ?");
+        if (!retVal) {
+            e.preventDefault();
+        }
+        else {
+            alert('payment');
+            $('#paymentform').submit();
+        }
+
+    }
+    $(document).ready(function () {
+        $('#continuePayment').click(function () {
+            if ($(this).attr("checked")) {
+                $('#pay').removeClass('not-active');
+            }
+            else $('#pay').addClass('not-active');
+            //if ($(this).is(":checked")) {
+            //    alert($(this.val()));
+            //}
+        });
+    })
+</script>

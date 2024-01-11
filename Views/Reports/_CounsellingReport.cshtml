@@ -1,0 +1,301 @@
+﻿@model List<UAAAS.Models.CounsellingReport>
+@{
+    var model = Model;
+}
+@*@functions {
+
+
+    public static string DeficiencyPercentage(decimal required, decimal available)
+    {
+        string percentage = "0";
+
+        if (available == 0)
+        {
+            percentage = "" + 100;
+        }
+        else
+        {
+            var cal = (100 - ((available / required) * 100));
+            if (cal > 0)
+            {
+                percentage = "" + cal;
+                percentage = percentage.Length > 5 ? percentage.Substring(0, 5) : percentage;  
+            }
+            else 
+            { 
+             percentage = "" + cal;
+            }
+            
+        }
+
+        return percentage;
+    }
+
+}*@
+@using (Html.BeginForm())
+{
+    int count = 0;
+    int count1 = 0;
+    int DeptCount=0;
+    string DepartmentName="";
+    string DepartmentName1 = "";
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    S.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                   College Code
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Name of the Institution
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Institution address
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Dist.
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Name of the course
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Proposed Intake for the A.Y 2023-24
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    JNTUH approved intake for the A.Y 2022-23
+                </th>
+                @*<th style="text-align: center; background-color: yellow; vertical-align: top">
+                    JNTUH Not approved intake for the A.Y 2022-23
+                </th>*@
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Required Faculty
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Available Faculty
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Required PHD Faculty
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Available PHD Faculty
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    NTPL Faculty
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    CSE PHD Faculty
+                </th>
+                @*<th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Percentage
+                </th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item1 in Model)
+            {
+                foreach (var item in item1.CollegeSpecializations.OrderBy(D=>D.DepartmentName))
+                {
+                    count1++;
+                    DeptCount = item1.CollegeSpecializations.Where(D => D.DepartmentName == item.DepartmentName).Count();
+                    DepartmentName = item.DepartmentName;
+                    if(count1==1)
+                    {
+                        DepartmentName1 = item1.CollegeSpecializations.Where(D => D.DepartmentName == item.DepartmentName).FirstOrDefault().DepartmentName;
+                    }
+                    var bcolor = string.Empty;
+                    if (@item.isPercentage==true)
+                    {
+                        bcolor = "red";
+                    }
+                    else
+                    {
+                        bcolor =string.Empty; 
+                    }
+                    <tr>
+                        <td style="text-align: center;vertical-align: top">
+                            @(count = count + 1)
+                        </td>
+                        <th style="text-align: center; background-color: @bcolor; vertical-align: top">
+                            '@item1.CollegeCode
+                        </th>
+                        <th style="text-align: left; vertical-align: top">
+                            @item1.CollegeName
+                        </th>
+                        <th style="text-align: left; vertical-align: top">
+                            @item1.CollegeAddress
+                        </th>
+                        <th style="text-align: left; vertical-align: top">
+                            @item1.Grade
+                        </th>
+                        <th style="text-align: left; vertical-align: top">
+                            @if (item.Intake.Contains("#") == true)
+                            {
+                                <b>@item.Specialization</b>
+                            }
+                            else
+                            {
+                                <label>@item.Specialization</label>
+                            }
+                        </th>
+                       
+                        <th style="text-align: right; vertical-align: top">
+                            @if (item.Intake.Contains("$") == true)
+                            {
+                                string[] specializations = item.Intake.Split('$');
+                                <label>@specializations[0]</label>
+                            }
+                            else if (item.Intake.Contains("*") == true)
+                            {
+                                string[] specializations = item.Intake.Split('*');
+                                <b>@specializations[0]</b>
+                            }
+                            else if (item.Intake.Contains("#") == true)
+                            {
+                                string[] specializations = item.Intake.Split('#');
+                                <b>@specializations[0]</b>
+                            }
+                            else
+                            {
+                                <label>@item.Intake</label>
+                            }
+                        </th>
+                        <th style="text-align: right; vertical-align: top">
+                            @if (@item.ApprovedIntake == "0")
+                            {
+                                <span>---</span>
+                            }
+                            else
+                            {
+                                @item.ApprovedIntake
+                            }
+
+                        </th>
+                        @*<th style="text-align: right; vertical-align: top">
+                            @if (@item.ApprovedIntake == "0")
+                            {
+                                @item.ApprovedIntake
+
+                            }
+                            else
+                            {
+                                <span>---</span>
+                            }
+
+                        </th>*@
+                        <th style="text-align: right; vertical-align: top">
+                            @item.RequiredFaculty
+                        </th>
+                        <th style="text-align: right; vertical-align: top">
+                            @item.AvailableFaculty
+                        </th>
+                        <th style="text-align: right; vertical-align: top">
+                            @item.PHDRequiredFaculty
+                        </th>
+                        <th style="text-align: right; vertical-align: top">
+                            @item.PHDAvailableFaculty
+                        </th>
+                        <th style="text-align: right; vertical-align: top">
+                            @item.NTPLFaculty
+                        </th>
+                        <th style="text-align: right; vertical-align: top">
+                            @item.CSEPhDFaculty
+                        </th>
+                        @*@{
+                          var DeficiencyPercen = DeficiencyPercentage(Convert.ToDecimal(item.RequiredFaculty), Convert.ToDecimal(item.AvailableFaculty));
+                        }
+
+                        <th style="text-align: left; vertical-align: top">
+                            @DeficiencyPercen
+                        </th>*@
+
+
+                        @*@if (DepartmentName == DepartmentName1 && count1==1)
+                       {
+                        <th rowspan="@DeptCount" style="text-align: left; vertical-align: top">
+                            @item.PHDAvailableFaculty
+                        </th>
+                        DepartmentName1= item1.CollegeSpecializations.Where(D => D.DepartmentName == item.DepartmentName).FirstOrDefault().DepartmentName;
+                       }
+                       else if (DepartmentName != DepartmentName1 && count1 != 1)
+                       {
+                        <th rowspan="@DeptCount" style="text-align: left; vertical-align: top">
+                            @item.PHDAvailableFaculty
+                        </th>
+                           DepartmentName1 = item1.CollegeSpecializations.Where(D => D.DepartmentName == item.DepartmentName).FirstOrDefault().DepartmentName;
+                       }*@
+                       
+                    </tr>
+                }
+
+                @*<tr>
+                        <td style="text-align: center;vertical-align: top">
+                            @(count = count + 1)
+                        </td>
+                        <td style="text-align: left;vertical-align: top">
+                            <label>@item.CollegeName.Replace("’", "'")</label>
+                            <br style="mso-data-placement:same-cell;" />
+                            <label>@item.CollegeAddress</label>
+                        </td>
+                        <td style="text-align: center;vertical-align: top">
+
+                            <label style="text-transform: uppercase">@item.CollegeCode</label>
+                            <br style="mso-data-placement:same-cell;" />
+                            <label style="text-transform: uppercase">@item.Establishyear</label>
+
+                        </td>
+                        <td style="">
+                            @if (item.CollegeSpecializations != null)
+                            {
+                                foreach (var specialization in item.CollegeSpecializations)
+                                {
+                                    if (specialization.Intake != null && specialization.Intake != string.Empty &&
+                                         specialization.Specialization != null && specialization.Specialization != string.Empty)
+                                    {
+                                        <table style="border-collapse: collapse; width: 100%">
+                                            <tr>
+                                                <td style="border: none; text-align: left">
+                                                    @if (specialization.Intake.Contains("#") == true)
+                                                    {
+                                                        <b>@specialization.Specialization</b>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label>@specialization.Specialization</label>
+                                                    }
+                                                </td>
+                                                <td style="border: none; text-align: right">
+                                                    @if (specialization.Intake.Contains("$") == true)
+                                                    {
+                                                        string[] specializations = specialization.Intake.Split('$');
+                                                        <label>@specializations[0]</label>
+                                                    }
+                                                    else if (specialization.Intake.Contains("*") == true)
+                                                    {
+                                                        string[] specializations = specialization.Intake.Split('*');
+                                                        <b>@specializations[0]</b>
+                                                    }
+                                                    else if (specialization.Intake.Contains("#") == true)
+                                                    {
+                                                        string[] specializations = specialization.Intake.Split('#');
+                                                        <b>@specializations[0]</b>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label>@specialization.Intake</label>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    }
+                                }
+                            }
+                        </td>
+
+                    </tr>*@
+            }
+        </tbody>
+    </table>
+}

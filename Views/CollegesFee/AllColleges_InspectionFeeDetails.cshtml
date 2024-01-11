@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "AllColleges_InspectionFeeDetails";
+}
+<h2>Colleges Inspection Fee</h2>
+
+@using (Ajax.BeginForm("AllColleges_InspectionFeeDetails", "CollegesFee", new AjaxOptions(), new { enctype = "multipart/form-data" }))
+{
+    <div style="text-align:end;;">
+        <div style="display:inline-flex;width:70%;text-align:center;">
+            <div class="editor-label" style="width: 20%;">
+                <span>Academic Year</span>
+            </div>
+            <div class="editor-field" style="width: 30%;">
+                @Html.DropDownList("AcademicYearId", new SelectList(ViewBag.Years as System.Collections.IEnumerable, "Id", "Year"), "---Select---", new { @style = "width:250px;" })
+            </div>
+            <div style="width: 10%;">
+                <input type="submit" value="Download" />
+            </div>
+        </div> 
+    </div>
+}

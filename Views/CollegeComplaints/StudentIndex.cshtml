@@ -1,0 +1,49 @@
+﻿@model List<UAAAS.Controllers.studentnews>
+@{
+    ViewBag.Title = "StudentIndex";
+    string Color = "black";
+}
+
+<h2>Student Corner</h2>
+<br/>
+<div style="float:right;">
+    @Html.ActionLink("Track Grievance", "TrackComplaint", "FacultyComplaints", new { @class = "create_button", @style = "" }) &nbsp;&nbsp;&nbsp;&nbsp;
+    @Html.ActionLink("Add Grievance", "StudentComplaintScreen", "FacultyComplaints", new { @class = "create_button", @style = "" })
+</div>
+<div>
+    <table width="60%" cellspacing="10px;">
+        <tr>
+            <td width="30%" style="text-align:-webkit-center;vertical-align:top;padding-top:1px;">
+                <div style="height:340px;background-color:white; padding: 0px 10px 10px 10px;">
+                    <br />
+                    <div style="background-color: green; color: white; text-align: initial; font-weight: bold;border-bottom-right-radius:10px;border-top-left-radius:10px;">
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;NEWS  /  CIRCULARS  /  NOTICES :</span>
+                    </div>
+                    <marquee direction="up" scrolldelay="300" style="height:270px;" onmouseover="this.stop();" onmouseout="this.start();">
+                        <ul class="newstitle" style="padding-left:10px;">
+                            @foreach (var item in Model)
+                            {
+                                if (!string.IsNullOrWhiteSpace(item.filename))
+                                {
+                                    <li style="color:@Color">
+                                        <a class="navigationurl" href="~/Content/Upload/StudentsNews/@item.filename" target="_blank" style="color:@Color;font-weight:bold;">@item.Title</a><img src="~/Content/images/latest.gif" alt="latest" />
+                                        @*@if (@item.createdDate != null)
+                                        {
+                                            <a class="navigationurl" href="@item.url" target="_blank" style="color:@Color;font-weight:bold;">@item.createdDate.ToString("dd-MMM-yyy") : @item.newstitle</a>
+                                            if (item.createdDate >= DateTime.Now.AddDays(-10))
+                                            {
+                                                <img src="~/Content/images/latest.gif" alt="latest" />
+                                                @*<img src="../Content/images/latest.gif" alt="latest" />
+                                            }
+                                        }*@
+                                    </li>
+                                }                               
+                            }
+                        </ul>
+                    </marquee>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <br />
+</div>

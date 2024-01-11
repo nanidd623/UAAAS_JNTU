@@ -1,0 +1,82 @@
+﻿@model List<UAAAS.Controllers.studentnews>
+@{
+    ViewBag.Title = "StudentIndex";
+    string Color = "black";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+
+<h2>Student Corner</h2>
+<br/>
+<div style="float:right;">
+    @Html.ActionLink("Track Grievance", "TrackComplaint", "FacultyComplaints", new { @class = "create_button", @style = "" }) &nbsp;&nbsp;&nbsp;&nbsp;
+    @Html.ActionLink("Add Grievance", "StudentComplaintScreen", "FacultyComplaints", new { @class = "create_button", @style = "" })
+</div>
+<div>
+    <table width="100%">
+        <tr>
+            <td style="text-align:-webkit-center;vertical-align:top;padding-top:1px;">
+                <div style="height:340px;background-color:white; padding: 0px 10px 10px 10px;">
+                    <br />
+                    <div style="background-color: green; color: white; text-align: initial; font-weight: bold;border-bottom-right-radius:10px;border-top-left-radius:10px;">
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;NEWS  /  CIRCULARS  /  NOTICES :</span>
+                    </div>
+                    <br />
+                    @*<marquee direction="up" scrolldelay="300" style="height:270px;" onmouseover="this.stop();" onmouseout="this.start();">*@
+                        <ul class="newstitle" style="padding-left:10px;">
+                            @foreach (var item in Model)
+                            {
+                                if (!string.IsNullOrWhiteSpace(item.filename))
+                                {
+                                   
+                                    <li style="color:@Color">
+                                        <a class="navigationurl" href="~/Content/Upload/StudentsNews/@item.filename" target="_blank" style="color:@Color;font-weight:bold;float: left;">@item.Title</a>
+                                        @*<img src="~/Content/images/latest.gif" alt="latest" />*@
+                                     <br />
+                                    </li>
+                                }
+                                
+                            }
+                            @*<li style="color:@Color;">
+                                    <a class="navigationurl" href="~/Content/Upload/StudentsNews/OmbudsmanDetails.pdf" target="_blank" style="color:@Color;font-weight:bold;float: left;">Circular-Details of University OMBUDSPERSON-Reg.</a>
+                                    <br />
+                                </li>*@
+                        </ul>
+                    @*</marquee>*@
+                </div>
+            </td>
+            <td style="text-align:-webkit-center;vertical-align:top;padding-top:1px;">
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <br />
+                            <div style="background-color: green; color: white; text-align: initial; font-weight: bold;border-bottom-right-radius:10px;border-top-left-radius:10px;">
+                                <span>&nbsp;&nbsp;&nbsp;&nbsp;Details of University OMBUDSPERSON</span>
+                            </div>
+                        <b></b> </td>
+                    </tr>
+                    <tr>
+                        <td style="float: right;font-family: sans-serif;">Name : &nbsp;&nbsp;</td>
+                        <td><b>Dr. R.Sayanna</b></td>
+                    </tr>
+                    <tr>
+                        <td style="float: right;font-family: sans-serif;">Designation :  &nbsp;&nbsp;</td>
+                        <td><b>Former Vice-Chancellor Kakatiya University,<br /> Warangal,Telangana State & Former Professor & <br />Head, Department of Physics<br />Osmania University, Hyderabad</b></td>
+                    </tr>
+                    <tr>
+                        <td style="float: right;font-family: sans-serif;">E mail :  &nbsp;&nbsp;</td>
+                        <td><b>ombudsperson@jntuh.ac.in</b></td>
+                    </tr>
+                    @*<tr>
+                        <td style="float: right;font-family: sans-serif;">Photograph :  &nbsp;&nbsp;</td>
+                        <td><img src="~/Content/images/Dr.JAGANNATHJETTY.jpg" alt="latest" style="height:120px"/></td>
+                    </tr>*@
+                </table>
+            </td>
+            <td style="text-align:-webkit-center;vertical-align:top;padding-top:1px;">
+                <br />
+                <img src="~/Content/images/Dr.R.Sayanna.png" alt="latest" style="height:120px" />
+            </td>
+</tr>
+    </table>
+    <br />
+</div>

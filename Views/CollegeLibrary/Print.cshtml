@@ -1,0 +1,102 @@
+﻿@model UAAAS.Models.CollegeLibrary
+@{
+    var OddColor = "#DDEEEE";
+    var evenColor = "#EEFFFF";
+    var Odd = OddColor;
+}
+<br />
+<table cellpadding="3" cellspacing="3" width="100%">
+    <tr border="1">
+        <td width="50%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.librarianName)
+        </td>
+        <td width="50%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.librarianName)
+        </td>
+    </tr>
+    <tr border="1">
+        <td width="50%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.librarianQualifications)
+        </td>
+        <td width="50%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.librarianQualifications)
+        </td>
+    </tr>
+    <tr border="1">
+        <td width="50%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.libraryPhoneNumber)
+        </td>
+        <td width="50%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.libraryPhoneNumber)
+            @Html.ValidationMessageFor(model => model.libraryPhoneNumber)
+        </td>
+    </tr>
+    <tr border="1">
+        <td width="50%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.totalSupportingStaff)
+        </td>
+        <td width="50%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.totalSupportingStaff, new { @Value = Model.totalSupportingStaff == 0 ? "" : Model.totalSupportingStaff.ToString() })
+        </td>
+    </tr>
+    <tr border="1">
+        <td width="50%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.totalTitles)
+        </td>
+        <td width="50%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.totalTitles, new { @Value = Model.totalTitles == 0 ? "" : Model.totalTitles.ToString() })
+            @Html.ValidationMessageFor(model => model.totalTitles)
+        </td>
+    </tr>
+    <tr border="1">
+        <td width="50%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.totalVolumes)
+        </td>
+        <td width="50%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.totalVolumes, new { @Value = Model.totalVolumes == 0 ? "" : Model.totalVolumes.ToString() })
+        </td>
+    </tr>
+    <tr border="1">
+        <td width="50%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.totalNationalJournals)
+        </td>
+        <td width="50%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.totalNationalJournals, new { @Value = Model.totalNationalJournals == 0 ? "" : Model.totalNationalJournals.ToString() })
+        </td>
+    </tr>
+    <tr border="1">
+        <td width="50%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.totalInternationalJournals)
+        </td>
+        <td width="50%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.totalInternationalJournals, new { @Value = Model.totalInternationalJournals == 0 ? "" : Model.totalInternationalJournals.ToString() })
+        </td>
+    </tr>
+    <tr border="1">
+        <td width="50%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.totalEJournals)
+        </td>
+        <td width="50%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.totalEJournals, new { @Value = Model.totalEJournals == 0 ? "" : Model.totalEJournals.ToString() })
+        </td>
+    </tr>
+    <tr border="1">
+        <td width="50%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.librarySeatingCapacity)
+        </td>
+        <td width="50%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.librarySeatingCapacity, new { @Value = Model.librarySeatingCapacity == 0 ? "" : Model.librarySeatingCapacity.ToString() })
+        </td>
+    </tr>
+    <tr border="1">
+        <td width="50%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.libraryWorkingHoursFrom)
+        </td>
+        <td width="50%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.libraryWorkingHoursFrom, new { @Value = Model.libraryWorkingHoursFrom == 0 ? "" : Model.libraryWorkingHoursFrom.ToString(), style = "width:60px" })
+            <span>to</span>
+            @Html.DisplayFor(model => model.libraryWorkingHoursTo, new { @Value = Model.libraryWorkingHoursTo == 0 ? "" : Model.libraryWorkingHoursTo.ToString(), style = "width:60px" })
+        </td>
+    </tr>
+</table>
+

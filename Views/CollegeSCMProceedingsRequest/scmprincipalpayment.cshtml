@@ -1,0 +1,195 @@
+﻿@model UAAAS.Controllers.College.CollegeSCMProceedingsRequestController.scmpaymentsdetals
+@using System.Web.Configuration
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "SCMPayment";
+}
+
+<style>
+    .not-active {
+        pointer-events: none;
+        cursor: default;
+    }
+</style>
+<div style="margin-top:50px;">
+    <h2>Payment Details</h2>
+    <table class="webGrid">
+        <thead>
+            <tr class="paymentheader">
+                @*<th>S.No.</th>*@
+                <th>Department</th>
+                <th>Count</th>
+                <th>Txn Amount.</th>
+            </tr>
+        </thead>
+        <tbody>
+          
+                <tr>
+                    <td>@Model.department </td>
+                    <td>@Model.addedfacultycount</td>
+                    <td>@Model.amount</td>
+                </tr>
+          
+        </tbody>
+    </table>
+</div>
+<br />
+<table class="full_table" style="width: 100%; font-size: 0.7rem;">
+    <tr>
+        <th style="text-align: center;" rowspan="3">
+            Total SCM Fee
+        </th>
+    </tr>
+    <tr>
+
+        <td style="width: 60px; text-align: center; background-color: lightgreen; font-weight: bold;">
+            <label>Rs</label> @ViewBag.totalFee
+        </td>
+        <td class="create_link_right" style="text-align:center;">
+            <html>
+            <body>
+                <form method="post" id="paymentform" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment">
+                    <input name="msg" type="hidden" value=@ViewBag.msg>
+
+
+                    @if (ViewBag.IsPaymentDone)
+                    {
+
+                        <input type="button" value="Paid" id="pay" class="create_button not-active">
+                    }
+                    else if (ViewBag.IsEditable)
+                    {
+                        <input type="checkbox" id="continuePayment" />
+                        <span>I Agree</span>
+                        <br />
+                        <text>Once payment is done colleges can not add<br /> new SCM Request please confirm before making payment</text>
+                        <input type="submit" value="Pay" id="pay" class="create_button not-active">
+                    }
+                    else
+                    {
+                        <input type="button" value="pay" id="pay" class="create_button not-active">
+                    }
+
+                </form>
+            </body>
+        </html>
+</tr>
+</table>
+@if (!ViewBag.IsPaymentDone)
+{
+    <p><b style="color:red;font-size:12px;">*Note: </b><span style="font-weight:bold;color:red;font-size:12px;">Please use Internet Explorer 11+ Version for successful payments.</span></p>
+}
+<br />
+@*@if (!String.IsNullOrEmpty(@ViewBag.Payments))
+    {*@
+<div style="margin-top:50px;">
+    <h2>Payment History</h2>
+    <table class="webGrid" style="font-weight: bold">
+        <thead>
+            <tr class="paymentheader">
+                <th>S.No.</th>
+                <th>Challan Number</th>
+                <th>Txn Reference No.</th>
+                <th>Txn Amount.</th>
+                <th>Payment Description</th>
+                <th>Acknowledgement</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pay in ((List<UAAAS.Models.jntuh_paymentresponse>)ViewBag.Payments).Select((value, i) => new { i = i + 1, value }))
+            {
+                <tr>
+                    <td>@pay.i </td>
+                    <td>@pay.value.CustomerID</td>
+                    <td>@pay.value.TxnReferenceNo</td>
+                    <td>@pay.value.TxnAmount</td>
+                    <td>@pay.value.ErrorDescription</td>
+                    <td>@Html.ActionLink("Print", "CollegeScmPrint", "CollegeSCMProceedingsRequest", new { paymentid = @pay.value.Id }, new { @class = "create_button", @target = "_blank", @style = "color: white" })</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@*}*@
+<style type="text/css">
+    .paymentheader {
+        background-color: bisque;
+    }
+    /*.paymentbody {
+        background-color: darkgoldenrod;
+    }*/
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+        $.ajaxSetup({ cache: false });
+
+        $("#openDialog").live("click", function (e) {
+            //e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Pay',
+                height: 300,
+                width: 650
+            });
+            url = $("#openDialog").attr('href');
+            return false;
+        });
+        $('#pay').click(function (e) {
+            var data = "challanNumber=@ViewBag.challnNumber&txnAmount=@ViewBag.totalFee&collegeCode=@ViewBag.collegeCode";
+            //alert(data);
+            //e.preventDefault();
+            $.ajax({
+                url: "/CollegeSCMProceedingsRequest/SavePrincipalPaymentRequest",
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                data: data,
+                success: function (data) {
+
+
+                    //$('#paymentform').submit();
+
+                },
+                error: function (event) {
+                    //debugger;
+
+                    // $(this).prop("checked", false);
+
+                }
+
+            });
+        });
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+
+    });
+</script>
+<script>
+    function DisplayMessage(e) {
+        var retVal = confirm("Do you want to continue ?");
+        if (!retVal) {
+            e.preventDefault();
+        }
+        else {
+            alert('payment');
+            $('#paymentform').submit();
+        }
+
+    }
+    $(document).ready(function () {
+        $('#continuePayment').click(function () {
+            if ($(this).attr("checked")) {
+                $('#pay').removeClass('not-active');
+            }
+            else $('#pay').addClass('not-active');
+        });
+    })
+</script>

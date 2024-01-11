@@ -1,0 +1,231 @@
+﻿@{
+    ViewBag.Title = "Deputy Director";
+    Layout = "~/Views/Shared/_AcademicAuditCellLayoutPage1.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <style>
+        /*body {
+            font-family: Arial;
+            color: black;
+        }*/
+
+        .split {
+            height: 100%;
+            width: 50%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            overflow-x: hidden;
+            padding-top: 30px;
+        }
+
+        .left {
+            left: 0;
+            background-color:;
+        }
+
+        .right {
+            right: 0;
+            background-color:;
+        }
+
+        .centered {
+            position: absolute;
+            top: 50%;
+            left: 60%;
+            transform: translate(-50%, -60%);
+            text-align: center;
+        }
+
+            .centered img {
+                width: 100px;
+                border-radius: 50%;
+            }
+    </style>
+
+    <style>
+        .accordion {
+            background-color: #eee;
+            color: red;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+        }
+
+            .active, .accordion:hover {
+                background-color: #f8e9e9;
+            }
+
+        .panel {
+            padding: 0 18px;
+            display: none;
+            background-color: white;
+            overflow: hidden;
+        }
+    </style>
+    <title>DeputyDirector</title>
+</head>
+<body>
+    <h2>Deputy Director</h2>
+    <div>
+        <div style="text-align:center">
+            <img src="~/Content/images/Ravindra_Reddy.jpg" height="160px" width="160px" /><br />
+            <span style="font-size:16px;color:chocolate;font-weight:bold;">Dr. B. Ravindra Reddy</span><br />
+            <span style="font-size: 0.90rem;">
+                M.Sc., Ph.D.<br />
+                Professor of Mathematics & Deputy Director of Affiliations & Academic Audit
+            </span>
+        </div>
+        <br />
+
+        <button class="accordion"> Qualifications</button>
+        <div class="panel">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+
+                        <h4 style="color:red">Educational Qualifications</h4>
+                        <table>
+                            <tr>
+                                <td> <b>Ph. D.University (Mathematics) </b> </td>
+                                <td>:</td>
+                                <td> Osmania University</td>
+                            </tr>
+                            <tr>
+                                <td><b>Subject</b>   </td>
+                                <td>:</td>
+                                <td>Ph.D in Mathematics</td>
+                            </tr>
+                            <tr>
+                                <td><b> Division & Year</b></td>
+                                <td>:</td>
+                                <td>  (2009)</td>
+                            </tr>
+                        </table>
+
+                        <br />
+
+                        <table>
+                            <tr>
+                                <td> <b>M. Sc.University</b>   </td>
+                                <td>:</td>
+                                <td>  Pondicherry Central University</td>
+                            </tr>
+                            <tr>
+                                <td> <b>Subject</b>  </td>
+                                <td>:</td>
+                                <td> M.Sc in Mathematics</td>
+                            </tr>
+                            <tr>
+                                <td><b>Division & Year</b> </td>
+                                <td>:</td>
+                                <td> 1998 </td>
+                            </tr>
+                        </table>
+                        <br />
+
+                        <table>
+                            <tr>
+                                <td> <b>B.Sc university</b>   </td>
+                                <td>:</td>
+                                <td> JVR Govt. Degree College </td>
+                            </tr>
+                            <tr>
+                                <td> <b>Subject</b>  </td>
+                                <td>:</td>
+                                <td>  B.Sc in (M.P.C)</td>
+                            </tr>
+                        </table>
+            </table>
+
+        </div>
+        <button class="accordion"> Additional Details</button>
+        <div class="panel">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+
+                        <h4 style="color:red">Publications:</h4>
+                        <b>68</b>
+                        <br />
+                        <h4 style="color:red">Conference Proceedings: </h4>
+                        <b>03</b>
+                        <h4 style="color:red">Papers Presented in various seminars/conferences: </h4>
+                        <b>15</b>
+                        <h4 style="color:red">Guest Lectures/Invited Talks/Chaired a Session: </h4>
+                        <b>05</b>
+                        <h4 style="color:red">Text Books Authored: </h4>
+                        <b>02</b>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <button class="accordion"> Teaching Experience in JNTU Hyderabad</button>
+
+        <div class="panel">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+                        <table>
+                            <tr>
+                                <td><b>Total Teaching Experience</b></td>
+                                <td><b>:</b></td>
+                                <td><b> 24 Years</b></td>
+                            </tr>
+                            <tr><th> Professor of Mathematics</th></tr>
+                            <tr>
+                                <td>Organization</td>
+                                <td><b>:</b></td>
+                                <td>JNTUH College of Engineering, Hyderabad</td>
+                            </tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td> 8th July 2010 to Till date.</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="text-align:right;">
+            <br />
+            @Html.ActionLink("Click here to download", "deputydirectorfile", new { }, new { @class = "create_button" })
+        </div>
+    </div>
+
+</body>
+</html>
+
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+</script>

@@ -1,0 +1,38 @@
+﻿@{   
+    int sno = 1;
+}
+<table border="1" style="width: 100%">
+
+    <thead>
+        <tr>
+            <th style="text-align: center; background-color: yellow; vertical-align: top;">S.No</th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top;">College Code</th>
+            <th style="text-align: left; background-color: yellow; vertical-align: top;">College Name</th>
+            <th style="text-align: left; background-color: yellow; vertical-align: top;">Email</th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top;">Mobile No</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.allCollegeMails)
+        {
+            <tr>
+                <td style="vertical-align: top;">
+                    @sno+1
+                </td>
+                <td style="vertical-align: top;">
+                    @item.collegeCode
+                </td>
+                <td style="vertical-align: top;">
+                    @item.collegeName
+                </td>
+                <td style="vertical-align: top;">
+                    @item.email
+                </td>
+                <td style="vertical-align: top;">
+                    @item.mobileNo
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

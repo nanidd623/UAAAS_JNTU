@@ -1,0 +1,64 @@
+﻿@model List<UAAAS.Models.DCB_Reports>
+@{
+    int Count = 1;
+    //var firstYear = Model.Select(s => s.FirstYear).FirstOrDefault();
+    //var SecondYear = Model.Select(s => s.SecondYear).FirstOrDefault();
+    //var ThridYear = Model.Select(s => s.ThridYear).FirstOrDefault();
+    //var FouthYear = Model.Select(s => s.FouthYear).FirstOrDefault();
+    decimal Total = new decimal();
+}
+<style>
+    .Header {
+        background-color: yellow;
+        color: blue;
+        font-weight: bold;
+        vertical-align: top";
+    }
+</style>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th rowspan="2" class="Header">S.No</th>
+            <th rowspan="2" class="Header">CollegeCode</th>
+            <th rowspan="2" class="Header">CollegeName</th>
+            <th colspan="3" class="Header">@TempData["FirstYear"].ToString()</th>
+            <th colspan="3" class="Header">@TempData["SecondYear"].ToString()</th>
+            <th colspan="3" class="Header">@TempData["ThirdYear"].ToString()</th>
+            <th colspan="3" class="Header">@TempData["FouthYear"].ToString()</th>
+        </tr>
+        <tr>
+            @for (int i = 0; i < 4; i++)
+            {
+
+                <th class="Header">Demand <br />(slab)</th>
+                <th class="Header">Collection</th>
+                <th class="Header">Balance</th>
+
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align:center;">@(Count++)</td>
+                <td style="text-align:center;">@item.CollegeCode</td>
+                <td style="text-align:left;">@item.CollegeName</td>
+                <td style="text-align:right;">@item.FirstYearDemand</td>
+                <td style="text-align:right;">@item.FirstYearCollection</td>
+                <td style="text-align:right;">@item.FirstYearBalance</td>
+                <td style="text-align:right;">@item.SecondYearDemand</td>
+                <td style="text-align:right;">@item.SecondYearCollection</td>
+                <td style="text-align:right;">@item.SecondYearBalance</td>
+                <td style="text-align:right;">@item.ThridYearDemand</td>
+                <td style="text-align:right;">@item.ThridYearCollection</td>
+                <td style="text-align:right;">@item.ThridYearBalance</td>
+                <td style="text-align:right;">@item.FouthYearDemand</td>
+                <td style="text-align:right;">@item.FouthYearCollection</td>
+                <td style="text-align:right;">@item.FouthYearBalance</td>
+            </tr>
+            
+        }
+    </tbody>
+</table>

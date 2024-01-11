@@ -1,0 +1,71 @@
+﻿@model UAAAS.Controllers.pannumberchangeing
+@{
+    ViewBag.Title = "Pannumberchange";
+}
+<h2>PAN Number Change</h2>
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p class="SuccessText" style="text-align: center;font-weight: bold">@TempData["Success"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+@using (Html.BeginForm("Pannumberchange", "FacultyMultipleRegistrations", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="details_table">
+
+        <div class="editor-label">
+            @Html.LabelFor(m => m.RegistrationNumber)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.RegistrationNumber, new {@required = "required"})
+            @Html.ValidationMessageFor(m => m.RegistrationNumber)
+        </div>
+        <br/>
+        <div class="editor-label">
+            <span>Incorrect PAN Number</span>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.worngpannumbe, new {@required = "required"})
+            @Html.ValidationMessageFor(m => m.worngpannumbe)
+        </div>
+        <div class="editor-label">
+            <span>Orginal PAN Number</span>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.correctpannumber, new {@required = "required"})
+            @Html.ValidationMessageFor(m => m.correctpannumber)
+        </div>
+        <div class="editor-label">
+            <span>PAN Document</span>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.pandocument, new {type = "file", @class = "panfile"})
+            @Html.ValidationMessageFor(m => m.pandocument)
+        </div>
+        <div class="editor-label">
+            <span>Reson</span>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.Reson, new { @required = "required" })
+            @Html.ValidationMessageFor(m => m.Reson)
+        </div>
+        <div class="display-label last-row">
+            &nbsp;
+        </div>
+        <div class="display-field last-row">
+            <p>
+                <input type="submit" value="Submit"/>
+            </p>
+        </div>
+        <div class="clear"></div>
+    </div>
+}

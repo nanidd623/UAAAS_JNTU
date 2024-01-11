@@ -1,0 +1,581 @@
+﻿@using UAAAS.Models
+@model IEnumerable<UAAAS.Models.CollegeFaculty>
+@{
+    ViewBag.Title = "Appeal Faculty Details";
+    var index = 1;
+    var psno = 1;
+    var pcolor = string.Empty;
+    var pupdatedcolor = string.Empty;
+    uaaasDBContext db = new uaaasDBContext();
+}
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null, null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $('#collegeId').change(function () {
+            var collegeId = $(this).val();
+            if ($('#collegeId').val() != '') {
+                window.location = '/AppealFormat/ViewFacultyDetails?collegeid=' + collegeId;
+            }
+            else {
+                window.location = '/AppealFormat/ViewFacultyDetails';
+            }
+        });
+
+        $.ajaxSetup({ cache: false });
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Department',
+            autoOpen: false,
+            resizable: false,
+            height: 200,
+            width: 680,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'Deactivate Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 500,
+                width: 500,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Faculty'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('#example').find('tr').click(function () {
+            debugger;
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            debugger;
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Department & Specialization'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+
+            $("#dialog-confirmactive").dialog({
+                title: 'Active Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+
+            $("#dialog-confirmactive").dialog('open');
+            return false;
+        });
+
+    });
+</script>
+
+
+<table class="four_columns">
+    <tr>
+        <td class="col1">
+            <span>College</span>
+        </td>
+        <td class="col2" colspan="4">
+            @Html.DropDownList("collegeId",
+                                  new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"),
+                                  "--Select--", new { id = "collegeId" })
+        </td>
+    </tr>
+
+</table>
+
+<br />
+@using (Html.BeginForm())
+{
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+
+    //for principal
+    <h2>Appeal Principal Details</h2>
+    <table style="width: 100%; border: 1px; border-color: red" class="LabsAppeal">
+
+        <tr>
+            <th class="col1" style="text-align: center;">S.No </th>
+            <th class="col1" style="text-align: center;"> Registration ID</th>
+            <th class="col1" style="text-align: center;">Full Name</th>
+            <th class="col1" style="text-align: center;">Old Deactivation Reasons</th>
+            @*<th class="col1" style="text-align: center;">New Deactivation Reasons</th>*@
+            <th class="col1" style="width: 80px; text-align: center;">Compliance/ Reverification</th>
+            <th class="col1" style="text-align: center;">View</th>
+            <th class="col1" style="text-align: center;">Add/Reactivate</th>
+        </tr>
+        @if (ViewBag.Status == true && ViewBag.isActive != null)
+        {
+            if (@ViewBag.ViewPhdUndertakingDocument != null)
+            {
+                pcolor = "green";
+            }
+            if (ViewBag.ViewNotificationDocument != null)
+            {
+                pcolor = "red";
+            }
+            if (ViewBag.isActive == true)
+            {
+                pupdatedcolor = "green";
+            }
+            <tr>
+                <td class="col2" style="width: 5px; text-align: center; vertical-align: middle; background-color: @pupdatedcolor;">
+                    @(1)
+                </td>
+                <td class="col2" style="text-align: center; vertical-align: middle;">@ViewBag.RegistrationNumber</td>
+                <td class="col2" style="text-align: center; vertical-align: middle;">@ViewBag.FullName</td>
+                <td class="col2" style="text-align: center; vertical-align: middle;">@ViewBag.Reason</td>
+                @*<td class="col2" style="text-align: center; vertical-align: middle;">@ViewBag.NewReason</td>*@
+                <td class="col2" style="text-align: center; vertical-align: middle;color: @pcolor">
+                    @if (@ViewBag.ViewNotificationDocument != null)
+                    {
+                        <span>Compliance</span>
+                    }
+                    else
+                    {
+                        if (@ViewBag.ViewPhdUndertakingDocument != null)
+                        {
+                            <span>Reverification</span>
+                        }
+                    }
+                </td>
+                <td class="col2" style="text-align: center; vertical-align: middle;">
+                    @Html.ActionLink("View", "ViewFacultyDetails", "NewOnlineRegistration", new { fid = UAAAS.Models.Utilities.EncryptString(ViewBag.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"])}, new { @class = "view_button", target = "_blank" })
+                </td>
+                <td class="col2" style="text-align: center; vertical-align: middle;">
+                    @if (@ViewBag.ViewNotificationDocument != null && ViewBag.isActive == false)
+                    {
+                        @Html.ActionLink("Add", "RegPrincipalAdding", "AppealFormat", new { fid = UAAAS.Models.Utilities.EncryptString(ViewBag.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"] }, new { @class = "create_button" })
+                    }
+                    else if (@ViewBag.ViewPhdUndertakingDocument != null && ViewBag.isActive == false)
+                    {
+                        @Html.ActionLink("Re-Activate", "PrincipalReactivateAllFlags", "AppealFormat", new { fid = UAAAS.Models.Utilities.EncryptString(ViewBag.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"] }, new { @class = "create_button confirmDialog" })
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+
+        //For faculty
+        <br />
+        <h2>Appeal Faculty Details</h2>
+        <table id="example" class="display">
+            <thead>
+                <tr>
+                    <th style="width: 50px; text-align: center;">
+                        S.No
+                    </th>
+                    <th style="width: 150px; text-align: center;">
+                        Registration ID
+                    </th>
+                    <th style="text-align: left;">
+                        Full Name
+                    </th>
+                    <th style="text-align: left;">
+                        Identified For
+                    </th>
+                    <th style="text-align: left;">
+                        Department
+                    </th>
+                    <th style="width: 80px; text-align: center;">
+                        Compliance/ Reverification
+                    </th>
+                    @*<th style="width: 80px; text-align: center;">
+                        Notification Report Document
+                        </th>
+                        <th style="width: 80px; text-align: center;">
+                        Appointment Order Document
+                        </th>
+                        <th style="width: 80px; text-align: center;">
+                        Joining Order Document
+                        </th>*@
+                    <th style="width: 80px; text-align: center;">
+                        Selection Commite Minutes Document
+                    </th>
+                    <th style="width: 80px; text-align: center;">
+                        Reverification Supporting Document
+                    </th>
+                    <th style="width: 80px; text-align: center;">
+                        Old Deactivation Reasons
+                    </th>
+                    @*<th class="col1" style="text-align: center;">New Deactivation Reasons</th>*@
+                    <th style="width: 80px; text-align: center;">
+                        View
+                    </th>
+                    <th style="width: 230px; text-align: center;">
+                        Add/Reactivate
+                    </th>
+                    <th style="width: 230px; text-align: center;">
+                        Update Department
+                    </th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ToList())
+                {
+                    var color = string.Empty;
+                    int j = 1;
+                    var updatedcolor = string.Empty;
+                    if (item.ViewAppealReverificationSupportDoc != null)
+                    {
+                        color = "green";
+                    }
+                    if (item.ViewNotificationDocument != null)
+                    {
+                        color = "red";
+                    }
+                    if (item.isActive)
+                    {
+                        updatedcolor = "green";
+                    }
+
+                    var department = string.Empty;
+                    if (item.IdentifiedFor == "PG")
+                    {
+                        department = item.DegreeName + "-" + item.SpecializationName;
+                    }
+                    else
+                    {
+                        department = item.DegreeName + "-" + item.department;
+                    }
+                    var fdegreeid = db.jntuh_registered_faculty_education.Count(e => e.facultyId == item.id&&e.educationId!=8) > 0 ? db.jntuh_registered_faculty_education.Where(e => e.facultyId == item.id && e.educationId != 8).Select(e => e.educationId).Max() : 0;
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle; background-color: @updatedcolor; border-bottom: 1px solid #fff;">                           
+                            @(index++)
+                        </td>
+                        <td style="text-align: left; text-transform: uppercase; vertical-align: middle;">
+                            @Html.DisplayFor(modelItem => item.FacultyRegistrationNumber)
+                        </td>
+                        @if (fdegreeid == 6)
+                        {
+                            <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                                @Html.DisplayFor(modelItem => item.facultyFirstName)
+                                @Html.DisplayFor(modelItem => item.facultySurname)
+                                @Html.DisplayFor(modelItem => item.facultyLastName)<span style="color: red;font-weight:bold">&nbsp;(Ph.D)</span>
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                                @Html.DisplayFor(modelItem => item.facultyFirstName)
+                                @Html.DisplayFor(modelItem => item.facultySurname)
+                                @Html.DisplayFor(modelItem => item.facultyLastName)
+                            </td>
+                        }
+
+                        <td style="text-align: left; vertical-align: middle;">
+                            @Html.DisplayFor(modelItem => item.IdentifiedFor)
+                        </td>
+                        <td style="text-align: left; vertical-align: middle;">
+                            @*@Html.DisplayFor(modelItem => item.department)*@
+                            @department
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;width: 50px;color:@color">
+                            @if (Model != null && item.ViewNotificationDocument != null)
+                            {
+                                <span>Compliance</span>
+                            }
+                            else if (Model != null && item.ViewAppealReverificationSupportDoc != null)
+                            {
+                                <span>Reverification</span>
+                            }
+                        </td>
+                        @*<td style="text-align: center; vertical-align: middle;width: 50px">
+                                @if (Model != null && item.ViewNotificationDocument != null)
+                                {
+                                    <a href="@item.ViewNotificationDocument.Replace("~", "")" target="_blank">View</a>
+                                }
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;width: 50px">
+                                @if (Model != null && item.ViewAppointmentOrderDocument != null)
+                                {
+                                    <a href="@item.ViewAppointmentOrderDocument.Replace("~", "")" target="_blank">View</a>
+                                }
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;width: 50px">
+                                @if (Model != null && item.ViewJoiningReportDocument != null)
+                                {
+                                    <a href="@item.ViewJoiningReportDocument.Replace("~", "")" target="_blank">View</a>
+                                }
+                            </td>*@
+                        <td style="text-align: center; vertical-align: middle;width: 50px">
+                            @if (Model != null && item.ViewSelectionCommitteeDocument != null)
+                            {
+                                <a href="@item.ViewSelectionCommitteeDocument.Replace("~", "")" target="_blank"><span style="font-weight: bold; color: red">View</span></a>
+                            }
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;width: 50px">
+                            @if (Model != null && item.ViewAppealReverificationSupportDoc != null)
+                            {
+                                <a href="@item.ViewAppealReverificationSupportDoc.Replace("~", "")" target="_blank"><span style="font-weight: bold; color: red">View</span></a>
+                            }
+                        </td>
+                        <td style="text-align: left;vertical-align: middle;color: red">
+                            @*@Html.DisplayFor(modelItem => item.Reason)*@
+                            @if (!String.IsNullOrEmpty(@item.Reason))
+                            {
+                                string[] values = item.Reason.Split(',');
+                                for (int i = 0; i < values.Length; i++)
+                                {
+                                    values[i] = values[i].Trim();
+                                }
+                                foreach (var reason in values)
+                                {
+                                    if (j == values.Count())
+                                    {
+                                        <span style="color: red"> @reason</span>
+
+                                    }
+                                    else
+                                    {
+                                        <span style="color: red"> @reason</span>
+                                        <span style="color: red">,</span>
+                                        <br />
+
+                                    }
+                                    j++;
+                                }
+                            }
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @Html.ActionLink("View", "ViewFacultyDetails", "NewOnlineRegistration", new { fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "view_button", target = "_blank" })
+                        </td>
+                        <td style="text-align: center; vertical-align: middle; color: @color">
+                            @if (Model != null && item.ViewNotificationDocument != null && item.isActive == false)
+                            {
+                                @Html.ActionLink("Add", "FacultyAddingToCollege", "AppealFormat", new {fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"]}, new {@class = "create_button"})
+                            }
+                            else if (Model != null && item.ViewAppealReverificationSupportDoc != null && item.isActive == false)
+                            {
+                                @Html.ActionLink("Re-Activate", "FacultyReactivateAllFlags", "AppealFormat", new {fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"]}, new {@class = "create_button confirmDialog"})
+                            }
+                        </td>
+                        <td style="text-align: center; vertical-align: middle; color: @color">
+                            @if (Model != null && item.ViewAppealReverificationSupportDoc != null && item.isActive == false)
+                            {                           
+                                @Html.ActionLink("Add Dept", "AppealFacultyAddDepartment", "AppealFormat", new { fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"] }, new { @class = "editDialog create_button", @style = "background-color:green" })
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>
+                        <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+                    </th>
+
+                    <th>
+                        <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                    </th>
+                    @*<th class=" ui-state-default">
+                            <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                        </th>*@
+                    @*<th class=" ui-state-default">
+                            <input type="text" id="i-5" style="width: 90%; text-align: center;" class="search_init">
+                        </th>*@
+                    @*<th class=" ui-state-default">
+                            <input type="text" id="i-6" style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-7" style="width: 90%; text-align: left;" class="search_init">
+                        </th>*@
+                    @*<th class=" ui-state-default">
+                            <input type="text" id="i-7" style="width: 90%; text-align: left;display: none; " class="search_init">
+                        </th>*@
+                    <th class=" ui-state-default">
+                        <input type="text" id="i-8" style="width: 90%; text-align: left;display: none;" class="search_init">
+                    </th>
+                    <th class=" ui-state-default">
+                        <input type="text" id="i-9" style="width: 90%; text-align: left;display: none;" class="search_init">
+                    </th>
+                    <th class=" ui-state-default">
+                        <input type="text" id="i-10" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    <th class=" ui-state-default">
+                        <input type="text" id="i-11" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    <th class=" ui-state-default">
+                        <input type="text" id="i-12" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>
+
+                    <th class=" ui-state-default">
+                        <input type="text" id="i-13" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    <th class=" ui-state-default">
+                        <input type="text" id="i-13" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    <th class=" ui-state-default">
+                        <input type="text" id="i-13" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    <th class=" ui-state-default">
+                        <input type="text" id="i-14" style="width: 90%; text-align: left;display: none; " class="search_init">
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+        <div id="dialog-confirm" style="display: none">
+            <p>
+                <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+                Are you sure to delete ?
+            </p>
+        </div>
+        <div id="dialog-confirmactive" style="display: none">
+            <p>
+                <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+                Are you sure to active ?
+            </p>
+        </div>
+        <div id="dialog-confirm-Add" style="display: none">
+            <p>
+                <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+                Are you sure to add  ?
+            </p>
+        </div>
+        <div id="dialog-edit" style="display: none">
+        </div>
+        <div id="dialog-view" style="display: none">
+        </div>
+}
+
+
+

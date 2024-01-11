@@ -1,0 +1,25 @@
+﻿@model UAAAS.Models.CollegeSports
+@{
+    ViewBag.Title = "College Sports Details";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+}
+
+<h2>College Sports Details</h2>
+
+<div class="details_table">
+
+    <div class="display-label" style="width:100px">Sports Type</div>
+    <div class="display-field" style="width:250px">
+        @Html.DisplayFor(model => model.sportsType)
+    </div>
+
+    <div class="display-label" style="width:100px">Sports Facility</div>
+    <div class="display-field" style="width:250px">
+        @Html.DisplayFor(model => model.sportsFacility)
+    </div>
+
+</div>

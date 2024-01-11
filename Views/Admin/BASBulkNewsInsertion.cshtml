@@ -1,0 +1,197 @@
+﻿@model UAAAS.Models.BulkCollegesNews
+@{
+    ViewBag.Title = "Bulk News Insertion Screen";
+    int Count = 1;
+}
+
+<h2>BAS Bulk News Insertion Screen...</h2>
+<style type="text/css">
+    .tdright {
+        width: 25%;
+    }
+
+    .tdcenter {
+        width: 5%;
+    }
+
+    .tdleft {
+        width: 70%;
+    }
+
+    .tdright span {
+        font-weight: bold;
+    }
+</style>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+<br />
+@using (Html.BeginForm("BASBulkNewsInsertion", "CollegeNews", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div style="width:70%;border:solid 1px #e6e6e6;border-top:5px solid #F2552C;box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);margin:auto;">
+        <table cellspacing="6px;" width="90%" style="margin:auto;padding:7px;">
+            <tr>
+                <td class="tdright">
+                    <span>Title</span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    @Html.TextAreaFor(model => model.title, new { @style = "vertical-align: top;width:100%;" }) &nbsp;&nbsp;&nbsp;
+                    @Html.ValidationMessageFor(model => model.title)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height:2px;"></td>
+            </tr>
+            <tr>
+                <td class="tdright">
+                    <span>News Type</span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    @*@Html.DropDownListFor(model => model.NewsType, new SelectList(ViewBag.BASNewsType as System.Collections.IEnumerable, "Value", "Text"), "---Select---", new { @style = "width:30%;" })*@
+                    <label>@Html.RadioButtonFor(model => model.NewsType, "1", new { @style = "vertical-align: top;" }) Faculty News</label> &nbsp;&nbsp;&nbsp;
+                    <label>@Html.RadioButtonFor(model => model.NewsType, "2", new { @style = "vertical-align: top;" }) Student News</label> &nbsp;&nbsp;&nbsp;
+                    @Html.ValidationMessageFor(model => model.NewsType)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height:2px;"></td>
+            </tr>
+            <tr>
+                <td class="tdright">
+                    <span>Student Type</span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    @*@Html.DropDownListFor(model => model.StudentBASNewsType, new SelectList(ViewBag.StudentBASNewsType as System.Collections.IEnumerable, "Value", "Text"), "---Select---", new { @style = "width:30%;" })*@                
+                    <label>@Html.RadioButtonFor(model => model.StudentBASNewsType, "1", new { @style = "vertical-align: top;" }) FirstYear</label> &nbsp;&nbsp;&nbsp;
+                    <label>@Html.RadioButtonFor(model => model.StudentBASNewsType, "2", new { @style = "vertical-align: top;" }) SecondYear</label> &nbsp;&nbsp;&nbsp;
+                    <label>@Html.RadioButtonFor(model => model.StudentBASNewsType, "3", new { @style = "vertical-align: top;" }) Pharm.D</label> &nbsp;&nbsp;&nbsp;
+                    @Html.ValidationMessageFor(model => model.StudentBASNewsType)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height:2px;"></td>
+            </tr>
+            <tr>
+                <td class="tdright">
+                    <span>New Folder Name</span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    @Html.TextBoxFor(model => model.FolderName, new { @style = "vertical-align: top;width:80%;" }) &nbsp;&nbsp;&nbsp;
+                    @Html.ValidationMessageFor(model => model.FolderName)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height:2px;"></td>
+            </tr>
+            <tr>
+                <td class="tdright">
+                    <span>Upload PDF List</span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.files, "", new { @type = "file", @multiple = "multiple" })&nbsp;&nbsp;&nbsp;
+                        @Html.ValidationMessageFor(model => model.files, "", new { @class = "text-danger" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height:2px"></td>
+            </tr>
+            <tr>
+                <td class="tdright">
+                    <span>Status</span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    <label>@Html.RadioButtonFor(model => model.isActive, true, new { @style = "vertical-align: top;" }) Active</label>&nbsp;&nbsp;&nbsp;
+                    <label>@Html.RadioButtonFor(model => model.isActive, false, new { @style = "vertical-align: top;" }) Inactive</label>&nbsp;&nbsp;&nbsp;
+                    @Html.ValidationMessageFor(model => model.isActive)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height:2px"></td>
+            </tr>
+            <tr>
+                <td class="tdright">
+                    <span>Show Latest News Image </span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    <label>@Html.RadioButtonFor(model => model.isLatest, true, new { @style = "vertical-align: top;" }) Active</label>&nbsp;&nbsp;&nbsp;
+                    <label>@Html.RadioButtonFor(model => model.isLatest, false, new { @style = "vertical-align: top;" }) Inactive</label>&nbsp;&nbsp;&nbsp;
+                    @Html.ValidationMessageFor(model => model.isLatest)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td style="float:left;">
+                    <input type="submit" value="Submit" />
+                </td>
+            </tr>
+            @*<tr>
+                    <td class="tdright">
+                        <span>Upload Excel</span>
+                    </td>
+                    <td class="tdcenter">:</td>
+                    <td class="tdleft">
+                        @Html.TextBoxFor(model => model.RegNosExcel, new { type = "file", @class = "file required", @style = "vertical-align: top;" }) &nbsp;&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tdright">
+                        <span>Old Path</span>
+                    </td>
+                    <td class="tdcenter">:</td>
+                    <td class="tdleft">
+                        @Html.TextBoxFor(model => model.ExcelFileFolderpath, new { @style = "vertical-align: top;" }) &nbsp;&nbsp;&nbsp;
+                    </td>
+                </tr>*@
+        </table>
+    </div>
+}
+
+<br />
+
+@if (ViewBag.FailureItems != null)
+{
+    <table class="webGrid">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Item Name</th>
+                <th>Error Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.FailureItems)
+            {
+                <tr>
+                    <td>@(Count++)</td>
+                    <td>@item.ItemName</td>
+                    <td>@item.reason</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

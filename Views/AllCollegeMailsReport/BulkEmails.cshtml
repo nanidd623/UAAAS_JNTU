@@ -1,0 +1,214 @@
+﻿@model UAAAS.Models.CollegeBulkMails
+@*@model UAAAS.Models.BulkCollegeMails*@
+@using UAAAS.Models
+@{
+    ViewBag.Title = "BulkEmails";
+    int sno = 1;
+    TempData.Keep("BulkCollegeMailsData");
+}
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+
+
+        $('#chkselectall').click(function () {
+            // add multiple select / deselect functionality
+            $('.forcheckbox').attr('checked', this.checked);
+        });
+       
+    });
+
+</script>
+
+<h2>BulkEmails</h2>
+@using (Html.BeginForm("BulkEmails", "AllCollegeMailsReport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <table class="four_columns" style="margin-left: 10px; width: 60%; font-size: 15px">
+        <tr style="height: 30px">
+            <td class="col1" style="width: 18%">Subject : </td>
+            <td class="col2" style="width: 80%">
+                @Html.TextBoxFor(model => model.Subject, new { style = "width:99%" })
+            </td>
+        </tr>
+        <tr style="height: 30px">
+            <td class="col1" style="vertical-align: top; width: 18%">Message : </td>
+            <td class="col2" style="width: 55%">
+                @Html.TextAreaFor(model => model.Message)
+            </td>
+        </tr>
+        <tr style="height: 30px">
+            <td class="col1" style="vertical-align: top">SMS : </td>
+            <td class="col2">
+                @Html.TextAreaFor(model => model.SMS, new { style = "width:99%" })
+            </td>
+            <td style="width: 20%">
+                <label id="SMSText"></label>
+            </td>
+        </tr>
+        <tr style="height: 30px">
+            <td class="col1">Attachment :</td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.files, "", new { @type = "file", @multiple = "multiple" })
+                @Html.ValidationMessageFor(model => model.files, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr style="height: 30px">
+            <td class="col1">Save Subject In College_News :</td>
+            <td class="col2">
+                @Html.CheckBoxFor(model => model.Select, new { style = "width:5%" })
+            </td>
+        </tr>
+        
+        <tr style="height: 30px; font-size: 15px">
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                @*<button class="btn btn-default">Submit</button>*@
+                <input type="submit" id="btnsubmit" value="Submit" style="padding: 4px 15px; font-size: 15px" />
+                @Html.ActionLink("Back", "BulkEmails", "AllCollegeMailsReport", null, new { @class = "create_button" })
+            </td>
+        </tr>
+    </table>
+   
+    if (@ViewBag.UploadStatus != null)
+    {
+        <div style="float:right">
+            @Html.ActionLink("Send To All", "BulkEmailssending", "AllCollegeMailsReport", new { @collegemails = @TempData["BulkCollegeMailsData"] }, new { @class = "create_button" })
+        </div>
+    <br /><br />
+        <table class="four_columns" style="margin-left: 10px; width: 100%; font-size: 15px">
+            <tr style="height: 30px">
+                <td class="col1" style="width: 5%">Subject : </td>
+                <td class="col2" style="width: 95%">
+                    @ViewBag.Subect
+                </td>
+            </tr>
+            <tr style="height: 30px">
+                <td class="col1" style="width: 5%">Message : </td>
+                <td class="col2" style="width: 95%">
+                    
+                    @Html.Raw(HttpUtility.HtmlDecode(@ViewBag.Message.Replace("\r\n", "<br>")))
+                </td>
+            </tr>
+        </table>
+    <br /><br />
+        <table id="example" class="display" style="width: 100%">
+            <thead>
+                <tr>
+                    <th style="width: 50px; text-align: center;">S.No</th>
+                    <th style="width: 80px; text-align: center;">College Code</th>
+                    <th style="text-align: left;">College Name</th>
+                    <th style="text-align: left;">CollegeEmail</th>
+                    <th style="text-align: left;">SocietyEmail</th>
+                    <th style="text-align: left;">SecretaryEmail</th>
+                    <th style="text-align: left;">PrincipalEmail</th>
+                    <th style="text-align: left;">Attachment File</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.Bulkemails.Count(); i++)
+                {
+                    <tr>
+                        <td style="text-align: center;">
+                            @(sno++)
+                        </td>
+                        <td style="text-align: center;">
+                            @Html.DisplayFor(m => m.Bulkemails[i].collegeCode)
+                            @Html.HiddenFor(m => m.Bulkemails[i].collegeCode)
+                        </td>
+                        <td style="text-align: left;">
+                            @Html.DisplayFor(m => m.Bulkemails[i].collegeName)
+                            @Html.HiddenFor(m => m.Bulkemails[i].collegeName, new { Value = Model.Bulkemails[i].collegeName })
+                        </td>
+                        <td style="text-align: left;">
+                            @Html.DisplayFor(m => m.Bulkemails[i].Collegeemail)
+                            @Html.HiddenFor(m => m.Bulkemails[i].Collegeemail, new { Value = Model.Bulkemails[i].Collegeemail })
+                        </td>
+                        <td style="text-align: center;">
+                            @Html.DisplayFor(m => m.Bulkemails[i].Societyemail)
+                            @Html.HiddenFor(m => m.Bulkemails[i].Societyemail, new { Value = Model.Bulkemails[i].Societyemail })
+                        </td>
+                        <td style="text-align: center;">
+                            @Html.DisplayFor(m => m.Bulkemails[i].Secretaryemail)
+                            @Html.HiddenFor(m => m.Bulkemails[i].Secretaryemail, new { Value = Model.Bulkemails[i].Secretaryemail })
+                        </td>
+                        <td style="text-align: center;">
+                            @Html.DisplayFor(m => m.Bulkemails[i].principalemail)
+                            @Html.HiddenFor(m => m.Bulkemails[i].principalemail, new { Value = Model.Bulkemails[i].principalemail })
+                        </td>
+                        <td style="text-align: center;">
+                            <a href="~/Content/Upload/Emails/@Html.DisplayFor(m => m.Bulkemails[i].FileName)" target="_blank"><img src="../../Content/images/pdf.png" alt="A-117" height="18"></a>
+                            
+                            @Html.HiddenFor(m => m.Bulkemails[i].FileName, new { Value = Model.Bulkemails[i].FileName })
+                        </td>
+
+
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+        }
+        }

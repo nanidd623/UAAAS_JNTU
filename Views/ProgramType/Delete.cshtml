@@ -1,0 +1,48 @@
+﻿@model UAAAS.Models.jntuh_program_type
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>jntuh_program_type</legend>
+
+    <div class="display-label">programType</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.programType)
+    </div>
+
+    <div class="display-label">isActive</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.isActive)
+    </div>
+
+    <div class="display-label">createdOn</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.createdOn)
+    </div>
+
+    <div class="display-label">my_aspnet_users</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users.name)
+    </div>
+
+    <div class="display-label">updatedOn</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.updatedOn)
+    </div>
+
+    <div class="display-label">my_aspnet_users1</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users1.name)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

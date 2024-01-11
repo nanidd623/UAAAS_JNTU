@@ -1,0 +1,66 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml"; }
+@model System.Web.Mvc.HandleErrorInfo
+@{
+    ViewBag.Title = "Error";
+}
+
+<h2>Error</h2>
+<br />
+<h2>
+    <div style="color: black; font-size: 1rem; text-transform: capitalize;">
+        An unexpected error has occurred. Please contact the system administrator.
+    </div>
+</h2>
+<br />
+@*@if (Model != null && HttpContext.Current.IsDebuggingEnabled)*@
+@if (Model != null)
+{
+    <div style="line-height: 1.2rem;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 75px;"><b>Exception</b></td>
+                <td style="width: 10px;">:</td>
+                <td>
+                    <div style="color: red; display: inline-block;">@Model.Exception.Message</div>
+                </td>
+            </tr>
+            @*<tr>
+                <td style="width: 75px;"><b>Error Message</b></td>
+                <td style="width: 10px;">:</td>
+                <td>
+                    <div style="color: red; display: inline-block;">@Model.Exception.InnerException.Message</div>
+                </td>
+            </tr>*@
+            <tr>
+                <td><b>Controller</b></td>
+                <td>:</td>
+                <td>
+                    <div style="color: red; display: inline-block;">@Model.ControllerName</div>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Action</b></td>
+                <td>:</td>
+                <td>
+                    <div style="color: red; display: inline-block;">@Model.ActionName</div>
+                </td>
+            </tr>
+            @*<tr>
+                <td colspan="3">
+                    <div style="overflow: scroll">
+                        <pre>
+                            @Model.Exception.StackTrace
+                        </pre>
+                    </div>
+                </td>
+            </tr>*@
+        </table>
+
+
+    </div>
+}
+@*<div class="error">
+    <p>Controller Name: @Model.ControllerName</p>
+    <p>Action Name : @Model.ActionName</p>
+    <p>Message: @Model.Exception.Message</p>
+</div>*@

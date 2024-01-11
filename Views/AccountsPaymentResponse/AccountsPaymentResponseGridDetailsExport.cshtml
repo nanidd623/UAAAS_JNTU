@@ -1,0 +1,80 @@
+﻿@model List<UAAAS.Models.Admin.PaymentResponse>
+@{
+
+}
+@using (Html.BeginForm())
+{
+    int count = 0;
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    S.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Code
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Name
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Txn Amount
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Customer ID
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Txn Reference No.
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Payment Type
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Txn Date
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Txn Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center;vertical-align: top">
+                        @(count = count + 1)
+                    </td>
+                    <th style="text-align: center;vertical-align: top">
+                        @item.CollegeId
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.CollegeName
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.TxnAmount
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.CustomerID
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.TxnReferenceNo
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.PaymentTypeName
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.TxnDate
+                    </th>
+                    @if (@item.AuthStatus == "0300")
+                    {
+                        <th style="text-align: left; vertical-align: top">SUCCESS</th>
+                    }
+                    else
+                    {
+                        <th style="text-align: left; vertical-align: top">@item.ErrorDescription</th>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}

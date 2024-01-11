@@ -1,0 +1,86 @@
+﻿@model UAAAS.Models.AFRCFee
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#AcademicyearId").change(function () {
+            var id = $(this).val();
+            var collegeid = $("#CollegeId").val();
+            if (id != null && id != "") {
+                $.ajax({
+                    type: "Get",
+                    url: "/CollegesFee/GetAfrcFee?collegeId=" + collegeid + "&&AcademicYearId=" + id,
+                    success: function (data) {
+                        if (data != null) {
+                            console.log(data);
+                            $("#EngineeringFee").val(data.data.afrcFee);
+                            $("#PharmacyFee").val(data.data.groupofInstitutionsafrcFee);
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+            else {
+                window.location.href = "/CollegesFee/CollegesAll";
+            }
+        });
+
+    });
+</script>
+@using (Ajax.BeginForm("EditCollegssAfrcFee", "CollegesFee", new AjaxOptions(), new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model => model.CollegeId)
+    if (String.IsNullOrEmpty(Model.Message))
+    {
+        <div>
+            <div style="display:inline-flex;">
+                <div class="editor-label" style="width: 200px;">
+                    <span>College</span>
+                </div>
+                <div class="editor-field" style="width: 300px;">
+                    @Html.DisplayFor(model => model.college, new { })
+                </div>
+            </div>
+            <div style="display:inline-flex;">
+                <div class="editor-label" style="width: 200px;">
+                    <span>Academic Year</span>
+                </div>
+                <div class="editor-field" style="width: 300px;">
+                    @Html.DropDownListFor(model => model.AcademicyearId, new SelectList(ViewBag.Years as System.Collections.IEnumerable, "id", "Year"), "---Select---", new { @style = "width:250px;" })
+                </div>
+            </div>
+            <div style="display:inline-flex;">
+                <div class="editor-label" style="width: 200px;">
+                    <span>Enginering Fee</span>
+                </div>
+                <div class="editor-field" style="width: 300px;">
+                    @Html.TextBoxFor(model => model.EngineeringFee, new { })
+                    @Html.ValidationMessageFor(model => model.EngineeringFee)
+                </div>
+            </div>
+            <div style="display:inline-flex;">
+                <div class="editor-label" style="width: 200px;">
+                    <span>Pharmacy Fee</span>
+                </div>
+                <div class="editor-field" style="width: 300px;">
+                    @Html.TextBoxFor(model => model.PharmacyFee, new { })
+                </div>
+            </div>
+            <div style="float:right;">
+                <input type="submit" value="Update" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div style="display:inline-flex;">
+            <div class="editor-label" style="width: 200px;">
+                <span>Error Message</span>
+            </div>
+            <div class="editor-field" style="width: 300px;">
+                @Html.DisplayFor(model => model.Message, new { })
+            </div>
+        </div>
+    }
+}

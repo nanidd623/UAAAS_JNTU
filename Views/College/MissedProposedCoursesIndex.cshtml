@@ -1,0 +1,87 @@
+﻿@model IEnumerable<UAAAS.Models.MissedProposedCourses>
+@{
+    if (@User.IsInRole("College") == true)
+    {
+        Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "Missed Proposed Courses";
+    int count = 1;
+}
+
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "bStateSave": false,
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ]
+                           });
+}
+
+<h2>Missed Proposed Courses</h2>
+<br />
+<table id="example" class="display full_table" style="width: 100%;">
+    <thead>
+        <tr>
+            <th style="text-align: center;" colspan="1">S.No
+            </th>
+            <th colspan="2">Code
+            </th>
+            <th colspan="2">Degree
+            </th>
+            <th style="text-align: center;" colspan="2">Department
+            </th>
+            <th style="text-align: center;" colspan="4">Specialization
+            </th>
+            <th style="text-align: center;" colspan="1">Shift
+            </th>
+            <th style="text-align: center;" colspan="1">Existing Intake 
+                <br />
+                A.Y
+                <label>@ViewBag.PresentAcademicYear</label>
+            </th>
+            <th style="text-align: center;" colspan="1">Proposed Intake
+                <br />
+                A.Y
+                <label>@ViewBag.NextAcademicYear</label>
+            </th>
+            <th style="text-align: center;" colspan="1">Status
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align: center;" colspan="1">
+                    @(count++)
+                </td>
+                <td colspan="2">@item.collegeCode</td>
+                <td colspan="2">@item.degree</td>
+                <td style="text-align: left;" colspan="2">@item.department</td>
+                <td style="text-align: left;" colspan="4">@item.specilization</td>
+                <td style="text-align: center;" colspan="1">@item.shift</td>
+                <td style="text-align: center;" colspan="1">@item.existingIntake</td>
+                <td style="text-align: center;" colspan="1">@item.proposedIntake</td>
+                @if (item.status == true)
+                {
+                    <td style="text-align: center;" colspan="1">
+                        <img src="@Url.Content("~/Content/images/submitted.png")" alt="JNTU Hyderabad Logo" />
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align: center;" colspan="1">
+                        <img src="@Url.Content("~/Content/images/not_submitted.png")" alt="JNTU Hyderabad Logo" />
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}

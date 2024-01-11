@@ -1,0 +1,264 @@
+﻿@model UAAAS.Models.FacultyFlags
+@{
+    int count = 1;
+}
+
+<table border="1" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                S.No
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top;width:auto;">
+                College Code
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                College Name
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Registration Number
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Name
+            </th>
+            @if (Model.type == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Adjunct Faculty</th>
+            }
+            @if (Model.absent == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Absent</th>
+            }
+            @if (Model.OriginalCertificatesNotShown == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Orginal Certificates Not shown in College Inspection</th>
+            }
+            @if (Model.Xeroxcopyofcertificates == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Photo copy of Certificates</th>
+            }
+            @if (Model.NotQualifiedAsperAICTE == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Not Qualified as per AICTE/PCI</th>
+            }
+            @if (Model.NoSCM == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">no/not valid SCM</th>
+            }
+            @if (Model.PANNumber == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">No PAN Number</th>
+            }
+            @if (Model.IncompleteCertificates == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">IncompleteCertificates</th>
+            }
+            @if (Model.NoRelevantUG == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">NO Relevant UG</th>
+            }
+            @if (Model.NoRelevantPG == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">NO Relevant PG</th>
+            }
+            @if (Model.NORelevantPHD == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">NO Relevant PHD</th>
+            }
+            @if (Model.InvalidPANNumber == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">InvalidPAN</th>
+            }
+            @if (Model.OriginalsVerifiedPHD == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">No Guide Sign in PHD Thesis</th>
+            }
+            @if (Model.OriginalsVerifiedUG == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Complaint PHD Faculty</th>
+            }
+            @if (Model.InvalidAadhaar == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Invalid/Blur Aadhaar</th>
+            }
+            @if (Model.BAS == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">BAS Flag</th>
+            }
+            @if (Model.Invaliddegree == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">AICTE Not Approved University Degrees</th>
+            }
+            @if (Model.Blacklistfaculy == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Blacklisted Faculty</th>
+            }
+            @if (Model.AbsentforVerification == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Absentfor Physical Verification</th>
+            }
+            @if (Model.Noclass == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">No Class in UG/PG</th>
+            }
+            @if (Model.Genuinenessnotsubmitted == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PHD Genuinity not Submitted </th>
+            }
+            @if (Model.NotConsideredPhD == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Cosidered as a faculty but not cosidered his/her P.hD</th>
+            }
+            @if (Model.FakePhD == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Fake PhD</th>
+            }
+            @if (Model.NoPGspecialization == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">no Specialization in PG</th>
+            }
+            @if (Model.NoForm16 == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">NoForm16</th>
+            }
+            @if (Model.NoForm26AS == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">NoForm26AS</th>
+            }
+            @if (Model.Covid19 == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Covid-19</th>
+            }
+            @if (Model.Maternity == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Maternity</th>
+            }
+    </thead>
+    <tbody>
+        @if (Model.FacultyFlagsDetails.Count() != 0)
+        {
+            foreach (var item in Model.FacultyFlagsDetails)
+            {
+                <tr>
+                    <td style="text-align: left;">@(count++)</td>
+                    <td style="text-align: left;">@item.collegeCode</td>
+                    <td style="text-align: left;">@item.collegeName</td>
+                    <td style="text-align: left;">@item.RegistrationNumber</td>
+                    <td style="text-align: left;">@item.Name</td>
+                    @if (Model.type == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.typeFlag</th>
+                    }
+                    @if (Model.absent == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.absentFlag</th>
+                    }
+                    @if (Model.OriginalCertificatesNotShown == true)
+                    {
+                        <th style="text-align: left; vertical-align: top">@item.OriginalCertificatesNotShownFlag</th>
+                    }
+                    @if (Model.Xeroxcopyofcertificates == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.XeroxcopyofcertificatesFlag</th>
+                    }
+                    @if (Model.NotQualifiedAsperAICTE == true)
+                    {
+                        <th style="text-align: left; vertical-align: top">@item.NotQualifiedAsperAICTEFlag</th>
+                    }
+                    @if (Model.NoSCM == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.NoSCMFlag</th>
+                    }
+                    @if (Model.PANNumber == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.PANNumberFlag</th>
+                    }
+                    @if (Model.IncompleteCertificates == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.IncompleteCertificatesFlag</th>
+                    }
+                    @if (Model.NoRelevantUG == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.NoRelevantUGFlag</th>
+                    }
+                    @if (Model.NoRelevantPG == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.NoRelevantPGFlag</th>
+                    }
+                    @if (Model.NORelevantPHD == true)
+                    {
+                        <th style="text-align: center; vertical-align: top">@item.NORelevantPHDFlag</th>
+                    }
+                    @if (Model.InvalidPANNumber == true)
+                    {
+                        <th style="text-align: left; vertical-align: top">@item.InvalidPANNumberFlag</th>
+                    }
+                    @if (Model.OriginalsVerifiedPHD == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.OriginalsVerifiedPHDFlag</th>
+                    }
+                    @if (Model.OriginalsVerifiedUG == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.OriginalsVerifiedUGFlag</th>
+                    }
+                    @if (Model.InvalidAadhaar == true)
+                    {
+                        <th style="text-align: left; vertical-align: top">@item.InvalidAadhaarFlag</th>
+                    }
+                    @if (Model.BAS == true)
+                    {
+                        <th style="text-align: left; vertical-align: top">@item.BASFlag</th>
+                    }
+                    @if (Model.Invaliddegree == true)
+                    {
+                        <th style="text-align: left;  vertical-align: top">@item.InvaliddegreeFlag</th>
+                    }
+                    @if (Model.Blacklistfaculy == true)
+                    {
+                        <th style="text-align: left;  vertical-align: top">@item.BlacklistfaculyFlag</th>
+                    }
+                    @if (Model.AbsentforVerification == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.AbsentforVerificationFlag</th>
+                    }
+                    @if (Model.Noclass == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.NoclassFlag</th>
+                    }
+                    @if (Model.Genuinenessnotsubmitted == true)
+                    {
+                        <th style="text-align: left; vertical-align: top">@item.GenuinenessnotsubmittedFlag</th>
+                    }
+                    @if (Model.NotConsideredPhD == true)
+                    {
+                        <th style="text-align: left;  vertical-align: top">@item.NotConsideredPhDFlag</th>
+                    }
+                    @if (Model.FakePhD == true)
+                    {
+                        <th style="text-align: left;  vertical-align: top">@item.FakePhDFlag</th>
+                    }
+                    @if (Model.NoPGspecialization == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.NoPGspecializationFlag</th>
+                    }
+                    @if (Model.NoForm16 == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.NoForm16</th>
+                    }
+                    @if (Model.NoForm26AS == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.NoForm26AS</th>
+                    }
+                    @if (Model.Covid19 == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.Covid19</th>
+                    }
+                    @if (Model.Maternity == true)
+                    {
+                        <th style="text-align: left;vertical-align: top">@item.Maternity</th>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>

@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<h3>APIData</h3>
+<div style="margin:auto;text-align:center;">
+    <div style="display:inline-flex;">
+        <div>
+            <p style="font-weight: bold;">@Html.ActionLink("Staff Newly Added API Data", "StaffNewlyAddedData", "APIDataPush", new { }, null)</p>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div>
+            <p style="font-weight: bold;">@Html.ActionLink("Staff Transferred API Data", "StaffTransferData", "APIDataPush", new { }, null)</p>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <div>
+            <p style="font-weight: bold;">@Html.ActionLink("Staff Deleted API Data", "StaffDeletedData", "APIDataPush", new { }, null)</p>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <br />
+    <div style="display:inline-flex;">
+        <div>
+            <p style="font-weight: bold;">@Html.ActionLink("Students API Data", "StudentData", "APIDataPush", new { }, null)</p>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+</div>
+

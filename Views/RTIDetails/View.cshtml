@@ -1,0 +1,447 @@
+﻿@model UAAAS.Models.RTIDetails
+@{
+    ViewBag.Title = "RTIDetails";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";   
+}
+ 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".view_hide").show();
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit RTI Details',
+            autoOpen: false,
+            resizable: false,
+            height: 200,
+            width: 450,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add RTI Details'
+            });
+            url = $("#openDialog").attr('href');
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        //$('.full_table').find('tr').click(function () {
+        $('.webGrid').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit RTI Details'
+            });
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete RTI Details',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View RTI Details',
+                autoOpen: false,
+                resizable: false,
+                height: 350,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+</script>
+
+<div id="div_print">
+    <h2>RTI Details</h2>
+    @using (Html.BeginForm())
+    {
+        int count = 0;     
+        <table class="four_columns" style="width: 100%;">
+            <tr>
+                <td class="col11" colspan="8">
+                    <b>RTI Details:</b>
+                </td>
+            </tr>
+            <tr style="font-weight: bold;">
+                <td style="text-align: center; width: 50px;" class="col11">S.No</td>
+                <td style="text-align: left; width: 250px;" class="col11">Actual Designation</td>
+                <td style="text-align: left; width: 250px;" class="col11">Designation in the committee</td>
+                <td style="text-align: left;" class="col11">Member Name</td>
+                <td style="text-align: left;" class="col11">Registration No.</td>
+                <td style="text-align: left;" class="col11">Email</td>
+                <td style="text-align: left;" class="col11">Mobile</td>
+
+
+                <td style="text-align: left;" class="col11 view_hide"></td>
+            </tr>
+
+            @foreach (var item in ViewBag.Committee)
+            {                
+                <tr>
+                    <td style="text-align: center;" class="col21">
+                        @(count = count + 1)
+                    </td>
+                     <td style="text-align: left;" class="col21">
+                        @if (item.actualDesignation != null)
+                        {
+                            <label>@item.actualDesignation</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.designationName != null)
+                        {
+                            <label>@item.designationName</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.memberName != null)
+                        {
+                            <label>@item.memberName</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.registrationNumber != null)
+                        {
+                            <label>@item.registrationNumber</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.Email != null)
+                        {
+                            <label>@item.Email</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.Mobile != null)
+                        {
+                            <label>@item.Mobile</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="width: 20px; text-align: center;" class="col21 view_hide">
+                        @Html.ActionLink("Details", "Details", "RTIDetails", new { id = item.id }, new { @class = "viewDialog view_button" })
+                    </td>
+                </tr>
+            }
+        </table>
+            if (ViewBag.CommitteeCount == 0)
+            {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+            }
+
+        <div id="dialog-view" style="display: none">
+        </div>
+
+        <br />
+        <br />
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                var ComplaintmainUrl = window.location;
+                var courseurl;
+
+		$.ajaxSetup({ cache: false });
+        var $myCourseDialog = $("#dialog-edit-course").dialog({
+            title: 'Add/Edit RTI Complaints ',
+            autoOpen: false,
+            resizable: false,
+            height: 350,
+            width: 550,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(courseurl);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+
+
+
+                $(".viewDialogComplaints").live("click", function (e) {
+                    var courseurl = $(this).attr('href');
+                    $("#dialog-view-course").dialog({
+                        title: 'View RTI Complaints ',
+                        autoOpen: false,
+                        resizable: false,
+                        height: 350,
+                        width: 550,
+                        show: { effect: 'drop', direction: "up" },
+                        modal: true,
+                        draggable: true,
+                        open: function (event, ui) {
+                            $(this).load(courseurl);
+                        },
+                        buttons: {
+                            "Close": function () {
+
+                                $(this).dialog("close");
+
+                            }
+                        },
+                        close: function (event, ui) {
+                            $(this).dialog('close');
+                        }
+                    });
+
+                    $("#dialog-view-course").dialog('open');
+                    return false;
+                });
+                $("#btncancelCourse").live("click", function (e) {
+                    $("#dialog-edit-course").dialog("close");
+                });
+
+                $($myCourseDialog).bind("dialogclose", function () {
+                    window.location = ComplaintmainUrl;
+                });
+            });
+        </script>
+            int counter = 0;     
+        <table class="four_columns" style="width: 100%;">
+            <tr>
+                <td class="col11" colspan="10">
+                    <b>RTI Complaints:</b>
+                </td>
+            </tr>
+            <tr style="font-weight: bold;">
+                <td style="text-align: center; width: 50px;" class="col11">S.No</td>
+                <td style="text-align: left; width: 250px;" class="col11">Complaint given by Registration No.</td>
+                <td style="text-align: left;" class="col11">Complaint given by Name</td>
+                <td style="text-align: left;" class="col11">Complaint on Registration No.</td>
+                <td style="text-align: left;" class="col11">Complaint on Name</td>
+                <td style="text-align: left;" class="col11">Complaint Description</td>
+                <td style="text-align: left;" class="col11">Complaint Supporting Document</td>
+                <td style="text-align: left;" class="col11">Action Taken</td>
+                <td style="text-align: left;" class="col11">Action Taken Supporting Document</td>
+                <td style="text-align: left;" class="col11 view_hide"></td>
+            </tr>
+
+            @foreach (var item in ViewBag.Complaints)
+            {                
+                <tr>
+                    <td style="text-align: center;" class="col21">
+                        @(counter = counter + 1)
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.complaintGivenByRegNum != null)
+                        {
+                            <label>@item.complaintGivenByRegNum</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.complaintGivenByName != null)
+                        {
+                            <label>@item.complaintGivenByName</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.complaintOnRegNum != null)
+                        {
+                            <label>@item.complaintOnRegNum</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.complaintOnName != null)
+                        {
+                            <label>@item.complaintOnName</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.complaintDescription != null)
+                        {
+                            <label>@item.complaintDescription</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.complaintSupportingDocPath != null)
+                        {
+                            <a href="../Content/Upload/CollegeEnclosures/RTIDetails/@item.complaintSupportingDocPath" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.actionsTaken != null)
+                        {
+                            <label>@item.actionsTaken</label>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="text-align: left;" class="col21">
+                        @if (item.actionTakenSupportingDocPath != null)
+                        {
+                            <a href="../Content/Upload/CollegeEnclosures/RTIDetails/@item.actionTakenSupportingDocPath" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                        }
+                        else
+                        {
+                            <label></label>
+                        }
+                    </td>
+                    <td style="width: 20px; text-align: center;" class="col21 view_hide">
+                        @Html.ActionLink("Details", "Details", "RTIComplaints", new { id = item.id }, new { @class = "viewDialog view_button" })
+                    </td>
+                </tr>
+            }
+        </table>
+        
+            if (ViewBag.ComplaintsCount == 0)
+            {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+            }
+
+        <div id="dialog-view-course" style="display: none">
+        </div>
+    }
+</div>
+
+

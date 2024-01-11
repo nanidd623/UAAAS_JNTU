@@ -1,0 +1,22 @@
+﻿Dear @ViewBag.Name,
+<br />
+<br />
+<span>Registration Number : @ViewBag.RegistrationNumber</span>
+<br/>
+<span>College : @ViewBag.CollegeName</span>
+<br/>
+@if (!string.IsNullOrEmpty(@ViewBag.ticketId))
+{
+    <span>
+        Your Mobility Request is Submitted.&nbsp;&nbsp;
+        Your <b>Faculty Ticket ID</b> : @ViewBag.ticketId
+        <br /> 
+        You can now login to www.jntuhaac.in with the following credentials.<br />
+        <br /><br />
+    </span>
+}
+<br />
+<br />
+Thanks & Regards<br />
+Director, AAC,<br />
+JNTUH, Hyderabad

@@ -1,0 +1,109 @@
+﻿@model UAAAS.Models.UpdateCollegeStatus
+@{
+    ViewBag.Title = "CollegeType";   
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="../../Scripts/jquery-te-1.4.0.min.js" type="text/javascript"></script>
+<link href="../../Content/jquery-te-1.4.0.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    .jqte
+    {
+        width: 481px;
+    }
+</style>
+<script type="text/javascript">
+    //$(document).ready(function () {
+    //    $('#ddlCollegeType').change(function () {
+    //        var a = $('#ddlCollegeType').val();
+    //        if (a == 5) {
+    //            $('#divfromtodate').show();
+    //            $('#divdate').hide();
+    //        }
+    //        else {
+    //            $('#divfromtodate').hide();
+    //            $('#divdate').show();
+    //        }
+    //    });
+    //});
+
+</script>
+@using (Html.BeginForm("UpdateCollegeStatus","Colleges",FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend></legend>
+
+        @*  <div class="editor-label">
+            <span>NEW:</span>
+        </div>
+        <div class="editor-field" style="width:100%">
+            <span> @Html.RadioButton("Group", true, new { id = "rbtnNew" })New</span>  
+            <span> @Html.RadioButton("Group", true, new { id = "rbtnClose" })Closed</span>  
+            <span> @Html.RadioButton("Group", true, new { id = "rbtnReopen" })Reopen</span>  
+            <span> @Html.RadioButton("Group", true, new { id = "rbtnDelete" })Delete</span>  
+            <span> @Html.RadioButton("Group", true, new { id = "rbtnPermanent" })Permanent</span>  
+        </div>*@
+       @* <div class="editor-label">
+            <span>College Type</span>
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.collegeType,
+            new SelectList(ViewBag.collegeType as System.Collections.IEnumerable, "id", "collegeType"),
+            new { id = "ddlCollegeType", @class = "width" })
+        </div>*@
+        <div class="editor-label">
+            <span>College</span>
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.collegeName)
+            @Html.HiddenFor(model => model.collegeId)
+            @Html.HiddenFor(model => model.collegeCode)
+        </div>
+         <div class="editor-label">
+            <span>Status</span>
+        </div>
+         <div class="editor-field">
+            <span>@Html.RadioButtonFor(model=>model.Active,true)Active</span>
+             <span>@Html.RadioButtonFor(model=>model.Active,false)InActive</span>
+
+        @Html.ValidationMessageFor(model => model.Active)
+          
+            </div>
+       @* <div id="divfromtodate" style="display:none">
+            <div class="editor-label">
+                <span>FromDate</span>
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.fromDate)<span>(DD/MM/YYYY)</span>
+            </div>
+            <div class="editor-label">
+                <span>ToDate</span>
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.toDate)<span>(DD/MM/YYYY)</span>
+            </div>
+        </div>
+        <div id="divdate">
+             <div class="editor-label">
+                <span>Date</span>
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.fromDate)<span>(DD/MM/YYYY)</span>
+            </div>
+        </div>
+
+        <div class="editor-label">
+            <span>Remarks</span>
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.remarks)
+        </div>*@
+        <div style="text-align: center">
+            <p>
+                <input type="submit" value="Submit" id="btnsend" name="cmd" />
+                @Html.ActionLink("Back", "Index", "Colleges", new { @class = "create_button" })
+            </p>
+        </div>
+    </fieldset>
+}

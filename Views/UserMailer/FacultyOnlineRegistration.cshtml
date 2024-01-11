@@ -1,0 +1,39 @@
+Dear @ViewBag.Username,
+<br />
+<br />
+
+@if (@ViewBag.UniqueID == string.Empty)
+{
+    <span>Your <b>Faculty Registration ID</b> : @ViewBag.FacultyRegistrationNumber
+        <br />
+        @*<b>Unique ID</b> will be given after verification.*@
+        @*<br />*@
+        <br />
+        You can now login to www.jntuhaac.in with the following credentials.<br />
+        Username: @ViewBag.Username<br />
+        Password: @ViewBag.Password
+
+        Please quote your faculty registration ID in all future references & correspondence to University.
+        <br /><br />
+        @if (@ViewBag.Type == "NewFaculty" && @ViewBag.PANNumber == "")
+        {
+            <span>Your registration is provisional. You must submit your PAN Number within a month.</span>
+        }
+
+    </span>
+}
+else
+{
+    <span>Your <b>Faculty Unique ID</b>: @ViewBag.UniqueID
+        <br />
+        <br />
+        You can login to www.jntuhaac.in to see your details.
+    </span>
+    
+}
+
+<br />
+<br />
+Thanks & Regards<br />
+Director, AAC,<br />
+JNTUH, Hyderabad

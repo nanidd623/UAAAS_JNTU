@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "View1";
+    // Layout = null;
+    List<SelectListItem> data123 = new List<SelectListItem>()
+            {
+                  new SelectListItem(){Value = "10",Text = "Apple"},
+                  new SelectListItem(){Value = "15",Text = "Orange"},
+                  new SelectListItem(){Value = "25",Text = "Graphs"},
+                  new SelectListItem(){Value = "30",Text = "Bannana"},
+                  new SelectListItem(){Value = "25",Text = "Others"},
+            };
+}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title></title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+    <script type="text/javascript">
+        
+        $(document).ready(function () {
+           
+            var FruitsData = @Html.Raw(Json.Encode(data123));
+       
+            var Data = [];
+
+            $.each(FruitsData,function(index,table){
+                Data.push({label : table.Text ,value : table.Value});
+            });
+
+            //var Data = [
+            //    { label: "Download Sales", value: 12 },
+            //    { label: "In-Store Sales", value: 30 },
+            //    { label: "Mail-Order Sales", value: 20 }
+            //];
+            var total = 80;
+            var browsersChart = Morris.Donut({
+                element: 'donut-example',
+                data: Data,
+                formatter: function (value, data) {
+                    return value;
+                    //return Math.floor(value / total * 100) + '%';
+                }
+            });
+
+            browsersChart.options.data.forEach(function (label, i) {
+                //var legendItem = $('<span></span>').text(label['label'] + " ( " + label['value'] + " )").prepend('<br><span>&nbsp;</span>');
+                //legendItem.find('span')
+                //  .css('backgroundColor', browsersChart.options.colors[i])
+                //  .css('width', '20px')
+                //  .css('display', 'inline-block')
+                //  .css('margin', '5px');
+                //$('#legend').append(legendItem)
+            });
+        });
+       
+    </script>
+</head>
+<body>
+    <div id="donut-example" style="height:150px;width:50%;"></div>
+    <div id="legend" class="donut-legend"></div>
+</body>
+</html>
+

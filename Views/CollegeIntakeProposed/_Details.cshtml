@@ -1,0 +1,41 @@
+﻿@model UAAAS.Models.CollegeIntakeProposed
+<div class="details_table">
+
+    <div class="display-label" style="width: 250px">Degree</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.Degree)
+    </div>
+
+    <div class="display-label" style="width: 250px">Department</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.Department)
+    </div>
+
+    <div class="display-label" style="width: 250px">Specialization</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.Specialization)
+    </div>
+    <div class="display-label" style="width: 250px">Shift</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.Shift)
+    </div>
+
+    <div class="display-label" style="width: 250px">Program Status</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.CourseAffiliationStatusCode)
+    </div>
+
+    @*<div class="display-label" style="width: 250px">ExistingIntake</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.ExistingIntake)
+    </div>*@
+
+    <div class="display-label" style="width: 250px">Proposed Intake For the A.Y  @ViewBag.Year</div>
+    <div class="display-field" style="width: 250px">
+        @Html.DisplayFor(model => model.proposedIntake)
+    </div>
+
+</div>
+
+
+

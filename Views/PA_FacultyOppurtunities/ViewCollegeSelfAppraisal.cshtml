@@ -1,0 +1,103 @@
+﻿@model List<UAAAS.Models.Permanent_Affiliation.FacultyOppurtunityModel>
+@{
+    ViewBag.Title = "Opportunities provided to faculty members";
+}
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<link href="@Url.Content("~/Content/jntuh-styles.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/themes/base/jquery.ui.datepicker.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery-ui-1.8.20.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    //Direction Delete Confirmation
+    $(".confirmDirDialog").live("click", function (e) {
+        var url = $(this).attr('href');
+        $("#dialog-confirmDir").dialog({
+            title: "Delete",
+            autoOpen: false,
+            resizable: false,
+            height: 170,
+            width: 350,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            buttons: {
+                "Yes": function () {
+                    $(this).dialog("close");
+                    window.location = url;
+                },
+                "No": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $("#dialog-confirmDir").dialog('open');
+        return false;
+    });
+</script>
+
+@if (Model.Count > 0)
+{
+    <div>
+        <table class="webGrid" style="background: whitesmoke;">
+            <thead>
+                <tr class="col1">
+                    <th>S.No</th>
+                    <th>Type</th>
+                    <th>Academic Year</th>
+                    <th>Registration Number</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Document</th>
+                    @if (ViewBag.IsEditable == true)
+                    {
+                        <th>Action</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in Model.Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr class="col2">
+                        <td>@pay.i </td>
+                        @if (pay.value.Selfappraisaltype == 1)
+                        {
+                            <td>Faculty</td>
+                        }
+                        else
+                        {
+                            <td>Student</td>
+                        }
+                        <td>@pay.value.AcademicYear </td>
+                        <td>@pay.value.FacultyRegistrationNumber </td>
+                        <td>@pay.value.Membername </td>
+                        <td>@pay.value.Description </td>
+                        <td>
+                            @if (@pay.value.SuportingdocumentPath != null)
+                            {
+                                <a href="../Content/Upload/College/CollegeFacultyOppurtunities/@pay.value.SuportingdocumentPath" target="_blank">
+                                    <span style="color: red;"><b>View</b></span>
+                                </a>
+                            }
+                        </td>
+                        @if (ViewBag.IsEditable == true)
+                        {
+                            <td style="vertical-align: middle;">
+                                @Html.ActionLink("Delete", "DeleteSelfAppraisal", "PA_FacultyOppurtunities", new { @id = @pay.value.Id }, new { @class = "confirmDirDialog delete_button" })
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<div id="dialog-confirmDir" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>

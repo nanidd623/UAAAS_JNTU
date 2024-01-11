@@ -1,0 +1,369 @@
+﻿@model IEnumerable<UAAAS.Models.DataEntryColleges>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Data Entry Assigned Colleges";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int sno = 1;
+}
+@*@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "bStateSave": false,
+                              "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+                              "aoColumns": [ { "bSortable": false, "bSearchable": true }, null, null, null ]
+                           });
+}*@
+<script type="text/javascript">
+    var asInitVals = new Array();
+    //rettriveing phaseId by using querystring
+    function querystring(key) {
+        var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi');
+        var r = [], m;
+        while ((m = re.exec(document.location.search)) != null) r.push(m[1]);
+        return r;
+    }
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 5000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+
+        //PhaseId
+        var s = querystring('PhaseId');
+        if (s == '') {
+            $("#PhaseId").val("Select Inspection Phase");
+        }
+        else {
+            $("#PhaseId").val(s);
+        }
+        $("#PhaseId").change(function () {
+            var id = $('#PhaseId').val();
+
+            var s = $("#btnSearch").attr("href");
+            s = s.substring(0, s.indexOf('=') + 1);
+            $("#btnSearch").attr("href", s + id)
+
+        });
+
+    });
+
+</script>
+<h2>Data Entry Assigned Colleges</h2>
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit DataEntry Colleges',
+            autoOpen: false,
+            resizable: false,
+            height: 300,
+            width: 650,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add DataEntry College'
+            });
+            url = $("#openDialog").attr('href');
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        //$('.full_table').find('tr').click(function () {
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit DataEntry College'
+            });
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete DataEntry College',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View DataEntry College',
+                autoOpen: false,
+                resizable: false,
+                height: 200,
+                width: 400,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+</script>
+<div class="create_link_right" style="float: left">
+
+    @*@Html.DropDownList("ddlPhaseId",
+            new SelectList(ViewBag.oldInspectionPhases as System.Collections.IEnumerable, "id", "name"),
+            "Select Inspection Phase", new { id = "PhaseId" })
+    @Html.ActionLink("Search", "DataEntryColleges", "DataEntry", new { PhaseId = DBNull.Value }, new { @class = "create_button", id = "btnSearch" })*@
+
+</div>
+
+<div class="create_link_right" style="float: right;">   
+     @Html.ActionLink("Assign College for Data Entry", "DataEntryCreateColleges", "DataEntry", new { @id = "openDialog", @class = "create_button" })
+
+</div>
+@using (Html.BeginForm())
+{    
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No</th>
+                <th style="width: 120px; text-align: center;">Username</th>
+                <th style="width: 120px; text-align: center;">Screen</th>
+                <th style="width: 120px; text-align: center;">College Code</th>
+                <th style="text-align: left;">College Name</th>
+                <th class="ui-state-default" style="width: 120px; text-align: center;">Work Status</th>
+                @*<th class="ui-state-default" style="width: 100px; text-align: center;">Is Verify</th>*@
+                @*<th class="ui-state-default" style="width: 50px; text-align: center;">Status</th>*@
+                <th style="width: 50px;" class="ui-state-default" colspan="2"></th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in ViewBag.DataEntryList as List<UAAAS.Models.DataEntryColleges>)
+            {                
+                <tr>
+                    <td style="text-align: center;">
+                        @(sno++)
+                    </td>
+                    <td style="width: 150px; text-align: center;">
+                        @item.userName
+                    </td>
+                    <td style="width: 150px; text-align: center;">
+                        @item.phasename
+                    </td>
+                    <td style="text-align: center;">
+                        @item.collegeCode
+                    </td>
+                    <td style="text-align: left;">
+                        @item.collegeName
+                    </td>
+                    <td style="text-align: center;">
+                        @if (@item.isCompleted == true)
+                        {
+                            <span>Completed</span>
+                        }
+                        else
+                        {
+                            <span>Pending</span>
+                        }
+                    </td>
+                    @* <td style="text-align: center;width:100px;">
+                        @if (@item.isVerified == true)
+                        {
+                            <span>Completed</span>
+                        }
+                        else
+                        {
+                            <span>Pending</span>
+                        }
+                    </td>*@
+                    @*<td style="text-align: center; width: 50px;">
+                        @if (@item.isActive == true)
+                        {
+                           
+                            <img src="/Content/images/active.png" alt="JNTU Hyderabad Logo" />
+                        }
+                        else
+                        {
+                           
+                            <img src="/Content/images/inactive.png" alt="JNTU Hyderabad Logo" />
+                        }
+                    </td>*@
+                    <td style="text-align: center;">
+                        @Html.ActionLink("Edit", "DataEntryCreateColleges", "DataEntry", new {id = item.id}, new {@class = "editDialog edit_button"})
+                        @* @Html.ActionLink("Delete", "DataEntryDeleteColleges", "DataEntry", new { id = item.id }, new { @class = "confirmDialog delete_button" })*@
+                    </td>
+                    <td style="text-align: center;">
+                         @Html.ActionLink("Delete", "DataEntryDeleteColleges", "DataEntry", new { id = item.id }, new { @class = "confirmDialog delete_button" })
+                    </td>
+                    @*  <td style="width: 40px; text-align: center;">
+                        @Html.ActionLink("View", "View", "CollegeInformation", new { id = UAAAS.Models.Utilities.EncryptString(item.collegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "edit_button1", target = "_blank" })
+                    </td>*@
+
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th style="">
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="text-align: center;">
+                    <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                </th>
+                <th style="text-align: center;">
+                    <input type="text" id="i-2" style="width: 50%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left;">
+                    <input type="text" id="i-3" style="width: 95%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left;">
+                    <input type="text" id="i-4" style="width: 85%; text-align: left;" class="search_init">
+                </th>
+                @* <th class=" ui-state-default" style="width: 70px;">
+                    <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+                </th>*@
+                <th class=" ui-state-default" style="width: 50px;">
+                    <input type="text" id="i-6" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="">
+                    <input type="text" id="i-7" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+}
+

@@ -1,0 +1,578 @@
+﻿@{
+    ViewBag.Title = "Director";
+    Layout = "~/Views/Shared/_AcademicAuditCellLayoutPage1.cshtml";
+}
+
+<h2>Director</h2>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <style>
+        /*body {
+            font-family: Arial;
+            color: black;
+        }*/
+
+        .split {
+            height: 100%;
+            width: 50%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            overflow-x: hidden;
+            padding-top: 30px;
+        }
+
+        .left {
+            left: 0;
+            background-color:;
+        }
+
+        .right {
+            right: 0;
+            background-color:;
+        }
+
+        .centered {
+            position: absolute;
+            top: 50%;
+            left: 60%;
+            transform: translate(-50%, -60%);
+            text-align: center;
+        }
+
+            .centered img {
+                width: 100px;
+                border-radius: 50%;
+            }
+    </style>
+
+    <style>
+        .accordion {
+            background-color: #eee;
+            color: red;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+        }
+
+            .active, .accordion:hover {
+                background-color: #f8e9e9;
+            }
+
+        .panel {
+            padding: 0 18px;
+            display: none;
+            background-color: white;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="text-align: right">
+        <p style="text-align: right">
+            <a href="~/Home/DirectorsList" class="create_button">Succession List of Directors</a>
+        </p>
+    </div>
+
+    <div style="text-align:center">
+        <img src="~/Content/images/Dr.D.Srinivasa_Rao.JPG" height="160px" width="160px" />
+        <br />
+        @*<div style="float: right; width: 250px; text-align: center; margin-left: 10px; margin-bottom: 50px;">
+            <img src="../../Content/images/Ramamohan.jpg" style="max-width: 150px; text-align: center;border:1px solid #0A1A32;" /><br />*@
+        <span style="font-size:16px;color:chocolate;font-weight:bold;">Dr. Duggirala Srinivasa Rao</span><br />
+        <span style="font-size: 0.90rem;">
+            B.Tech, M.E, Ph.D<br />
+            Senior Professor of ECE & Director of Affiliations & Academic Audit
+        </span>
+    </div>
+    <br />
+    <div style="text-align:justify">
+
+
+
+        <span style="font-size:14px; text-align:justify;"><b></b> </span>
+    </div>
+    @*<div>
+            &nbsp;  &nbsp;  &nbsp; @Html.ActionLink("Educational Qualifications", "")
+        </div>*@
+    <button class="accordion"> Qualifications</button>
+
+    <div class="panel">
+        <table width="100%">
+            <tr width="100%">
+                <td width="10%"></td>
+                <td width="90%">
+
+                    <h4 style="color:red">Educational Qualifications</h4>
+                    <table>
+                        <tr>
+                            <td> <b>Ph. D.University</b> </td>
+                            <td>:</td>
+                            <td> University of Hyderabad</td>
+                        </tr>
+                        <tr>
+                            <td><b>Subject</b>   </td>
+                            <td>:</td>
+                            <td>Computer Networks</td>
+                        </tr>
+                        <tr>
+                            <td><b> Division & Year</b></td>
+                            <td>:</td>
+                            <td> Awarded, 2004</td>
+                        </tr>
+                    </table>
+
+                    <br />
+
+                    <table>
+                        <tr>
+                            <td> <b>M. E.University</b>   </td>
+                            <td>:</td>
+                            <td> Osmania University</td>
+                        </tr>
+                        <tr>
+                            <td> <b>Subject</b>  </td>
+                            <td>:</td>
+                            <td>Digital Systems</td>
+                        </tr>
+                        <tr>
+                            <td><b>Division & Year</b> </td>
+                            <td>:</td>
+                            <td> Awarded, 1994</td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <button class="accordion"> Publications</button>
+
+    <div class="panel">
+        <table width="100%">
+            <tr width="100%">
+                <td width="10%"></td>
+                <td width="90%">
+
+                    <h4 style="color:red">Publications</h4>
+
+
+
+
+                    <table>
+                        <tr>
+                            <td>International Journals</td>
+                            <td><b>:</b></td>
+                            <td>  98</td>
+                        </tr>
+                        <tr>
+                            <td>International Conferences</td>
+                            <td><b>:</b></td>
+                            <td>34</td>
+                        </tr>
+                        <tr>
+                            <td>National Conferences</td>
+                            <td><b>:</b></td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+
+
+
+                </td>
+
+            </tr>
+        </table>
+
+    </div>
+
+    <button class="accordion"> Teaching Experience in JNTU Hyderabad</button>
+
+    <div class="panel">
+        <table width="100%">
+            <tr width="100%">
+                <td width="10%"></td>
+                <td width="90%">
+
+
+
+
+                    <table>
+                        <tr>
+                            <td><b>Total Teaching & Research Experience</b></td>
+                            <td><b>:</b></td>
+                            <td><b> 33 Years</b></td>
+                        </tr>
+                        <tr><th> Professor</th></tr>
+                        <tr>
+
+
+                            <td>Organization</td>
+                            <td><b>:</b></td>
+                            <td>JNTUH College of Engineering, Hyderabad</td>
+                        </tr>
+                        <tr>
+                            <td>Duration</td>
+                            <td><b>:</b></td>
+                            <td>March 2007 to till-date</td>
+                        </tr>
+
+                        <tr><th> Associate Professor</th></tr>
+                        <tr>
+
+
+                            <td>Organization</td>
+                            <td><b>:</b></td>
+                            <td>JNTUH College of Engineering, Hyderabad</td>
+                        </tr>
+                        <tr>
+                            <td>Duration</td>
+                            <td><b>:</b></td>
+                            <td>June 2005 to March 2007</td>
+                        </tr>
+
+                        <tr><th> Associate Professor</th></tr>
+                        <tr>
+
+
+                            <td>Organization</td>
+                            <td><b>:</b></td>
+                            <td>JNTUA College of Engineering, Anantapur</td>
+                        </tr>
+                        <tr>
+                            <td>Duration</td>
+                            <td><b>:</b></td>
+                            <td>June 2003 to May 2005</td>
+                        </tr>
+
+
+                        <tr><th> Assistant Professor</th></tr>
+                        <tr>
+                            <td>Organization</td>
+                            <td><b>:</b></td>
+                            <td>JNTUA College of Engineering, Anantapur</td>
+                        </tr>
+                        <tr>
+                            <td>Duration</td>
+                            <td><b>:</b></td>
+                            <td>October 1994 to May 2003</td>
+                        </tr>
+
+                        <tr><th> Lecturer</th></tr>
+                        <tr>
+
+
+                            <td>Organization</td>
+                            <td><b>:</b></td>
+                            <td>Chaitanya Bharathi Institute of Technology, Hyderabad</td>
+                        </tr>
+                        <tr>
+                            <td>Duration</td>
+                            <td><b>:</b></td>
+                            <td>August 1988 to September 1994</td>
+                        </tr>
+
+
+                        <tr><th> Lecturer</th></tr>
+                        <tr>
+
+
+                            <td>Organization</td>
+                            <td><b>:</b></td>
+                            <td>Rural Engineering College Bhallai, Bidar (DT)</td>
+                        </tr>
+                        <tr>
+                            <td>Duration</td>
+                            <td><b>:</b></td>
+                            <td>June 1987 to August 1988</td>
+                        </tr>
+
+                    </table>
+
+
+
+                </td>
+
+            </tr>
+        </table>
+
+    </div>
+
+    <button class="accordion"> Administrative Experience in JNTU Hyderabad</button>
+
+    <div class="panel">
+        <table width="100%">
+            <tr width="100%">
+                <td width="10%"></td>
+                <td width="90%">
+
+
+
+
+                    <table align="left">
+
+                        <tr><th colspan="3"> Director of Directorate of Affiliations & Academic Audit ,JNTU Hyderabad</th></tr>
+
+
+                        <tr>
+                            <td>Duration</td>
+                            <td><b>:</b></td>
+                            <td>June, 2021 to till date</td>
+                        </tr>
+
+                        <tr><th colspan="3"> Coordinator, TEQIP</th></tr>
+
+                        <tr>
+                            <td>Duration</td>
+                            <td><b>:</b></td>
+                            <td>March 2015 to June 2018</td>
+                        </tr>
+
+
+
+                        <tr><th colspan="3"> BoS Chair </th></tr>
+
+                        <tr>
+                            <td>Duration</td>
+                            <td><b>:</b></td>
+                            <td>November 2014 to October, 2016</td>
+                        </tr>
+
+
+                        <tr><th colspan="3"> Head of ECE  Dept. JNTUH Hyderabad</th></tr>
+
+                        <tr>
+                            <td>Duration</td>
+                            <td><b>:</b></td>
+                            <td>September 2012 to October, 2014</td>
+                        </tr>
+
+                    </table>
+
+
+
+                </td>
+
+            </tr>
+        </table>
+
+    </div>
+
+    <button class="accordion"> Research Projects</button>
+
+    <div class="panel">
+        <table width="100%">
+            <tr width="100%">
+                <td width="10%"></td>
+                <td width="90%">
+
+                    <table>
+
+                        <tr><th colspan="3"> Quality of Service in mobile Ad-hoc networks </th></tr>
+
+                        <tr>
+                            <td>Funding Agency</td>
+                            <td><b>:</b></td>
+                            <td>UGC</td>
+                        </tr>
+
+                        <tr>
+                            <td>Duration of the project</td>
+                            <td><b>:</b></td>
+                            <td>2010-2012</td>
+                        </tr>
+
+                        <tr>
+                            <td>Status</td>
+                            <td><b>:</b></td>
+                            <td>Completed</td>
+                        </tr>
+
+                        <tr><th colspan="3"> Disaster Management for Land Slide Detection </th></tr>
+
+                        <tr>
+                            <td>Funding Agency</td>
+                            <td><b>:</b></td>
+                            <td>CoE TEQIP II</td>
+                        </tr>
+
+                        <tr>
+                            <td>Duration of the project</td>
+                            <td><b>:</b></td>
+                            <td>2016 - 2019</td>
+                        </tr>
+
+                        <tr>
+                            <td>Status</td>
+                            <td><b>:</b></td>
+                            <td>Completed</td>
+                        </tr>
+
+
+                        <tr><th colspan="3"> Development of Early Warning system for landslide prediction </th></tr>
+
+                        <tr>
+                            <td>Funding Agency</td>
+                            <td><b>:</b></td>
+                            <td>RPS-AICTE</td>
+                        </tr>
+
+                        <tr>
+                            <td>Duration of the project</td>
+                            <td><b>:</b></td>
+                            <td>September 2017 - September 2020</td>
+                        </tr>
+
+                        <tr>
+                            <td>Status</td>
+                            <td><b>:</b></td>
+                            <td>Completed</td>
+                        </tr>
+
+
+                        <tr><th colspan="3"> Prediction of Gravelly soil induced Ladslides  </th></tr>
+
+                        <tr>
+                            <td>Funding Agency</td>
+                            <td><b>:</b></td>
+                            <td>TEQIP-III - CoE</td>
+                        </tr>
+
+                        <tr>
+                            <td>Duration of the project</td>
+                            <td><b>:</b></td>
+                            <td>October 2020 - March 2021</td>
+                        </tr>
+
+                        <tr>
+                            <td>Status</td>
+                            <td><b>:</b></td>
+                            <td>On-going</td>
+                        </tr>
+
+                        <tr><th colspan="3"> Improving Crop productivity by Monitoring Pest, Disease  and  Meteorological Disasters using IoTs  </th></tr>
+
+                        <tr>
+                            <td>Funding Agency</td>
+                            <td><b>:</b></td>
+                            <td>CSIR-HRDG </td>
+                        </tr>
+
+                        <tr>
+                            <td>Duration of the project</td>
+                            <td><b>:</b></td>
+                            <td>February 2021 - February 2024</td>
+                        </tr>
+
+                        <tr>
+                            <td>Status</td>
+                            <td><b>:</b></td>
+                            <td>On-going</td>
+                        </tr>
+
+
+                        <tr><th colspan="3"> Development of Avalanche Forecasting System using IoTs to Mitigate Avalanche Hazards</th></tr>
+
+                        <tr>
+                            <td>Funding Agency</td>
+                            <td><b>:</b></td>
+                            <td>TEQIP-III- CoE</td>
+                        </tr>
+
+                        <tr>
+                            <td>Duration of the project</td>
+                            <td><b>:</b></td>
+                            <td>January 2021 - June 2021</td>
+                        </tr>
+
+                        <tr>
+                            <td>Status</td>
+                            <td><b>:</b></td>
+                            <td>On-going</td>
+                        </tr>
+
+
+                        <tr><th colspan="3"> Development of Coal Mine Safety Monitoring and Alerting System using IoTs to mitigate Coal Mine Accidents</th></tr>
+
+                        <tr>
+                            <td>Funding Agency</td>
+                            <td><b>:</b></td>
+                            <td>TEQIP-III -CoE</td>
+                        </tr>
+
+                        <tr>
+                            <td>Duration of the project</td>
+                            <td><b>:</b></td>
+                            <td>January 2021 - June 2021</td>
+                        </tr>
+
+                        <tr>
+                            <td>Status</td>
+                            <td><b>:</b></td>
+                            <td>On-going</td>
+                        </tr>
+
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div style="text-align:right;">
+        <br />
+        @Html.ActionLink("Click here to download", "DownloadDirectorFile", new { }, new { @class = "create_button" })
+    </div>
+    <div style="text-align:left;display:none;">
+        @*<div style="line-height: 1.5rem;">
+            <b>Prof. VijayaKumari Gunta,</b> began her career as a member of faculty, JNTU, in the year 1992. Specialized in Computer Science and Engineering, she holds a Ph.D degree from University of Hyderabad. In her two decades of service, she has expressed passion towards teaching and has demonstrated agility in learning new developments in the field. She has designed and taught several new courses (Cloud Computing, Parallel and Distributed Algorithms, Game Theory, Advanced Algorithms). Her research interests include Algorithms, Security and Cloud Computing. Together with her research scholars she is currently working on a DIT Funded Project to Develop Encryption Techniques for Cloud Computing Environments.
+            <br />
+            <br />
+            Beyond her academic contributions, <b>Prof. VijayaKumari</b> has served as Head, Department of CSE for two terms during which she has strived for advancement of education and research of Computer Science and Engineering in the Institution. At the Centre for e-Learning Solutions (CEEL), JNTUH, she has taken active role in the establishment of Virtual Classrooms and Blended learning environments where she is a coordinator. She has also served as Nodal Officer – TEQIP project, JNTUH College of Engg. for four years. She brings in a variety of perspective and unique experience acquired as Nodal Officer, coordinating the efforts of the faculty and Staff of various departments and Strategic Planning to spin off excellence in the Institution and winning grants to the tune of `17.5crs for the Institution.  She has served as Director, UGC- Academic Staff College during which she has developed modules for innovative pedagogical practices, strategies for research oriented teaching and Technology enabled learning.
+            <br />
+            <br />
+            She is member of several professional societies and takes interest in organizing and participating in technical activities that match her expertise and Student Advising. She has served on the program committee of premier International Conferences in the fields of Artificial Intelligence and Network Security such as ICISS, KBCS and was the Organizing Chair of ICISS 2008. She travelled to NewYork, USA to judge the Microsoft Imagine Cup WorldWide Finals -2011 Student Software Design Challenge. She enjoys Carnatic Music.
+             <br />
+            <br />*@
+        </b><br />
+        <b>Contact :</b><br />
+        <hr style="width: 250px; float: left;" /><br />
+        <b>Dr. Duggirala Srinivasa Rao</b><br />
+        Director, Affiliations & Academic Audit ,
+        <br />
+        Second Floor,Administrative Block, JNTUH, Kukatpally, Hyderabad - 500 085.<br />
+        <b>Phone:</b> 040 -3241 4600, <b>Email:</b> <a href="mailto:duaac@jntuh.ac.in">duaac@jntuh.ac.in</a>
+    </div>
+
+</body>
+
+</html>
+
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+</script>
+

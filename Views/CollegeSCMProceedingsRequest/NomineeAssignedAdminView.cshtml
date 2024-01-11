@@ -1,0 +1,175 @@
+﻿@using System.Globalization
+@model IList<UAAAS.Controllers.College.NomineeAssignSCMRequests>
+@{
+    ViewBag.Title = "CollegeScmProceedingsRequestNomineeAssignedview";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    int Index = 1;
+    string SCMRequestDate = string.Empty;
+    string AuditorAssignDate = string.Empty;
+}
+
+<h2>SCM Nominees Assigned List</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+
+        <table id="example" class="display" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th style="text-align: center">Code</th>
+                    <th>College</th>
+                    <th>Department</th>
+                    <th>SCM Request Date</th>
+                    <th>Nominee Name</th>
+                    @*<th style="text-align: center">Professor </th>
+                        <th style="text-align: center">Associate Professor</th>*@
+                    @*<th style="text-align: center">Nominee Email</th>*@
+                    @*<th style="text-align: center">Nominee Mobile</th>*@
+                    <th>Nominee Assign Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    if (@item.ScmRequestDate != null)
+                    {
+                        SCMRequestDate = UAAAS.Models.Utilities.MMDDYY2DDMMYY(item.ScmRequestDate.ToString());
+                    }
+                    else
+                    {
+                        SCMRequestDate = "";
+                    }
+
+                    AuditorAssignDate = UAAAS.Models.Utilities.MMDDYY2DDMMYY(item.AuditorAssignDate.ToString(CultureInfo.InvariantCulture));
+                    <tr>
+                        <td style="text-align: center;">@(Index++)</td>
+                        <td>@item.CollegeCode</td>
+                        <td>@item.CollegeName</td>
+                        <td>@item.Department</td>
+                        <td>@SCMRequestDate</td>
+                        <td>@item.AuditorName</td>
+                        @*<td>@item.AuditorEmail</td>*@
+                        @*<td>@item.AuditorMobile</td>*@
+                        <td>@AuditorAssignDate</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>
+                        <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-2" style="width: 60%; text-align: left;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-3" style="width: 60%; text-align: left;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-6" style="width: 90%; text-align: left;" class="search_init">
+                    </th>
+                    @*<th class=" ui-state-default">
+                            <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-4" style="width: 90%; text-align: left; display: none;" class="search_init">
+                        </th>*@
+                    <th class=" ui-state-default">
+                        <input type="text" id="i-6" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    @*<th style="width: 60px;" class=" ui-state-default">
+                             <input type="text" id="i-8" style="width: 90%; text-align: left; display: none;" class="search_init">
+                        </th>
+                         <th class=" ui-state-default">
+                             <input type="text" id="i-10" style="width: 50%; text-align: left; display: none;" class="search_init">
+                         </th>
+                         <th class=" ui-state-default">
+                             <input type="text" id="i-11" style="width: 90%; text-align: left;display: none;" class="search_init">
+                         </th>
+
+                         <th class=" ui-state-default">
+                             <input type="text" id="i-14" style="width: 80%; text-align: left; display: none;" class="search_init">
+                         </th>*@
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 5000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function() {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null,null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function(i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function() {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function(i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function() {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>

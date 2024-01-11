@@ -1,0 +1,288 @@
+﻿@model UAAAS.Models.Permanent_Affiliation.NAACModel
+
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    ViewBag.Title = "NAAC Information";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $(".calendarnew").css("width", "160px");
+
+        $('.calendarnew').attr("readonly", "true");
+        $('.calendarnew').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: "-180M",
+            maxDate: "+180M",
+            yearRange: '2000:2050',
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+        });
+
+        $(".Supportingfile").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "Documentfile");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+    });
+</script>
+
+<h2>NAAC ACCREDITATION </h2><br />
+
+@using (Html.BeginForm("Add", "NAAC", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    @Html.HiddenFor(model => model.affiliationId, new { @Value = Model.affiliationId })
+    @Html.HiddenFor(model => model.affiliationTypeId, new { @Value = Model.affiliationTypeId })
+    <table class="faculty_table" style="text-align: center; width: 100%">
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.AcademicYear)
+            </td>
+            <td class="col2">
+                @Html.DropDownListFor(model => model.AcademicYear, new SelectList(ViewBag.AcademicYear as System.Collections.IEnumerable, "id", "academicYear"), "---Select---", new { @class = "required" })
+                @Html.ValidationMessageFor(model => model.AcademicYear)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.AffiliationFromDate)
+            </td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.AffiliationFromDate, new { @id = "fromDate", @name = "@fromDate", @class = "calendarnew", @placeholder = "DD/MM/YYYY" })
+                @Html.ValidationMessageFor(model => model.AffiliationFromDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.AffiliationToDate)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.AffiliationToDate, new { @id = "toDate", @name = "@toDate", @class = "calendarnew", @placeholder = "DD/MM/YYYY" })
+                @Html.ValidationMessageFor(model => model.AffiliationToDate)
+            </td>
+            <td class="col1">
+                @Html.LabelFor(model => model.Grade)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.Grade, new { @id = "txtgrade", @placeholder = "Enter Grade" })
+                @Html.ValidationMessageFor(model => model.Grade)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.CGPA)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.CGPA, new { @id = "txtcgpa", @placeholder = "Enter CGPA", onkeypress = "return isDecimalKey(event,this)" })
+                @Html.ValidationMessageFor(model => model.CGPA)
+            </td>
+            <td class="col3">
+                @Html.LabelFor(model => model.Duration)
+            </td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.Duration, new { @id = "txtduration", @placeholder = "Enter Duration" })
+                @Html.ValidationMessageFor(model => model.Duration)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.affiliationfile)
+            </td>
+            <td class="col2">
+                @if (Model.affiliationfilepath != null)
+                {
+                    @Html.TextBoxFor(model => model.affiliationfile, new { type = "file", @id = "@txtFile", @name = "@file", @class = "Supportingfile" })
+                    <a href="~/Content/Upload/College/NAAC/@Model.affiliationfilepath" target="_blank">
+                        <span style="color: red;"><b>View</b></span>
+                    </a>
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.affiliationfile, new { type = "file", @id = "@txtFile", @name = "@file", @class = "required Supportingfile" })
+                }
+                @Html.ValidationMessageFor(model => model.affiliationfile)
+            </td>
+        </tr>
+    </table>
+
+    //if (Model.affiliationId > 0)
+    //{
+    <div style="text-align: right">
+        <p>
+            <input type="submit" value="Add" id="btnAdd" name="cmd" class="btnclass" onclick="return Validate();" />
+        </p>
+    </div>
+    @*}*@
+}
+<br />
+@if (ViewBag.NAACList.Count > 0)
+{
+    <div style="margin-top:15px;">
+        <h2>NAAC ACCREDITATION  History</h2><br />
+        <table class="webGrid">
+            <thead>
+                <tr class="col1">
+                    <th>S.No</th>
+                    <th>Academic Year</th>
+                    <th>Accreditation from date (DD/MM/YYYY)</th>
+                    <th>Accreditation to date (DD/MM/YYYY)</th>
+                    <th>Duration</th>
+                    <th>Grade</th>
+                    <th>CGPA</th>
+                    <th>Supporting Document</th>
+                    @if (ViewBag.IsEditable == true)
+                    {
+                        <th>Delete</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in ((List<UAAAS.Controllers.Permanent_Affiliation.NAAC>)ViewBag.NAACList).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr class="col2">
+                        <td>@pay.i </td>
+                        <td>@pay.value.AcademicYear</td>
+                        <td>@pay.value.AffiliationFromDate</td>
+                        <td>@pay.value.AffiliationToDate</td>
+                        <td>@pay.value.Duration</td>
+                        <td>@pay.value.Grade</td>
+                        <td>@pay.value.CGPA</td>
+                        <td style="text-align: left; font-weight: normal;">
+                            @if (pay.value.FilePath != null)
+                            {
+                                <a href="../Content/Upload/College/NAAC/@pay.value.FilePath" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                            }
+                        </td>
+                        @if (ViewBag.IsEditable == true)
+                        {
+                            @*<td>
+                                         @Html.ActionLink("Edit", "Edit", "NAAC", new
+                                {
+                                    affiliationTypeId = UAAAS.Models.Utilities.EncryptString(pay.value.affiliationTypeId.ToString(),
+                                        System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString(),
+
+                                    affiliationId = UAAAS.Models.Utilities.EncryptString(pay.value.affiliationId.ToString(),
+                                    System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString()
+                                }, new { @class = "edit_button" })
+                                     </td>*@
+
+                            <td>
+                                @Html.ActionLink("Delete", "Delete", "NAAC", new
+                    {
+                        affiliationTypeId = UAAAS.Models.Utilities.EncryptString(pay.value.affiliationTypeId.ToString(),
+                        System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString(),
+
+                        affiliationId = UAAAS.Models.Utilities.EncryptString(pay.value.affiliationId.ToString(),
+                        System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString(),
+                    }, new { @class = "confirmDialog delete_button" })
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<script type="text/javascript">
+    function Validate() {
+        debugger;
+        var startDate = document.getElementById("fromDate").value;
+        var endDate = document.getElementById("toDate").value;
+
+        if ((Date.parse(endDate) <= Date.parse(startDate))) {
+            alert("From date should be less than to date.");
+            //document.getElementById("toDate").value = "";
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+</script>

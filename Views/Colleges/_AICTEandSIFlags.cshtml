@@ -1,0 +1,68 @@
+﻿@model UAAAS.Controllers.CollegeStatus
+@*@using UAAAS.Models;*@
+@{
+    ViewBag.Title = "_AICTEandSIFlags";
+}
+
+
+<div id="div_print">
+
+    @using (Html.BeginForm("SIStatus", "Colleges", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div>
+            <table style="width: 100%">
+                <tr>
+                    <td class="col1" style="font-weight: bold; width: 24%">
+
+                        @Html.Label("College Code.", "College Code.")
+                    </td>
+                    <td class="col2">
+                        <span style="text-transform: uppercase; font-weight: bold;">@Html.DisplayFor(model => model.CollegeCode)</span>
+                        @Html.HiddenFor(model => model.CollegeStatusId)
+                        @Html.HiddenFor(model => model.CollegeId)
+                        @Html.HiddenFor(model => model.CollegeCode)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold; width: 24%">
+                      
+                        @Html.Label("College Name.", "College Name.")
+                    </td>
+                    <td class="col2">
+                        <span style="text-transform: uppercase; font-weight: bold;">@Html.DisplayFor(model => model.CollegeName)</span>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td class="col1">
+                        <b>SI Status</b>
+                    </td>
+                    <td class="col2">
+                        @Html.CheckBoxFor(model => model.SIflag, false)
+                    </td>
+                </tr>
+                <tr>
+
+                    <td class="col1">
+                        <b>50% Absent Faculty</b>
+                    </td>
+                    <td class="col2">
+                        @Html.CheckBoxFor(model => model.AICTEFlag, false)
+                    </td>
+                </tr>
+                <tr>
+
+                    <td class="col1">
+                        <b>Zero Admissions in all programs</b>
+                    </td>
+                    <td class="col2">
+                        @Html.CheckBoxFor(model => model.Isactive, false)
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="text-align: right">
+            <input type="submit" value="Submit"/>
+        </div>
+    }
+</div>

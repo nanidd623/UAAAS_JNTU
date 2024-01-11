@@ -1,0 +1,242 @@
+﻿@model UAAAS.Models.FFCAuditors
+@{
+    ViewBag.Title = "FFCAditorsCreate";   
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetDepartments();
+        GetDesignation();       
+    });
+    function GetDepartments() {
+        $.getJSON("/FFCAuditors/GetDepartments", {},
+            function (DepartmentsData) {
+                // alert('b');
+                var select = $("#Department");
+                select.empty();
+                select.append($('<option/>', {
+                    value: '',
+                    text: '-- Select --'
+                }));
+                $.each(DepartmentsData, function (index, itemdata) {
+                    select.append($('<option/>', {
+                        value: itemdata.Value,
+                        text: itemdata.Text,
+                        selected: (itemdata.Value == @Model.auditorDepartmentID ? true : false)
+                    }));
+                });
+            });
+        }
+        function GetDesignation() {
+            $.getJSON("/FFCAuditors/GetDesignation", {},
+                function (DesignationData) {
+                    var select = $("#Designation");
+                    select.empty();
+                    select.append($('<option/>', {
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(DesignationData, function (index, itemdata) {
+                        select.append($('<option/>', {
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.auditorDesignationID ? true : false)
+                        }));
+                    });
+                });
+            }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend></legend>
+        @if (ViewBag.IsUpdate == true)
+        {
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorName)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorName)
+                @Html.ValidationMessageFor(model => model.auditorName)
+            </div>
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorDepartmentID)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.DropDownListFor(model => model.auditorDepartmentID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+            "-- Select --", new { id = "Department", @class = "width" })
+                @Html.ValidationMessageFor(model => model.auditorDepartmentID)
+            </div>
+
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorDesignationID)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.DropDownListFor(model => model.auditorDesignationID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "DesignationName"),
+            "-- Select --", new { id = "Designation", @class = "width" })
+                @Html.ValidationMessageFor(model => model.auditorDesignationID)
+            </div>
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorPreferredDesignation)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorPreferredDesignation)
+                @Html.ValidationMessageFor(model => model.auditorPreferredDesignation)
+            </div>
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorEmail1)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorEmail1)
+                @Html.ValidationMessageFor(model => model.auditorEmail1)
+            </div>
+
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorEmail2)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorEmail2)
+                @Html.ValidationMessageFor(model => model.auditorEmail2)
+            </div>
+
+
+
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorMobile1)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorMobile1)
+                @Html.ValidationMessageFor(model => model.auditorMobile1)
+            </div>
+
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorMobile2)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorMobile2)
+                @Html.ValidationMessageFor(model => model.auditorMobile2)
+            </div>
+
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorPlace)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.DropDownListFor(model => model.auditorPlace,
+                new SelectList(ViewBag.Campus as System.Collections.IEnumerable, "Name", "Name"),
+                "-- Select --", new { id = "Campus", style = "width: 105px;" })
+                @Html.ValidationMessageFor(model => model.auditorPlace)
+            </div>
+
+            <div class="editor-label" style="width: 38%">
+                <span>Status</span>
+            </div>
+            <div class="editor-field" style="width: 58%">
+
+                <label>@Html.RadioButtonFor(model => model.isActive, true, new { @id = "Active" }) Active</label>
+                <label>@Html.RadioButtonFor(model => model.isActive, false, new { @id = "In-Active" }) In-Active</label>
+
+            </div>          
+          
+            @Html.HiddenFor(model => model.createdBy)           
+            @Html.HiddenFor(model => model.createdOn)
+           
+        }
+        else
+        {
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorName)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorName)
+                @Html.ValidationMessageFor(model => model.auditorName)
+            </div>
+      
+
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorDepartmentID)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.DropDownListFor(model => model.auditorDepartmentID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+            "-- Select --", new { id = "Department", @class = "width" })
+                @Html.ValidationMessageFor(model => model.auditorDepartmentID)
+            </div>
+
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorDesignationID)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.DropDownListFor(model => model.auditorDesignationID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "DesignationName"),
+            "-- Select --", new { id = "Designation", @class = "width" })
+                @Html.ValidationMessageFor(model => model.auditorDesignationID)
+            </div>
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorPreferredDesignation)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorPreferredDesignation)
+            </div>
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorEmail1)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorEmail1)
+                @Html.ValidationMessageFor(model => model.auditorEmail1)
+            </div>
+
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorEmail2)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorEmail2)
+            </div>
+
+
+
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorMobile1)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorMobile1)
+                @Html.ValidationMessageFor(model => model.auditorMobile1)
+            </div>
+
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorMobile2)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.EditorFor(model => model.auditorMobile2)
+            </div>
+
+            <div class="editor-label" style="width: 38%">
+                @Html.LabelFor(model => model.auditorPlace)
+            </div>
+            <div class="editor-field" style="width: 58%">
+                @Html.DropDownListFor(model => model.auditorPlace,
+                new SelectList(ViewBag.Campus as System.Collections.IEnumerable, "Name", "Name"),
+                "-- Select --", new { id = "Campus", style = "width: 105px;" })
+                @Html.ValidationMessageFor(model => model.auditorPlace)
+            </div>           
+        }
+
+        <div style="text-align: right">
+            <p>
+                @if (ViewBag.IsUpdate == true)
+                {
+                    <input type="submit" value="Update" id="btnSave" name="cmd" />
+                }
+                else
+                {                    
+                    <input type="submit" value="Add" id="btnAdd" name="cmd" />
+                }
+            </p>
+        </div>
+    </fieldset>
+}
+

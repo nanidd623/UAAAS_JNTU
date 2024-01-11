@@ -1,0 +1,107 @@
+﻿@model UAAAS.Models.CollegesReport
+@{
+    ViewBag.Title = "CollegesReport";   
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="../../Scripts/jquery-te-1.4.0.min.js" type="text/javascript"></script>
+<link href="../../Content/jquery-te-1.4.0.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    .jqte1
+    {
+        width: 481px;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnsend').click(function () {
+            var file = $('#filepicker').val();
+            //if (file == '') {
+            //    alert('Please Choose File');
+            //    return false;
+            //}           
+            if ($('#subject').val() != '') {
+                if ($('#message').val() == '') {
+                    alert('Please enter Message Details');
+                    return false;
+                }
+            }
+
+            if ($('#subject').val() == '' && $('#message').val() == '' && $('#SMS').val() == '') {
+
+                alert('Please enter SMS or email related details');
+                return false;
+            }
+        });
+
+        $('#SMS').keyup(function () {
+            var SMSLength = ($(this).val()).length + 1;
+            var SMSCalculation = (SMSLength / 160);
+            var ResultMessage = SMSLength + '-(' + Math.ceil(SMSCalculation) + ')' + 'Message(s)';
+            $('#SMSText').html(ResultMessage);
+        });
+        $("#message").jqte();
+    });
+
+</script>
+@using (Html.BeginForm("SendMailToCollege", "CollegesReport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend></legend>
+        <div class="editor-label">
+            <span>Choose File:</span>
+        </div>
+        <div class="editor-field" style="width: 80%">
+            <input type="file" name="fileUploader" id="filepicker" />
+        </div>
+        <div class="editor-label">
+            <span>To:</span>
+        </div>
+        <div class="editor-field" style="width: 80%">
+            @Html.TextBoxFor(model => model.email, new { @style = "width:475px" })
+            @Html.HiddenFor(model => model.collegeid)
+        @*    @Html.HiddenFor(model => model.mobile)*@
+            @Html.ValidationMessageFor(model => model.email)
+        </div>
+        <div class="editor-label">
+            <span>Subject:</span>
+        </div>
+        <div class="editor-field" style="width: 80%">
+            @Html.TextBoxFor(model => model.subject, new { @style = "width:475px", id = "subject" })
+
+        </div>
+        <div class="editor-label" style="min-height: 181px">
+            <span>Message:</span>
+        </div>
+        <div class="editor-field" style="width: 80%">
+            @Html.TextAreaFor(model => model.message, new { id = "message1", @style = "width:475px; height: 185px;" })
+
+        </div>
+
+        <div class="editor-label">
+            <span>Mobile:</span>
+        </div>
+        <div class="editor-field" style="width: 80%">
+            @Html.TextBoxFor(model => model.mobile, new { @id = "mobile", @style = "width:475px" })
+            @Html.ValidationMessageFor(model => model.mobile)
+        </div>
+
+        <div class="editor-label" style="min-height: 110px">
+            <span>SMS:</span>
+        </div>
+        <div class="editor-field" style="min-height: 110px; width: 80%">
+            @Html.TextAreaFor(model => model.smstext, new { @id = "SMS", @style = "width:480px" })
+            @Html.ValidationMessageFor(model => model.smstext)
+            <label id="SMSText"></label>
+        </div>
+
+
+        <div style="text-align: center">
+            <p>
+                <input type="submit" value="Send" id="btnsend" name="cmd" />
+                @Html.ActionLink("Back", "CollegesReport", "CollegesReport", new { @class = "create_button" })
+            </p>
+        </div>
+    </fieldset>
+}

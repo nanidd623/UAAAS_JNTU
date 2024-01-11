@@ -1,0 +1,156 @@
+﻿@model IList<UAAAS.Models.linkscreenpermissions>
+@{
+    ViewBag.Title = "CollegeLinkScreens";
+    var index = 1;
+}
+<h2>CollegeLinkScreens</h2>
+<script type="text/javascript">
+    $(document).ready(function() {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#SiteMenu').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function() {
+                var oSettings = $('#SiteMenu').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function(i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function() {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function(i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+        $("tfoot input").keyup(function() {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+
+<div id="MenuDiv" style="width: 100%;">
+    <table id="SiteMenu" class="display" style="width: 100%;">
+        <thead>
+            <tr>
+                <th style="text-align: center">
+                    S.No
+                </th>            
+                <th>
+                   Link Name
+                </th>
+                <th style="">
+                    From Date
+                </th>
+                <th style="" class="ui-state-default">
+                   To Date
+                </th>
+                <th class="ui-state-default" style="text-align: center">
+                    Status
+                </th>
+                <th class="ui-state-default" colspan="2" style="text-align: center"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ToList())
+            {
+                <tr>
+                    <td style="text-align: center">
+                        @(index++)
+                    </td>
+                 
+                    <td>
+                        @item.LinkName
+                    </td>
+                    <td>
+                        @item.fromdate
+                    </td>
+                    <td>
+                        @item.Todate
+                    </td>
+                    <td style="text-align: center">
+                        @if (item.isactive == true)
+                        {
+                            <img src="@Url.Content("~/Content/images/active.png")" alt="JNTU Hyderabad Logo" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/Content/images/inactive.png")" alt="JNTU Hyderabad Logo" />
+                        }
+                    </td>
+                    @*@if (ViewBag.SubMenu == true)
+                    {
+                        <td style="text-align: center; font-weight: normal;">
+                            @Html.ActionLink("Edit", "EditSubMenu", "SitePermissions", new { id = item.id }, new { @class = "edit_button" })
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="text-align: center; font-weight: normal;">
+                            @Html.ActionLink("Edit", "EditParentMenu", new { id = item.id }, new { @class = "edit_button" })
+                        </td>
+                    }*@
+                    <td style="text-align: center; font-weight: normal;">
+                        @Html.ActionLink("Edit", "EditParentMenu", new { id = item.id }, new { @class = "edit_button" })
+                    </td>
+                    <td style="text-align: center; font-weight: normal;">
+                        @Html.ActionLink("Delete", "DeleteMenu", new { id = item.id }, new { @class = "delete_button" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>           
+                <th>
+                    <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class="ui-state-default">
+                    <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class="ui-state-default">
+                    <input type="text" id="i-6" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th colspan="2" class=" ui-state-default">
+                    <input type="text" id="i-7" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+</div>

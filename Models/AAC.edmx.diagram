@@ -1,0 +1,859 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="516bfb05ec764b0bbf2840756c3b9a30" Name="Diagram1" ZoomLevel="18">
+        <EntityTypeShape EntityType="Models.college_circulars" Width="1.5" PointX="8.25" PointY="379.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.college_clusters" Width="1.5" PointX="10.25" PointY="384.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.college_grade" Width="1.5" PointX="11.25" PointY="379.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.customer" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_academic_calendermaster" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_academic_performance" Width="1.5" PointX="5.25" PointY="290.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_academic_year" Width="1.5" PointX="5.25" PointY="294" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_address" Width="1.5" PointX="7.5" PointY="441.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_address_log" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_affiliation_requests" Width="1.5" PointX="10.5" PointY="438" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_affiliation_type" Width="1.5" PointX="5.25" PointY="307" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_afrc_fee" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_auditor_assigned" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_auditors_dataentry" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_college_edit_status" Width="1.5" PointX="6.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_college_intake_existing" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_college_intake_existing_supportingdocuments" Width="1.5" PointX="8.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_college_laboratories" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_faculty_registered" Width="1.5" PointX="0.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_mbadeficiency" Width="1.5" PointX="10.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_pharmacydata" Width="1.5" PointX="10.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_principal_registered" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_scmproceedingrequest_addfaculty" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_appeal_scmproceedingsrequests" Width="1.5" PointX="4.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_approach_road" Width="1.5" PointX="5.25" PointY="318.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_approvedadmitted_intake" Width="1.5" PointX="7.5" PointY="405.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_area_requirement" Width="1.5" PointX="10.5" PointY="432.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_attendence_registrationnumberstracking" Width="1.5" PointX="12.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_auditor_assigned" Width="1.5" PointX="12.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_auditors_dataentry" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_bpharmacy_faculty_deficiency" Width="1.5" PointX="14.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_chairperson_designation" Width="1.5" PointX="5.25" PointY="327.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_changeuserid" Width="1.5" PointX="6.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_416randomcodes" Width="1.5" PointX="14.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_academic_calender" Width="1.5" PointX="14.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_academic_data" Width="1.5" PointX="16.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_academic_performance" Width="1.5" PointX="7.5" PointY="417.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_academic_performance_points" Width="1.5" PointX="7.5" PointY="349.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_accounts_payment_type" Width="1.5" PointX="8.25" PointY="345.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_affiliation" Width="1.5" PointX="7.5" PointY="359" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_affiliationfee_dues" Width="1.5" PointX="16.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_affliationstatus" Width="1.5" PointX="8.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_aictefaculty" Width="1.5" PointX="16.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_antiragging_committee" Width="1.5" PointX="15.75" PointY="385.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_antiragging_complaints" Width="1.5" PointX="15.75" PointY="380.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_bas_complaints" Width="1.5" PointX="18.75" PointY="379.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_basreport" Width="1.5" PointX="10.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_batch_performance" Width="1.5" PointX="7.5" PointY="307.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_closure" Width="1.5" PointX="15.75" PointY="376.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_committee_observations" Width="1.5" PointX="18.75" PointY="386.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_complaints" Width="1.5" PointX="16.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_computer_lab" Width="1.5" PointX="21.75" PointY="381.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_computer_lab_printers" Width="1.5" PointX="21.75" PointY="386.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_computer_student_ratio" Width="1.5" PointX="21.75" PointY="376.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_dd_payments" Width="1.5" PointX="10.5" PointY="353.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_degree" Width="1.5" PointX="18.75" PointY="374.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_desirable_others" Width="1.5" PointX="15.75" PointY="389.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_desirable_requirement" Width="1.5" PointX="18.75" PointY="391.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_document" Width="1.5" PointX="15.75" PointY="372.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_edit_remarks" Width="1.5" PointX="21.75" PointY="372.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_edit_status" Width="1.5" PointX="24.75" PointY="381.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_edit_status_log" Width="1.5" PointX="24.75" PointY="376.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_enclosures" Width="1.5" PointX="10.5" PointY="348" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_enclosures_hardcopy" Width="1.5" PointX="24.75" PointY="386.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_essential_requirements" Width="1.5" PointX="18.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_events" Width="1.5" PointX="0.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_examination_branch" Width="1.5" PointX="24.75" PointY="371.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_examination_branch_edep" Width="1.5" PointX="15.75" PointY="395.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_examination_branch_security" Width="1.5" PointX="24.75" PointY="391.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_examination_branch_staff" Width="1.5" PointX="18.75" PointY="369.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_expenditure" Width="1.5" PointX="27.75" PointY="374.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_expenditure_type" Width="1.5" PointX="5.25" PointY="358.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_experiments" Width="1.5" PointX="18.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_faculty_deficiency" Width="1.5" PointX="15.75" PointY="436.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_faculty_registered" Width="1.5" PointX="27.75" PointY="381.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_faculty_registered_test" Width="1.5" PointX="12.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_faculty_replaceregistered" Width="1.5" PointX="18.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_faculty_student_ratio" Width="1.5" PointX="27.75" PointY="386.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_facultyverification_tracking" Width="1.5" PointX="7.5" PointY="293.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_governingmeeting" Width="1.5" PointX="20.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_grievance_complaints" Width="1.5" PointX="27.75" PointY="391.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_grievancesassigned" Width="1.5" PointX="20.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_hostel_maintenance" Width="1.5" PointX="24.75" PointY="396.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_income" Width="1.5" PointX="15.75" PointY="368.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_income_type" Width="1.5" PointX="5.25" PointY="362.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_infrastructure_parameters" Width="1.5" PointX="21.75" PointY="368.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_intake_existing" Width="1.5" PointX="10.5" PointY="401.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_intake_existing_log" Width="1.5" PointX="6.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_intake_proposed" Width="1.5" PointX="10.5" PointY="409.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_internet_bandwidth" Width="1.5" PointX="27.75" PointY="395.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_lab" Width="1.5" PointX="15.75" PointY="448.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_laboratories" Width="1.5" PointX="24.75" PointY="364" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_laboratories_dataentry2" Width="1.5" PointX="18.75" PointY="363.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_laboratories_deficiency" Width="1.5" PointX="30.75" PointY="381.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_land_registration" Width="1.5" PointX="5.25" PointY="366.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_legal_software" Width="1.5" PointX="21.75" PointY="396.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_library" Width="1.5" PointX="30.75" PointY="374.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_library_details" Width="1.5" PointX="30.75" PointY="386.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_links_assigned" Width="1.5" PointX="7.5" PointY="353.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_macaddress" Width="1.5" PointX="20.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_minoritystatus" Width="1.5" PointX="7.5" PointY="384.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_monthlybasreports" Width="1.5" PointX="30.75" PointY="369.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_news" Width="1.5" PointX="30.75" PointY="393.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_noc_data" Width="1.5" PointX="20.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_noc_enclosures" Width="1.5" PointX="18.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_other_university_courses" Width="1.5" PointX="15.75" PointY="442.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_payment" Width="1.5" PointX="27.75" PointY="364.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_paymentoffee_type" Width="1.5" PointX="5.25" PointY="370.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_payments_banks" Width="1.5" PointX="5.25" PointY="375.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_payments_subpurpose" Width="1.5" PointX="7.5" PointY="374.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_pgcourse_faculty" Width="1.5" PointX="5.25" PointY="379.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_pgcourses" Width="1.5" PointX="18.75" PointY="432.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_previous_academic_faculty" Width="1.5" PointX="20.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_principal_director" Width="1.5" PointX="15.75" PointY="428.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_principal_registered" Width="1.5" PointX="30.75" PointY="398.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_randamcodes" Width="1.5" PointX="15.75" PointY="607.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_rti_complaints" Width="1.5" PointX="15.75" PointY="364.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_rti_details" Width="1.5" PointX="15.75" PointY="400.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_screens" Width="1.5" PointX="13.5" PointY="340.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_screens_assigned" Width="1.5" PointX="21.75" PointY="364.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_screens_assigned_log" Width="1.5" PointX="15.75" PointY="360.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_sports" Width="1.5" PointX="18.75" PointY="439.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_staticdata_modifications" Width="1.5" PointX="13.5" PointY="350" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_status" Width="1.5" PointX="5.25" PointY="384.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_studentregistration" Width="1.5" PointX="8.75" PointY="21.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_students_complaints" Width="1.5" PointX="22.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_type" Width="1.5" PointX="5.25" PointY="388.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_users" Width="1.5" PointX="33.75" PointY="381.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_women_protection_cell" Width="1.5" PointX="27.75" PointY="400.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_women_protection_cell_complaints" Width="1.5" PointX="33.75" PointY="377.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_collegefaculty_leaves" Width="1.5" PointX="33.75" PointY="386.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_collegestatus" Width="1.5" PointX="22.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_committee_observations" Width="1.5" PointX="5.25" PointY="392.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_complaints" Width="1.5" PointX="10.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_complaints_givenby" Width="1.5" PointX="12.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_complaints_status" Width="1.5" PointX="22.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_computer_student_ratio_norms" Width="1.5" PointX="5.25" PointY="396.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_course_affiliation_status" Width="1.5" PointX="5.25" PointY="400.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_dataentry_allotment" Width="1.5" PointX="33.75" PointY="372.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_dates" Width="1.5" PointX="22.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_degree" Width="1.5" PointX="7.5" PointY="389.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_degree_type" Width="1.5" PointX="5.25" PointY="410.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_department" Width="1.5" PointX="9.75" PointY="389.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_designation" Width="1.5" PointX="5.25" PointY="414.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_desirable_requirement_type" Width="1.5" PointX="5.25" PointY="419.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_district" Width="1.5" PointX="10.5" PointY="445.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_documents_required" Width="1.5" PointX="5.25" PointY="428" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_download" Width="1.5" PointX="5.25" PointY="431.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_edep_equipment" Width="1.5" PointX="5.25" PointY="436.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_education_category" Width="1.5" PointX="5.25" PointY="440.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_enclosures" Width="1.5" PointX="5.25" PointY="444.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_error_log" Width="1.5" PointX="5.25" PointY="448.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_essential_requirements" Width="1.5" PointX="22.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_eventmaster" Width="1.5" PointX="24.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_facility_status" Width="1.5" PointX="5.25" PointY="452.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_category" Width="1.5" PointX="5.25" PointY="456.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_deactivation_reason" Width="1.5" PointX="2.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_degree" Width="1.5" PointX="24.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_edit_requests" Width="1.5" PointX="24.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_education" Width="1.5" PointX="24" PointY="406.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_education_edit_request" Width="1.5" PointX="24.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_mobility_requests" Width="1.5" PointX="14.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_news" Width="1.5" PointX="36.25" PointY="387.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_student_ratio_norms" Width="1.5" PointX="5.25" PointY="460.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_subjects" Width="1.5" PointX="21" PointY="436.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_supporting_documents" Width="1.5" PointX="24.75" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_type" Width="1.5" PointX="5.25" PointY="464" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_ffc_auditor" Width="1.5" PointX="13" PointY="405.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_ffc_auditor_campus" Width="1.5" PointX="18.75" PointY="25.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_ffc_cluster_emails" Width="1.5" PointX="33.75" PointY="391.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_ffc_committee" Width="1.5" PointX="18" PointY="655.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_ffc_external_auditor_groups" Width="1.5" PointX="5.25" PointY="467.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_ffc_order" Width="1.5" PointX="18" PointY="659.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_ffc_schedule" Width="1.5" PointX="15.75" PointY="656.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_generated_letters" Width="1.5" PointX="20.75" PointY="25.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_governingbodydesignations" Width="1.5" PointX="22.75" PointY="25.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_grc_designation" Width="1.5" PointX="5.25" PointY="471.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_inactive_faculty" Width="1.5" PointX="24.75" PointY="25.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_infrastructure_parameters" Width="1.5" PointX="5.25" PointY="475.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_inspection_phase" Width="1.5" PointX="13.5" PointY="355.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_lab_master" Width="1.5" PointX="12" PointY="392.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_lab_master_experments" Width="1.5" PointX="13" PointY="399" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_land_category" Width="1.5" PointX="5.25" PointY="478.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_land_registration_type" Width="1.5" PointX="5.25" PointY="482.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_land_type" Width="1.5" PointX="5.25" PointY="486.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_leavetype" Width="1.5" PointX="5.25" PointY="490" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_link_screens" Width="1.5" PointX="26.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_menu" Width="1.5" PointX="5.25" PointY="493.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_miscellaneous_parameters" Width="1.5" PointX="5.25" PointY="498" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_newsevents" Width="1.5" PointX="5.25" PointY="501.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_noscmfaculty" Width="1.5" PointX="26.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_notin415faculty" Width="1.5" PointX="4.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_pan_status" Width="1.5" PointX="26.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_paymentrequests" Width="1.5" PointX="7.5" PointY="332.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_paymentrequests_copy" Width="1.5" PointX="10.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_paymentresponse" Width="1.5" PointX="10.5" PointY="331.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_paymentresponse_copy" Width="1.5" PointX="26.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_paymentresponse_new" Width="1.5" PointX="26.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_phd_subject" Width="1.5" PointX="5.25" PointY="506.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_phdundertaking" Width="1.5" PointX="26.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_physical_labmaster" Width="1.5" PointX="6.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_physical_labmaster_copy" Width="1.5" PointX="26.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_program_type" Width="1.5" PointX="5.25" PointY="509.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_qualification" Width="1.5" PointX="5.25" PointY="513.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_registered_faculty_edit_fields" Width="1.5" PointX="28.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_registered_faculty_education" Width="1.5" PointX="35.25" PointY="397" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_registered_faculty_education_log" Width="1.5" PointX="0.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_registered_faculty_log" Width="1.5" PointX="28.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_registered_faculty_subjectstaught" Width="1.5" PointX="36.25" PointY="382.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_registration" Width="1.5" PointX="28.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_scm" Width="1.5" PointX="28.75" PointY="21.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_scm_new" Width="1.5" PointX="28.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_scmproceedingrequest_addfaculty" Width="1.5" PointX="28.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_scmproceedingsrequests" Width="1.5" PointX="2.75" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_scmproceedingsrequests_copy" Width="1.5" PointX="12.75" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_scmupload" Width="1.5" PointX="30.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_shift" Width="1.5" PointX="5.25" PointY="517.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_smssendstatus" Width="1.5" PointX="30.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_society_other_colleges" Width="1.5" PointX="18.75" PointY="443.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_society_other_locations_colleges" Width="1.5" PointX="18.75" PointY="448.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_software_norms" Width="1.5" PointX="5.25" PointY="522.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_specialization" Width="1.5" PointX="12" PointY="362.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_sports_type" Width="1.5" PointX="5.25" PointY="526.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_state" Width="1.5" PointX="5.25" PointY="530.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_subcomplaints" Width="1.5" PointX="8.75" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_ugstudents" Width="1.5" PointX="30.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_university" Width="1.5" PointX="5.25" PointY="534.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_water_type" Width="1.5" PointX="5.25" PointY="539.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_year_in_degree" Width="1.5" PointX="5.25" PointY="543" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_applications" Width="1.5" PointX="0.75" PointY="379.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_membership" Width="1.5" PointX="5.25" PointY="546.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_paths" Width="1.5" PointX="30.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_personalizationallusers" Width="1.5" PointX="30.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_personalizationperuser" Width="1.5" PointX="18.75" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_profiles" Width="1.5" PointX="5.25" PointY="552.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_roles" Width="1.5" PointX="8" PointY="364.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_sessioncleanup" Width="1.5" PointX="3" PointY="271.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_sessions" Width="1.5" PointX="3" PointY="273.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_sitemap" Width="1.5" PointX="20.75" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_users" Width="1.5" PointX="3" PointY="355" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.my_aspnet_usersinroles" Width="1.5" PointX="10.25" PointY="376.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.temp_aeronautical" Width="1.5" PointX="30.75" PointY="21.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.universities_table" Width="1.5" PointX="22.75" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.user_browsers" Width="1.5" PointX="30.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.user_login_logout" Width="1.5" PointX="32.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntu_phd" Width="1.5" PointX="4.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_attendace" Width="1.5" PointX="32.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_college_faculty_registered_copy" Width="1.5" PointX="32.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_samepan" Width="1.5" PointX="32.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_scmproceedingrequest_addfaculty_copy" Width="1.5" PointX="32.75" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Models.jntuh_settings" Width="1.5" PointX="24.75" PointY="32.75" IsExpanded="true" />
+        <AssociationConnector Association="Models.FK_college_circulars_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_college_circulars_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_college_clusters_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_college_clusters_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_college_grade_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_college_grade_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_college_grade_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_academic_performance_points_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_academic_performance_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_academic_performance_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_staticdata_modifications_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_academic_year_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_academic_year_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_approvedadmitted_intake_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_academic_performance_fk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_batch_performance_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_dd_payments_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_enclosures_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_facultyverification_tracking_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_intake_existing1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_intake_proposed_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_inspection_phase_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_paymentrequests_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_paymentresponse_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_scmphases_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_address_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_address_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_address_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_address_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_affiliation_requests_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_affiliation_requests_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_affiliation_requests_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_affiliation_requests_ibfk_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_affiliation_requests_ibfk_5" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_affiliation_requests_ibfk_6" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_affiliation_type1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_affiliation_type_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_affiliation_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_approach_road_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_approach_road_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_approvedadmitted_intake_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_approvedadmitted_intake_ibfk_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_approvedadmitted_intake_ibfk_5" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_approvedadmitted_intake_ibfk_6" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_area_requirement1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_area_requirement_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_area_requirement_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_chairperson_designation1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_chairperson_designation_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_academic_performance_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_academic_performance_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_academic_performance_fk_5" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_academic_performance_fk_6" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_academic_performance_fk_7" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_academic_performance_points_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_academic_performance_points_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_dd_payments_ibfk_8" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_affiliation_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_affiliation_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_antiragging_committee_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_antiragging_committee_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_antiragging_committee_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_antiragging_complaints_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_antiragging_complaints_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_bas_complaints_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_bas_complaints_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_closure_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_closure_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_committee_observations_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_committee_observations_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_computer_lab_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_computer_lab_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_computer_lab_printers_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_computer_lab_printers_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_computer_lab_printers_fk_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_computer_student_ratio_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_computer_student_ratio_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_computer_student_ratio_fk_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_dd_payments_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_dd_payments_ibfk_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_dd_payments_ibfk_5" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_dd_payments_ibfk_6" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_dd_payments_ibfk_7" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_degree_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_degree_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_degree_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_desirable_others_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_desirable_others_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_desirable_requirement_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_desirable_requirement_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_desirable_requirement_fk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_document_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_document_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_edit_remarks_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_edit_remarks_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_edit_status_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_edit_status_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_edit_status_log_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_edit_status_log_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_enclosures_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_enclosures_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_enclosures_hardcopy_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_enclosures_hardcopy_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_EDEP_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_EDEP_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_EDEP_fk_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_security_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_security_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_staff_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_staff_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_expenditure1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_expenditure_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_expenditure_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_expenditure_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_expenditure_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_faculty_deficiency_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_faculty_deficiency_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_faculty_deficiency_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_registered_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_registered_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_student_ratio_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_student_ratio_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_student_ratio_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_grievance_complaints_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_grievance_complaints_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_hostel_maintenance_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_hostel_maintenance_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_hostel_maintenance_fk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_income1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_income_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_income_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_income_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_income_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_infrastructure_parameters_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_infrastructure_parameters_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_intake_existing_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_intake_existing_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_intake_existing_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_intake_existing_5" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_intake_proposed_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_intake_proposed_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_intake_proposed_ibfk_5" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_intake_proposed_ibfk_6" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_intake_proposed_ibfk_7" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_internet_bandwidth_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_internet_bandwidth_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_internet_bandwidth_fk_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_lab_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_lab_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_lab_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_lab_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_lab_5" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_laboratories_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_laboratories_dataentry2_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_laboratories_deficiency_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_laboratories_deficiency_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_land_registration_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_land_registration_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_legal_software_fk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_legal_software_fk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_legal_software_fk_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_library_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_library_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_library_details_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_library_details_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_library_details_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_scmphases_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_minoritystatus_ibfk1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_monthlybasreports_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_news_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_news_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_other_university_courses_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_other_university_courses_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_other_university_courses_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_payment_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_payment_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_paymentOfFee_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_paymentOfFee_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_payments_subpurpose_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_paymentrequests_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_paymentresponse_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_payments_banks_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_payments_banks_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_payments_subpurpose_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_payments_subpurpose_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_pgcourse_faculty_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_pgcourse_faculty_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_pgcourses_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_pgcourses_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_pgcourses_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_pgcourses_5" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_pgcourses_6" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_principal_director_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_principal_director_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_principal_director_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_principal_director_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_principal_director_5" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_principal_registered_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_principal_registered_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_rti_complaints_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_rti_complaints_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_rti_details_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_rti_details_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_rti_details_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_screens_assigned_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_screens_assigned_log_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_sports_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_sports_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_sports_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_staticdata_modifications_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_staticdata_modifications_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_status_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_status_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_users_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_users_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_users_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_college_women_protection_cell_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_women_protection_cell_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_women_protection_cell_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_women_protection_cell_complaints_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_college_women_protection_cell_complaints_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_collegefaculty_leaves_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_collegefaculty_leaves_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_committee_observations_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_committee_observations_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_computer_student_ratio_norms_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_computer_student_ratio_norms_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_course_affiliation_status1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_course_affiliation_status_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_dataentry_allotment_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_dataentry_allotment_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_dataentry_allotment_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jjntuh_lab_experments_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_lab_master_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_degree_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_degree_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_degree_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_department_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_degree_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_degree_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_auditor_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_lab_experments_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_lab_master_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_department_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_department_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_specialization_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_auditor_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_designation_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_designation_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_desirable_requirement_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_desirable_requirement_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_district_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_district_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_district_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_documents_required_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_documents_required_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_download_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_download_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_EDEP_equipment_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_EDEP_equipment_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_education_category_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_education_category_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_education_ibfk_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_education_ibfk_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_enclosures_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_enclosures_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_error_log_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_error_log_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_facility_status_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_facility_status_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_category_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_category_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_education_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_education_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_news_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_news_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_student_ratio_norms_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_student_ratio_norms_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_subjects_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_subjects_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_subjects_ibfk_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_subjects_ibfk_5" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_faculty_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_ffc_committee_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_ffc_cluster_emails_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_ffc_committee_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_ffc_external_auditor_groups_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_ffc_external_auditor_groups_4" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_ffc_orders_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_GRC_designation1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_GRC_designation_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_infrastructure_parameters_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_infrastructure_parameters_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_inspection_phase_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_inspection_phase_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_lab_master_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.FK_jntuh_lab_experments_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_land_category_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_land_category_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_land_registration_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_land_registration_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_land_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_land_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_leavetype_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_leavetype_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_menu_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_menu_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_miscellaneous_parameters_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_miscellaneous_parameters_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_newsevents_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_newsevents_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_phd_subject_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_phd_subject_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_program_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_program_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_qualification_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_qualification_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_education_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_education_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_subjectstaught_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_subjectstaught_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_shift_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_shift_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_society_other_colleges_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_society_other_colleges_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_society_other_colleges_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_society_other_locations_colleges_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_society_other_locations_colleges_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_society_other_locations_colleges_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_software_norms_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_software_norms_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_specialization_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_specialization_ibfk_3" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_sports_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_sports_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_state_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_state_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_university_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_university_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_water_type_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_water_type_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_year_in_degree_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.jntuh_year_in_degree_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.my_aspnet_sessioncleanup1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.my_aspnet_sessions1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.my_aspnet_users1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.my_aspnet_membership1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.my_aspnet_profiles1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.my_aspnet_usersinroles_1" ManuallyRouted="false" />
+        <AssociationConnector Association="Models.my_aspnet_usersinroles1" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Models.jntuh_college_faculty" Width="1.5" PointX="15.75" PointY="405.5" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_ibfk_4" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_ibfk_5" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_ibfk_6" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_ibfk_7" />
+        <AssociationConnector Association="Models.jntuh_faculty_education_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_faculty_subjects_ibfk_3" />
+        <EntityTypeShape EntityType="Models.jntuh_registered_faculty_experience_log" Width="1.5" PointX="39.25" PointY="382.875" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_experience_log_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_experience_log_ibfk_4" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_experience_log_ibfk_5" />
+        <EntityTypeShape EntityType="Models.jntuh_college_laboratories_copy" Width="1.5" PointX="19.375" PointY="33.75" />
+        <EntityTypeShape EntityType="Models.jntuh_lab_master_copy" Width="1.5" PointX="27.375" PointY="33.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_covidactivities" Width="1.5" PointX="33.375" PointY="29.75" />
+        <EntityTypeShape EntityType="Models.jntuh_covid_activites" Width="1.5" PointX="29.375" PointY="33.75" />
+        <EntityTypeShape EntityType="Models.jntuh_faculty_phddetails" Width="1.5" PointX="15.375" PointY="29.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_aicteapprovedintake" Width="1.5" PointX="9.375" PointY="34.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_intake_adjustmentsdata" Width="1.5" PointX="31.375" PointY="34.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_intake_adjustments" Width="1.5" PointX="21.375" PointY="34.75" />
+        <EntityTypeShape EntityType="Models.jntuh_compliance_questionnaire" Width="1.5" PointX="35.375" PointY="5.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_facultydeclaration" Width="1.5" PointX="33.375" PointY="34.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_compliance_questionnaire" Width="1.5" PointX="35.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_nbaaccreditationdata" Width="1.5" PointX="15.75" PointY="340.75" />
+        <AssociationConnector Association="Models.accademicyear" />
+        <AssociationConnector Association="Models.specialization" />
+        <EntityTypeShape EntityType="Models.jntuh_college" Width="1.5" PointX="13.5" PointY="369.375" />
+        <EntityTypeShape EntityType="Models.jntuh_college_affiliation_type" Width="1.5" PointX="5.25" PointY="404.75" />
+        <AssociationConnector Association="Models.FK_college_circulars_1" />
+        <AssociationConnector Association="Models.FK_college_clusters_1" />
+        <AssociationConnector Association="Models.FK_college_grade_1" />
+        <AssociationConnector Association="Models.jntuh_college_affiliation_4" />
+        <AssociationConnector Association="Models.jntuh_address1" />
+        <AssociationConnector Association="Models.jntuh_approvedadmitted_intake_ibfk_2" />
+        <AssociationConnector Association="Models.collegeid" />
+        <AssociationConnector Association="Models.FK_jntuh_college_academic_performance_points_4" />
+        <AssociationConnector Association="Models.FK_jntuh_college_committee_observations_3" />
+        <AssociationConnector Association="Models.FK_jntuh_college_faculty_deficiency_1" />
+        <AssociationConnector Association="Models.FK_jntuh_college_infrastructure_parameters_3" />
+        <AssociationConnector Association="Models.FK_jntuh_college_laboratories_1" />
+        <AssociationConnector Association="Models.FK_jntuh_college_laboratories_dataentry2_1" />
+        <AssociationConnector Association="Models.FK_jntuh_college_laboratories_deficiency_1" />
+        <AssociationConnector Association="Models.FK_jntuh_college_pgcourses_1" />
+        <AssociationConnector Association="Models.FK_jntuh_college_randamcodes_1" />
+        <AssociationConnector Association="Models.FK_jntuh_college_screens_assigned_1" />
+        <AssociationConnector Association="Models.FK_jntuh_college_screens_assigned_log_1" />
+        <AssociationConnector Association="Models.FK_jntuh_college_staticdata_modifications_1" />
+        <AssociationConnector Association="Models.FK_jntuh_dataentry_allotment_2" />
+        <AssociationConnector Association="Models.FK_jntuh_ffc_schedule_1" />
+        <AssociationConnector Association="Models.jntuh_college_academic_performance_fk_4" />
+        <AssociationConnector Association="Models.jntuh_college_affiliation1" />
+        <AssociationConnector Association="Models.jntuh_college_antiragging_committee_3" />
+        <AssociationConnector Association="Models.jntuh_college_antiragging_complaints_committee_3" />
+        <AssociationConnector Association="Models.jntuh_college_bas_complaints_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_college_closure1" />
+        <AssociationConnector Association="Models.jntuh_college_computer_lab_fk_3" />
+        <AssociationConnector Association="Models.jntuh_college_computer_lab_printers_fk_3" />
+        <AssociationConnector Association="Models.jntuh_college_computer_student_ratio_fk_3" />
+        <AssociationConnector Association="Models.jntuh_college_dd_payments_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_college_degree1" />
+        <AssociationConnector Association="Models.jntuh_college_desirable_others_fk_3" />
+        <AssociationConnector Association="Models.jntuh_college_desirable_requirement_fk_4" />
+        <AssociationConnector Association="Models.jntuh_college_document_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_college_edit_remarks1" />
+        <AssociationConnector Association="Models.jntuh_college_edit_status1" />
+        <AssociationConnector Association="Models.jntuh_college_edit_status_log1" />
+        <AssociationConnector Association="Models.jntuh_college_enclosures1" />
+        <AssociationConnector Association="Models.jntuh_college_enclosures_hardcopy1" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_EDEP_fk_3" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_fk_3" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_security_fk_3" />
+        <AssociationConnector Association="Models.jntuh_college_examination_branch_staff_fk_3" />
+        <AssociationConnector Association="Models.jntuh_college_expenditure_3" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_registered_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_student_ratio1" />
+        <AssociationConnector Association="Models.jntuh_college_facultyverification_tracking_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_college_grievance_complaints_committee_3" />
+        <AssociationConnector Association="Models.jntuh_college_hostel_maintenance_fk_4" />
+        <AssociationConnector Association="Models.jntuh_College_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_College_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_College_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_College_ibfk_4" />
+        <AssociationConnector Association="Models.jntuh_College_ibfk_5" />
+        <AssociationConnector Association="Models.jntuh_college_income_3" />
+        <AssociationConnector Association="Models.jntuh_college_intake_existing_1" />
+        <AssociationConnector Association="Models.jntuh_college_intake_proposed_ibfk_4" />
+        <AssociationConnector Association="Models.jntuh_college_internet_bandwidth_fk_3" />
+        <AssociationConnector Association="Models.jntuh_college_lab1" />
+        <AssociationConnector Association="Models.jntuh_college_legal_software_fk_3" />
+        <AssociationConnector Association="Models.jntuh_college_library1" />
+        <AssociationConnector Association="Models.jntuh_college_library_details1" />
+        <AssociationConnector Association="Models.jntuh_college_monthlybasreports_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_college_news_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_college_other_university_courses1" />
+        <AssociationConnector Association="Models.jntuh_college_payment_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_college_principal_director1" />
+        <AssociationConnector Association="Models.jntuh_college_principal_registered_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_college_rti_complaints_3" />
+        <AssociationConnector Association="Models.jntuh_college_rti_details_3" />
+        <AssociationConnector Association="Models.jntuh_college_sports_ibfk_4" />
+        <AssociationConnector Association="Models.jntuh_college_users_ibfk_4" />
+        <AssociationConnector Association="Models.jntuh_college_women_protection_cell_3" />
+        <AssociationConnector Association="Models.jntuh_college_women_protection_cell_complaints_3" />
+        <AssociationConnector Association="Models.jntuh_collegefaculty_leaves_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_ffc_cluster_emails_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_experience_log_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_society_other_colleges1" />
+        <AssociationConnector Association="Models.jntuh_society_other_locations_colleges1" />
+        <AssociationConnector Association="Models.jntuh_college_affiliation_type1" />
+        <AssociationConnector Association="Models.jntuh_college_affiliation_type_1" />
+        <EntityTypeShape EntityType="Models.jntuh_college_affiliation_tracking" Width="1.5" PointX="35.375" PointY="9.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_chairperson" Width="1.5" PointX="21.75" PointY="359.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_land" Width="1.5" PointX="18.75" PointY="423.25" />
+        <AssociationConnector Association="Models.jntuh_college_land_3" />
+        <AssociationConnector Association="Models.jntuh_college_chairperson_3" />
+        <AssociationConnector Association="Models.jntuh_college_chairperson1" />
+        <AssociationConnector Association="Models.jntuh_college_land1" />
+        <AssociationConnector Association="Models.jntuh_college_chairperson_1" />
+        <AssociationConnector Association="Models.jntuh_college_chairperson_2" />
+        <AssociationConnector Association="Models.jntuh_college_land_1" />
+        <AssociationConnector Association="Models.jntuh_college_land_2" />
+        <AssociationConnector Association="Models.jntuh_college_land_4" />
+        <AssociationConnector Association="Models.jntuh_college_land_5" />
+        <AssociationConnector Association="Models.jntuh_college_land_6" ManuallyRouted="true" >
+          <ConnectorPoint PointX="6.75" PointY="540.73051846247415" />
+          <ConnectorPoint PointX="7.190104166666667" PointY="539.78727589611628" />
+          <ConnectorPoint PointX="7.190104166666667" PointY="538.874109576923" />
+          <ConnectorPoint PointX="8.89438685921974" PointY="538.874109576923" />
+          <ConnectorPoint PointX="10.117657196310638" PointY="525.04523721931491" />
+          <ConnectorPoint PointX="10.132342803689362" PointY="524.879218814571" />
+          <ConnectorPoint PointX="11.242657196310638" PointY="512.32729505184034" />
+          <ConnectorPoint PointX="11.257342803689362" PointY="512.16127664709643" />
+          <ConnectorPoint PointX="14.148909696310639" PointY="479.47258285710404" />
+          <ConnectorPoint PointX="14.163595303689363" PointY="479.30656445236013" />
+          <ConnectorPoint PointX="14.88328438381064" PointY="471.1705963638754" />
+          <ConnectorPoint PointX="14.897969991189363" PointY="471.0045779591315" />
+          <ConnectorPoint PointX="14.949690477560639" PointY="470.419886266204" />
+          <ConnectorPoint PointX="14.964376084939362" PointY="470.25386786146009" />
+          <ConnectorPoint PointX="15.367657196310638" PointY="465.69484043776697" />
+          <ConnectorPoint PointX="15.382342803689362" PointY="465.52882203302306" />
+          <ConnectorPoint PointX="15.492657196310638" PointY="464.28173575249207" />
+          <ConnectorPoint PointX="15.507342803689362" PointY="464.11571734774816" />
+          <ConnectorPoint PointX="16.086404696310638" PointY="457.56951675952973" />
+          <ConnectorPoint PointX="16.101090303689361" PointY="457.40349835478582" />
+          <ConnectorPoint PointX="18.586407196310638" PointY="429.307394791937" />
+          <ConnectorPoint PointX="18.601092803689362" PointY="429.14137638719308" />
+          <ConnectorPoint PointX="18.75" PointY="427.45800473297135" />
+        </AssociationConnector>
+        <AssociationConnector Association="Models.jntuh_college_land_7" />
+        <AssociationConnector Association="Models.jntuh_college_land_8" />
+        <AssociationConnector Association="Models.jntuh_college_land_9" />
+        <EntityTypeShape EntityType="Models.jntuh_selfappraisal" Width="1.5" PointX="16.5" PointY="345.625" />
+        <EntityTypeShape EntityType="Models.jntuh_college_funds" Width="1.5" PointX="21.75" PointY="391.375" />
+        <AssociationConnector Association="Models.FK_jntuh_college_funds_1" />
+        <AssociationConnector Association="Models.FK_jntuh_college_funds_2" />
+        <AssociationConnector Association="Models.FK_jntuh_college_funds_3" />
+        <EntityTypeShape EntityType="Models.jntuh_extracurricularactivities" Width="1.5" PointX="35.375" PointY="15.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_extracurricularactivities" Width="1.5" PointX="35.375" PointY="19.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_womenprotection_antiragging_complaints" Width="1.5" PointX="15.75" PointY="334.75" />
+        <AssociationConnector Association="Models.jntuh_college_womenprotection_antiragging_complaints_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_college_womenprotection_antiragging_complaints_ibfk_1" />
+        <EntityTypeShape EntityType="Models.jntuh_college_jntu_pci_aicte_intakes" Width="1.5" PointX="35.375" PointY="24.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_jntu_pci_aicte_supportingdocs" Width="1.5" PointX="35.375" PointY="35.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_governingbody" Width="1.5" PointX="3.375" PointY="19.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_courtcases" Width="1.5" PointX="15.75" PointY="354.875" />
+        <AssociationConnector Association="Models.jntuh_college_courtcases_ibfk_1" />
+        <EntityTypeShape EntityType="Models.jntuh_college_establishment" Width="1.5" PointX="33.75" PointY="365.625" />
+        <AssociationConnector Association="Models.jntuh_college_establishment1" />
+        <AssociationConnector Association="Models.jntuh_college_establishment_1" />
+        <AssociationConnector Association="Models.jntuh_college_establishment_2" />
+        <EntityTypeShape EntityType="Models.jntuh_college_faculty_information" Width="1.5" PointX="18.75" PointY="343.5" />
+        <EntityTypeShape EntityType="Models.jntuh_college_financialstandards" Width="1.5" PointX="18.75" PointY="338.375" />
+        <EntityTypeShape EntityType="Models.jntuh_college_placement" Width="1.5" PointX="18.75" PointY="352.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_selfappraisal" Width="1.5" PointX="21.75" PointY="340.875" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_information_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_college_financialstandards_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_college_placement_fk_3" />
+        <AssociationConnector Association="Models.jntuh_college_selfappraisal_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_college_faculty_information_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_college_financialstandards_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_college_placement_fk_4" />
+        <AssociationConnector Association="Models.jntuh_college_selfappraisal_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_college_placement_fk_1" />
+        <AssociationConnector Association="Models.jntuh_college_placement_fk_2" />
+        <AssociationConnector Association="Models.jntuh_college_placement_fk_5" />
+        <AssociationConnector Association="Models.jntuh_college_selfappraisal_ibfk_3" />
+        <EntityTypeShape EntityType="Models.jntuh_pa_college_edit_status" Width="1.5" PointX="35.75" PointY="29.75" />
+        <EntityTypeShape EntityType="Models.jntuh_pa_college_screens_assigned" Width="1.5" PointX="15.75" PointY="349" />
+        <AssociationConnector Association="Models.jntuh_pa_college_screens_assigned_ibfk_1" />
+        <EntityTypeShape EntityType="Models.jntuh_college_booksandjournals" Width="1.5" PointX="21.75" PointY="335.25" />
+        <AssociationConnector Association="Models.jntuh_college_booksandjournals_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_college_booksandjournals_ibfk_1" />
+        <EntityTypeShape EntityType="Models.jntuh_oladcolleges" Width="1.5" PointX="0.75" PointY="36.75" />
+        <EntityTypeShape EntityType="Models.jntuh_direct_recruitment_principal" Width="1.5" PointX="37.375" PointY="5.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_direct_principalrecruit" Width="1.5" PointX="37.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_direct_principal_experience" Width="1.5" PointX="11.375" PointY="36.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_jhubactivities" Width="1.5" PointX="37.375" PointY="9.75" />
+        <EntityTypeShape EntityType="Models.jntuh_jhubactivities" Width="1.5" PointX="37.375" PointY="14.75" />
+        <EntityTypeShape EntityType="Models.jntuh_registered_faculty_experience" Width="1.5" PointX="39.25" PointY="389.625" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_experience_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_experience_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_experience_ibfk_4" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_experience_ibfk_5" />
+        <EntityTypeShape EntityType="Models.jntuh_college_facultytracking" Width="1.5" PointX="5.375" PointY="35.75" />
+        <EntityTypeShape EntityType="Models.jntuh_registered_faculty" Width="1.5" PointX="33" PointY="396.375" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_ibfk_4" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_faculty_news_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_education_ibfk_3" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_experience_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_experience_log_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_ibfk_1" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_registered_faculty_subjectstaught_ibfk_1" />
+        <EntityTypeShape EntityType="Models.jntuh_principal_details_affiliated_colleges" Width="1.5" PointX="37.375" PointY="33.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_grievance_committee" Width="1.5" PointX="18.75" PointY="396" />
+        <AssociationConnector Association="Models.jntuh_college_grievance_committee_3" />
+        <AssociationConnector Association="Models.FK_jntuh_college_grievance_committee_4" />
+        <AssociationConnector Association="Models.jntuh_college_grievance_committee_1" />
+        <AssociationConnector Association="Models.jntuh_college_grievance_committee_4" />
+        <EntityTypeShape EntityType="Models.jntuh_college_women_protection_cell_rti_antiragging_details" Width="1.5" PointX="21.75" PointY="347.25" />
+        <AssociationConnector Association="Models.jntuh_college_women_protection_cell__ibfk_2" />
+        <AssociationConnector Association="Models.jntuh_college_women_protection_cell__ibfk_1" />
+        <EntityTypeShape EntityType="Models.jntuh_api_designations" Width="1.5" PointX="37.375" PointY="18.75" />
+        <EntityTypeShape EntityType="Models.jntuh_apistudentspush_data" Width="1.5" PointX="23.375" PointY="35.75" />
+        <EntityTypeShape EntityType="Models.jntuh_apistaffpush_data" Width="1.5" PointX="37.375" PointY="21.75" />
+        <EntityTypeShape EntityType="Models.jntuh_academic_audit" Width="1.5" PointX="38.375" PointY="27.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_area" Width="1.5" PointX="18.75" PointY="401.5" />
+        <AssociationConnector Association="Models.jntuh_college_area_1" />
+        <AssociationConnector Association="Models.jntuh_college_area1" />
+        <AssociationConnector Association="Models.jntuh_college_area_2" />
+        <AssociationConnector Association="Models.jntuh_college_area_3" />
+        <EntityTypeShape EntityType="Models.committeemembers2023_24" Width="1.5" PointX="29.375" PointY="38.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_paymentoffee" Width="1.5" PointX="27.75" PointY="369.5" />
+        <AssociationConnector Association="Models.jntuh_college_paymentOfFee_3" />
+        <AssociationConnector Association="Models.jntuh_college_paymentOfFee1" />
+        <AssociationConnector Association="Models.jntuh_college_paymentOfFee_1" />
+        <AssociationConnector Association="Models.jntuh_college_paymentOfFee_2" />
+        <EntityTypeShape EntityType="Models.jntuh_college_noc_mergecourse" Width="1.5" PointX="39.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Models.jntuh_college_noc_restoreintake" Width="1.5" PointX="39.375" PointY="5.75" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,493 @@
+﻿
+@model UAAAS.Models.Facultyleave
+@{
+    ViewBag.Title = "FacultyLeave";
+    int count = 1;
+    string Display = string.Empty;
+    string PresentDisplay = string.Empty;
+  
+}
+
+<h2>Faculty Leave Application</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$(".calendartwo").datepicker();
+        $('.calendartwo').attr("readonly", "true");
+        $('.calendartwo').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate:"-6M",
+            maxDate: "+2M",
+            yearRange:'2019:2020',
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+        buttonImageOnly: true
+    });
+        $("#Upload").click(function () {
+            return Validate();
+            var PresentCollegeId = $("#PresentCollegeid").val();
+            if (PresentCollegeId != null && PresentCollegeId != 0) {
+                $("#PresentDesignationId").addClass("required");
+                $("#PresentfacultyDateOfAppointment").addClass("required");
+                $("#Documentfile").addClass("required");
+                return true;
+            }
+        });
+
+        // For Deleting
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+
+            $("#dialog-confirm").dialog({
+                title: 'Delete Leave',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'fadeIn', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $("#Collegeid").change(function () {
+            var id = $(this).val();
+            if (id == "0") {
+                $("#OtherCollegeDiv").show();
+            }
+            else {
+                $("#OtherCollegeDiv").hide();
+            }
+        });
+
+        function Validate() {
+            var isValidUrl = true;
+            var isValidTitle = true;
+
+            var startDate = $("#SLeavefromdate").val();
+            var endDate = $("#SLeavetodate").val();
+            if (startDate == "" || endDate == "") {
+                alert("from date and to date should not be empty.");
+                isValidDate = false;
+                return isValidDate;
+            }
+            if (startDate != " " && endDate != " ") {
+                var fromDate = startDate.substr(6, 4) + startDate.substr(3, 2) + startDate.substr(0, 2);
+                var toDate = endDate.substr(6, 4) + endDate.substr(3, 2) + endDate.substr(0, 2);
+                if (toDate < fromDate) {
+                    alert("from date should be less than to date.");
+                    isValidDate = false;
+                }
+                else {
+                    isValidDate = true;
+                }
+            }
+
+
+
+            return isValidDate;
+        }
+
+     
+
+        $("#SLeavefromdate").change(function () {
+            debugger;
+            var facultyid = $("#facultyId").val();
+            var DateOfApp = $(this).val(); 
+            //var DateOfResign = $("#facultyDateOfResignation").val();
+            var todate = $("#SLeavetodate").val();
+
+            if (facultyid != "" && DateOfApp != "" && todate != "") {
+                $.ajax({
+                    type: "GET",
+                    url: "/CollegeFacultyLeaves/CheckLeavesDates?facultyId=" + facultyid + "&&facultyfromdate=" + DateOfApp + "&&facultytodate=" + todate + "",
+                    // data: "{'facultyId':'" + facultyid + "', 'facultyDateOfResignation':'" + DateOfApp + "', 'facultyDateOfAppointment':'" + DateOfResign + "'}",
+                    success: function (status) {
+
+                        if (status.status == true) {
+
+                            alert(status.message);
+                            $("#SLeavefromdate").val('');
+                            $("#SLeavetodate").val('');
+                        }
+                        else {
+                            return false;
+                        }
+                    },
+                    error: function () {
+
+                    }
+                })
+            }
+
+        });
+
+        $("#SLeavetodate").change(function () {
+            debugger;
+            var facultyid = $("#facultyId").val();
+            var DateOfApp = $("#SLeavefromdate").val();
+            var todate = $(this).val();
+
+            if (facultyid != "" && DateOfApp != "" && todate != "") {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/CollegeFacultyLeaves/CheckLeavesDates?facultyId=" + facultyid + "&&facultyfromdate=" + DateOfApp + "&&facultytodate=" + todate + "",
+                    // data: "{'facultyId':'" + facultyid + "', 'facultyDateOfResignation':'" + DateOfApp + "', 'facultyDateOfAppointment':'" + DateOfResign + "'}",
+                    success: function (status) {
+
+                        if (status.status == true) {
+
+                            alert(status.message);
+                            //alert("You have Already selected those Dates");
+                            $("#SLeavefromdate").val('');
+                            $("#SLeavetodate").val('');
+                        }
+                        else {
+                            return false;
+                        }
+                    },
+                    error: function () {
+
+                    }
+                })
+            }
+
+        });
+
+        $(".JoiningOrder").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "JoiningOrder");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+                    $(".JoiningOrder > span").text("");
+                }
+            }
+
+        });
+
+        $(".RelievingOrder").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "RelievingOrder");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+                    $(".RelievingOrder > span").text("");
+                }
+            }
+
+        });
+
+       
+
+        $(".Documentfile").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "Documentfile");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+                    $(".Documentfile > span").text("");
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+       
+
+    });
+</script>
+
+<style>
+    .col1 {
+        width: 14%;
+        height: 20px;
+    }
+
+    .col2 {
+        width: 36%;
+        height: 20px;
+    }
+
+    .PrevoiusCollege{
+        display:@Display;
+    }
+    #Present{
+     display:@PresentDisplay;
+    }
+</style>
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success">
+        <p style="text-align: center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+    </div>
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div>
+}
+<br />
+@using (Html.BeginForm("Index", "CollegeFacultyLeaves", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+  
+    <div style="padding-left:10px;">
+       
+        <div>
+        <table width="100%">
+           @*<tr id="Present">
+                    <td colspan="5">
+                        <div class="note">
+                            <table>
+                                <tr>                              
+                                   
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="Present"><td style="height: 10px;"></td></tr>*@
+            @Html.HiddenFor(model => model.facultyId)
+            <tr>
+                <td class="col1">Registration Number</td>
+                <td class="col2">
+                   @Html.DisplayFor(model => model.RegistrationNumber)
+                    @Html.HiddenFor(model => model.RegistrationNumber)
+                    @Html.ValidationMessageFor(model => model.RegistrationNumber)
+                </td>
+                <td>&nbsp;&nbsp;</td>
+                <td class="col1">Name</td>
+                <td class="col2">
+                    @Html.DisplayFor(model => model.Firstname)
+                    @Html.DisplayFor(model => model.Middlename)
+                    @Html.DisplayFor(model => model.Lastname)
+                    
+                </td>
+              
+            </tr>
+            <tr>
+                <td class="col3">FROM</td>
+                <td class="col4">
+                    @Html.TextBoxFor(model => model.SLeavefromdate, new {@class = "calendartwo", @placeholder = "DD/MM/YYYY"})
+                    @Html.ValidationMessageFor(model => model.SLeavefromdate)
+                </td>
+                <td>&nbsp;&nbsp;</td>
+                <td class="col3"> TO</td>
+                <td class="col4">
+                    @Html.TextBoxFor(model => model.SLeavetodate, new {@class = "calendartwo", @placeholder = "DD/MM/YYYY"})
+                    @Html.ValidationMessageFor(model => model.SLeavetodate)
+                </td>
+
+            </tr>
+            <tr>
+                <td class="col1">Leave Type</td>
+                <td class="col2">
+                    @Html.DropDownListFor(model => model.Leavetypeid, new SelectList(ViewBag.LeaveTyps as System.Collections.IEnumerable, "Id", "LeaveType"), "---Select---", new { @style = "width:400px;", @id = "" })
+                    @Html.ValidationMessageFor(model => model.Leavetypeid)
+                </td>
+                <td>&nbsp;&nbsp;</td>
+                <td class="col1">Supporting Document</td>
+                <td class="col2">
+                    @*PresentJoiningOrder*@
+                    @Html.TextBoxFor(model => model.Documentfile, new {@type = "file", @class = "Documentfile"})
+                    @Html.ValidationMessageFor(model => model.Documentfile)
+                </td>
+            </tr>
+
+            <tr><td style="height: 15px;"></td></tr>
+        </table>
+        <div style="float: right;">
+            <input type="submit" id="Upload" name="Upload" value="Submit" style="float: right;"/>
+        </div>
+            <table width="100%" border="0" class="webGrid">
+                @if (Model.facultyleaveslist != null)
+                {
+                    <tr style="height: 20px;">
+                        <td colspan="8">
+                            <table width="100%" border="0" class="webGrid">
+                                <tr style="background-color:#C1D4E6;">
+                                    <th>S.No</th>
+                                    <th>Registrationnumber</th>
+                                    <th>Leavetype</th>
+                                    <th>FROM (MM/DD/YYYY)</th>
+                                    <th>TO (MM/DD/YYYY)</th>
+                                    <th>No of Days</th>
+                                    <th>Document</th>
+                                    <th>Delete</th>
+                                </tr>
+                                @if (Model.facultyleaveslist != null)
+                                {
+
+                                    foreach (var item in Model.facultyleaveslist)
+                                    {
+                                        <tr style="background-color:#FCF1D1;">
+                                            <td>@(count++)</td>
+                                            <td>@item.RegistrationNumber</td>
+                                            <td>@item.Leavetype</td>
+                                            <td>@item.SLeavefromdate</td>
+                                            <td>@item.SLeavetodate</td>
+                                            <td>@item.noofdays</td>
+                                            <td>
+                                                <a href="~/Content/Upload/Faculty/LeaveDocuments/@item.Documentview" target="_blank">
+                                                    <span style="color: red;"><b>View</b></span>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                @if (@item.isDelete==true)
+                                                {
+                                                    <a href="/CollegeFacultyLeaves/DeleteLeaveData?id=@item.id" class="confirmDialog delete_button"><span>Delete</span></a>
+                                                }
+                                                else
+                                                {
+  
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+          
+        </div>
+
+    </div>
+    <br />
+}
+
+<div id="editDialog" style="display: none"></div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>

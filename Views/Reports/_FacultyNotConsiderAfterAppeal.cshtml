@@ -1,0 +1,39 @@
+﻿@model IList<UAAAS.Models.CollegeFaculty>
+@using UAAAS.Models;
+@{
+    
+    int sno = 1;
+}
+<table border="1" width="100%">
+    <tr>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">SNo</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">College Code</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">College Name</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">Registration Number</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">Full Name</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">Designation</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">Department</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">Pending Status</th>
+        
+    </tr>
+    @foreach (var item in Model)
+    {
+
+           
+        var fullname = @item.facultyFirstName + " " + @item.facultyLastName;
+
+        
+         
+        <tr>
+            <th style="text-align: center;  vertical-align: top;">@(sno++)</th>
+            <th style="text-align: center;  vertical-align: top;">@item.CollegeCode</th>
+            <th style="text-align: center;  vertical-align: top;">@item.CollegeName</th>
+            <th style="text-align: left;  vertical-align: top;">@item.FacultyRegistrationNumber</th>
+            <th style="text-align: left;  vertical-align: top;">@fullname</th>
+            <th style="text-align: left;  vertical-align: top;">@item.designation</th>
+            <th style="text-align: left;  vertical-align: top;">@item.department</th>
+            <th style="text-align: left;  vertical-align: top;">@item.Reason</th>
+            
+        </tr>
+    }
+</table>

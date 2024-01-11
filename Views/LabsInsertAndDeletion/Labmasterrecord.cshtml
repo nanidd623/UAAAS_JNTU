@@ -1,0 +1,332 @@
+﻿@model UAAAS.Controllers.EditLabsList
+@{
+    ViewBag.Title = "EditLabmasterrecord";
+    int count = 1;
+}
+
+<h2>Edit Labmaster record</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $("#CollegeTypeId").change(function () {
+            debugger;
+            var selectedValue = $(this).val();
+            if (selectedValue != null && selectedValue != "")
+                window.location.href = "/LabsInsertAndDeletion/Labmasterrecord?CollegeTypeId=" + selectedValue;
+            else
+                window.location.href = "/LabsInsertAndDeletion/Labmasterrecord";
+        });
+
+        $("#CollegeId").change(function () {
+            debugger;
+            var type = $("#CollegeTypeId").val();
+            var selectedValue = $(this).val();
+            if ((type != null && type != "") && (selectedValue != null && selectedValue != ""))
+                window.location.href = "/LabsInsertAndDeletion/Labmasterrecord?CollegeTypeId=" + type + "&&CollegeId=" + selectedValue;
+            else
+                window.location.href = "/LabsInsertAndDeletion/Labmasterrecord";
+        });
+
+        $("#Year").change(function () {
+            debugger;
+            var type = $("#CollegeTypeId").val();
+            var id = $("#CollegeId").val();
+            var selectedValue = $(this).val();
+            if ((type != null && type != "") && (selectedValue != null && selectedValue != "")) {
+                if (type == "1" && (id != "" && id != null))
+                    window.location.href = "/LabsInsertAndDeletion/Labmasterrecord?CollegeTypeId=" + type + "&&CollegeId=" + id + "&&Year=" + selectedValue;
+                else if (type == "2")
+                    window.location.href = "/LabsInsertAndDeletion/Labmasterrecord?CollegeTypeId=" + type + "&&Year=" + selectedValue;
+            }
+            else
+                window.location.href = "/LabsInsertAndDeletion/Labmasterrecord";
+        });
+
+        $("#Semister").change(function () {
+            debugger;
+            var ctype = $("#CollegeTypeId").val();
+            var cid = $("#CollegeId").val();
+            var yearid = $("#Year").val();
+            var selectedValue = $(this).val();
+            if ((ctype != null && ctype != "") && (yearid != null && yearid != "") && (selectedValue != null && selectedValue != "")) {
+                if (ctype == "1" && (cid != "" && cid != null))
+                    window.location.href = "/LabsInsertAndDeletion/Labmasterrecord?CollegeTypeId=" + ctype + "&&CollegeId=" + cid + "&&Year=" + yearid + "&&Semister=" + selectedValue;
+                else if (ctype == "2")
+                    window.location.href = "/LabsInsertAndDeletion/Labmasterrecord?CollegeTypeId=" + ctype + "&&Year=" + yearid + "&&Semister=" + selectedValue;
+            }
+            else
+                window.location.href = "/LabsInsertAndDeletion/Labmasterrecord";
+        });
+
+        $(".EditDialog").live('click', function () {
+            debugger;
+            var url = $(this).attr('href');
+            $("#editDialog").dialog({
+                title: 'Edit Lab Master',
+                autoOpen: false,
+                model: true,
+                resizable: false,
+                width: 770,
+                height: 430,
+                effect: { effect: 'drop', direction: "up" },
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            })
+            $("#editDialog").dialog('open');
+            return false;
+        })        
+    });
+</script>
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success" style="height:15px;">
+        <p style="text-align: center;font-weight: bold"><span style="color:green;font-weight:bold;">Success : </span>@TempData["SUCCESS"].ToString()</p>
+    </div><br/>
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;"><span style="color:red;font-weight:bold;">Error : </span>@TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+
+@using (Html.BeginForm())
+{
+
+    <div>
+        @*<table width="100%">
+            <tr>
+                <td class="col3">
+                    <span>College Type</span>
+                </td>
+                <td class="col4">
+                    <select ng-model="Type" ng-options="type.Value as type.Text for fruit in Fruits track by fruit.Id"></select>
+                    @Html.DropDownListFor(model => model.CollegeTypeId, new SelectList(ViewBag.CollegeType as System.Collections.IEnumerable, "Value", "Text"), "---Select---", new { @id = "CollegeTypeId", @style = "width:200px;" })
+                    @Html.ValidationMessageFor(m => m.CollegeTypeId)
+                </td>
+            </tr>
+        </table>*@
+        <table width="100%">
+            <tr>
+                <td class="col3">
+                    <span>College Type</span>
+                </td>
+                <td class="col4">
+                    @Html.DropDownListFor(model => model.CollegeTypeId, new SelectList(ViewBag.CollegeType as System.Collections.IEnumerable, "Value", "Text"), "---Select---", new { @id = "CollegeTypeId", @style = "width:200px;" })
+                    @Html.ValidationMessageFor(m => m.CollegeTypeId)
+                </td>
+            </tr>
+            @if (Model.CollegeTypeId == 1)
+            {
+                <tr style="">
+                    <td class="col3">
+                        <span>College</span>
+                    </td>
+                    <td class="col4">
+                        @Html.DropDownListFor(m => m.CollegeId, new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"), "---Select---", new { @id = "CollegeId", @style = "width:500px;" })
+                        @Html.ValidationMessageFor(m => m.CollegeId)
+                    </td>
+                </tr>
+            }
+            <tr style="">
+                <td class="col3">
+                    <span>Year</span>
+                </td>
+                <td class="col4">
+                    @Html.DropDownListFor(m => m.Year, new SelectList(ViewBag.YearList as System.Collections.IEnumerable, "Value", "Text"), new { @id = "Year", @style = "width:150px;" })
+                    @Html.ValidationMessageFor(m => m.Year)
+                </td>
+            </tr>
+            <tr style="">
+                <td class="col3">
+                    <span>Semester</span>
+                </td>
+                <td class="col4">
+                    @Html.DropDownListFor(m => m.Semister, new SelectList(ViewBag.SemesterList as System.Collections.IEnumerable, "Value", "Text"), new { @id = "Semister", @style = "width:150px;" })
+                    @Html.ValidationMessageFor(m => m.Semister)
+                </td>
+            </tr>
+        </table>
+</div>
+    <br />
+    if (ViewBag.objsList != null)
+    {
+        <div >
+
+            <table id="example" class="display" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">
+                            S.No
+                        </th>
+                        <th style="width: 80px; text-align: center;">
+                            Degree
+                        </th>
+                        <th style="text-align: left;width: 100px;">
+                            Department
+                        </th>
+                        <th style="width: 120px; text-align: center;">Specialization</th>
+                        <th style="width: 50px; text-align: center;">Year</th>
+                        <th style="width: 50px; text-align: center;">Semester</th>
+                        <th style="width: 50px; text-align: center;">LabCode</th>
+                        <th style="width: 180px; text-align: center;">LabName</th>
+                        @*<th style="width: 180px; text-align: center;">EquipmentName</th>*@
+                        <th style="width: 30px; text-align: center;">NoofUnits</th>
+                        <th style="width: 30px; text-align: center;">Edit</th>
+                        <th style="width: 30px; text-align: center;">View</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in ViewBag.objsList)
+                    {
+                        <tr>
+                            <td>@(count++)</td>
+                            <td>
+                                @item.Degree
+                            </td>
+                            <td>
+                                @item.Department
+                            </td>
+                            <td>
+                                @item.Specialization
+                            </td>
+                            <td style="text-align:center;">
+                                @item.Year
+                            </td>
+                            <td style="text-align:center;">
+                                @item.Semister
+                            </td>
+                            <td>
+                                @item.Labcode
+                            </td>
+                            <td>
+                                @item.LabName
+                            </td>
+                            @*<td>
+                                @item.EquipmentName
+                            </td>*@
+                            <td style="text-align:center;">
+                                @item.noofUnits
+                            </td>
+                            <td style="text-align:center;">
+                                <a href="/LabsInsertAndDeletion/EditLabmasterrecords?labcode=@item.Labcode" class="EditDialog edit_button">Edit</a>
+                                @*@Html.ActionLink("Edit", "EditLabmasterrecords", "LabsInsertAndDeletion", new {}, new { @class = "create_button editdialog", @style = "float:center;" })*@
+                            </td>
+                            <td style="text-align:center;">
+                                <a href="/LabsInsertAndDeletion/ViewLabmasterrecords?labcode=@item.Labcode" class="view_button" target="_blank">View</a>
+                                @*@Html.ActionLink("Edit", "EditLabmasterrecords", "LabsInsertAndDeletion", new {}, new { @class = "create_button editdialog", @style = "float:center;" })*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>
+                            <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                        </th>
+                        <th width="120px">
+                            <input type="text" id="i-1" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                        <th width="100px">
+                            <input type="text" id="i-1" style="width: 70%; text-align: left;" class="search_init">
+                        </th>
+                        <th width="100px">
+                            <input type="text" id="i-2" style="width: 70%; text-align: left;" class="search_init">
+                        </th>
+                        <th class=" ui-state-default" width="130px">
+                            <input type="text" id="i-3" style="width: 70%; text-align: left;" class="search_init">
+                        </th>
+                        <th class="ui-state-default" width="125px">
+                            <input type="text" id="i-4" style="width: 70%; text-align: left;" class="search_init">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-6" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-7" style="width: 90%; text-align: left;display:none " class="search_init">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-8" style="width: 90%; text-align: left;display:none " class="search_init">
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    }
+}
+<div id="editDialog" style="display: none">
+
+</div>

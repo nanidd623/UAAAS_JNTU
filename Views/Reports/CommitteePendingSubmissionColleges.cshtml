@@ -1,0 +1,185 @@
+﻿@model IEnumerable<UAAAS.Models.CommitteePendingSubmissionColleges>
+@{
+    ViewBag.Title = "CommitteePendingSubmissionColleges";
+    int sno = 1;
+}
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 1000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+        $('#chkselectall').click(function () {
+
+            // add multiple select / deselect functionality       
+            $('.forcheckbox').attr('checked', this.checked);
+        });
+
+        $('#btnsubmit').click(function () {
+            var file = $('#filepicker').val();
+            var chk = $('#chkall').val();
+            if (file == '') {
+                alert('Please Choose File');
+                return false;
+            }
+
+            // alert(chk);
+
+        });
+
+    });
+
+</script>
+<h2>Committee Pending Submission Colleges</h2>
+
+@using (Html.BeginForm())
+{           
+    <input type="submit" value="Export" />
+    @Html.ActionLink("Back", "Admin", "Dashboard", null, new { @class = "create_button" })
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th class=" ui-state-default" style="width: 30px;text-align: center;">S.No</th>
+                <th class=" ui-state-default" style="text-align: left;">Name</th>
+                <th class=" ui-state-default" style="text-align: left;">Total Inspections</th>
+                <th class=" ui-state-default" style="text-align: left;">Department</th>
+                <th class=" ui-state-default" style="text-align: left;">Designation</th>
+                <th class=" ui-state-default" style="text-align: left;">Preferred Designation</th>
+                <th class=" ui-state-default" style="text-align: left;">Email</th>                
+                <th class=" ui-state-default" style="text-align: center;width:80px">Mobile</th>            
+                
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {           
+           
+                <tr>
+                    <td style="text-align: center;">
+                        @(sno++)
+                    </td>
+                    <td style="text-align: left;">
+                         @item.auditorname
+                    <td style="text-align: center;">
+                        @item.id
+                    </td>
+                    <td style="text-align: left;">
+                        @item.departmentname
+                    </td>
+                    <td style="text-align: left;">
+                        @item.designation
+                    </td>
+                     <td style="text-align: left;">
+                        @item.auditorpreferreddesignation
+                    </td>
+                   <td style="text-align: left;">
+                        @item.auditoremail1
+                    </td>
+                  @*  <td style="text-align: left;">
+                        @item.auditoremail2
+                    </td>*@
+                    <td style="text-align: center;">
+                        @item.auditormobile1
+                    </td>
+                   @* <td style="text-align: center;">
+                        @item.auditormobile2
+                    </td>
+                    <td style="text-align: left;">
+                        @item.auditorplace
+                    </td>*@
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th style="">
+                    <input type="text" id="i-0" style="width: 20%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="">
+                    <input type="text" id="i-1" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left">
+                    <input type="text" id="i-3" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="">
+                    <input type="text" id="i-4" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+               <th class=" ui-state-default" style="text-align: left">
+                    <input type="text" id="i-5" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+                <th style="">
+                    <input type="text" id="i-6" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+                <th style="">
+                    <input type="text" id="i-7" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+               @* <th>
+                    <input type="text" id="i-8" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left">
+                    <input type="text" id="i-9" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="">
+                    <input type="text" id="i-10" style="width: 80%; text-align: left;" class="search_init">
+                </th>*@
+
+            </tr>
+        </tfoot>
+    </table>
+        
+      
+}

@@ -1,0 +1,226 @@
+﻿@model UAAAS.Models.CollegeFeeReimbursement
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetSpecialization(@Model.departmentID);
+        $(".calendar, .year").css("width", "75px");
+
+        if ($("#degree").val() > 0) {
+            GetDepartments($("#degree").val());
+        }
+        
+        
+        $("#degree").change(function () {
+            var DegreeID = $(this).val();
+            GetDepartments(DegreeID);
+        });
+        if($("#department").val() > 0)
+        {
+            GetSpecialization($("#department").val());
+        }
+        $("#department").change(function(){
+            var DepartmentID = $(this).val();
+            GetSpecialization(DepartmentID);
+        });
+
+        function GetDepartments(DegreeID){
+            $.getJSON("/CollegeFeeReimbursement/GetDepartments",{ id : DegreeID},
+                function(DepartmentsData){
+                    var select = $("#department");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(DepartmentsData,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.departmentID ? true : false)
+                        }));
+                    });
+                });
+            }
+
+        function GetSpecialization(DepartmantID){
+            $.getJSON("/CollegeFeeReimbursement/GetSpecialization" ,{id : DepartmantID},
+                function(Specializationdata){
+                    var select = $("#specialization");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(Specializationdata,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.specializationId ? true : false)
+                        }));
+                    });
+                });
+            }
+    });
+
+</script>
+@using (Ajax.BeginForm("AddEditRecord", "CollegeFeeReimbursement", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "CollegeFeeReimbursementDialog" }))
+{
+    @Html.ValidationSummary(true)    
+    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    if (ViewBag.Count == 0)
+    {
+    <div class="warning" style="width: 550px; margin: 0 auto;">
+        <p>Please select your courses in "College Information" page before filling up this page.</p>
+    </div>
+    }
+    <div class="details_table">
+        @if (ViewBag.IsUpdate == true)
+        {
+            @Html.HiddenFor(model => model.id)
+        }
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.degreeID)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @*@Html.EditorFor(model => model.degreeID)*@
+            @Html.DropDownListFor(model => model.degreeID,
+            new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "degreeId", "degree"),
+                "-- Select -- ", new { id = "degree", style = "width: 170px;" })
+            @Html.ValidationMessageFor(model => model.degreeID)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.departmentID)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.DropDownListFor(model => model.departmentID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+            "-- Select --", new { id = "department", style = "width: 170px;" })
+            @Html.ValidationMessageFor(model => model.departmentID)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.specializationId)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.DropDownListFor(model => model.specializationId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "specializationName"),
+            "-- Select --", new { id = "specialization", style = "width: 170px;" })
+            @Html.ValidationMessageFor(model => model.specializationId)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.shiftId)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.DropDownListFor(model => model.shiftId,
+            new SelectList(ViewBag.Shift as System.Collections.IEnumerable, "id", "shiftName"),
+            new { id = "shift", style = "width: 170px;" })
+            @Html.ValidationMessageFor(model => model.shiftId)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.yearInDegreeId)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.DropDownListFor(model => model.yearInDegreeId,
+            new SelectList(ViewBag.YearInDegree as System.Collections.IEnumerable, "id", "yearInDegree"),
+            "-- Select --", new { id = "yearInDegree", style = "width: 170px;" })
+            @Html.ValidationMessageFor(model => model.yearInDegreeId)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.seatsWithoutReimbursement)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.seatsWithoutReimbursement, new { @Value = Model.seatsWithoutReimbursement == 0 ? "" : @Model.seatsWithoutReimbursement.ToString() })
+            @Html.ValidationMessageFor(model => model.seatsWithoutReimbursement)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.feeWithoutReimbursement)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.feeWithoutReimbursement, new { @Value = Model.feeWithoutReimbursement == 0 ? "" : @Model.feeWithoutReimbursement.ToString() })
+            @Html.ValidationMessageFor(model => model.feeWithoutReimbursement)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.seatsWithReimbursement)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.seatsWithReimbursement, new { @Value = Model.seatsWithReimbursement == 0 ? "" : @Model.seatsWithReimbursement.ToString() })
+            @Html.ValidationMessageFor(model => model.seatsWithReimbursement)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.feeWithReimbursement)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.feeWithReimbursement, new { @Value = Model.feeWithReimbursement == 0 ? "" : @Model.feeWithReimbursement.ToString() })
+            @Html.ValidationMessageFor(model => model.feeWithReimbursement)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.NRISeats)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.NRISeats, new { @Value = Model.NRISeats == 0 ? "" : @Model.NRISeats.ToString() })
+            @Html.ValidationMessageFor(model => model.NRISeats)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.totalNRIFee)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.totalNRIFee, new { @Value = Model.totalNRIFee == 0 ? "" : @Model.totalNRIFee.ToString() })
+            @Html.ValidationMessageFor(model => model.totalNRIFee)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.PIOSeats)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.PIOSeats, new { @Value = Model.PIOSeats == 0 ? "" : @Model.PIOSeats.ToString() })
+            @Html.ValidationMessageFor(model => model.PIOSeats)
+        </div>
+
+        <div class="editor-label" style="width: 210px">
+            @Html.LabelFor(model => model.totalPIOFee)
+        </div>
+        <div class="editor-field" style="width: 420px">
+            @Html.TextBoxFor(model => model.totalPIOFee, new { @Value = Model.totalPIOFee == 0 ? "" : @Model.totalPIOFee.ToString() })
+            @Html.ValidationMessageFor(model => model.totalPIOFee)
+        </div>
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.createdBy)
+        @Html.HiddenFor(model => model.academicYearId)
+        <div style="text-align: center">
+            <p>
+                @if (ViewBag.IsUpdate == true)
+                {
+                    <input type="submit" value="Save" id="btnSave" name="cmd" />                    
+                }
+                else
+                {
+                    <input type="submit" value="Add" id="btnAdd" name="cmd" />
+                }
+            </p>
+        </div>
+    </div>
+}

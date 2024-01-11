@@ -1,0 +1,717 @@
+﻿@model UAAAS.Models.DeficiencyCollege
+@{    
+    ViewBag.Title = "Colleges Deficiencies";
+}
+
+@using (Html.BeginForm())
+{
+    int count = 0;
+    <h2>Colleges Deficiencies</h2>
+    <table style="width: 100%; border-bottom: solid 1px #ccc; margin-bottom: 3px; background-color: #eee;">
+        <tr>
+            <td style="width: 140px; vertical-align: top;"><b>Report Type</b></td>
+            <td>
+                @Html.HiddenFor(model => model.reportTypeId)
+                @foreach (var item in Model.reportType)
+                {
+                    var optionValue = "reportType_" + item.name;
+                    var selectValue = item.selected; 
+                    
+                    <span style="float: left; text-align: left; display: inline-block;">
+                        @if (selectValue == 1)
+                        {
+                            <input type="radio"  id="@optionValue" name="reportTypeId" value ="@item.id" checked="checked" class="deficiencies" />
+                        }
+                        else
+                        {
+                            <input type="radio"  id="@optionValue" name="reportTypeId" value ="@item.id" class="deficiencies" />
+                        }
+
+                        <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+                    </span>
+                }
+
+            </td>
+        </tr>
+    </table>
+    <table style="width: 100%; border-bottom: solid 1px #ccc; margin-bottom: 3px;">
+        <tr>
+            <td style="width: 140px; vertical-align: top;"><b>Shortage Type</b></td>
+            <td>
+                @Html.HiddenFor(model => model.shortageTypeId)
+                @foreach (var item in Model.shortageType)
+                {
+                    var optionValue = "shortageType_" + item.name;
+                    var selectValue = item.selected; 
+                    <span style="float: left; text-align: left; display: inline-block;">
+                        @if (selectValue == 1)
+                        {
+                            <input type="radio"  id="@optionValue" name="shortageTypeId" value ="@item.id" checked="checked" />
+                        }
+                        else
+                        {
+                            <input type="radio"  id="@optionValue" name="shortageTypeId" value ="@item.id" />
+                        }
+
+                        <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+
+                    </span>
+               
+                }
+
+            </td>
+        </tr>
+    </table>
+    <table style="width: 100%; border-bottom: solid 1px #ccc; margin-bottom: 3px; background-color: #eee;">
+        <tr>
+            <td style="width: 140px; vertical-align: top;"><b>Degree (Multiple)</b></td>
+            <td>
+                @Html.HiddenFor(model => model.degreeId)
+                @foreach (var item in Model.degree)
+                {
+
+                    var optionValue = "degree_" + item.name;
+                    var selectValue = item.selected; 
+
+                    <span style="float: left; text-align: left; display: inline-block;">
+                        @if (selectValue == 1)
+                        {
+                            <input type="checkbox" id="@optionValue" name="degreeId" value ="@item.id" checked="checked" class="All" />
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="@optionValue" name="degreeId" value ="@item.id" class="All" />
+                        }
+                        <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+
+                    </span>
+                }
+                <span style="float: left; text-align: left; display: inline-block; font-size: 16px;">(&nbsp;&nbsp;</span>
+                @Html.HiddenFor(model => model.viewTypeId)
+                @foreach (var item in Model.viewType)
+                {
+
+                    var optionValue = "degree_" + item.name;
+                    var selectValue = item.selected; 
+
+                    <span style="float: left; text-align: left; display: inline-block;">
+                        @if (selectValue == 1)
+                        {
+                            <input type="radio" id="@optionValue" name="viewTypeId" value ="@item.id" checked="checked" />
+                        }
+                        else
+                        {
+                            <input type="radio" id="@optionValue" name="viewTypeId" value ="@item.id" />
+                        }
+                        <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+
+                    </span>
+                }
+                <span style="float: left; text-align: left; display: inline-block; font-size: 16px;">)</span>
+            </td>
+        </tr>
+    </table>
+    <table style="width: 100%; border-bottom: solid 1px #ccc; margin-bottom: 3px;">
+        <tr>
+            <td style="width: 140px; vertical-align: top;"><b>Degree (Only One)</b></td>
+            <td>
+                @Html.HiddenFor(model => model.degreeOnlyId)
+                @foreach (var item in Model.degreeOnly)
+                {
+                    var optionValue = "degreeOnly_" + item.name;
+                    var selectValue = item.selected; 
+                    
+                    <span style="float: left; text-align: left; display: inline-block;">
+
+                        @if (selectValue == 1)
+                        {
+                            <input type="radio"  id="@optionValue" name="degreeOnlyId" value ="@item.id" checked="checked" class="Only" />
+                        }
+                        else
+                        {
+                            <input type="radio"  id="@optionValue" name="degreeOnlyId" value ="@item.id" class="Only" />
+                        }
+
+                        <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+
+                    </span>
+                }
+
+            </td>
+        </tr>
+    </table>
+    <table style="width: 100%; border-bottom: solid 1px #ccc; margin-bottom: 3px; background-color: #eee;">
+        <tr>
+            <td style="width: 140px; vertical-align: top;"><b>Columns</b></td>
+            <td>
+                @Html.HiddenFor(model => model.columnId)
+
+                @foreach (var item in Model.columnList)
+                {
+                    var optionValue = "columnList_" + item.name;
+                    var selectValue = item.selected;
+                    
+                    <span style="float: left; text-align: left; display: inline-block;">
+                        @if (selectValue == 1)
+                        {
+                            <input type="checkbox"  id="@optionValue" name="columnId" value ="@item.id" checked="checked" class="allCols" />
+                        }
+                        else
+                        {
+                            <input type="checkbox"  id="@optionValue" name="columnId" value ="@item.id" class="allCols" />
+                        }
+                        <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+                    </span>
+                }
+            </td>
+        </tr>
+    </table>
+    <table style="width: 100%; border-bottom: solid 1px #ccc; margin-bottom: 3px;">
+        <tr>
+            <td style="width: 140px; vertical-align: top;"><b>Remarks Type</b></td>
+            <td>
+                @Html.HiddenFor(model => model.remarksTypeId)
+                @foreach (var item in Model.remarksType)
+                {
+                    var optionValue = "remarksType_" + item.name;
+                    var selectValue = item.selected; 
+                    <span style="float: left; text-align: left; display: inline-block;">
+                        @if (selectValue == 1)
+                        {
+                            <input type="radio"  id="@optionValue" name="remarksTypeId" value ="@item.id" checked="checked" />
+                        }
+                        else
+                        {
+                            <input type="radio"  id="@optionValue" name="remarksTypeId" value ="@item.id" />
+                        }
+
+                        <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+
+                    </span>
+               
+                }
+
+            </td>
+        </tr>
+    </table>
+    <table style="width: 100%; background-color: #eee;">
+        <tr>
+            <td style="width: 140px;"><b>College</b></td>
+            <td>
+                @Html.DropDownListFor(model => model.CollegeId,
+            new SelectList(Model.AllColleges, "Id", "Name"),
+            "All Colleges", new { id = "CollegeName" })
+
+                 @Html.DropDownListFor(model=>model.InspectionPhaseId,
+            new SelectList(ViewBag.oldInspectionPhases as System.Collections.IEnumerable, "id", "name")
+            , new { id = "PhaseId" })              
+                <input type="submit" value="Search" name="cmd" style="width: 80px; padding: 4px 15px; margin: 0;" />
+                <input type="submit" value="Export" name="cmd" style="width: 80px; padding: 4px 15px; margin: 0;" />
+            </td>
+        </tr>
+    </table>
+    <br />  
+    
+    <label style="color: green">Page loaded in @ViewBag.Time</label>
+
+                for (var i = 0; i < Model.AllColleges.Count(); i++)
+                {
+    @Html.HiddenFor(m => m.AllColleges[i].Id);
+    @Html.HiddenFor(m => m.AllColleges[i].Name);
+                }
+    <br />    
+                if (ViewBag.Count != null)
+                {                    
+    
+    <table id="example" class="display" style="border: solid 1px #ccc; border-collapse: collapse; max-width: 2600px;">
+        <thead>
+            @* <tr class="DataTables_sort_wrapper" style="border: solid 1px #ccc;">
+                    <td colspan="16" style="text-align: left; font-size: 11px;">
+                        <u><b>Computers Norms</b></u>: B.Tech-1:4, B.Pharmacy-1:6, M.Tech-1:2, M.Pharmacy-1:6, MBA-1:2, MCA-1:2, MAM-1:2, MTM-1:2, Pharm.D-1:6, Pharm.D PB-1:6 &nbsp;&nbsp;&nbsp;<br />
+                        <u><b>Principal</b></u>: A = Quallified Principal, B = Not Qualified Principal &nbsp;&nbsp;&nbsp;<br />
+                        <u><b>Faculty Norms</b></u>: B.Tech-1:15, B.Pharmacy-1:15, M.Tech-1:12, M.Pharmacy-1:12, MBA-1:15, MCA-1:15, MAM-1:12, MTM-1:12, Pharm.D-1:12, Pharm.D PB-1:12 &nbsp;&nbsp;&nbsp;
+                    </td>
+                </tr>*@
+            <tr class="DataTables_sort_wrapper_121131" style="border: solid 1px #ccc;">
+                <th style="text-align: center; width: 60px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">S.No
+                </th>
+                <th style="text-align: center; width: 250px; font-weight: bold; padding: 3px 5px;" rowspan="2" class="ui-state-default">College Name
+                </th>
+                <th style="text-align: center; width: 80px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">College Code & Year
+                </th>
+                @if (Model.columnList.Where(c => c.id == 4).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Specializations
+                    </th>
+                }
+                @if (Model.columnList.Where(c => c.id == 5).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Labs (shortage)
+                    </th>
+                }
+                @if (Model.columnList.Where(c => c.id == 6).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; width: 250px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Computers (shortage)
+                    </th>
+                }
+                @if (Model.columnList.Where(c => c.id == 7).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Principal
+                    </th>
+                }
+                @if (Model.columnList.Where(c => c.id == 8).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; width: 250px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Faculty (shortage)
+                    </th>
+                }
+                @if (Model.columnList.Where(c => c.id == 9).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; width: 180px; padding: 3px 5px; font-weight: bold" colspan="2" class="ui-state-default">Ratified
+                    </th>
+                }
+                @if (Model.columnList.Where(c => c.id == 10).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Library (shortage)
+                    </th>
+                }
+                @if (Model.columnList.Where(c => c.id == 11).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Overall Points
+                    </th>
+                }
+                @if (Model.columnList.Where(c => c.id == 12).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">NBA
+                    </th>
+                }
+                @if (Model.columnList.Where(c => c.id == 13).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">NAAC
+                    </th>
+                }
+                @if (Model.columnList.Where(c => c.id == 14).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; width: 350px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Deficiencies / Remarks (*)
+                    </th>
+                }
+                @if (Model.columnList.Where(c => c.id == 15).Select(c => c.selected).FirstOrDefault() == 1)
+                {
+                    <th style="text-align: center; width: 60px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Grade
+                    </th>
+                }
+            </tr>
+            @if (Model.columnList.Where(c => c.id == 9).Select(c => c.selected).FirstOrDefault() == 1)
+            {
+                <tr style="border: solid 1px #ccc; width: 180px;">
+                    <th style="text-align: center; padding: 3px 5px; font-weight: bold" class="ui-state-default">Number	
+                    </th>
+                    <th style="text-align: center; padding: 3px 5px; font-weight: bold" class="ui-state-default">%
+                    </th>
+                </tr>
+            }
+        </thead>
+
+        @if (ViewBag.CollegeSpecializations != null)
+        {
+            <tbody>
+                @foreach (var item in ViewBag.CollegeSpecializations)
+                {
+                    <tr style="border: solid 1px #ccc;">
+                        <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px;">
+                            @(count = count + 1)
+                        </td>
+                        <td style="text-align: left; border: solid 1px #ccc; padding: 3px 5px;">
+                            <label>@item.CollegeName</label>
+                            <br />
+                            <label>@item.CollegeAddress</label>
+                            <br />
+                            @if (item.IsPermanentCollege == "Permanent College")
+                            {
+                                <label>[<b>@item.IsPermanentCollege</b>]</label>
+                            }
+                        </td>
+                        <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px;">
+                            <table style="border-collapse: collapse; text-align: left; width: 100%">
+                                <tr>
+                                    <td style="border: none; text-align: center">
+                                        <label style="text-transform: uppercase">@item.CollegeCode</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none; text-align: center">
+                                        <label style="text-transform: uppercase">@item.Establishyear</label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        @if (Model.columnList.Where(c => c.id == 4).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="border: solid 1px #ccc; padding: 3px 5px;">
+                                @if (item.CollegeSpecializations != null)
+                                {
+                                    foreach (var specialization in item.CollegeSpecializations)
+                                    {
+                                        if (specialization.Intake != null && specialization.Intake != string.Empty &&
+                                             specialization.Specialization != null && specialization.Specialization != string.Empty)
+                                        {
+                                    <table style="border-collapse: collapse; width: 500px;">
+                                        <tr>
+                                            <td style="border: none; text-align: left">
+                                                @if (specialization.Intake.Contains("#") == true)
+                                                {                                        
+                                                    <label style="font-weight: bold">@specialization.Specialization</label> 
+                                                }
+                                                else
+                                                {
+                                                    <label>@specialization.Specialization</label>  
+                                                }
+                                            </td>
+                                            <td style="border: none; text-align: right">
+                                                @if (specialization.Intake.Contains("$") == true)
+                                                {
+                                                    string[] specializations = specialization.Intake.Split('$');
+                                                    <label>@specializations[0]</label>                      
+                                                }
+                                                else if (specialization.Intake.Contains("*") == true)
+                                                {
+                                                    string[] specializations = specialization.Intake.Split('*');
+
+
+                                                    //if [existing intake > proposed intake] then show [existing intake - decrease in proposed intake]
+                                                    if (specialization.ExistingIntake > Convert.ToInt32(specializations[0]))
+                                                    {
+                                                        if (Convert.ToInt32(specializations[0]) == 0)
+                                                        {
+                                                    @specialization.ExistingIntake.ToString()<label style='font-weight: bold'>(0)</label>
+                                                        }
+                                                        else
+                                                        {
+                                                    <label>@specialization.ExistingIntake.ToString() - </label> <label style='font-weight: bold'>  @(specialization.ExistingIntake - Convert.ToInt32(specializations[0])) </label> 
+                                                        }
+                                                    }
+
+                                                    //if [existing intake < proposed intake] then show [existing intake + increase in proposed intake]
+                                                    if (specialization.ExistingIntake < Convert.ToInt32(specializations[0]))
+                                                    {
+                                                
+                                                    <label>@specialization.ExistingIntake.ToString() + </label> <label style='font-weight: bold'>  @(Convert.ToInt32(specializations[0]) - specialization.ExistingIntake) </label> 
+                                                
+                                                    }
+                                                }
+
+                                                else if (specialization.Intake.Contains("#") == true)
+                                                {
+                                                    string[] specializations = specialization.Intake.Split('#');
+                                                    <label style="font-weight: bold">@specializations[0]</label>    
+                                                }
+                                                else
+                                                {
+                                                    <label>@specialization.Intake</label>          
+                                                }
+                                            </td>
+                                        </tr>
+                                    </table>
+                                        }
+                                    }
+                                }
+                            </td>
+                        }
+
+                        @if (Model.columnList.Where(c => c.id == 5).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px;">
+                                <label>@item.LabsShortage</label>
+                            </td>
+                        }
+                        @if (Model.columnList.Where(c => c.id == 6).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="text-align: left; border: solid 1px #ccc; padding: 3px 5px;">
+                                @if (item.ComputersShortage != null)
+                                {
+                                    foreach (var ComptersShortage in item.ComputersShortage)
+                                    {
+                                    <table style="border-collapse: collapse; text-align: left; width: 100%">
+                                        <tr>
+                                            <td style="border: none; text-align: left">
+                                                @ComptersShortage
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    }
+                                }
+                            </td>
+                        }
+                        @if (Model.columnList.Where(c => c.id == 7).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px;">
+                                <label>@item.PrincipalGrade</label>
+                            </td>
+                        }
+                        @if (Model.columnList.Where(c => c.id == 8).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="text-align: left; border: solid 1px #ccc; padding: 3px 5px;">
+                                @if (item.FacultyShortage != null)
+                                {
+                                    foreach (var FacultyShortage in item.FacultyShortage)
+                                    {
+                                    <table style="border-collapse: collapse; text-align: left; width: 100%">
+                                        <tr>
+                                            <td style="border: none; text-align: left">
+                                                @FacultyShortage
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    }
+                                }
+                            </td>
+                        }
+                        @if (Model.columnList.Where(c => c.id == 9).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px;">
+                                <label>@item.Number</label>
+                            </td>
+                            <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px;">
+                                <label>@item.Percentage</label>
+                            </td>
+                        }
+                        @if (Model.columnList.Where(c => c.id == 10).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px;">
+                                <label>@item.LibraryShortage</label>
+                            </td>
+                        }
+                        @if (Model.columnList.Where(c => c.id == 11).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px;">
+                                <label>@item.OverallPoints</label>/100</td>
+                        }
+                        @if (Model.columnList.Where(c => c.id == 12).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px;">
+                                <label>@item.NBAStatus</label></td>
+                        }
+                        @if (Model.columnList.Where(c => c.id == 13).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px;">
+                                <label>@item.NAACStatus</label></td>
+                        }
+                        @if (Model.columnList.Where(c => c.id == 14).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="text-align: left; border: solid 1px #ccc; padding: 3px 5px;">
+                                @if (item.UGObservations != null)
+                                {
+                                    int i = 1;
+                                    foreach (var UGObservations in item.UGObservations)
+                                    {
+                                    <table style="border-collapse: collapse;">
+                                        <tr>
+                                            <td style="border: none; text-align: left">
+                                                <label>@(i++)</label>. @UGObservations<label></label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    }
+                                }
+                            </td>
+                        }
+                        @if (Model.columnList.Where(c => c.id == 15).Select(c => c.selected).FirstOrDefault() == 1)
+                        {
+                            <td style="text-align: center; border: solid 1px #ccc; padding: 3px 5px;">
+                                @item.Grade
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>
+                        <input type="text" id="i-0" style="width: 90%; text-align: left;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                    </th>
+                    @if (Model.columnList.Where(c => c.id == 4).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                    @if (Model.columnList.Where(c => c.id == 5).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                    @if (Model.columnList.Where(c => c.id == 6).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                    @if (Model.columnList.Where(c => c.id == 7).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-6" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                    @if (Model.columnList.Where(c => c.id == 8).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-7" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                    @if (Model.columnList.Where(c => c.id == 9).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-8" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-9" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                    @if (Model.columnList.Where(c => c.id == 10).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-10" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                    @if (Model.columnList.Where(c => c.id == 11).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-11" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                    @if (Model.columnList.Where(c => c.id == 12).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-12" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                    @if (Model.columnList.Where(c => c.id == 13).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-13" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                    @if (Model.columnList.Where(c => c.id == 14).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-14" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                    @if (Model.columnList.Where(c => c.id == 15).Select(c => c.selected).FirstOrDefault() == 1)
+                    {
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-15" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                    }
+                </tr>
+            </tfoot>
+        }
+        else
+        {
+            <div class="warning" style="width: 200px; margin: 0 auto;">
+                <p>No records found</p>
+            </div>
+        }
+    </table>
+   
+                }
+                else
+                {
+    <div class="warning" style="width: 500px; margin: 0 auto;">
+        <p>Please select required options and click on 'SEARCH' button</p> (It may take few minutes to generate the report, please wait... AVG.Time to load: 3 minutes 0 seconds)
+    </div>
+                }
+}
+<style type="text/css">
+    .dataTables_wrapper1 {
+        overflow: auto;
+        overflow-y: scroll;
+        height: 500px;
+    }
+</style>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 10,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $(".All").change(function () {
+            if (this.checked) {
+                $(".Only").removeAttr("checked");
+            }
+        });
+
+        $(".Only").change(function () {
+            if (this.checked) {
+                $(".All").removeAttr("checked");
+            }
+        });
+
+        $(".deficiencies").change(function () {
+            if (this.checked) {
+                if (this.id == "reportType_With Deficiency" || this.id == "reportType_Without Deficiency") {
+                    $(".allCols").attr("checked", "checked");
+                }
+            }
+        });
+    });
+   
+
+
+</script>

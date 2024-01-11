@@ -1,0 +1,177 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_department>
+
+@{
+    ViewBag.Title = "Department";
+    int index = 1;
+}
+
+<h2>Department</h2>
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+    });
+
+</script>
+<p class="create_link_right">
+    @Html.ActionLink("Add Department", "Create", null, new { @class = "create_button" })
+
+</p>
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th style="width: 50px; text-align: center;">S.No
+            </th>
+            <th style="width: 50px; text-align: left;">Degree 
+            </th>
+            <th style="text-align: left;">Department
+            </th>            
+            <th class="ui-state-default" style="width: 150px; text-align: left;">Description</th>
+            <th class="ui-state-default" style="width: 20px; text-align: center;">Status</th>
+            <th class="ui-state-default" style="width: 20px; text-align: center;">Edit</th>
+            <th class="ui-state-default" style="width: 20px; text-align: center;">Details</th>          
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 20px; text-align: center;">
+                    @(index++)
+                </td>
+                <td style="width: 80px; text-align: left;">
+                    @Html.DisplayFor(modelItem => item.jntuh_degree.degree)
+                </td>
+                 <td style="width: 100px; text-align: left; ">
+                    @Html.DisplayFor(modelItem => item.departmentName)
+                </td>
+                 <td style="width: 150px; text-align: left; ">
+                    @Html.DisplayFor(modelItem => item.departmentDescription)
+                </td>                
+                <td style="text-align: center;">
+                    @if (item.isActive == true)
+                    {
+                        <img src="@Url.Content("~/Content/images/active.png")" alt="JNTU Hyderabad Logo" />
+                    }
+                    else
+                    {
+                        <img src="@Url.Content("~/Content/images/inactive.png")" alt="JNTU Hyderabad Logo" />
+                    }
+                </td>
+                <td style="width: 20px; text-align: center; font-weight: normal;">
+                   @Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "edit_button" })
+                </td>
+                 <td style="width: 20px; text-align: center; font-weight: normal;">
+                   @Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "view_button" })
+                </td>            
+            </tr>
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th style="width: 50px;">
+                <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th style="width: 50px;">
+                <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th class=" ui-state-default" style="width: 50px;">
+                <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+            </th>          
+            <th class=" ui-state-default" style="width: 70px;">
+                <input type="text" id="i-5" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th style="width: 40px;" class=" ui-state-default">
+                <input type="text" id="i-6" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th style="width: 40px;" class=" ui-state-default">
+                <input type="text" id="i-7" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>                 
+        </tr>
+    </tfoot>
+</table>
+
+@*@{
+    var grid = new WebGrid(Model.Select((element, index) => new { Data = element, Index = index }),
+        canPage: true,
+        rowsPerPage: 10,
+        selectionFieldName: "selectedRow",
+        ajaxUpdateContainerId: "gridContent"
+        );
+    grid.Pager(WebGridPagerModes.NextPrevious);
+}
+<div id="gridContent">
+    @grid.GetHtml(tableStyle: "webGrid",
+                headerStyle: "gridHeader",
+                alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: grid.Columns(
+                grid.Column("ID", "S.No.", format: item => item.Index + 1, style: "row_number", canSort: true),
+                grid.Column("Data.departmentName", "Department Name", null, style: "align_left", canSort: true),
+                grid.Column("Data.jntuh_degree.degree", "Degree", null, style: "align_left", canSort: true),
+                grid.Column("Data.departmentDescription", "Description", null, style: "align_left", canSort: true),
+                grid.Column("Data.isActive", "Status", format: @<text>@if (item.Data.isActive == true)
+                                                                      { <img src="@Url.Content("~/Content/images/active.png")" alt="JNTU Hyderabad Logo" />}
+                                                                      else
+                                                                      {<img src="@Url.Content("~/Content/images/inactive.png")" alt="JNTU Hyderabad Logo" />}</text>, style: "status", canSort: true),
+                grid.Column("Edit", "Edit", format: @<text>@Html.ActionLink("Edit", "Edit", new { id = item.Data.id }, new { @class = "edit_button" }) </text>, style: "edit", canSort: true),
+                grid.Column("Detail", format: @<text>@Html.ActionLink("Details", "Details", new { id = item.Data.id }, new { @class = "view_button" }) </text>, style: "view", canSort: true)
+         ))
+</div>*@

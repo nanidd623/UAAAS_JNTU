@@ -1,0 +1,175 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_ffc_auditor_campus>
+@{
+    ViewBag.Title = "Campus";
+    int index = 1;
+}
+<h2>Campus</h2>
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "bStateSave": false,
+     "sDom": '<"top"lfip>rt<"bottom"ip<"clear">'
+});
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Campus',
+            autoOpen: false,
+            resizable: false,
+            height: 350,
+            width: 650,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Campus'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit Campus'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Campus',
+                autoOpen: false,
+                resizable: false,
+                height: 350,
+                width: 650,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+    });
+</script>
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="success">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@using(Html.BeginForm())
+{
+    <p class="create_link_right">
+    @Html.ActionLink("Add Campus", "AddorEdit", null, new { @id = "openDialog", @class = "create_button" })
+</p>
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th style="width: 40px; text-align: center;">S.No
+            </th>
+            <th style="text-align: left;">Campus
+            </th>
+            <th style="text-align: left;">Description
+            </th>
+            <th style="text-align: center; width: 40px">Status
+            </th>
+            <th style="text-align: center; width: 40px"></th>
+            <th style="text-align: center; width: 40px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align: center;">
+                    @(index++)
+                </td>
+                <td style="text-align: left; text-transform: uppercase;">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td style="text-align: left;">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td style="text-align: center;">
+                    @if (item.isActive == true)
+                    {
+                        <img src="@Url.Content("~/Content/images/active.png")" alt="active" />
+                    }
+                    else
+                    {
+                        <img src="@Url.Content("~/Content/images/inactive.png")" alt="inactive" />
+                    }
+                </td>
+                <td style="text-align: center;">
+                    @Html.ActionLink("Edit", "AddorEdit", new { id = item.id }, new { @class = "editDialog edit_button" })
+                </td>
+                <td style="text-align: center;">
+                    @Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "viewDialog view_button" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+ <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+}

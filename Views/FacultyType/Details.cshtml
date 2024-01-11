@@ -1,0 +1,63 @@
+﻿@model UAAAS.Models.jntuh_faculty_type
+
+@{
+    ViewBag.Title = "Faculty Type Details";
+}
+
+<h2>Faculty Type Details</h2>
+
+<div class="details_table">
+
+    <div class="display-label">Faculty Type</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.facultyType)
+    </div>
+
+    <div class="display-label">Faculty Type Description</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.facultyTypeDescription)
+    </div>
+
+    <div class="display-label">Status</div>
+    <div class="display-field">
+       @* @Html.DisplayFor(model => model.isActive)*@
+        @if (this.Model.isActive == true)
+        { <label>Active</label>}
+        else
+        {<label>Inactive</label>}
+    </div>
+
+    <div class="display-label">Created Date</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.createdOn)
+    </div>
+
+    <div class="display-label">Created By</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users.name)
+    </div>
+
+    <div class="display-label">Updated Date</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.updatedOn)
+    </div>
+
+    <div class="display-label">Updated By</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users1.name)
+    </div>
+     <div class="display-label last-row">
+        &nbsp;
+    </div>
+    <div class="display-field last-row">
+        <p>
+            @Html.ActionLink("Back", "Index", null, new { @class = "back_button" })
+            @Html.ActionLink("Edit", "Edit", new { id = Model.id }, new { @class = "submit_button" })
+        </p>
+    </div>
+    <div class="clear"></div>
+</div>
+@*<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>*@

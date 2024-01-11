@@ -1,0 +1,70 @@
+﻿@model IList<UAAAS.Models.ComputerStudentRatioDetails>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Computer Student Ratio";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    string macfile = string.Empty;
+}
+<h2>Computer Student Ratio</h2>
+@using (Html.BeginForm())
+{
+    if (ViewBag.Norecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+    }
+    else
+    {    
+    <table class="four_columns" style="width: 100%;">
+        <tr style="font-weight: bold;">
+            <td style="text-align: left;width:30%" class="col11">Degree</td>
+            <td style="text-align: center;width:30%;" class="col11">Total Intake</td>
+            <td style="text-align: center;width:30%;" class="col11">Available Computers</td>
+        </tr>
+        @for (int i = 0; i < ViewBag.Count; i++)
+        {
+            <tr>
+                <td style="text-align: left;" class="col21">
+                    @Html.LabelFor(m => m[i].degree, Model[i].degree == null ? string.Empty : Model[i].degree.ToString())
+                    @Html.HiddenFor(m => m[i].degreeId)
+                     @{
+                        macfile = Model[i].MacAddressList;
+                    }
+                </td>
+                <td style="text-align: center;" class="col21 focus">
+                    @Html.LabelFor(m => m[i].totalIntake, Model[i].totalIntake == 0 ? "0" : Model[i].totalIntake.ToString())
+                    @Html.HiddenFor(m => m[i].totalIntake)
+                </td>
+                @if (ViewBag.Update == true)
+                {
+                    <td style="text-align: center; " class="col21">
+                        @Html.DisplayFor(m => m[i].availableComputers, new { Value = Model[i].availableComputers == 0 ? "0" : Model[i].availableComputers.ToString(), style = "text-align: center;" })
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align: center;" class="col21">
+                        @Html.DisplayFor(m => m[i].availableComputers, new { Value = Model[i].availableComputers == 0 ? string.Empty : Model[i].availableComputers.ToString(), style = "text-align: center;" })
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+    <br />
+      <table class="webGrid" style="width: 100%;">
+            <tr>
+                <td style="text-align: left;" class="col1">
+                    <span>Upload MAC-ADDRESS LIST:</span>
+                </td>
+                <td class="col1">              
+                 @if(!string.IsNullOrEmpty(macfile))
+                {                    
+                  
+                    <span><a href="../Content/Upload/CollegeEnclosures/@macfile" target="_blank"><span style="font-weight:bold;color:red">View</span></a></span>   
+                }
+               </td>
+            </tr>
+     </table>
+    }
+}

@@ -1,0 +1,205 @@
+﻿@model List<UAAAS.Controllers.OldColleges>
+@{
+    var index = 1;
+    ViewBag.Title = "List of Affiliated Colleges";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+
+@*<h2>@ViewBag.Title</h2>*@
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null],
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+        $.ajaxSetup({ cache: false });
+    });
+</script>
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success">
+        <p style="text-align: center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+    </div>
+    <br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div>
+    <br />
+}
+<table class="example">
+    <tr>
+        <td>
+            <p style="font-size: 14px; font-family:Bookman Old Style;font-weight:bold">
+                Jawaharlal Nehru Technological University, Hyderabad was established on 2 October 1972 by the Legislature of the State of Andhra Pradesh as the first–ever Technological University in the country.  It has been in the forefront during the last forty four years in providing quality technical education of relevance in the State of Andhra Pradesh. <span style="font-weight:bold;color:blue">After 37 years of relentless service to the society at large, JNT University was restructured into four different Universities namely JNT University Hyderabad, JNT University Anantapur, JNT University Kakinada and JNFAU by the Government of Andhra Pradesh vide Government Order No. 13, dated 18 August 2008 and the Act of State Legislature No. 30, dated September 2008.</span>  From then, this university was re-designated as Jawaharlal Nehru Technological University Hyderabad (JNTUH), Hyderabad. The jurisdiction of the University is entire Telangana State.
+            </p>
+            <br />
+            <p style="font-size: 14px; font-family:Bookman Old Style;font-weight:bold">
+                Jawaharlal Nehru Technological University Hyderabad is one of the largest Affiliating Universities in the State of Telangana offering quality education through various courses both at Under Graduate and Post Graduate levels, in Engineering, Pharmacy and Management. In order to consistently maintain the Academic standards in the Affiliated Colleges, the University monitors and regulates all the academic activities of the Affiliated Colleges including Affiliation process on annual basis.
+            </p>
+            <br />
+            <p style="font-size: 14px; font-family:Bookman Old Style;font-weight:bold;color:red">
+                Note : Discrepancies (if any) maybe brought to the notice of the University.
+            </p>
+            <br />
+        </td>
+    </tr>
+</table>
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th style="text-align: center;">
+                S.No
+            </th>
+            <th style="text-align: center;">
+                College Code
+            </th>
+            <th style="text-align: center;">
+                College Name
+            </th>
+            <th style="text-align: center;">
+                Address
+            </th>
+            <th style="text-align: center;">
+                District
+            </th>
+            <th style="text-align: center;">
+                Year of Establishment
+            </th>
+            <th style="text-align: center;display:none;">
+                Year of Closing
+            </th>
+            <th style="text-align: center;">
+                Website
+            </th>
+            <th style="text-align: center;">
+                College Status
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center;">
+                        @(index++)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase;">
+                        @item.CollegeCode
+                    </td>
+                    <td style="text-align: left; text-transform: uppercase;">
+                        @if (item.CollegeId > 0)
+                        {
+                            @Html.ActionLink(@item.CollegeName.ToString(), "CollegeInformation", new { id = UAAAS.Models.Utilities.EncryptString(item.CollegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { target = "_blank" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink(@item.CollegeName.ToString(), "OldCollegeInformation", new { collegeCode = UAAAS.Models.Utilities.EncryptString(item.CollegeCode.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { target = "_blank" })
+                        }
+                    </td>
+                    <td style="text-align: left;">
+                        @item.Address
+                    </td>
+                    <td style="text-align: left;">
+                        @item.District
+                    </td>
+                    <td style="text-align: left;">
+                        @item.YearOfEstablishment
+                    </td>
+                    <td style="text-align: left; display:none;">
+                        @item.YearOfClosing
+                    </td>
+                    <td style="text-align: left;">
+                        @item.Website
+                    </td>
+                    <td style="text-align: left;">
+                        @item.CollegeStatus
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th style="width: 50px;">
+                <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th style="width: 50px;">
+                <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+            </th>
+            <th style="width: 50px;">
+                <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th style="width: 50px;">
+                <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th style="width: 50px;">
+                <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th style="width: 50px;">
+                <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th style="width: 50px; display:none;">
+                <input type="text" id="i-6" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th style="width: 50px;">
+                <input type="text" id="i-7" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+            <th style="width: 50px;">
+                <input type="text" id="i-8" style="width: 90%; text-align: left;" class="search_init">
+            </th>
+        </tr>
+    </tfoot>
+</table>

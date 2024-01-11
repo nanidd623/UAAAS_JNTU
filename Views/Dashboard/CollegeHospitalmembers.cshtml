@@ -1,0 +1,339 @@
+﻿@model UAAAS.Controllers.pharmacyhospitaldata
+@{
+    ViewBag.Title = "CollegeHospitalmembers";
+}
+<span style="color: red; font-weight: bold; font-size: large;">SUBMISSION OF REQUIRED DOCUMENTS FOR INSTALLATION OF BAS DEVICE AT HOSPITAL FOR PHARM-D/PHARAM-D(PB) COURSE(S)</span>
+<br /><br />
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p class="SuccessText" style="text-align: center;font-weight: bold">@TempData["Success"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+<script type="text/javascript">
+    $(document).ready(function() {
+        var mainUrl = window.location;
+        var url;
+
+
+        $('.subtUpload').click(function() {
+
+            var filename = $('.pdfupload').val();
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+
+            
+            }
+            else
+            {
+                var size = GetpdfFileSize(filename);
+                size = size / 1048576;
+                if (size > 1) {
+                    alert("Document should not exceed 1 MB in Size");
+                    $(this).val('');
+                } else {
+                    $(".pdffile > span").text("");
+                }
+            }
+            var filename = $('.xlsupload').val();
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+            else {
+                var size = GetpdfFileSize(filename);
+                size = size / 1048576;
+                if (size > 1) {
+                    alert("Document should not exceed 1 MB in Size");
+                    $(this).val('');
+                } else {
+                    $(".pdffile > span").text("");
+                }
+            }
+            var filename = $('.ttpdfupload').val();
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+            else {
+                var size = GetpdfFileSize(filename);
+                size = size / 1048576;
+                if (size > 1) {
+                    alert("Document should not exceed 1 MB in Size");
+                    $(this).val('');
+                } else {
+                    $(".pdffile > span").text("");
+                }
+            }
+
+        });
+
+        //change function for pdf Document
+        //get pdf file size
+        function GetPhdUndertakingFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    alert(fileSize);
+                }
+                //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#timetablesheet")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        function GetpdfFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    alert(fileSize);
+                }
+                //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#hospitaldocument")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        $(function() {
+            $(".pdffile").change(function() {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                    case 'pdf':
+                    case 'PDF':
+
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetpdfFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        alert("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+                        $(".pdffile > span").text("");
+                    }
+                }
+            });
+        });
+
+        $(function() {
+            $(".ttpdffile").change(function() {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                    case 'pdf':
+                    case 'PDF':
+
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetPhdUndertakingFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        alert("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+                        $(".pdffile > span").text("");
+                    }
+                }
+            });
+        });
+
+        function GetselectioncommitteeFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    alert(fileSize);
+                }
+                //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#filepicker")[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+        $(function() {
+            $(".xlsfile").change(function() {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                    case 'xls':
+                    case 'xlsx':
+
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    alert('You can upload only  xls files');
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetselectioncommitteeFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        alert('Document should not exceed 1 MB in Size');
+                        $(this).val('');
+                    } else {
+
+                        //$(".selectionfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+    });
+</script>
+
+@using (Html.BeginForm("CollegeHospitalmembers", "Dashboard", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+     <table class="webGrid" style="width: 100%;">
+        <tr>
+            <td colspan="2" class="col1">
+                <span><b>FACULTY/STUDENT LIST</b>: (Upload Faculty/Student Data <b>Strictly</b> in this format - <a href="../../Content/College Hospital Faculty and Students.xls"><img src="../../Content/images/excel.png" /></a>)</span>
+            </td>
+        </tr>
+        @*<tr>
+            <td colspan="2" class="col1">
+                <span>College Faculty Details A.Y. 2019-20</span>
+            </td>
+        </tr>*@
+         <tr>
+             <td style="text-align: left;" class="col1">
+                 <span>Hospital MOU: <span style="color: blue">(upload as a single .pdf file)</span></span>
+             </td>
+             <td class="col2">
+                 @Html.TextBoxFor(model => model.hospitaldocument, new {type = "file", @class = " pdfupload pdffile"})
+                 @Html.ValidationMessageFor(m => m.hospitaldocument)
+                 @if (@Model.hospitaldocumentfile != null && @Model.hospitaldocumentfile != string.Empty)
+                 {
+                     <span><a href="../Content/Upload/CollegeEnclosures/HospitalMOU/@Model.hospitaldocumentfile" class="viewFileData" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+                 }
+             </td>
+         </tr>
+         <tr>
+             <td style="text-align: left;" class="col1">
+                 <span>Faculty/Student Information: <span style="color: blue">(upload the filled excel sheet as per format given)</span></span>
+             </td>
+             <td class="col2">
+                 @Html.TextBoxFor(model => model.facultyinformation, new {type = "file", @class = "xlsupload xlsfile"})
+                 @Html.ValidationMessageFor(m => m.hospitaldocument)
+                 @if (@Model.facultyinformationfile != null && @Model.facultyinformationfile != string.Empty)
+                 {
+                     <span><a href="../Content/Upload/CollegeEnclosures/HospitalFS/@Model.facultyinformationfile" class="viewFileData" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+                 }
+             </td>
+         </tr>
+         <tr>
+             <td style="text-align: left;" class="col1">
+                 <span>Time Tables: <span style="color: blue">(upload as a single .pdf file)</span></span>
+             </td>
+            
+                 <td class="col2">
+                 @Html.TextBoxFor(model => model.timetablesheet, new {type = "file", @class = " ttpdfupload ttpdffile"})
+                 @Html.ValidationMessageFor(m => m.timetablesheet)
+                 @if (@Model.timetablesheetfile != null && @Model.timetablesheetfile != string.Empty)
+                 {
+                     <span><a href="../Content/Upload/CollegeEnclosures/HospitalTT/@Model.timetablesheetfile" class="viewFileData" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+                 }
+             </td>
+         </tr>
+         <tr>
+             <td colspan="2" class="col2">
+                 <p align="center">
+                     <input type="submit" value="Upload" name="fileUploader" class="subtUpload" />
+                 </p>
+             </td>
+        </tr>
+       
+    </table>
+}

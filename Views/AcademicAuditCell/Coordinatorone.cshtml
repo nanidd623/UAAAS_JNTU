@@ -1,0 +1,541 @@
+﻿@{
+    ViewBag.Title = "Coordinator";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <style>
+        body {
+            font-family: Arial;
+            color: black;
+        }
+
+        .split {
+            height: 100%;
+            width: 50%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            overflow-x: hidden;
+            padding-top: 30px;
+        }
+
+        .left {
+            left: 0;
+            background-color:;
+        }
+
+        .right {
+            right: 0;
+            background-color:;
+        }
+
+        .centered {
+            position: absolute;
+            top: 50%;
+            left: 60%;
+            transform: translate(-50%, -60%);
+            text-align: center;
+        }
+
+            .centered img {
+                width: 100px;
+                border-radius: 50%;
+            }
+    </style>
+
+    <style>
+        .accordion {
+            background-color: #eee;
+            color: red;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+        }
+
+            .active, .accordion:hover {
+                background-color: #f8e9e9;
+            }
+
+        .panel {
+            padding: 0 18px;
+            display: none;
+            background-color: white;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <h2>Coordinator</h2>
+    <div>
+        <div style="text-align:center">
+            <img src="~/Content/images/vijaykumar.JPG" height="160px" width="160px" />
+            <h2>Dr. K. Vijaya Kumar</h2>
+            <p style="font-size:15px; text-align:justify;"><b> Dr. K. Vijaya Kumar,</b> Professor of Physics is presently working as Coordinator, Directorate of Affiliations & Academic Audit , JNTU Hyderabad, Kukatpally, Hyderabad. He obtained Ph. D. (Physics with Materials Science) from Osmania University in 2002, M. Sc. (Physics with Materials Science) from Osmania University in 1996. Under his guidance 7 Ph. Ds awarded and 6 scholars pursuing for their Ph. D. He has published about 60 international publications and authored 10 books for engineering graduates. He also obtained Post Graduate Diploma in English Language Teaching from Osmania University and Post Graduate Diploma in Cyber Laws & Intellectual Properties from University of Hyderabad. </p>
+        </div>
+        <br />
+        @*<div>
+                &nbsp;  &nbsp;  &nbsp; @Html.ActionLink("Educational Qualifications", "")
+            </div>*@
+        <button class="accordion"> Qualifications</button>
+        <div class="panel">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="40%">
+
+                        <h4 style="color:red">Educational Qualifications</h4>
+
+
+
+
+                        <table>
+                            <tr>
+                                <td> <b>Ph. D.University</b> </td>
+                                <td>:</td>
+                                <td> Osmania University</td>
+                            </tr>
+                            <tr>
+                                <td><b>Subject</b>   </td>
+                                <td>:</td>
+                                <td>Physics (Materials Science)</td>
+                            </tr>
+                            <tr>
+                                <td><b> Division & Year</b></td>
+                                <td>:</td>
+                                <td> Awarded, 2002</td>
+                            </tr>
+                        </table>
+
+                        <br />
+
+                        <table>
+                            <tr>
+                                <td> <b>M. Sc.University</b>   </td>
+                                <td>:</td>
+                                <td> Osmania University</td>
+                            </tr>
+                            <tr>
+                                <td> <b>Subject</b>  </td>
+                                <td>:</td>
+                                <td>Physics with Materials Science</td>
+                            </tr>
+                            <tr>
+                                <td><b>Division & Year</b> </td>
+                                <td>:</td>
+                                <td> First with Distinction, 1996</td>
+                            </tr>
+                        </table>
+
+                    </td>
+
+                    <td width="10%"></td>
+
+                    <td width="40%">
+                        <h4 style="color:red">Additional Qualifications</h4>
+
+                        <table>
+                            <tr>
+                                <td> <b>  PGDELT	University</b> </td>
+                                <td>:</td>
+                                <td> Osmania University</td>
+                            </tr>
+                            <tr>
+                                <td><b>Subject</b>   </td>
+                                <td>:</td>
+                                <td>P.G. Diploma in English Language Teaching</td>
+                            </tr>
+                            <tr>
+                                <td><b> Division & Year</b></td>
+                                <td>:</td>
+                                <td>  Second, 2005</td>
+                            </tr>
+                        </table>
+                        <br />
+
+                        <table>
+                            <tr>
+                                <td> <b>  PGD CL & IPR     University</b>   </td>
+                                <td>:</td>
+                                <td> Hyderabad Central University</td>
+                            </tr>
+                            <tr>
+                                <td> <b>Subject</b>  </td>
+                                <td>:</td>
+                                <td>P.G. Diploma in Cyber Laws & IPR</td>
+                            </tr>
+                            <tr>
+                                <td><b>Division & Year</b> </td>
+                                <td>:</td>
+                                <td>  First with Distinction, 2015</td>
+                            </tr>
+                        </table>
+
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <button class="accordion"> Publications</button>
+        <div class="panel">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+
+                        <h4 style="color:red">Publications</h4>
+
+
+
+
+                        <table>
+                            <tr>
+                                <td>International Publications</td>
+                                <td><b>:</b></td>
+                                <td>  60</td>
+                            </tr>
+                            <tr>
+                                <td>Books Authored & Published</td>
+                                <td><b>:</b></td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>Conferences Attended &Published Papers</td>
+                                <td><b>:</b></td>
+                                <td>71</td>
+                            </tr>
+                        </table>
+
+
+
+                    </td>
+
+                </tr>
+            </table>
+
+        </div>
+
+        <button class="accordion"> Teaching Experience in JNTU Hyderabad</button>
+
+        <div class="panel">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+
+
+
+
+                        <table>
+                            <tr>
+                                <td><b>Total Teaching & Research Experience</b></td>
+                                <td><b>:</b></td>
+                                <td><b> 21 Years</b></td>
+                            </tr>
+                            <tr><th> Professor of Physics</th></tr>
+                            <tr>
+
+
+                                <td>Organization</td>
+                                <td><b>:</b></td>
+                                <td>JNTUH College of Engineering Sultanpur, Pulkal (M),Sangareddy-District, A.P., India</td>
+                            </tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>January 2019 to till-date</td>
+                            </tr>
+                            <tr>
+                                <td>Scale of Pay</td>
+                                <td><b>:</b></td>
+                                <td>37400-67000+AGP 10000</td>
+                            </tr>
+
+
+                            <tr><th> Associate Professor of Physics</th></tr>
+                            <tr>
+
+
+                                <td>Organization</td>
+                                <td><b>:</b></td>
+                                <td>JNTUH College of Engineering Sultanpur, Pulkal (M),Sangareddy-District, A.P., India</td>
+                            </tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>September 2017 to December 2018</td>
+                            </tr>
+                            <tr>
+                                <td>Scale of Pay</td>
+                                <td><b>:</b></td>
+                                <td>37400-67000+AGP 9000</td>
+                            </tr>
+
+
+
+
+                            <tr><th> Associate Professor of Physics</th></tr>
+                            <tr>
+
+
+                                <td>Organization</td>
+                                <td><b>:</b></td>
+                                <td>JNTUH College of Engineering Jagtial, Nachupally (Kondagattu),Karimnagar District, A.P., India</td>
+                            </tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>January 2016 to September 2017</td>
+                            </tr>
+                            <tr>
+                                <td>Scale of Pay</td>
+                                <td><b>:</b></td>
+                                <td>37400-67000+AGP 9000</td>
+                            </tr>
+
+
+
+
+                            <tr><th> Associate Professor of Physics</th></tr>
+                            <tr>
+
+
+                                <td>Organization</td>
+                                <td><b>:</b></td>
+                                <td>JNTUH College of Engineering Jagtial, Nachupally (Kondagattu),Karimnagar District, A.P., India</td>
+                            </tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>September 2007 to December 2015</td>
+                            </tr>
+                            <tr>
+                                <td>Scale of Pay</td>
+                                <td><b>:</b></td>
+                                <td>15600-39100+AGP Rs.8000</td>
+                            </tr>
+
+
+                            <tr><th> Associate Professor of Physics</th></tr>
+                            <tr>
+
+
+                                <td>Organization</td>
+                                <td><b>:</b></td>
+                                <td>JNTU, College of Engineering Kakinada, Kakinada, A.P., India</td>
+                            </tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>July 2007 to September 2007</td>
+                            </tr>
+                            <tr>
+                                <td>Scale of Pay</td>
+                                <td><b>:</b></td>
+                                <td>15600-39100+AGP Rs.7000</td>
+                            </tr>
+                        </table>
+
+
+
+                    </td>
+
+                </tr>
+            </table>
+
+        </div>
+
+        <button class="accordion"> Administrative Experience in JNTU Hyderabad</button>
+
+        <div class="panel">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+
+
+
+
+                        <table align="left">
+
+                            <tr><th colspan="3"> Coordinator, Directorate of Directorate of Affiliations & Academic Audit ,JNTU Hyderabad</th></tr>
+
+
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>January, 2020 to till date</td>
+                            </tr>
+
+                            <tr><th colspan="3"> Sports Coordinator, JNTUH CES, Sultanpur</th></tr>
+
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>March 2019 to May 2019</td>
+                            </tr>
+
+
+
+                            <tr><th colspan="3"> Chairman CRC, JNTUH CES, Sultanpur</th></tr>
+
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>October 2017 to January, 2020</td>
+                            </tr>
+
+
+                            <tr><th colspan="3"> Chairman CRC, JNTUH CES, Sultanpur</th></tr>
+
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>October 2017 to January, 2020</td>
+                            </tr>
+                            <tr><th colspan="3"> NSS Programme Officer, JNTUH CES, Sultanpur</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>October 2017 to January, 2020</td>
+                            </tr>
+
+
+
+                            <tr><th colspan="3"> Dy. Warden for Girls’ Hostel, JNTUH CES, Sultanpur</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>October 2017 to September 2018</td>
+                            </tr>
+
+
+
+
+                            <tr><th colspan="3"> Head, Department of Physics, JNTUH CEJ, Nachupally (Kondagattu), Karimnagar-Dist., TS, India</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>November 2014 to January 2017</td>
+                            </tr>
+
+
+
+                            <tr><th colspan="3"> Coordinator at Additional Controller-I, Exam Branch,  JNTU Hyderabad, Kukatpally, Hyderabad</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>June 2011 to August 2011 (2 Months)</td>
+                            </tr>
+
+
+                            <tr><th colspan="3"> Coordinator at Additional Controller-I, Exam Branch,  JNTU Hyderabad, Kukatpally, Hyderabad</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>May 2012 to July 2012 (3 Months)</td>
+                            </tr>
+
+
+                            <tr><th colspan="3"> Students’ Advisor in JNTUH CEJ, Karimnagar District, A.P., India</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>September 2009 to January 2010 (1 Year 4 Months)</td>
+                            </tr>
+
+                            <tr>
+                                <th colspan="3">
+                                     Chairman, Class Review Committee(Officer-in-Charge) for I B. Tech. Courses,
+                                    JNTUH CEJ,  Karimnagar District, A.P.,India
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>September 2007 to September 2009 (2 Years)</td>
+                            </tr>
+                        </table>
+
+
+
+                    </td>
+
+                </tr>
+            </table>
+
+        </div>
+
+        <button class="accordion"> Research Projects</button>
+
+        <div class="panel">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+
+                        <table>
+
+                            <tr>
+                                <td> TEQIP-III, JNTUH, Hyderabad granted me project (JNTUH/TECHIP-III/CRS/2019/MECH/02) entitled<b>“A Systematic Study on Characterization of Rare Earth Doped Nano Magnetic Ceramics Synthesized by Sol-Gel Method”</b>(2019-2020) [Co-Principal Investigator]</td>
+
+
+                            </tr>
+                            <tr></tr>
+
+                            <tr>
+                                <td> TEQIP-III, JNTUH, Hyderabad granted me project (JNTUH/TECHIP-III/CRS/2019/Physics/04) entitled <b>“ Nano composite polymer blend electrolytes – Applications to Solid State  Batteries”</b>(2019-2020) [Co-Principal Investigator]</td>
+
+
+                            </tr>
+
+                        </table>
+
+
+
+
+
+                    </td>
+
+                </tr>
+            </table>
+
+        </div>
+        <div>
+
+            @Html.ActionLink("Click here to download", "DownloadFile", new { })
+        </div>
+    </div>
+
+</body>
+
+
+
+
+</html>
+
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+</script>

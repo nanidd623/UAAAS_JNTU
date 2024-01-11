@@ -1,0 +1,691 @@
+﻿@model UAAAS.Models.LandInformation
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "Land Information";
+}
+
+<h2>Land Information</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit College',
+            autoOpen: false,
+            resizable: false,
+            height: 300,
+            width: 740,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Land Registration Details'
+            });
+            url = $("#openDialog").attr('href');
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('.webGrid').find('tbody').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit Land Registration Details'
+            });
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Land Registration Details',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Land Registration Details',
+                autoOpen: false,
+                resizable: false,
+                height: 300,
+                width: 600,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        $(".Supportingfile").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "Documentfile");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+    });
+</script>
+@using (Html.BeginForm("Edit", "LandInformation", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    if (ViewBag.NotUpload == true)
+    {
+        <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+    }
+    else
+    {
+        if (TempData["Error"] != null)
+        {
+            <div class="error">
+                <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+            </div>
+        }
+        if (TempData["Success"] != null)
+        {
+            <div class="success">
+                <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+            </div>
+        }
+        <table>
+            <tr>
+                <td class="col111" colspan="4">
+                    <b>Land Details of the College:</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.areaInAcres) (in Acres)
+                </td>
+                <td class="col2 focus">
+                    @Html.TextBoxFor(model => model.areaInAcres, new { @Value = Model.areaInAcres == 0 ? "" : @Model.areaInAcres.ToString() })
+                    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+                    @Html.ValidationMessageFor(model => model.areaInAcres)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.landTypeID)
+                </td>
+                <td class="col2" colspan="3" style="line-height: 1.2rem;">
+                    @Html.HiddenFor(model => model.landTypeID)
+                    @foreach (var item in Model.landType)
+                    {
+                        var optionValue = "landType_" + item.id;
+                        var selectValue = item.selected;
+                        <input type="radio"
+                               id="@optionValue"
+                               name="landTypeID"
+                               value="@item.id" />
+                        <label for="@optionValue" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                        <script type="text/javascript">
+                            if(@selectValue == '1')
+                                $("#@optionValue").attr('checked','checked');
+                        </script>
+                    }
+                    @Html.ValidationMessageFor(model => model.landTypeID)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.landRegistrationTypeId)
+                </td>
+                <td class="col2" colspan="3" style="line-height: 1.2rem;">
+                    @Html.HiddenFor(model => model.landRegistrationTypeId)
+                    @foreach (var item in Model.landRegistrationType)
+                    {
+                        var optionValue1 = "landRegistrationType_" + item.id;
+                        var selectValue = item.selected;
+                        <input type="radio"
+                               id="@optionValue1"
+                               name="landRegistrationTypeId"
+                               value="@item.id" />
+                        <label for="@optionValue1" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                        <script type="text/javascript">
+                            if(@selectValue=='1')
+                                $("#@optionValue1").attr('checked','checked');
+                        </script>
+                    }
+                    @Html.ValidationMessageFor(model => model.landRegistrationTypeId)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.landCategoryId)
+                </td>
+                <td class="col2" colspan="3" style="line-height: 1.2rem;">
+                    @Html.HiddenFor(model => model.landCategoryId)
+                    @foreach (var item in Model.landCategory)
+                    {
+                        var optionValue2 = "landCategory_" + item.id;
+                        var selectValue = item.selected;
+                        <input type="radio"
+                               id="@optionValue2"
+                               name="landCategoryId"
+                               value="@item.id" />
+                        <label for="@optionValue2" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                        <script type="text/javascript">
+                            if(@selectValue == '1')
+                                $("#@optionValue2").attr('checked','checked');
+                        </script>
+                    }
+                    @Html.ValidationMessageFor(model => model.landCategoryId)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.landRegistrationFile)
+                </td>
+                <td class="col2" colspan="3">
+                    @if (Model.landRegistrationFilePath != null)
+                    {
+                        @Html.TextBoxFor(model => model.landRegistrationFile, new { type = "file", @id = "@txtFile", @name = "@file", @class = "Supportingfile" })
+                        <a href="~/Content/Upload/College/LandInformation/LandRegistration/@Model.landRegistrationFilePath" target="_blank">
+                            <span style="color: red;"><b>View</b></span>
+                        </a>
+                        @Html.HiddenFor(model => model.landRegistrationFilePath)
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.landRegistrationFile, new { type = "file", @id = "@txtFile", @name = "@file", @class = "required Supportingfile" })
+                    }
+                    @Html.ValidationMessageFor(model => model.landRegistrationFile)
+                </td>
+            </tr>
+        </table>
+    }
+    <br />
+    <table style="width: 100%">
+        <tr>
+            <td class="col111" style="width: 50%">
+                <b>Registration Details :</b>
+            </td>
+            <td style="text-align: right;">
+                @if (ViewBag.NotUpload == true)
+                {
+
+                }
+                else
+                {
+                    <p class="create_link_right">
+                        @Html.ActionLink("Add Land Registration Details", "AddEditRecord", "LandInformation", new { collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })
+                    </p>
+                }
+            </td>
+        </tr>
+    </table>
+    if (TempData["RegistrationError"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["RegistrationError"].ToString()</p>
+        </div>
+    }
+    if (TempData["RegistrationSuccess"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["RegistrationSuccess"].ToString()</p>
+        </div>
+    }
+
+
+    <div id="gridContent">
+
+        @{
+    var grid = new WebGrid(ViewBag.RegistrationDetails,
+    canPage: false,
+        //rowsPerPage: 10,
+    selectionFieldName: "selectedRow",
+    ajaxUpdateContainerId: "gridContent"
+    );
+    //grid.Pager(WebGridPagerModes.NextPrevious);
+    var count = 1;
+        }
+        @grid.GetHtml(tableStyle: "webGrid",
+                headerStyle: "gridHeader",
+                alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: grid.Columns(
+                grid.Column("ID", "S.No.", format: p => count++, style: "row_number", canSort: true),
+                grid.Column("landRegistraionDate", "Registraion Date", format: @<text> @if (item.landRegistraionDate != null)
+                { <span>@Convert.ToDateTime(item.landRegistraionDate).ToString("dd/MM/yyyy")</span> } </text>, style: "align_left", canSort: true),
+                grid.Column("landAreaInAcres", "Area in Acres", null, style: "align_left", canSort: true),
+                grid.Column("landDocumentNumber", "Document Number", null, style: "align_left", canSort: true),
+                grid.Column("landSurveyNumber", "Survey Number", null, style: "align_left", canSort: true),
+                grid.Column("landLocation", "Location/Village", null, style: "align_left", canSort: true),
+                grid.Column("Edit", "Edit", format: @<text>@Html.ActionLink("Edit", "AddEditRecord", new { id = item.id }, new { @class = "editDialog edit_button" }) </text>, style: "edit", canSort: true),
+                grid.Column("Details", "Details", format: @<text>@Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "viewDialog view_button" }) </text>, style: "view", canSort: true),
+                grid.Column("Delete", "Delete", format: @<text>@Html.ActionLink("Delete", "DeleteRecord", new { id = item.id }, new { @class = "confirmDialog delete_button" }) </text>, style: "view", canSort: true)
+                                                                                              ))
+    </div>
+    if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No Data found</p>
+        </div>
+    }
+    <br />
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+
+    if (ViewBag.NotUpload == true)
+    {
+    }
+    else
+    {
+        <table>
+            <tr>
+                <td class="col111" colspan="4">
+                    <b>Land Conversion Certificate :</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.conversionCertificateIssuedBy)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.TextBoxFor(model => model.conversionCertificateIssuedBy, new { style = "width: 75%;" })
+                    @Html.ValidationMessageFor(model => model.conversionCertificateIssuedBy)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.conversionCertificateIssuedDate)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.TextBoxFor(model => model.conversionCertificateIssuedDate, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                    @Html.ValidationMessageFor(model => model.conversionCertificateIssuedDate)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.conversionCertificateIssuedPurpose)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.TextBoxFor(model => model.conversionCertificateIssuedPurpose, new { style = "width: 75%;" })
+                    @Html.ValidationMessageFor(model => model.conversionCertificateIssuedPurpose)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.landConversionFile)
+                </td>
+                <td class="col2" colspan="3">
+                    @if (Model.landConversionFilePath != null)
+                    {
+                        @Html.TextBoxFor(model => model.landConversionFile, new { type = "file", @id = "@txtFile", @name = "@file", @class = "Supportingfile" })
+                        <a href="~/Content/Upload/College/LandInformation/LandConversion/@Model.landConversionFilePath" target="_blank">
+                            <span style="color: red;"><b>View</b></span>
+                        </a>
+                        @Html.HiddenFor(model => model.landConversionFilePath)
+
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.landConversionFile, new { type = "file", @id = "@txtFile", @name = "@file", @class = "required Supportingfile" })
+                    }
+                    @Html.ValidationMessageFor(model => model.landConversionFile)
+                </td>
+            </tr>
+            <tr>
+                <td class="col111" colspan="4">
+                    <br />
+                    <b>Building Plan</b> in the name of the proposed institution prepared by Architect and Approved by Competent Authority :
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.buildingPlanIssuedBy)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.TextBoxFor(model => model.buildingPlanIssuedBy, new { style = "width: 75%;" })
+                    @Html.ValidationMessageFor(model => model.buildingPlanIssuedBy)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.buildingPlanIssuedDate)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.TextBoxFor(model => model.buildingPlanIssuedDate, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                    @Html.ValidationMessageFor(model => model.buildingPlanIssuedDate)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.buildingPlanFile)
+                </td>
+                <td class="col2" colspan="3">
+                    @if (Model.buildingPlanFilePath != null)
+                    {
+                        @Html.TextBoxFor(model => model.buildingPlanFile, new { type = "file", @class = "Supportingfile" })
+                        <a href="~/Content/Upload/College/LandInformation/BuildingPlan/@Model.buildingPlanFilePath" target="_blank">
+                            <span style="color: red;"><b>View</b></span>
+                        </a>
+                        @Html.HiddenFor(model => model.buildingPlanFilePath)
+
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.buildingPlanFile, new { type = "file", @class = "required Supportingfile" })
+                    }
+                    @Html.ValidationMessageFor(model => model.buildingPlanFile)
+                </td>
+            </tr>
+            <tr>
+                <td class="col111" colspan="4">
+                    <br />
+                    <b>Master Plan</b> in the name of the proposed institution prepared by Architect and Approved by Competent Authority :
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.masterPlanIssuedBy)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.TextBoxFor(model => model.masterPlanIssuedBy, new { style = "width: 75%;" })
+                    @Html.ValidationMessageFor(model => model.masterPlanIssuedBy)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.masterPlanIssuedDate)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.TextBoxFor(model => model.masterPlanIssuedDate, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                    @Html.ValidationMessageFor(model => model.masterPlanIssuedDate)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.compoundWall)
+                </td>
+                <td class="col2" colspan="3">
+                    <label>@Html.RadioButtonFor(model => model.compoundWall, true) Yes</label>
+                    <label>@Html.RadioButtonFor(model => model.compoundWall, false) No</label>
+                    @Html.ValidationMessageFor(model => model.compoundWall)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.approachRoadId)
+                </td>
+                <td class="col2" colspan="3" style="line-height: 1.2rem;">
+                    @Html.HiddenFor(model => model.approachRoadId)
+                    @foreach (var item in Model.approachRoad)
+                    {
+                        var optionValue3 = "approachRoad_" + item.id;
+                        var selectedValue = item.selected;
+                        <input type="radio"
+                               id="@optionValue3"
+                               name="approachRoadId"
+                               value="@item.id" />
+                        <label for="@optionValue3" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                        <script type="text/javascript">
+                            if(@selectedValue == '1')
+                                $("#@optionValue3").attr('checked','checked');
+                        </script>
+                    }
+                    @Html.ValidationMessageFor(model => model.approachRoadId)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.powerSupplyId)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.HiddenFor(model => model.powerSupplyId)
+                    @foreach (var item in Model.powerSupply)
+                    {
+                        var optionValue4 = "powerSupply_" + item.id;
+                        var selectedValue = item.selected;
+                        <input type="radio"
+                               id="@optionValue4"
+                               name="powerSupplyId"
+                               value="@item.id" />
+                        <label for="@optionValue4" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                        <script type="text/javascript">
+                            if(@selectedValue == '1')
+                                $("#@optionValue4").attr('checked','checked');
+                        </script>
+                    }
+                    @Html.ValidationMessageFor(model => model.powerSupplyId)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.WaterSupplyId)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.HiddenFor(model => model.WaterSupplyId)
+                    @foreach (var item in Model.WaterSupply)
+                    {
+                        var optionValue5 = "waterSupply_" + item.id;
+                        var selectedValue = item.selected;
+                        <input type="radio"
+                               id="@optionValue5"
+                               name="WaterSupplyId"
+                               value="@item.id" />
+                        <label for="@optionValue5" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                        <script type="text/javascript">
+                            if(@selectedValue == '1')
+                                $("#@optionValue5").attr('checked','checked');
+                        </script>
+                    }
+                    @Html.ValidationMessageFor(model => model.WaterSupplyId)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.drinkingWaterId)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.HiddenFor(model => model.drinkingWaterId)
+                    @foreach (var item in Model.DrinkingWater)
+                    {
+                        var optionValue6 = "drinkingWater_" + item.id;
+                        var selectedValue = @item.selected;
+                        <input type="radio"
+                               id="@optionValue6"
+                               name="drinkingWaterId"
+                               value="@item.id" />
+                        <label for="@optionValue6" style="padding-right: 10px !important;text-align: left;display: inline-block;">@item.name</label>
+                        <script type="text/javascript">
+                            if(@selectedValue == '1')
+                                $("#@optionValue6").attr('checked','checked');
+                        </script>
+                    }
+                    @Html.ValidationMessageFor(model => model.drinkingWaterId)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.IsPurifiedWater)
+                </td>
+                <td class="col2" colspan="3">
+                    <label>@Html.RadioButtonFor(model => model.IsPurifiedWater, true) Yes</label>
+                    <label>@Html.RadioButtonFor(model => model.IsPurifiedWater, false) No</label>
+                    @Html.ValidationMessageFor(model => model.IsPurifiedWater)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.potableWaterPerDay)
+                    <label>(in Liters per day)</label>
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.TextBoxFor(model => model.potableWaterPerDay, new { style = "width: 60px;", Value = @Model.potableWaterPerDay == 0 ? "" : Model.potableWaterPerDay.ToString() })
+                    @Html.ValidationMessageFor(model => model.potableWaterPerDay)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.masterplanFile)
+                </td>
+                <td class="col2" colspan="3">
+                    @if (Model.masterPlanFilePath != null)
+                    {
+                        @Html.TextBoxFor(model => model.masterplanFile, new { type = "file", @class = "Supportingfile" })
+                        <a href="~/Content/Upload/College/LandInformation/MasterPlan/@Model.masterPlanFilePath" target="_blank">
+                            <span style="color: red;"><b>View</b></span>
+                        </a>
+                        @Html.HiddenFor(model => model.masterPlanFilePath)
+
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.masterplanFile, new { type = "file", @class = "required Supportingfile" })
+                    }
+                    @Html.ValidationMessageFor(model => model.masterplanFile)
+                </td>
+            </tr>
+        </table>
+
+        @Html.HiddenFor(model => model.collegeId)
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.createdBy)
+
+        <p class="right_buttons">
+            <input type="submit" value="Save" />
+        </p>
+    }
+}

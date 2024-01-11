@@ -1,0 +1,906 @@
+﻿@model UAAAS.Models.CollegePlacement
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "College Students Placement Details";
+}
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<style type="text/css">
+    .width {
+        width: 80%;
+    }
+
+    .text_width {
+        width: 38%;
+        text-align: center;
+    }
+</style>
+<script type="text/javascript">
+
+    function ValidatePlacedStudents1()
+    {
+        //alert('a');
+        var totalStudentsAppeared1=$('#totalStudentsAppeared1').val();
+        var totalStudentsPassed1=$('#totalStudentsPassed1').val();
+        var totalStudentsDistinction1=$('#totalStudentsDistinction1').val();
+        var totalStudentsFirstClass1=$('#totalStudentsFirstClass1').val();
+        var totalStudentsDetained1=$('#totalStudentsDetained1').val();
+        var totalStudentsPlaced1=$('#totalStudentsPlaced1').val();
+        var totalStudentsAbove10L1=$('#totalStudentsAbove10L1').val();
+        var totalStudents5to10L1=$('#totalStudents5to10L1').val();
+        var totalStudents3to5L1=$('#totalStudents3to5L1').val();
+        var totalStudentsBelow3L1=$('#totalStudentsBelow3L1').val();
+        var totalStudentsHighEdu1=$('#totalStudentsHighEdu1').val();
+        var totalStudentsPubSec1=$('#totalStudentsPubSec1').val();
+        var totalStudentsEnt1=$('#totalStudentsEnt1').val();
+        var totalStudentsPlacePer1=$('#totalStudentsPlacePer1').val();
+        var totalStudentsDetCred1=$('#totalStudentsDetCred1').val();
+
+        if(totalStudentsAppeared1!='' && totalStudentsPassed1!='' && (parseInt(totalStudentsAppeared1)<parseInt(totalStudentsPassed1)))
+        {
+            $('#totalStudentsPassed1').val('');
+            $('#totalStudentsPassed1').focus();
+            alert('Passed students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed1!='' && totalStudentsDistinction1!='' && (parseInt(totalStudentsPassed1)<parseInt(totalStudentsDistinction1)))
+        {
+            $('#totalStudentsDistinction1').val('');
+            $('#totalStudentsDistinction1').focus();
+            alert('Distinction students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed1!='' && totalStudentsFirstClass1!='' && (parseInt(totalStudentsPassed1)<parseInt(totalStudentsFirstClass1)))
+        {
+            $('#totalStudentsFirstClass1').val('');
+            $('#totalStudentsFirstClass1').focus();
+            alert('First Class students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsAppeared1!='' && totalStudentsDetained1!='' && (parseInt(totalStudentsAppeared1)<parseInt(totalStudentsDetained1)))
+        {
+            $('#totalStudentsDetained1').val('');
+            $('#totalStudentsDetained1').focus();
+            alert('Detained for Attendance students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsAppeared1!='' && totalStudentsDetCred1!='' && (parseInt(totalStudentsAppeared1)<parseInt(totalStudentsDetCred1)))
+        {
+            $('#totalStudentsDetCred1').val('');
+            $('#totalStudentsDetCred1').focus();
+            alert('Detained for Credits students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed1!='' && totalStudentsPlaced1!='' && (parseInt(totalStudentsPassed1)<parseInt(totalStudentsPlaced1)))
+        {
+            $('#totalStudentsPlaced1').val('');
+            $('#totalStudentsPlaced1').focus();
+            alert('Placed students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed1!='' && totalStudentsEnt1!='' && (parseInt(totalStudentsPassed1)<parseInt(totalStudentsEnt1)))
+        {
+            $('#totalStudentsEnt1').val('');
+            $('#totalStudentsEnt1').focus();
+            alert('Entrepreneurs should be less than or equal to Passed students.');
+        }
+
+
+        if(totalStudentsPlaced1!='' && totalStudentsAbove10L1!='' && (parseInt(totalStudentsPlaced1)<parseInt(totalStudentsAbove10L1)))
+        {
+            $('#totalStudentsAbove10L1').val('');
+            $('#totalStudentsAbove10L1').focus();
+            alert('Above 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced1!='' && totalStudents5to10L1!='' && (parseInt(totalStudentsPlaced1)<parseInt(totalStudents5to10L1)))
+        {
+            $('#totalStudents5to10L1').val('');
+            $('#totalStudents5to10L1').focus();
+            alert('5 to 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced1!='' && totalStudents3to5L1!='' && (parseInt(totalStudentsPlaced1)<parseInt(totalStudents3to5L1)))
+        {
+            $('#totalStudents3to5L1').val('');
+            $('#totalStudents3to5L1').focus();
+            alert('3 to 5 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced1!='' && totalStudentsBelow3L1!='' && (parseInt(totalStudentsPlaced1)<parseInt(totalStudentsBelow3L1)))
+        {
+            $('#totalStudentsBelow3L1').val('');
+            $('#totalStudentsBelow3L1').focus();
+            alert('Below 3 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPassed1!='' && totalStudentsHighEdu1!='' && (parseInt(totalStudentsPassed1)<parseInt(totalStudentsHighEdu1)))
+        {
+            $('#totalStudentsHighEdu1').val('');
+            $('#totalStudentsHighEdu1').focus();
+            alert('Higher Education Students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed1!='' && totalStudentsPubSec1!='' && (parseInt(totalStudentsPassed1)<parseInt(totalStudentsPubSec1)))
+        {
+            $('#totalStudentsPubSec1').val('');
+            $('#totalStudentsPubSec1').focus();
+            alert('Public Sector Students should be less than or equal to Passed students.');
+        }
+    }
+
+    function ValidatePlacedStudents2()
+    {
+        //alert('a');
+        var totalStudentsAppeared2=$('#totalStudentsAppeared2').val();
+        var totalStudentsPassed2=$('#totalStudentsPassed2').val();
+        var totalStudentsDistinction2=$('#totalStudentsDistinction2').val();
+        var totalStudentsFirstClass2=$('#totalStudentsFirstClass2').val();
+        var totalStudentsDetained2=$('#totalStudentsDetained2').val();
+        var totalStudentsPlaced2=$('#totalStudentsPlaced2').val();
+        var totalStudentsAbove10L2=$('#totalStudentsAbove10L2').val();
+        var totalStudents5to10L2=$('#totalStudents5to10L2').val();
+        var totalStudents3to5L2=$('#totalStudents3to5L2').val();
+        var totalStudentsBelow3L2=$('#totalStudentsBelow3L2').val();
+        var totalStudentsHighEdu2=$('#totalStudentsHighEdu2').val();
+        var totalStudentsPubSec2=$('#totalStudentsPubSec2').val();
+        var totalStudentsEnt2=$('#totalStudentsEnt2').val();
+        var totalStudentsPlacePer2=$('#totalStudentsPlacePer2').val();
+        var totalStudentsDetCred2=$('#totalStudentsDetCred2').val();
+
+        if(totalStudentsAppeared2!='' && totalStudentsPassed2!='' && (parseInt(totalStudentsAppeared2)<parseInt(totalStudentsPassed2)))
+        {
+            $('#totalStudentsPassed2').val('');
+            $('#totalStudentsPassed2').focus();
+            alert('Passed students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed2!='' && totalStudentsDistinction2!='' && (parseInt(totalStudentsPassed2)<parseInt(totalStudentsDistinction2)))
+        {
+            $('#totalStudentsDistinction2').val('');
+            $('#totalStudentsDistinction2').focus();
+            alert('Distinction students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed2!='' && totalStudentsFirstClass2!='' && (parseInt(totalStudentsPassed2)<parseInt(totalStudentsFirstClass2)))
+        {
+            $('#totalStudentsFirstClass2').val('');
+            $('#totalStudentsFirstClass2').focus();
+            alert('First Class students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsAppeared2!='' && totalStudentsDetained2!='' && (parseInt(totalStudentsAppeared2)<parseInt(totalStudentsDetained2)))
+        {
+            $('#totalStudentsDetained2').val('');
+            $('#totalStudentsDetained2').focus();
+            alert('Detained for Attendance students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsAppeared2!='' && totalStudentsDetCred2!='' && (parseInt(totalStudentsAppeared2)<parseInt(totalStudentsDetCred2)))
+        {
+            $('#totalStudentsDetCred2').val('');
+            $('#totalStudentsDetCred2').focus();
+            alert('Detained for Credits students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed2!='' && totalStudentsPlaced2!='' && (parseInt(totalStudentsPassed2)<parseInt(totalStudentsPlaced2)))
+        {
+            $('#totalStudentsPlaced2').val('');
+            $('#totalStudentsPlaced2').focus();
+            alert('Placed students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed2!='' && totalStudentsEnt2!='' && (parseInt(totalStudentsPassed2)<parseInt(totalStudentsEnt2)))
+        {
+            $('#totalStudentsEnt2').val('');
+            $('#totalStudentsEnt2').focus();
+            alert('Entrepreneurs should be less than or equal to Passed students.');
+        }
+
+
+        if(totalStudentsPlaced2!='' && totalStudentsAbove10L2!='' && (parseInt(totalStudentsPlaced2)<parseInt(totalStudentsAbove10L2)))
+        {
+            $('#totalStudentsAbove10L2').val('');
+            $('#totalStudentsAbove10L2').focus();
+            alert('Above 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced2!='' && totalStudents5to10L2!='' && (parseInt(totalStudentsPlaced2)<parseInt(totalStudents5to10L2)))
+        {
+            $(totalStudents5to10L2).val('');
+            $('#totalStudents5to10L2').focus();
+            alert('5 to 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced2!='' && totalStudents3to5L2!='' && (parseInt(totalStudentsPlaced2)<parseInt(totalStudents3to5L2)))
+        {
+            $('#totalStudents3to5L2').val('');
+            $('#totalStudents3to5L2').focus();
+            alert('3 to 5 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced2!='' && totalStudentsBelow3L2!='' && (parseInt(totalStudentsPlaced2)<parseInt(totalStudentsBelow3L2)))
+        {
+            $('#totalStudentsBelow3L2').val('');
+            $('#totalStudentsBelow3L2').focus();
+            alert('Below 3 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPassed2!='' && totalStudentsHighEdu2!='' && (parseInt(totalStudentsPassed2)<parseInt(totalStudentsHighEdu2)))
+        {
+            $('#totalStudentsHighEdu2').val('');
+            $('#totalStudentsHighEdu2').focus();
+            alert('Higher Education Students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed2!='' && totalStudentsPubSec2!='' && (parseInt(totalStudentsPassed2)<parseInt(totalStudentsPubSec2)))
+        {
+            $('#totalStudentsPubSec2').val('');
+            $('#totalStudentsPubSec2').focus();
+            alert('Public Sector Students should be less than or equal to Passed students.');
+        }
+    }
+
+    function ValidatePlacedStudents3()
+    {
+        //alert('a');
+        var totalStudentsAppeared3=$('#totalStudentsAppeared3').val();
+        var totalStudentsPassed3=$('#totalStudentsPassed3').val();
+        var totalStudentsDistinction3=$('#totalStudentsDistinction3').val();
+        var totalStudentsFirstClass3=$('#totalStudentsFirstClass3').val();
+        var totalStudentsDetained3=$('#totalStudentsDetained3').val();
+        var totalStudentsPlaced3=$('#totalStudentsPlaced3').val();
+        var totalStudentsAbove10L3=$('#totalStudentsAbove10L3').val();
+        var totalStudents5to10L3=$('#totalStudents5to10L3').val();
+        var totalStudents3to5L3=$('#totalStudents3to5L3').val();
+        var totalStudentsBelow3L3=$('#totalStudentsBelow3L3').val();
+        var totalStudentsHighEdu3=$('#totalStudentsHighEdu3').val();
+        var totalStudentsPubSec3=$('#totalStudentsPubSec3').val();
+        var totalStudentsEnt3=$('#totalStudentsEnt3').val();
+        var totalStudentsPlacePer3=$('#totalStudentsPlacePer3').val();
+        var totalStudentsDetCred3=$('#totalStudentsDetCred3').val();
+
+        if(totalStudentsAppeared3!='' && totalStudentsPassed3!='' && (parseInt(totalStudentsAppeared3)<parseInt(totalStudentsPassed3)))
+        {
+            $('#totalStudentsPassed3').val('');
+            $('#totalStudentsPassed3').focus();
+            alert('Passed students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed3!='' && totalStudentsDistinction3!='' && (parseInt(totalStudentsPassed3)<parseInt(totalStudentsDistinction3)))
+        {
+            $('#totalStudentsDistinction3').val('');
+            $('#totalStudentsDistinction3').focus();
+            alert('Distinction students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed3!='' && totalStudentsFirstClass3!='' && (parseInt(totalStudentsPassed3)<parseInt(totalStudentsFirstClass3)))
+        {
+            $('#totalStudentsFirstClass3').val('');
+            $('#totalStudentsFirstClass3').focus();
+            alert('First Class students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsAppeared3!='' && totalStudentsDetained3!='' && (parseInt(totalStudentsAppeared3)<parseInt(totalStudentsDetained3)))
+        {
+            $('#totalStudentsDetained3').val('');
+            $('#totalStudentsDetained3').focus();
+            alert('Detained for Attendance students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsAppeared3!='' && totalStudentsDetCred3!='' && (parseInt(totalStudentsAppeared3)<parseInt(totalStudentsDetCred3)))
+        {
+            $('#totalStudentsDetCred3').val('');
+            $('#totalStudentsDetCred3').focus();
+            alert('Detained for Credits students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed3!='' && totalStudentsPlaced3!='' && (parseInt(totalStudentsPassed3)<parseInt(totalStudentsPlaced3)))
+        {
+            $('#totalStudentsPlaced3').val('');
+            $('#totalStudentsPlaced3').focus();
+            alert('Placed students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed3!='' && totalStudentsEnt3!='' && (parseInt(totalStudentsPassed3)<parseInt(totalStudentsEnt3)))
+        {
+            $('#totalStudentsEnt3').val('');
+            $('#totalStudentsEnt3').focus();
+            alert('Entrepreneurs should be less than or equal to Passed students.');
+        }
+
+
+        if(totalStudentsPlaced3!='' && totalStudentsAbove10L3!='' && (parseInt(totalStudentsPlaced3)<parseInt(totalStudentsAbove10L3)))
+        {
+            $('#totalStudentsAbove10L3').val('');
+            $('#totalStudentsAbove10L3').focus();
+            alert('Above 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced3!='' && totalStudents5to10L3!='' && (parseInt(totalStudentsPlaced3)<parseInt(totalStudents5to10L3)))
+        {
+            $('#totalStudents5to10L3').val('');
+            $('#totalStudents5to10L3').focus();
+            alert('5 to 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced3!='' && totalStudents3to5L3!='' && (parseInt(totalStudentsPlaced3)<parseInt(totalStudents3to5L3)))
+        {
+            $('#totalStudents3to5L3').val('');
+            $('#totalStudents3to5L3').focus();
+            alert('3 to 5 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced3!='' && totalStudentsBelow3L3!='' && (parseInt(totalStudentsPlaced3)<parseInt(totalStudentsBelow3L3)))
+        {
+            $('#totalStudentsBelow3L3').val('');
+            $('#totalStudentsBelow3L3').focus();
+            alert('Below 3 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPassed3!='' && totalStudentsHighEdu3!='' && (parseInt(totalStudentsPassed3)<parseInt(totalStudentsHighEdu3)))
+        {
+            $('#totalStudentsHighEdu3').val('');
+            $('#totalStudentsHighEdu3').focus();
+            alert('Higher Education Students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed3!='' && totalStudentsPubSec3!='' && (parseInt(totalStudentsPassed3)<parseInt(totalStudentsPubSec3)))
+        {
+            $('#totalStudentsPubSec3').val('');
+            $('#totalStudentsPubSec3').focus();
+            alert('Public Sector Students should be less than or equal to Passed students.');
+        }
+    }
+
+    function ValidatePlacedStudents4()
+    {
+        //alert('a');
+        var totalStudentsAppeared4=$('#totalStudentsAppeared4').val();
+        var totalStudentsPassed4=$('#totalStudentsPassed4').val();
+        var totalStudentsDistinction4=$('#totalStudentsDistinction4').val();
+        var totalStudentsFirstClass4=$('#totalStudentsFirstClass4').val();
+        var totalStudentsDetained4=$('#totalStudentsDetained4').val();
+        var totalStudentsPlaced4=$('#totalStudentsPlaced4').val();
+        var totalStudentsAbove10L4=$('#totalStudentsAbove10L4').val();
+        var totalStudents5to10L4=$('#totalStudents5to10L4').val();
+        var totalStudents3to5L4=$('#totalStudents3to5L4').val();
+        var totalStudentsBelow3L4=$('#totalStudentsBelow3L4').val();
+        var totalStudentsHighEdu4=$('#totalStudentsHighEdu4').val();
+        var totalStudentsPubSec4=$('#totalStudentsPubSec4').val();
+        var totalStudentsEnt4=$('#totalStudentsEnt4').val();
+        var totalStudentsPlacePer4=$('#totalStudentsPlacePer4').val();
+        var totalStudentsDetCred4=$('#totalStudentsDetCred4').val();
+
+        if(totalStudentsAppeared4!='' && totalStudentsPassed4!='' && (parseInt(totalStudentsAppeared4)<parseInt(totalStudentsPassed4)))
+        {
+            $('#totalStudentsPassed4').val('');
+            $('#totalStudentsPassed4').focus();
+            alert('Passed students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed4!='' && totalStudentsDistinction4!='' && (parseInt(totalStudentsPassed4)<parseInt(totalStudentsDistinction4)))
+        {
+            $('#totalStudentsDistinction4').val('');
+            $('#totalStudentsDistinction4').focus();
+            alert('Distinction students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed4!='' && totalStudentsFirstClass4!='' && (parseInt(totalStudentsPassed4)<parseInt(totalStudentsFirstClass4)))
+        {
+            $('#totalStudentsFirstClass4').val('');
+            $('#totalStudentsFirstClass4').focus();
+            alert('First Class students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsAppeared4!='' && totalStudentsDetained4!='' && (parseInt(totalStudentsAppeared4)<parseInt(totalStudentsDetained4)))
+        {
+            $('#totalStudentsDetained4').val('');
+            $('#totalStudentsDetained4').focus();
+            alert('Detained for Attendance students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsAppeared4!='' && totalStudentsDetCred4!='' && (parseInt(totalStudentsAppeared4)<parseInt(totalStudentsDetCred4)))
+        {
+            $('#totalStudentsDetCred4').val('');
+            $('#totalStudentsDetCred4').focus();
+            alert('Detained for Credits students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed4!='' && totalStudentsPlaced4!='' && (parseInt(totalStudentsPassed4)<parseInt(totalStudentsPlaced4)))
+        {
+            $('#totalStudentsPlaced4').val('');
+            $('#totalStudentsPlaced4').focus();
+            alert('Placed students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed4!='' && totalStudentsEnt4!='' && (parseInt(totalStudentsPassed4)<parseInt(totalStudentsEnt4)))
+        {
+            $('#totalStudentsEnt4').val('');
+            $('#totalStudentsEnt4').focus();
+            alert('Entrepreneurs should be less than or equal to Passed students.');
+        }
+
+
+        if(totalStudentsPlaced4!='' && totalStudentsAbove10L4!='' && (parseInt(totalStudentsPlaced4)<parseInt(totalStudentsAbove10L4)))
+        {
+            $('#totalStudentsAbove10L4').val('');
+            $('#totalStudentsAbove10L4').focus();
+            alert('Above 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced4!='' && totalStudents5to10L4!='' && (parseInt(totalStudentsPlaced4)<parseInt(totalStudents5to10L4)))
+        {
+            $('#totalStudents5to10L4').val('');
+            $('#totalStudents5to10L4').focus();
+            alert('5 to 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced4!='' && totalStudents3to5L4!='' && (parseInt(totalStudentsPlaced4)<parseInt(totalStudents3to5L4)))
+        {
+            $('#totalStudents3to5L4').val('');
+            $('#totalStudents3to5L4').focus();
+            alert('3 to 5 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced4!='' && totalStudentsBelow3L4!='' && (parseInt(totalStudentsPlaced4)<parseInt(totalStudentsBelow3L4)))
+        {
+            $('#totalStudentsBelow3L4').val('');
+            $('#totalStudentsBelow3L4').focus();
+            alert('Below 3 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPassed4!='' && totalStudentsHighEdu4!='' && (parseInt(totalStudentsPassed4)<parseInt(totalStudentsHighEdu4)))
+        {
+            $('#totalStudentsHighEdu4').val('');
+            $('#totalStudentsHighEdu4').focus();
+            alert('Higher Education Students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed4!='' && totalStudentsPubSec4!='' && (parseInt(totalStudentsPassed4)<parseInt(totalStudentsPubSec4)))
+        {
+            $('#totalStudentsPubSec4').val('');
+            $('#totalStudentsPubSec4').focus();
+            alert('Public Sector Students should be less than or equal to Passed students.');
+        }
+    }
+
+    function ValidatePlacedStudents5()
+    {
+        //alert('a');
+        var totalStudentsAppeared5=$('#totalStudentsAppeared5').val();
+        var totalStudentsPassed5=$('#totalStudentsPassed5').val();
+        var totalStudentsDistinction5=$('#totalStudentsDistinction5').val();
+        var totalStudentsFirstClass5=$('#totalStudentsFirstClass5').val();
+        var totalStudentsDetained5=$('#totalStudentsDetained5').val();
+        var totalStudentsPlaced5=$('#totalStudentsPlaced5').val();
+        var totalStudentsAbove10L5=$('#totalStudentsAbove10L5').val();
+        var totalStudents5to10L5=$('#totalStudents5to10L5').val();
+        var totalStudents3to5L5=$('#totalStudents3to5L5').val();
+        var totalStudentsBelow3L5=$('#totalStudentsBelow3L5').val();
+        var totalStudentsHighEdu5=$('#totalStudentsHighEdu5').val();
+        var totalStudentsPubSec5=$('#totalStudentsPubSec5').val();
+        var totalStudentsEnt5=$('#totalStudentsEnt5').val();
+        var totalStudentsPlacePer5=$('#totalStudentsPlacePer5').val();
+        var totalStudentsDetCred5=$('#totalStudentsDetCred5').val();
+
+        if(totalStudentsAppeared5!='' && totalStudentsPassed5!='' && (parseInt(totalStudentsAppeared5)<parseInt(totalStudentsPassed5)))
+        {
+            $('#totalStudentsPassed5').val('');
+            $('#totalStudentsPassed5').focus();
+            alert('Passed students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed5!='' && totalStudentsDistinction5!='' && (parseInt(totalStudentsPassed5)<parseInt(totalStudentsDistinction5)))
+        {
+            $('#totalStudentsDistinction5').val('');
+            $('#totalStudentsDistinction5').focus();
+            alert('Distinction students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed5!='' && totalStudentsFirstClass5!='' && (parseInt(totalStudentsPassed5)<parseInt(totalStudentsFirstClass5)))
+        {
+            $('#totalStudentsFirstClass5').val('');
+            $('#totalStudentsFirstClass5').focus();
+            alert('First Class students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsAppeared5!='' && totalStudentsDetained5!='' && (parseInt(totalStudentsAppeared5)<parseInt(totalStudentsDetained5)))
+        {
+            $('#totalStudentsDetained5').val('');
+            $('#totalStudentsDetained5').focus();
+            alert('Detained for Attendance students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsAppeared5!='' && totalStudentsDetCred5!='' && (parseInt(totalStudentsAppeared5)<parseInt(totalStudentsDetCred5)))
+        {
+            $('#totalStudentsDetCred5').val('');
+            $('#totalStudentsDetCred5').focus();
+            alert('Detained for Credits students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed5!='' && totalStudentsPlaced5!='' && (parseInt(totalStudentsPassed5)<parseInt(totalStudentsPlaced5)))
+        {
+            $('#totalStudentsPlaced5').val('');
+            $('#totalStudentsPlaced5').focus();
+            alert('Placed students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed5!='' && totalStudentsEnt5!='' && (parseInt(totalStudentsPassed5)<parseInt(totalStudentsEnt5)))
+        {
+            $('#totalStudentsEnt5').val('');
+            $('#totalStudentsEnt5').focus();
+            alert('Entrepreneurs should be less than or equal to Passed students.');
+        }
+
+
+        if(totalStudentsPlaced5!='' && totalStudentsAbove10L5!='' && (parseInt(totalStudentsPlaced5)<parseInt(totalStudentsAbove10L5)))
+        {
+            $('#totalStudentsAbove10L5').val('');
+            $('#totalStudentsAbove10L5').focus();
+            alert('Above 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced5!='' && totalStudents5to10L5!='' && (parseInt(totalStudentsPlaced5)<parseInt(totalStudents5to10L5)))
+        {
+            $('#totalStudents5to10L5').val('');
+            $('#totalStudents5to10L5').focus();
+            alert('5 to 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced5!='' && totalStudents3to5L5!='' && (parseInt(totalStudentsPlaced5)<parseInt(totalStudents3to5L5)))
+        {
+            $('#totalStudents3to5L5').val('');
+            $('#totalStudents3to5L5').focus();
+            alert('3 to 5 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced5!='' && totalStudentsBelow3L5!='' && (parseInt(totalStudentsPlaced5)<parseInt(totalStudentsBelow3L5)))
+        {
+            $('#totalStudentsBelow3L5').val('');
+            $('#totalStudentsBelow3L5').focus();
+            alert('Below 3 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPassed5!='' && totalStudentsHighEdu5!='' && (parseInt(totalStudentsPassed5)<parseInt(totalStudentsHighEdu5)))
+        {
+            $('#totalStudentsHighEdu5').val('');
+            $('#totalStudentsHighEdu5').focus();
+            alert('Higher Education Students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed5!='' && totalStudentsPubSec5!='' && (parseInt(totalStudentsPassed5)<parseInt(totalStudentsPubSec5)))
+        {
+            $('#totalStudentsPubSec5').val('');
+            $('#totalStudentsPubSec5').focus();
+            alert('Public Sector Students should be less than or equal to Passed students.');
+        }
+    }
+
+    function ValidatePlacedStudents6()
+    {
+        //alert('a');
+        var totalStudentsAppeared6=$('#totalStudentsAppeared6').val();
+        var totalStudentsPassed6=$('#totalStudentsPassed6').val();
+        var totalStudentsDistinction6=$('#totalStudentsDistinction6').val();
+        var totalStudentsFirstClass6=$('#totalStudentsFirstClass6').val();
+        var totalStudentsDetained6=$('#totalStudentsDetained6').val();
+        var totalStudentsPlaced6=$('#totalStudentsPlaced6').val();
+        var totalStudentsAbove10L6=$('#totalStudentsAbove10L6').val();
+        var totalStudents5to10L6=$('#totalStudents5to10L6').val();
+        var totalStudents3to5L6=$('#totalStudents3to5L6').val();
+        var totalStudentsBelow3L6=$('#totalStudentsBelow3L6').val();
+        var totalStudentsHighEdu6=$('#totalStudentsHighEdu6').val();
+        var totalStudentsPubSec6=$('#totalStudentsPubSec6').val();
+        var totalStudentsEnt6=$('#totalStudentsEnt6').val();
+        var totalStudentsPlacePer6=$('#totalStudentsPlacePer6').val();
+        var totalStudentsDetCred6=$('#totalStudentsDetCred6').val();
+
+        if(totalStudentsAppeared6!='' && totalStudentsPassed6!='' && (parseInt(totalStudentsAppeared6)<parseInt(totalStudentsPassed6)))
+        {
+            $('#totalStudentsPassed6').val('');
+            $('#totalStudentsPassed6').focus();
+            alert('Passed students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed6!='' && totalStudentsDistinction6!='' && (parseInt(totalStudentsPassed6)<parseInt(totalStudentsDistinction6)))
+        {
+            $('#totalStudentsDistinction6').val('');
+            $('#totalStudentsDistinction6').focus();
+            alert('Distinction students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed6!='' && totalStudentsFirstClass6!='' && (parseInt(totalStudentsPassed6)<parseInt(totalStudentsFirstClass6)))
+        {
+            $('#totalStudentsFirstClass6').val('');
+            $('#totalStudentsFirstClass6').focus();
+            alert('First Class students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsAppeared6!='' && totalStudentsDetained6!='' && (parseInt(totalStudentsAppeared6)<parseInt(totalStudentsDetained6)))
+        {
+            $('#totalStudentsDetained6').val('');
+            $('#totalStudentsDetained6').focus();
+            alert('Detained for Attendance students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsAppeared6!='' && totalStudentsDetCred6!='' && (parseInt(totalStudentsAppeared6)<parseInt(totalStudentsDetCred6)))
+        {
+            $('#totalStudentsDetCred6').val('');
+            $('#totalStudentsDetCred6').focus();
+            alert('Detained for Credits students should be less than or equal to Appeared students.');
+        }
+        if(totalStudentsPassed6!='' && totalStudentsPlaced6!='' && (parseInt(totalStudentsPassed6)<parseInt(totalStudentsPlaced6)))
+        {
+            $('#totalStudentsPlaced6').val('');
+            $('#totalStudentsPlaced6').focus();
+            alert('Placed students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed6!='' && totalStudentsEnt6!='' && (parseInt(totalStudentsPassed6)<parseInt(totalStudentsEnt6)))
+        {
+            $('#totalStudentsEnt6').val('');
+            $('#totalStudentsEnt6').focus();
+            alert('Entrepreneurs should be less than or equal to Passed students.');
+        }
+
+
+        if(totalStudentsPlaced6!='' && totalStudentsAbove10L6!='' && (parseInt(totalStudentsPlaced6)<parseInt(totalStudentsAbove10L6)))
+        {
+            $('#totalStudentsAbove10L6').val('');
+            $('#totalStudentsAbove10L6').focus();
+            alert('Above 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced6!='' && totalStudents5to10L6!='' && (parseInt(totalStudentsPlaced6)<parseInt(totalStudents5to10L6)))
+        {
+            $('#totalStudents5to10L6').val('');
+            $('#totalStudents5to10L6').focus();
+            alert('5 to 10 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced6!='' && totalStudents3to5L6!='' && (parseInt(totalStudentsPlaced6)<parseInt(totalStudents3to5L6)))
+        {
+            $('#totalStudents3to5L6').val('');
+            $('#totalStudents3to5L6').focus();
+            alert('3 to 5 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPlaced6!='' && totalStudentsBelow3L6!='' && (parseInt(totalStudentsPlaced6)<parseInt(totalStudentsBelow3L6)))
+        {
+            $('#totalStudentsBelow3L6').val('');
+            $('#totalStudentsBelow3L6').focus();
+            alert('Below 3 Lakhs Students should be less than or equal to Placed students.');
+        }
+        if(totalStudentsPassed6!='' && totalStudentsHighEdu6!='' && (parseInt(totalStudentsPassed6)<parseInt(totalStudentsHighEdu6)))
+        {
+            $('#totalStudentsHighEdu6').val('');
+            $('#totalStudentsHighEdu6').focus();
+            alert('Higher Education Students should be less than or equal to Passed students.');
+        }
+        if(totalStudentsPassed6!='' && totalStudentsPubSec6!='' && (parseInt(totalStudentsPassed6)<parseInt(totalStudentsPubSec6)))
+        {
+            $('#totalStudentsPubSec6').val('');
+            $('#totalStudentsPubSec6').focus();
+            alert('Public Sector Students should be less than or equal to Passed students.');
+        }
+    }
+
+    $(document).ready(function () {
+        GetSpecialization(@Model.departmentID);
+
+
+        if ($("#Degree").val() > 0) {
+            GetDepartments($("#Degree").val());
+        }
+
+
+        $("#Degree").change(function () {
+            var DegreeID = $(this).val();
+            GetDepartments(DegreeID);
+        });
+        if($("#Department").val() > 0)
+        {
+            GetSpecialization($("#Department").val());
+        }
+        $("#Department").change(function(){
+            var DepartmentID = $(this).val();
+            GetSpecialization(DepartmentID);
+        });
+
+        function GetDepartments(DegreeID){
+            $.getJSON("/CollegeIntakeProposed/GetDepartments",{ id : DegreeID},
+                function(DepartmentsData){
+                    var select = $("#Department");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(DepartmentsData,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.departmentID ? true : false)
+                        }));
+                    });
+                });
+        }
+
+        function GetSpecialization(DepartmantID){
+            $.getJSON("/CollegeIntakeProposed/GetSpecialization" ,{id : DepartmantID},
+                function(Specializationdata){
+                    var select = $("#Specialization");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(Specializationdata,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.specializationId ? true : false)
+                        }));
+                    });
+                });
+        }
+    });
+
+</script>
+
+<h2>Placement Details</h2><br />
+
+@using (Ajax.BeginForm("AddEditRecord", "PA_CollegePlacement", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "CollegeIntakeDialog" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 550px; margin: 0 auto;">
+            <p>Please select your courses in "College Information" page before filling up this page.</p>
+        </div>
+    }
+    <table>
+        @*@if (ViewBag.IsUpdate == true)
+            {
+                @Html.HiddenFor(model => model.id)
+            }*@
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.degreeID)
+            </td>
+
+            <td class="col2">
+                @Html.HiddenFor(model => model.degreeID)
+                @Html.DisplayFor(model => model.degree)
+            </td>
+            <td class="col1">
+                @Html.LabelFor(model => model.departmentID)
+            </td>
+            <td class="col2">
+                @Html.DisplayFor(model => model.department)
+                @Html.HiddenFor(model => model.departmentID)
+            </td>
+            <td class="col1">
+                @Html.LabelFor(model => model.specializationId)
+            </td>
+
+            <td class="col2">
+                @Html.DisplayFor(model => model.specialization)
+                @Html.HiddenFor(model => model.specializationId)
+            </td>
+        </tr>
+
+    </table>
+    <br />
+
+    <div style="margin-top:15px;">
+        <table class="webGrid">
+            <thead>
+                <tr class="col1">
+                    <th></th>
+                    <th colspan="6" style="text-align:center">Examination Information</th>
+                    <th colspan="9" style="text-align:center">Placement Information</th>
+                </tr>
+                <tr class="col1">
+                    <th style="text-align: center; ">Academic Year</th>
+                    <th style="text-align: center; ">Appeared</th>
+                    <th style="text-align: center; ">Passed</th>
+                    <th style="text-align: center; ">Distinction</th>
+                    <th style="text-align: center; ">First Class</th>
+                    <th style="text-align: center; ">Detained for Attendance</th>
+                    <th style="text-align: center; ">Detained for Credits</th>
+                    <th style="text-align: center; ">Placed</th>
+                    <th style="text-align: center; ">Above 10 Lakhs</th>
+                    <th style="text-align: center; ">5 to 10 Lakhs</th>
+                    <th style="text-align: center; ">3 to 5 Lakhs</th>
+                    <th style="text-align: center; ">Below 3 Lakhs</th>
+                    <th style="text-align: center; ">Higher Education</th>
+                    <th style="text-align: center; ">Public Sector</th>
+                    <th style="text-align: center; ">Entrepr- eneurs</th>
+                    <th style="text-align: center; ">Placement Percentage</th>
+                </tr>
+            </thead>
+            <tbody class="col2">
+                <tr>
+                    <td>@ViewBag.FirstYear</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAppeared1, new { @Value = Model.totalStudentsAppeared1 == 0 ? "" : @Model.totalStudentsAppeared1.ToString(), @style = "width:50px", @id = "totalStudentsAppeared1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPassed1, new { @Value = Model.totalStudentsPassed1 == 0 ? "" : @Model.totalStudentsPassed1.ToString(), @style = "width:50px", @id = "totalStudentsPassed1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDistinction1, new { @Value = Model.totalStudentsDistinction1 == 0 ? "" : @Model.totalStudentsDistinction1.ToString(), @style = "width:50px", @id = "totalStudentsDistinction1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsFirstClass1, new { @Value = Model.totalStudentsFirstClass1 == 0 ? "" : @Model.totalStudentsFirstClass1.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetained1, new { @Value = Model.totalStudentsDetained1 == 0 ? "" : @Model.totalStudentsDetained1.ToString(), @style = "width:50px", @id = "totalStudentsDetained1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetCred1, new { @Value = Model.totalStudentsDetCred1 == 0 ? "" : @Model.totalStudentsDetCred1.ToString(), @style = "width:50px", @id = "totalStudentsDetCred1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlaced1, new { @Value = Model.totalStudentsPlaced1 == 0 ? "" : @Model.totalStudentsPlaced1.ToString(), @style = "width:50px", @id = "totalStudentsPlaced1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAbove10L1, new { @Value = Model.totalStudentsAbove10L1 == 0 ? "" : @Model.totalStudentsAbove10L1.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents5to10L1, new { @Value = Model.totalStudents5to10L1 == 0 ? "" : @Model.totalStudents5to10L1.ToString(), @style = "width:50px", @id = "totalStudents5to10L1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents3to5L1, new { @Value = Model.totalStudents3to5L1 == 0 ? "" : @Model.totalStudents3to5L1.ToString(), @style = "width:50px", @id = "totalStudents3to5L1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsBelow3L1, new { @Value = Model.totalStudentsBelow3L1 == 0 ? "" : @Model.totalStudentsBelow3L1.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsHighEdu1, new { @Value = Model.totalStudentsHighEdu1 == 0 ? "" : @Model.totalStudentsHighEdu1.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPubSec1, new { @Value = Model.totalStudentsPubSec1 == 0 ? "" : @Model.totalStudentsPubSec1.ToString(), @style = "width:50px", @id = "totalStudentsPubSec1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsEnt1, new { @Value = Model.totalStudentsEnt1 == 0 ? "" : @Model.totalStudentsEnt1.ToString(), @style = "width:50px", @id = "totalStudentsEnt1", onchange = "ValidatePlacedStudents1()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlacePer1, new { @Value = Model.totalStudentsPlacePer1 == 0 ? "" : @Model.totalStudentsPlacePer1.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer1", onchange = "ValidatePlacedStudents1()" })</td>
+                </tr>
+                <tr>
+                    <td>@ViewBag.SecondYear</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAppeared2, new { @Value = Model.totalStudentsAppeared2 == 0 ? "" : @Model.totalStudentsAppeared2.ToString(), @style = "width:50px", @id = "totalStudentsAppeared2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPassed2, new { @Value = Model.totalStudentsPassed2 == 0 ? "" : @Model.totalStudentsPassed2.ToString(), @style = "width:50px", @id = "totalStudentsPassed2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDistinction2, new { @Value = Model.totalStudentsDistinction2 == 0 ? "" : @Model.totalStudentsDistinction2.ToString(), @style = "width:50px", @id = "totalStudentsDistinction2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsFirstClass2, new { @Value = Model.totalStudentsFirstClass2 == 0 ? "" : @Model.totalStudentsFirstClass2.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetained2, new { @Value = Model.totalStudentsDetained2 == 0 ? "" : @Model.totalStudentsDetained2.ToString(), @style = "width:50px", @id = "totalStudentsDetained2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetCred2, new { @Value = Model.totalStudentsDetCred2 == 0 ? "" : @Model.totalStudentsDetCred2.ToString(), @style = "width:50px", @id = "totalStudentsDetCred2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlaced2, new { @Value = Model.totalStudentsPlaced2 == 0 ? "" : @Model.totalStudentsPlaced2.ToString(), @style = "width:50px", @id = "totalStudentsPlaced2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAbove10L2, new { @Value = Model.totalStudentsAbove10L2 == 0 ? "" : @Model.totalStudentsAbove10L2.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents5to10L2, new { @Value = Model.totalStudents5to10L2 == 0 ? "" : @Model.totalStudents5to10L2.ToString(), @style = "width:50px", @id = "totalStudents5to10L2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents3to5L2, new { @Value = Model.totalStudents3to5L2 == 0 ? "" : @Model.totalStudents3to5L2.ToString(), @style = "width:50px", @id = "totalStudents3to5L2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsBelow3L2, new { @Value = Model.totalStudentsBelow3L2 == 0 ? "" : @Model.totalStudentsBelow3L2.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsHighEdu2, new { @Value = Model.totalStudentsHighEdu2 == 0 ? "" : @Model.totalStudentsHighEdu2.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPubSec2, new { @Value = Model.totalStudentsPubSec2 == 0 ? "" : @Model.totalStudentsPubSec2.ToString(), @style = "width:50px", @id = "totalStudentsPubSec2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsEnt2, new { @Value = Model.totalStudentsEnt2 == 0 ? "" : @Model.totalStudentsEnt2.ToString(), @style = "width:50px", @id = "totalStudentsEnt2", onchange = "ValidatePlacedStudents2()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlacePer2, new { @Value = Model.totalStudentsPlacePer2 == 0 ? "" : @Model.totalStudentsPlacePer2.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer2", onchange = "ValidatePlacedStudents2()" })</td>
+                </tr>
+                <tr>
+                    <td>@ViewBag.ThirdYear</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAppeared3, new { @Value = Model.totalStudentsAppeared3 == 0 ? "" : @Model.totalStudentsAppeared3.ToString(), @style = "width:50px", @id = "totalStudentsAppeared3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPassed3, new { @Value = Model.totalStudentsPassed3 == 0 ? "" : @Model.totalStudentsPassed3.ToString(), @style = "width:50px", @id = "totalStudentsPassed3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDistinction3, new { @Value = Model.totalStudentsDistinction3 == 0 ? "" : @Model.totalStudentsDistinction3.ToString(), @style = "width:50px", @id = "totalStudentsDistinction3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsFirstClass3, new { @Value = Model.totalStudentsFirstClass3 == 0 ? "" : @Model.totalStudentsFirstClass3.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetained3, new { @Value = Model.totalStudentsDetained3 == 0 ? "" : @Model.totalStudentsDetained3.ToString(), @style = "width:50px", @id = "totalStudentsDetained3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetCred3, new { @Value = Model.totalStudentsDetCred3 == 0 ? "" : @Model.totalStudentsDetCred3.ToString(), @style = "width:50px", @id = "totalStudentsDetCred3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlaced3, new { @Value = Model.totalStudentsPlaced3 == 0 ? "" : @Model.totalStudentsPlaced3.ToString(), @style = "width:50px", @id = "totalStudentsPlaced3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAbove10L3, new { @Value = Model.totalStudentsAbove10L3 == 0 ? "" : @Model.totalStudentsAbove10L3.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents5to10L3, new { @Value = Model.totalStudents5to10L3 == 0 ? "" : @Model.totalStudents5to10L3.ToString(), @style = "width:50px", @id = "totalStudents5to10L3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents3to5L3, new { @Value = Model.totalStudents3to5L3 == 0 ? "" : @Model.totalStudents3to5L3.ToString(), @style = "width:50px", @id = "totalStudents3to5L3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsBelow3L3, new { @Value = Model.totalStudentsBelow3L3 == 0 ? "" : @Model.totalStudentsBelow3L3.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsHighEdu3, new { @Value = Model.totalStudentsHighEdu3 == 0 ? "" : @Model.totalStudentsHighEdu3.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPubSec3, new { @Value = Model.totalStudentsPubSec3 == 0 ? "" : @Model.totalStudentsPubSec3.ToString(), @style = "width:50px", @id = "totalStudentsPubSec3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsEnt3, new { @Value = Model.totalStudentsEnt3 == 0 ? "" : @Model.totalStudentsEnt3.ToString(), @style = "width:50px", @id = "totalStudentsEnt3", onchange = "ValidatePlacedStudents3()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlacePer3, new { @Value = Model.totalStudentsPlacePer3 == 0 ? "" : @Model.totalStudentsPlacePer3.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer3", onchange = "ValidatePlacedStudents3()" })</td>
+                </tr>
+                <tr>
+                    <td>@ViewBag.FourthYear</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAppeared4, new { @Value = Model.totalStudentsAppeared4 == 0 ? "" : @Model.totalStudentsAppeared4.ToString(), @style = "width:50px", @id = "totalStudentsAppeared4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPassed4, new { @Value = Model.totalStudentsPassed4 == 0 ? "" : @Model.totalStudentsPassed4.ToString(), @style = "width:50px", @id = "totalStudentsPassed4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDistinction4, new { @Value = Model.totalStudentsDistinction4 == 0 ? "" : @Model.totalStudentsDistinction4.ToString(), @style = "width:50px", @id = "totalStudentsDistinction4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsFirstClass4, new { @Value = Model.totalStudentsFirstClass4 == 0 ? "" : @Model.totalStudentsFirstClass4.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetained4, new { @Value = Model.totalStudentsDetained4 == 0 ? "" : @Model.totalStudentsDetained4.ToString(), @style = "width:50px", @id = "totalStudentsDetained4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetCred4, new { @Value = Model.totalStudentsDetCred4 == 0 ? "" : @Model.totalStudentsDetCred4.ToString(), @style = "width:50px", @id = "totalStudentsDetCred4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlaced4, new { @Value = Model.totalStudentsPlaced4 == 0 ? "" : @Model.totalStudentsPlaced4.ToString(), @style = "width:50px", @id = "totalStudentsPlaced4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAbove10L4, new { @Value = Model.totalStudentsAbove10L4 == 0 ? "" : @Model.totalStudentsAbove10L4.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents5to10L4, new { @Value = Model.totalStudents5to10L4 == 0 ? "" : @Model.totalStudents5to10L4.ToString(), @style = "width:50px", @id = "totalStudents5to10L4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents3to5L4, new { @Value = Model.totalStudents3to5L4 == 0 ? "" : @Model.totalStudents3to5L4.ToString(), @style = "width:50px", @id = "totalStudents3to5L4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsBelow3L4, new { @Value = Model.totalStudentsBelow3L4 == 0 ? "" : @Model.totalStudentsBelow3L4.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsHighEdu4, new { @Value = Model.totalStudentsHighEdu4 == 0 ? "" : @Model.totalStudentsHighEdu4.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPubSec4, new { @Value = Model.totalStudentsPubSec4 == 0 ? "" : @Model.totalStudentsPubSec4.ToString(), @style = "width:50px", @id = "totalStudentsPubSec4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsEnt4, new { @Value = Model.totalStudentsEnt4 == 0 ? "" : @Model.totalStudentsEnt4.ToString(), @style = "width:50px", @id = "totalStudentsEnt4", onchange = "ValidatePlacedStudents4()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlacePer4, new { @Value = Model.totalStudentsPlacePer4 == 0 ? "" : @Model.totalStudentsPlacePer4.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer4", onchange = "ValidatePlacedStudents4()" })</td>
+                </tr>
+                <tr>
+                    <td>@ViewBag.FifthYear</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAppeared5, new { @Value = Model.totalStudentsAppeared5 == 0 ? "" : @Model.totalStudentsAppeared5.ToString(), @style = "width:50px", @id = "totalStudentsAppeared5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPassed5, new { @Value = Model.totalStudentsPassed5 == 0 ? "" : @Model.totalStudentsPassed5.ToString(), @style = "width:50px", @id = "totalStudentsPassed5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDistinction5, new { @Value = Model.totalStudentsDistinction5 == 0 ? "" : @Model.totalStudentsDistinction5.ToString(), @style = "width:50px", @id = "totalStudentsDistinction5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsFirstClass5, new { @Value = Model.totalStudentsFirstClass5 == 0 ? "" : @Model.totalStudentsFirstClass5.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetained5, new { @Value = Model.totalStudentsDetained5 == 0 ? "" : @Model.totalStudentsDetained5.ToString(), @style = "width:50px", @id = "totalStudentsDetained5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetCred5, new { @Value = Model.totalStudentsDetCred5 == 0 ? "" : @Model.totalStudentsDetCred5.ToString(), @style = "width:50px", @id = "totalStudentsDetCred5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlaced5, new { @Value = Model.totalStudentsPlaced5 == 0 ? "" : @Model.totalStudentsPlaced5.ToString(), @style = "width:50px", @id = "totalStudentsPlaced5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAbove10L5, new { @Value = Model.totalStudentsAbove10L5 == 0 ? "" : @Model.totalStudentsAbove10L5.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents5to10L5, new { @Value = Model.totalStudents5to10L5 == 0 ? "" : @Model.totalStudents5to10L5.ToString(), @style = "width:50px", @id = "totalStudents5to10L5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents3to5L5, new { @Value = Model.totalStudents3to5L5 == 0 ? "" : @Model.totalStudents3to5L5.ToString(), @style = "width:50px", @id = "totalStudents3to5L5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsBelow3L5, new { @Value = Model.totalStudentsBelow3L5 == 0 ? "" : @Model.totalStudentsBelow3L5.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsHighEdu5, new { @Value = Model.totalStudentsHighEdu5 == 0 ? "" : @Model.totalStudentsHighEdu5.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPubSec5, new { @Value = Model.totalStudentsPubSec5 == 0 ? "" : @Model.totalStudentsPubSec5.ToString(), @style = "width:50px", @id = "totalStudentsPubSec5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsEnt5, new { @Value = Model.totalStudentsEnt5 == 0 ? "" : @Model.totalStudentsEnt5.ToString(), @style = "width:50px", @id = "totalStudentsEnt5", onchange = "ValidatePlacedStudents5()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlacePer5, new { @Value = Model.totalStudentsPlacePer5 == 0 ? "" : @Model.totalStudentsPlacePer5.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer5", onchange = "ValidatePlacedStudents5()" })</td>
+                </tr>
+                <tr>
+                    <td>@ViewBag.SixthYear</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAppeared6, new { @Value = Model.totalStudentsAppeared6 == 0 ? "" : @Model.totalStudentsAppeared6.ToString(), @style = "width:50px", @id = "totalStudentsAppeared6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPassed6, new { @Value = Model.totalStudentsPassed6 == 0 ? "" : @Model.totalStudentsPassed6.ToString(), @style = "width:50px", @id = "totalStudentsPassed6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDistinction6, new { @Value = Model.totalStudentsDistinction6 == 0 ? "" : @Model.totalStudentsDistinction6.ToString(), @style = "width:50px", @id = "totalStudentsDistinction6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsFirstClass6, new { @Value = Model.totalStudentsFirstClass6 == 0 ? "" : @Model.totalStudentsFirstClass6.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetained6, new { @Value = Model.totalStudentsDetained6 == 0 ? "" : @Model.totalStudentsDetained6.ToString(), @style = "width:50px", @id = "totalStudentsDetained6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsDetCred6, new { @Value = Model.totalStudentsDetCred6 == 0 ? "" : @Model.totalStudentsDetCred6.ToString(), @style = "width:50px", @id = "totalStudentsDetCred6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlaced6, new { @Value = Model.totalStudentsPlaced6 == 0 ? "" : @Model.totalStudentsPlaced6.ToString(), @style = "width:50px", @id = "totalStudentsPlaced6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsAbove10L6, new { @Value = Model.totalStudentsAbove10L6 == 0 ? "" : @Model.totalStudentsAbove10L6.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents5to10L6, new { @Value = Model.totalStudents5to10L6 == 0 ? "" : @Model.totalStudents5to10L6.ToString(), @style = "width:50px", @id = "totalStudents5to10L6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudents3to5L6, new { @Value = Model.totalStudents3to5L6 == 0 ? "" : @Model.totalStudents3to5L6.ToString(), @style = "width:50px", @id = "totalStudents3to5L6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsBelow3L6, new { @Value = Model.totalStudentsBelow3L6 == 0 ? "" : @Model.totalStudentsBelow3L6.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsHighEdu6, new { @Value = Model.totalStudentsHighEdu6 == 0 ? "" : @Model.totalStudentsHighEdu6.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPubSec6, new { @Value = Model.totalStudentsPubSec6 == 0 ? "" : @Model.totalStudentsPubSec6.ToString(), @style = "width:50px", @id = "totalStudentsPubSec6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsEnt6, new { @Value = Model.totalStudentsEnt6 == 0 ? "" : @Model.totalStudentsEnt6.ToString(), @style = "width:50px", @id = "totalStudentsEnt6", onchange = "ValidatePlacedStudents6()" })</td>
+                    <td>@Html.TextBoxFor(model => model.totalStudentsPlacePer6, new { @Value = Model.totalStudentsPlacePer6 == 0 ? "" : @Model.totalStudentsPlacePer6.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer6", onchange = "ValidatePlacedStudents6()" })</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="text-align: right">
+            <p>
+                @*@if (ViewBag.IsUpdate == true)
+                    {*@
+                <input type="submit" value="Save" id="btnSave" name="cmd" />
+                @*}
+                    else
+                    {
+                        <input type="submit" value="Add" id="btnAdd" name="cmd" />
+                    }*@
+            </p>
+        </div>
+    </div>
+}

@@ -1,0 +1,64 @@
+﻿@model IList<UAAAS.Models.CollegFacultyVerification>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Check List";
+   
+}
+<h2>Check List</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)        
+   
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    
+    <table class="" style="width: 100%">
+
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <td class="col1" style="width: 800px">
+                    @Html.DisplayFor(m => m[i].LabelName)
+                    @Html.HiddenFor(m => m[i].LabelId)
+                    @Html.HiddenFor(m => m[i].Id)
+
+                </td>
+
+                @if (Model[i].IsValid != null && Model[i].VerificationOfficers.Count() == 2 && !Model[i].VerificationOfficers.Contains(Model[i].loggedinUserId))
+                {
+                    <td class="col2" style="text-align: center; width: 200px; background-color: lightgreen;">
+                        <label>@Html.RadioButtonFor(m => m[i].IsValid, true, new { @disabled = "disabled" }) Yes</label>
+                        <label>@Html.RadioButtonFor(m => m[i].IsValid, false, new { @disabled = "disabled" }) No</label>
+                    </td>
+                }
+                else
+                {
+                    <td class="col2" style="text-align: center; width: 200px;">
+                        <label>@Html.RadioButtonFor(m => m[i].IsValid, true) Yes</label>
+                        <label>@Html.RadioButtonFor(m => m[i].IsValid, false) No</label>
+                        @Html.ValidationMessageFor(m => m[i].IsValid)
+                    </td>
+                }
+                
+
+            </tr>
+        }
+    </table>
+    <p class="right_buttons">
+        <input type="submit" value="Save" />
+    </p>
+   
+}

@@ -1,0 +1,335 @@
+﻿@model UAAAS.Models.AddphdDocuments
+
+@{
+    ViewBag.Title = "AddPhdDocument";
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<h2>Ph.D Document Uploading</h2>
+@*<p style="text-align:right">
+     <b id="txtphdformat" style="float:right"><a href="../Content/PhD- DECLARATION.doc" target="_blank">Download Undertaking Format</a></b>
+</p>*@
+<div style="background: gold; border: 1px solid #f49820; padding: 2px;">
+
+    <b style="color: red">Note:</b><br/>
+    <p><span style="color: blue; font-weight: bold;">Scanned copies of all the proofs as mentioned above along with this two pages format must be uploaded as a single PDF file in the respective faculty portal.</span></p>
+    <p><span style="color: blue; font-weight: bold;">Only Original clear scanned copies are to be uploaded. Photocopies/Blur certificates are not accepted.</span></p>
+</div>
+<br/>
+@using (Html.BeginForm("AddPhdDocument", "OnlineRegistration", FormMethod.Post, new { enctype = "multipart/form-data" })) 
+{
+    @Html.ValidationSummary(true)
+
+   
+
+
+
+    <fieldset>
+        <div class="editor-label">
+            <span><b>Do you posses Ph.D?</b></span>
+        </div>
+        <div class="editor-field">
+            @Html.RadioButtonFor(model => model.PhdUndertakingDocumentstatus, true)<span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            @Html.RadioButtonFor(model => model.PhdUndertakingDocumentstatus, false)<span>No</span>
+        </div>
+
+
+
+        @Html.HiddenFor(model => model.Id)
+        <div id="Phdexist">
+            <div class="editor-label">
+                <b>  @Html.LabelFor(model => model.RegistrationNumber)</b>
+</div>
+            <div class="editor-field">
+                @Html.DisplayFor(model => model.RegistrationNumber)
+                @Html.ValidationMessageFor(model => model.RegistrationNumber)
+            </div>
+
+            <div class="editor-label">
+                <b>@Html.LabelFor(model => model.Name) </b>
+</div>
+            <div class="editor-field">
+                @Html.DisplayFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+
+            <div class="editor-label">
+                <b>  @Html.LabelFor(model => model.DepartmentId) </b>
+</div>
+            <div class="editor-field">
+                @Html.DropDownListFor(model => model.DepartmentId, new SelectList(ViewBag.department as System.Collections.IEnumerable, "id", "departmentName"), "---Select----")
+
+
+
+                @Html.ValidationMessageFor(model => model.DepartmentId)
+            </div>
+
+            <div class="editor-label">
+                <span><b>Ph.D Uploading Format </b></span>
+            </div>
+            <div class="editor-field PhdUndertakingfiles">
+
+                @Html.TextBoxFor(model => model.PhdDocumentfile, new {@class = "PhdUndertakingfile", @type = "file"})
+                <span style="color: red"></span>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                @if (!string.IsNullOrEmpty(Model.PhdDocumentName))
+                {
+                    <a href="../Content/Upload/Faculty/PhdDocument/@Model.PhdDocumentName.Replace("~", "")" target="_blank">
+                        <img src="@Url.Content("../../Content/images/pdf.png")" alt="Ph.D Doc" height="18">
+                    </a>
+                    @Html.HiddenFor(model => model.PhdDocumentName)
+                }
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <b id="txtphdformat" style="float: right"><a href="../Content/PhdDocumentFormat.pdf" target="_blank">You can download the format from here</a></b>
+
+                @Html.HiddenFor(model => model.Name)
+                @Html.HiddenFor(model => model.RegistrationNumber)
+                @Html.HiddenFor(model => model.FirstName)
+                @Html.HiddenFor(model => model.LastName)
+            </div>
+          
+        </div>
+        <div id="phdnotexisting">
+            <div class="editor-label">
+                <span><b>Reason </b></span>
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(model => model.PhdReason, new List<SelectListItem>()
+                {
+                   new SelectListItem{ Value = "Pursuring Ph.D",Text = "Pursuring Ph.D"},
+                    new SelectListItem{ Value = "I don't Posses Ph.D",Text = "I don't Posses Ph.D"}
+                },"---Select---")
+            </div>
+        </div>
+
+
+    </fieldset>
+    <br/>
+       
+            <input type="submit" id="submitbutton" value="Submit"/><br/>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        var PhdDocumentName = $("#PhdDocumentName").val();
+        if (PhdDocumentName == null)
+        {
+            $('input[name="PhdUndertakingDocumentstatus"]').attr('checked', false);
+            $("#Phdexist").hide();
+            $("#phdnotexisting").hide();
+            $("#submitbutton").hide();
+        }
+
+        
+    
+    var PhdReason=$("#PhdReason").val();
+   
+    if (PhdDocumentName != null)
+    {
+        $("#Phdexist").show();
+        $("#phdnotexisting").hide();
+        $("#submitbutton").show();
+        $("input[name=PhdUndertakingDocumentstatus][value=True]").prop('checked', true);
+       
+        $("#PhdDocumentfile").addClass("required");
+        $("#DepartmentId").addClass("required");
+        $("#PhdReason").removeClass("required");
+    }
+
+    if (PhdReason != "") {
+        $("#phdnotexisting").show();
+        $("#submitbutton").show();
+        $("#Phdexist").hide();
+        $("input[name=PhdUndertakingDocumentstatus][value=False]").prop('checked', true);
+        $("#PhdReason").addClass("required");
+        $("#PhdDocumentfile").removeClass("required");
+        $("#PhdDocumentfile").removeClass("input-validation-error");
+        $("#DepartmentId").removeClass("required");
+    }
+
+
+
+        //var phdstatus = $("input[name='PhdUndertakingDocumentstatus']").prop('checked');
+        //if (phdstatus === true) {
+        //    $("#Phdexist").show();
+        //    $("#phdnotexisting").hide();
+        //    $("#PhdDocumentfile").addClass("required");
+          
+        //}
+        //else
+        //{
+        //    $("#phdnotexisting").show();
+        //    $("#Phdexist").hide();
+        //    $("#PhdDocumentfile").removeClass("required");
+        //    $("#PhdDocumentfile").removeClass("input-validation-error");
+        //}
+
+
+
+
+     
+      //  $("#loadingid").css({ display: "none", colors: "red" });
+        //get pdf file size of Phd Undertaking
+        function GetPhdUndertakingFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#PhdDocumentfile")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //change function for pdf Phd Undertaking Document
+        $(function() {
+            $(".PhdUndertakingfile").change(function() {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                    case 'pdf':
+                    case 'PDF':
+
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".PhdUndertakingfiles > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetPhdUndertakingFileSize(file);
+                    size = size / 1048576;
+                    if (size > 10) {
+                        $(".PhdUndertakingfiles > span").text("Document should not exceed 10 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $(".PhdUndertakingfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+        window.setInterval(changeerror, 1000);
+    });
+    var c = 1;
+
+    function changeerror() {
+
+        switch (c) {
+            case 0:
+                $(".editor-field #txtphdformat a").css("color", "red");
+                //$(".error p").attr({"color": "red","text-align"});
+                c = 1;
+                break;
+            case 1:
+                $(".editor-field #txtphdformat a").css("color", "green");
+                c = 2;
+                break;
+            case 2:
+                $(".editor-field #txtphdformat a").css("color", "blue");
+                c = 0;
+                break;
+        }
+    }
+
+    $('input[name="PhdUndertakingDocumentstatus"]').change(function () {
+        debugger;
+        var checkedvalue = $('input[name="PhdUndertakingDocumentstatus"]:checked').val();
+
+       
+        if (checkedvalue === "True") {
+            $("#Phdexist").show();
+            $("#phdnotexisting").hide();
+            $("#PhdDocumentfile").addClass("required");
+            $("#DepartmentId").addClass("required");
+            $("#submitbutton").show();
+            $("#PhdReason").removeClass("required");
+        }
+        else
+        {
+            $("#phdnotexisting").show();
+            $("#Phdexist").hide();
+            $("#PhdReason").addClass("required");
+            $("#PhdDocumentfile").removeClass("required");
+            $("#PhdDocumentfile").removeClass("input-validation-error");
+            $("#DepartmentId").removeClass("required");
+            $("#submitbutton").show();
+        }
+
+    });
+
+
+    $("#submitbutton").click(function () {
+        debugger;
+        var documentfilename = $("#PhdDocumentName").val();
+        if (documentfilename != null) {
+            $("#PhdDocumentfile").removeClass("required");
+            $("#PhdDocumentfile").removeClass("input-validation-error");
+            $("#submitbutton").css("display", "none");
+          //  $("#loadingid").css({display: "block",colors:"green"});
+        } else {
+
+            $("#PhdDocumentfile").addClass("required");
+            $("#PhdDocumentfile").addClass("input-validation-error");
+            $("#submitbutton").css("display", "block");
+          //  $("#loadingid").css({ display: "none", colors: "red" });
+        }
+    });
+</script>
+
+<style>
+    .editor-label {
+        width: 20%;
+    }
+    #loadingid {
+        background-image: url(../Content/images/loader.gif);
+        width: 80px;
+        height: 20px;
+    }
+</style>
+
+
+    

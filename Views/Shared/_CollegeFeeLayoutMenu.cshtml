@@ -1,0 +1,251 @@
+﻿@using UAAAS.Models
+@{
+    string path = string.Empty;
+    string pathHref = string.Empty;
+    string Href = string.Empty;
+    string StaticHref = string.Empty;
+    string stringHref = string.Empty;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <style>
+        .TextLabels {
+            font-size: 0.8rem;
+            color: black;
+            font-family: 'Open Sans', sans-serif, 'Georgia', serif;
+            vertical-align: super;
+            cursor: pointer;
+        }
+
+        .TextSpace {
+            height: 9px;
+        }
+
+        #upleft {
+            width: 200px;
+            height: 470px;
+            border-radius: 3px;
+            background-color: white;
+        }
+
+        #Todayullist, #Monthullist, #Bankullist, #Collegeullist, #PaymentDateullist {
+            display: none;
+            padding-top: 10px;
+            padding-left: 15px;
+        }
+
+        #upleft .TextLabels:hover {
+            color: white;
+            background-color: #0e4e8e;
+            border-top-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            padding-left: 10px;
+        }
+
+        #upleft .TextLabels.active {
+            background-color: #de1c85;
+            border-top-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            padding-left: 10px;
+        }
+
+        #upleft .links li:hover {
+            color: white;
+            font-weight: bold;
+            padding-left: 10px;
+            background-color: #0e4e8e;
+            border-top-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                setNavigation();
+            });
+            function setNavigation() {
+                debugger;
+                path = window.location.pathname;
+                $("#upleft li a").each(function () {
+                    debugger;
+                    Href = $(this).attr('href');
+                    StaticHref = Href.split('?')[0];
+                    stringHref = Href.split('/')[2].split('?')[0];
+                    pathHref = path.split('/')[2].split('?')[0];
+                    if (pathHref === stringHref) {
+                        if (stringHref == "DailyReports")
+                            $("#TodayReport").addClass('active');
+                        else if (stringHref == "MonthlyReports")
+                            $("#MonthReport").addClass('active');
+                        else if (stringHref == "CollegeWiseReports")
+                            $("#CollegeReport").addClass('active');
+                        else if (stringHref == "BanksWiseReports")
+                            $("#BankReport").addClass('active');
+                        else if (stringHref == "PaymentDateWiseReports")
+                            $("#PaymentDateReport").addClass('active');
+                    }
+                });
+            }
+            $("#MonthReport, #BankReport, #TodayReport, #CollegeReport, #PaymentDateReport").click(function () {
+                var type = $(this).attr('id');
+
+                if (type == "TodayReport") {
+                    if ($("#Todayullist").css("display") == "block") {
+                        $("#Todayullist").hide();
+                    }
+                    else {
+                        $("#Bankullist").hide();
+                        $("#Collegeullist").hide();
+                        $("#Monthullist").hide();
+                        $("#PaymentDateullist").hide();
+                        $("#Todayullist").show().css({ "font-size": "0.8rem", "padding-left": "36px" });
+                    }
+                }
+                else if (type == "MonthReport") {
+                    if ($("#Monthullist").css("display") == "block") {
+                        $("#Monthullist").hide();
+                    }
+                    else {
+                        $("#Todayullist").hide();
+                        $("#Collegeullist").hide();
+                        $("#Bankullist").hide();
+                        $("#PaymentDateullist").hide();
+                        $("#Monthullist").show().css({ "font-size": "0.8rem", "padding-left": "36px" });
+                    }
+                }
+                else if (type == "CollegeReport") {
+                    if ($("#Collegeullist").css("display") == "block") {
+                        $("#Collegeullist").hide();
+                    }
+                    else {
+                        $("#Bankullist").hide();
+                        $("#Todayullist").hide();
+                        $("#Monthullist").hide();
+                        $("#PaymentDateullist").hide();
+                        $("#Collegeullist").show().css({ "font-size": "0.8rem", "padding-left": "36px" });
+                    }
+                }
+                else if (type == "BankReport") {
+                    if ($("#Bankullist").css("display") == "block") {
+                        $("#Bankullist").hide();
+                    }
+                    else {
+                        $("#Todayullist").hide();
+                        $("#Collegeullist").hide();
+                        $("#Monthullist").hide();
+                        $("#PaymentDateullist").hide();
+                        $("#Bankullist").show().css({ "font-size": "0.8rem", "padding-left": "36px" });
+                    }
+                }
+                else if (type == "PaymentDateReport") {
+                    if ($("#PaymentDateullist").css("display") == "block") {
+                        $("#PaymentDateullist").hide();
+                    }
+                    else {
+                        $("#Todayullist").hide();
+                        $("#Collegeullist").hide();
+                        $("#Monthullist").hide();
+                        $("#Bankullist").hide();
+                        $("#PaymentDateullist").show().css({ "font-size": "0.8rem", "padding-left": "36px" });
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="upleft" style="min-height: 475px;">
+        <table width="100%" style="padding-left:8px;padding-top:15px;">
+            <tr>
+                <td><span style="color:orange;font-weight:bold;"><b><u>Reports</u></b></span></td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="links">
+                    <p class="TextLabels" id="TodayReport">
+                        <b>1.&nbsp;&nbsp;Today Reports</b>
+                        <ul id="Todayullist">
+                            <li><a href="/CollegesFee/DailyReports?PaymentTypeId=1" id="reportslinks">DD Payments</a></li>
+                            <li><a href="/CollegesFee/DailyReports?PaymentTypeId=2" id="reportslinks">Online Payments</a></li>
+                        </ul>
+                    </p>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="links">
+                    <p class="TextLabels" id="MonthReport">
+                        <b>2.&nbsp;&nbsp;Monthly Reports</b>
+                        <ul id="Monthullist" style="color:black;">
+                            <li><a href="/CollegesFee/MonthlyReports?PaymentTypeId=1" id="reportslinks">DD Payments</a></li>
+                            <li><a href="/CollegesFee/MonthlyReports?PaymentTypeId=2" id="reportslinks">Online Payments</a></li>
+                        </ul>
+                    </p>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="links">
+                    <p class="TextLabels" id="CollegeReport">
+                        <b>3.&nbsp;&nbsp;College Reports</b>
+                        <ul id="Collegeullist" style="color:black;">
+                            <li><a href="/CollegesFee/CollegeWiseReports?PaymentTypeId=1" id="reportslinks">DD Payments</a></li>
+                            <li><a href="/CollegesFee/CollegeWiseReports?PaymentTypeId=2" id="reportslinks">Online Payments</a></li>
+                        </ul>
+                    </p>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="links">
+                    <p class="TextLabels" id="BankReport">
+                        <b>4.&nbsp;&nbsp;BankWise Reports</b>
+                        <ul id="Bankullist" style="color:black;">
+                            <li><a href="/CollegesFee/BanksWiseReports?PaymentTypeId=1" id="reportslinks">DD Payments</a></li>
+                            <li><a href="/CollegesFee/BanksWiseReports?PaymentTypeId=2" id="reportslinks">Online Payments</a></li>
+                        </ul>
+                    </p>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="links">
+                    <p class="TextLabels" id="PaymentDateReport">
+                        <b>5.&nbsp;&nbsp;PaymentDateWise Reports</b>
+                        <ul id="PaymentDateullist" style="color: black;">
+                            <li><a href="/CollegesFee/PaymentDateWiseReports?PaymentTypeId=1" id="reportslinks">DD Payments</a></li>
+                            <li><a href="/CollegesFee/PaymentDateWiseReports?PaymentTypeId=2" id="reportslinks">Online Payments</a></li>
+                        </ul>
+                    </p>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="links">
+                    <p class="TextLabels">
+                        <b>6.&nbsp;&nbsp;<a href="/CollegeFeesList/Index">Affiliation / Common Service Fee List</a></b>
+                    </p>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="links">
+                    <p class="TextLabels">
+                        <b>7.&nbsp;&nbsp;<a href="/PrincipalSCM/Index">Principal SCM</a></b>
+                    </p>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="links">
+                    <p class="TextLabels">
+                        <b>8.&nbsp;&nbsp;<a href="/AccountsPaymentResponse/PaymentResponseGridIndex">Payments List</a></b>
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

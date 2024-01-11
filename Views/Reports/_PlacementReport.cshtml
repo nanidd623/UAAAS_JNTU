@@ -1,0 +1,57 @@
+﻿@using UAAAS.Models
+@{
+    int sno = 1;
+}
+@using (Html.BeginForm())
+{      
+    <table border="1" style="width:100%">
+        <thead>
+            <tr>
+                <th style="text-align: center;background-color:yellow;vertical-align:top">S.No</th>
+                <th style="text-align: center;background-color:yellow;vertical-align:top;">College Code</th>
+                <th style="text-align: left;background-color:yellow;vertical-align:top;">College Name</th>
+                <th style="text-align: left;background-color:yellow;vertical-align:top;">Specialization</th>
+                <th style="text-align: center;background-color:yellow;vertical-align:top;">Academic Year</th>
+                <th style="text-align: center;background-color:yellow;vertical-align:top">Passed Students</th>                
+                <th style="text-align: center;background-color:yellow;vertical-align:top;">Placed Students</th>
+                <th style="text-align: center;background-color:yellow;vertical-align:top;">Placed%</th>                
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in ViewBag.placementList)
+            { 
+                <tr>
+                    <td style="text-align: center;width:30px;">
+                        @(sno++)
+                    </td>
+                    <td style="text-align: center;vertical-align:top;">
+                        @item.collegeCode
+                    </td>
+                      <td style="text-align: left;vertical-align:top;">
+                        @item.collegeName
+                    </td>
+                    <td style="text-align: left;vertical-align:top;">
+                        @item.specializationName
+                    </td>
+                    <td style="text-align: center;vertical-align:top;">
+                        @item.academicyear
+                    </td>
+                    <td style="text-align: center;vertical-align:top;">
+                        @item.totalStudentsPassed
+                    </td>                
+                    <td style="text-align: center;vertical-align:top;">
+                        @item.totalStudentsPlaced
+                    </td>
+                   <td style="text-align: center;vertical-align:top;">
+                        @item.PlacedPercentage
+                    </td>                  
+                </tr>
+            }
+        </tbody>        
+    </table>    
+
+}
+
+
+

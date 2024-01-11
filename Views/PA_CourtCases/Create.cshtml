@@ -1,0 +1,359 @@
+﻿@model UAAAS.Models.Permanent_Affiliation.CourtCasesModel
+
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    ViewBag.Title = "Court Cases";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div><br />
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div><br />
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $(".calendarnew").css("width", "160px");
+
+        $('.calendarnew').attr("readonly", "true");
+        $('.calendarnew').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: "-180M",
+            maxDate: "+180M",
+            yearRange: '2000:2050',
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+        });
+
+        $(".Supportingfile").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "Documentfile");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: '',
+            autoOpen: false,
+            resizable: false,
+            height: 500,
+            //height: 550,
+            //width: 820,
+            width: 720,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Court Case',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+    });
+</script>
+
+<h2>Court Cases filed against University during past six years (if any)</h2><br />
+
+@using (Html.BeginForm("Edit", "PA_CourtCases", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.CourtCaseId, new { @Value = Model.CourtCaseId })
+    @Html.HiddenFor(model => model.CollegeId, new { @Value = Model.CollegeId })
+
+    <table class="webGrid" style="width: 100%;">
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.WporSlorOtherNo)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.WporSlorOtherNo, new { @placeholder = "Enter WP / SL / other No."})
+                @Html.ValidationMessageFor(model => model.WporSlorOtherNo)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.YearofFilling)
+            </td>
+            <td class="col2">
+                @Html.DropDownListFor(model => model.YearofFilling, new SelectList(ViewBag.YearofFilling as System.Collections.IEnumerable, "id", "academicYear"), "---Select---", new { @class = "required", @style = "width:161px" })
+                @Html.ValidationMessageFor(model => model.YearofFilling)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.PrayerofthePetitioner)
+            </td>
+            <td class="col2">
+                @Html.TextAreaFor(model => model.PrayerofthePetitioner, new { @placeholder = "Enter Prayer of the Petitioner" })
+                @Html.ValidationMessageFor(model => model.PrayerofthePetitioner)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.Respondents)
+            </td>
+            <td class="col2">
+                @Html.DropDownListFor(model => model.Respondents, new SelectList(ViewBag.Respondents as System.Collections.IEnumerable, "value", "text"), "---Select---", new { @class = "required", @style = "width:161px" })
+                @Html.ValidationMessageFor(model => model.Respondents)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.WpPetitionerFile)
+            </td>
+            <td class="col2">
+                @if (Model.WpPetitionerFilepath != null)
+                {
+                    @Html.TextBoxFor(model => model.WpPetitionerFile, new { type = "file", @id = "@txtFile", @name = "@file", @class = "Supportingfile" })
+                    <a href="~/Content/Upload/College/CourtCases/WP Petitioner/@Model.WpPetitionerFilepath" target="_blank">
+                        <span style="color: red;"><b>View</b></span>
+                    </a>
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.WpPetitionerFile, new { type = "file", @id = "@txtFile", @name = "@file", @class = "required Supportingfile" })
+                }
+                @Html.ValidationMessageFor(model => model.WpPetitionerFile)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.InternOrderCopy)
+            </td>
+            <td class="col2">
+                @if (Model.InternOrderCopyPath != null)
+                {
+                    @Html.TextBoxFor(model => model.InternOrderCopy, new { type = "file", @id = "@txtFile", @name = "@file", @class = "Supportingfile" })
+                    <a href="~/Content/Upload/College/CourtCases/Intern Order Copy/@Model.InternOrderCopyPath" target="_blank">
+                        <span style="color: red;"><b>View</b></span>
+                    </a>
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.InternOrderCopy, new { type = "file", @id = "@txtFile", @name = "@file", @class = "Supportingfile" })
+                }
+                @Html.ValidationMessageFor(model => model.InternOrderCopy)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.OrderCopy)
+            </td>
+            <td class="col2">
+                @if (Model.OrderCopypath != null)
+                {
+                    @Html.TextBoxFor(model => model.OrderCopy, new { type = "file", @id = "@txtFile", @name = "@file", @class = "Supportingfile" })
+                    <a href="~/Content/Upload/College/CourtCases/Order Copy/@Model.OrderCopypath" target="_blank">
+                        <span style="color: red;"><b>View</b></span>
+                    </a>
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.OrderCopy, new { type = "file", @id = "@txtFile", @name = "@file", @class = "required Supportingfile" })
+                }
+                @Html.ValidationMessageFor(model => model.OrderCopy)
+            </td>
+        </tr>
+    </table>
+
+    <div style="text-align: right">
+        <p>
+            <input type="submit" value="Add" id="btnAdd" name="cmd" class="btnclass" />
+        </p>
+    </div>
+}
+<br />
+@if (ViewBag.CourtCasesList.Count > 0)
+{
+    <div style="margin-top:15px;">
+        <h2>List of Court Cases</h2><br />
+        <table class="webGrid">
+            <thead>
+                <tr class="col1">
+                    <th>S.No</th>
+                    <th>WP / SL / other No.</th>
+                    <th>Year of filing</th>
+                    <th>Prayer of the Petitioner</th>
+                    <th>If JNTUH is one of the respondents, mention the position</th>
+                    <th>Petitioner Affidavit</th>
+                    <th>Interim Order Copy</th>
+                    <th>Order / Judgement Copy</th>
+                    @if (ViewBag.IsEditable == true)
+                    {
+                        <th>Delete</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in ((List<UAAAS.Controllers.Permanent_Affiliation.CourtCases>)ViewBag.CourtCasesList).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr class="col2">
+                        <td>@pay.i </td>
+                        <td>@pay.value.WporSlorOtherNo</td>
+                        <td>@pay.value.YearofFilling</td>
+                        <td>@pay.value.PrayerofthePetitioner</td>
+                        <td>@pay.value.Respondents</td>
+                        <td style="text-align: left; font-weight: normal;">
+                            @if (pay.value.WpPetitionerFilepath != null)
+                            {
+                                <a href="../Content/Upload/College/CourtCases/WP Petitioner/@pay.value.WpPetitionerFilepath" target="_blank"><span style="color: red; font-weight: bold">View</span></a>
+                            }
+                        </td>
+                        <td style="text-align: left; font-weight: normal;">
+                            @if (pay.value.InternOrderCopyPath != null)
+                            {
+                                <a href="../Content/Upload/College/CourtCases/Intern Order Copy/@pay.value.InternOrderCopyPath" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                            }
+                        </td>
+                        <td style="text-align: left; font-weight: normal;">
+                            @if (pay.value.OrderCopypath != null)
+                            {
+                                <a href="../Content/Upload/College/CourtCases/Order Copy/@pay.value.OrderCopypath" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                            }
+                        </td>
+
+                        @if (ViewBag.IsEditable == true)
+                        {
+                            @*<td>
+                                            @Html.ActionLink("Edit", "Edit", "PA_CourtCases", new
+                                {
+                                    collegeId = UAAAS.Models.Utilities.EncryptString(pay.value.CollegeId.ToString(),
+                                    System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString(),
+
+                                    courtCaseId = UAAAS.Models.Utilities.EncryptString(pay.value.courtCaseId.ToString(),
+                                    System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString()
+                                }, new { @class = "edit_button" })
+                                        </td>*@
+
+                            <td>
+                                @Html.ActionLink("Delete", "Delete", "PA_CourtCases", new
+                    {
+                        collegeId = UAAAS.Models.Utilities.EncryptString(pay.value.CollegeId.ToString(),
+                                    System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString(),
+
+                        courtCaseId = UAAAS.Models.Utilities.EncryptString(pay.value.courtCaseId.ToString(),
+                        System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]).ToString()
+                    }, new { @class = "confirmDialog delete_button" })
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert"></span>
+        Are you sure to delete this Court Case ?
+    </p>
+</div>

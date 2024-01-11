@@ -1,0 +1,792 @@
+﻿@model UAAAS.Models.CollegeIntakeExisting
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<style type="text/css">
+    .width {
+        width: 80%;
+    }
+
+    .text_width {
+        width: 22%;
+        text-align: center;
+    }
+
+    .left_width {
+        width: 250px;
+    }
+
+    .right_width {
+        width: 380px;
+    }
+
+    .left_width_down {
+        width: 250px;
+    }
+
+    .right_width_down {
+        width: 380px;
+    }
+</style>
+<script type="text/javascript">
+    function ValidateAddmissions()
+    {
+        //debugger;
+        var crsStatus= $("#courseStatus").val();
+        if(crsStatus=="Increase") {
+            var proposedintake = $('#prop0').val();
+            var approvedintake = $('#appIn').val();
+            if (parseInt(proposedintake) == 0)
+            {
+                $('#prop0').val('');
+                return false;
+            }
+            if (parseInt(proposedintake) <= parseInt(approvedintake))
+            {
+                $('#prop0').val('');
+
+                alert("Increased intake must greater than  approved Intake for A.Y 2023-24.");
+                return false;
+            }
+        }
+
+        var proposedintake = $('#prop0').val();
+        var approvedintake = $('#appIn').val();
+        if (parseInt(proposedintake) == 0)
+        {
+            $('#prop0').val('');
+            return false;
+        }
+        if ((parseInt(proposedintake) <= parseInt(approvedintake)) && crsStatus != "Reduction")
+        {
+            $('#prop0').val(' ');
+
+            alert("Increased intake must greater than  approved Intake for A.Y 2023-24.");
+            return false;
+        }
+
+        if(crsStatus=="New")
+        {
+            $('#adi1').val('0');
+        }
+        var aapi1=$('#aapi1').val();
+        var aapi2=$('#aapi2').val();
+        var aapi3=$('#aapi3').val();
+        var aapi4=$('#aapi4').val();
+        var aapi5=$('#aapi5').val();
+        var degreeid=$("#Degree").val();
+        if (crsStatus == "Closure") {
+
+        } else {
+            if (degreeid==1) {
+                if (parseInt(aapi1)==0) {
+                    alert('AICTE Sanctioned Intake Should not be Zero');
+                    $('#aapi1').val('');
+                    $('#aapi1').focus();
+                    return false;
+                }
+            } else {
+                if (parseInt(aapi1)==0) {
+                    alert('AICTE Sanctioned Intake Should not be Zero');
+                    $('#aapi1').val('');
+                    $('#aapi1').focus();
+                    return false;
+                }
+                if (parseInt(aapi2)==0) {
+                    alert('AICTE Sanctioned Intake Should not be Zero');
+                    $('#aapi2').val('');
+                    //    //$('#adi1').val('');
+                    $('#aapi2').focus();
+                    return false;
+                }
+                if (parseInt(aapi3)==0) {
+                    alert('AICTE Sanctioned Intake Should not be Zero');
+                    $('#aapi3').val('');
+                    //    //$('#adi1').val('');
+                    $('#aapi3').focus();
+                    return false;
+                }
+            }
+        }
+
+        if(parseInt(api1)<parseInt(adi1))
+        {
+            alert('Admitted should be less than or equal to Approved');
+            $('#adi1').val('');
+            //$('#adi1').val('');
+            $('#adi1').focus()
+            //return false;
+        }
+        if(parseInt(api2)<parseInt(adi2))
+        {
+            alert('Admitted should be less than or equal to Approved');
+            $('#adi2').val('');
+            $('#adi2').focus()
+            //return false;
+        }
+        if(parseInt(api3)<parseInt(adi3))
+        {
+            alert('Admitted should be less than or equal to Approved');
+            $('#adi3').val('');
+            $('#adi3').focus()
+            // return false;
+        }
+        if(parseInt(api4)<parseInt(adi4))
+        {
+            alert('Admitted should be less than or equal to Approved');
+            $('#adi4').val('');
+            $('#adi4').focus()
+            // return false;
+        }
+        if(parseInt(api5)<parseInt(adi5))
+        {
+            alert('Admitted should be less than or equal to Approved');
+            $('#adi5').val('');
+            $('#adi5').focus()
+            // return false;
+        }
+
+
+    }
+    $(document).ready(function () {
+        GetSpecialization(@Model.DepartmentID);
+        $('.calendar').attr("readonly", "true");
+        $('.calendar').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+            //showButtonPanel: true
+        });
+        //$(".calendar, .year").css("width", "75px");
+
+        if ($("#Degree").val() > 0) {
+            GetDepartments($("#Degree").val());
+        }
+
+
+        $("#Degree").change(function () {
+            var DegreeID = $(this).val();
+            GetDepartments(DegreeID);
+        });
+        if($("#Department").val() > 0)
+        {
+            GetSpecialization($("#Department").val());
+        }
+        $("#Department").change(function(){
+            var DepartmentID = $(this).val();
+            GetSpecialization(DepartmentID);
+        });
+
+        function GetDepartments(DegreeID){
+            $.getJSON("/CollegeIntakeProposed/GetDepartments",{ id : DegreeID},
+                function(DepartmentsData){
+                    var select = $("#Department");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(DepartmentsData,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.DepartmentID ? true : false)
+                        }));
+                    });
+                });
+        }
+
+        function GetSpecialization(DepartmantID){
+            $.getJSON("/CollegeIntakeProposed/GetSpecialization" ,{id : DepartmantID},
+                function(Specializationdata){
+                    var select = $("#Specialization");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(Specializationdata,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == '@Model.specializationId' ? true : false)
+                        }));
+                    });
+                });
+        }
+        if($('#AICTEApprovalLettr').val()!='')
+        {
+            //alert('a');
+            $('#api0').removeAttr('disabled');
+        }
+        else if($('#AICTEApprovalLettr').val()=='')
+        {
+            $('#api0').attr('disabled', 'disabled');
+        }
+
+        $('.btnclass').click(function(){
+            if($('#AICTEApprovalLettr').val()!='')
+            {
+                //alert('a');
+                $('#api0').addClass('required');
+
+                $('#prop0').removeClass('required');
+            }
+            else if($('#AICTEApprovalLettr').val()=='')
+            {
+                //alert('p');
+                $('#prop0').addClass('required');
+                $('#api0').removeClass('required');
+            }
+        });
+
+
+    });
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.calendar1').attr("readonly", "true");
+        $('.calendar1').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            //minDate:'-2016/01/02', //yesterday is minimum date
+            maxDate: "+2Y", //tomorrow is maximum date
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+        });
+        //alert('Test');
+        //var value = $('#courseStatus').val();
+        //alert(value);
+        //if(value.toLowerCase() == 'closure')
+        //{
+        //    alert('Test');
+        //    $('#prop0').attr('disabled', true);
+        //}
+        $('.submit').click(function (event, args) {
+            if ($('#scannedCopy').val() == undefined && $('#NBAApproveLetter').val() == '') {
+                alert("Please select photo")
+
+                //if($('#prop0').val() == '')
+                //{
+                //    alert("Please Give Proposed Intake  Value")
+
+                //}
+                return false;
+            }
+            else {
+                return true;
+            }
+        });
+
+        //get file size
+        function GetFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#NBAApproveLetter")[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+
+        $(function () {
+            $(".file").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'PDF':
+                        case 'pdf':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".files > span").text("You can upload only PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetFileSize(file);
+
+                    if (size > 1048756) {
+                        $(".files > span").text("Photo should not exceed 300 KB in Size");
+                        $(this).val('');
+                    }
+                    else {
+                        $(".files > span").text("");
+                    }
+                }
+
+            });
+        });
+    });
+    var crsStatus='@Model.courseStatus';
+
+    var affiliated='@Model.courseAffiliatedStatus';
+    //alert(affiliated)
+    $("#courseStatus").val(crsStatus);
+    if (affiliated=="True") {
+        $("#y_Affiliated").attr("checked","checked");
+    }
+    else  if (affiliated=="false"){
+        $("#n_Affiliated").attr("checked","checked");
+    }
+    //validation function 07-2-2016
+    function Validation(){
+        //debugger;
+
+        var crsStatus= $("#courseStatus").val();
+        if(crsStatus=="Increase") {
+            var proposedintake = $('#prop0').val();
+            var approvedintake = $('#appIn').val();
+            if (parseInt(proposedintake) == 0)
+            {
+                $('#prop0').val('');
+                return false;
+            }
+            if (parseInt(proposedintake) <= parseInt(approvedintake))
+            {
+                $('#prop0').val('');
+                alert("Increased intake must greater than  approved Intake for A.Y 2023-24.");
+                return false;
+
+            }
+        }
+
+        var proposedintake = $('#prop0').val();
+        var approvedintake = $('#appIn').val();
+        if (parseInt(proposedintake) == 0)
+        {
+            $('#prop0').val('');
+            return false;
+        }
+        if ((parseInt(proposedintake) <= parseInt(approvedintake)) && crsStatus != "Reduction")
+        {
+            $('#prop0').val('');
+            alert("Increased intake must greater than  approved Intake for A.Y 2023-24.");
+            return false;
+
+        }
+
+
+        var aapi1=$('#aapi1').val();
+        var aapi2=$('#aapi2').val();
+        var aapi3=$('#aapi3').val();
+        var aapi4=$('#aapi4').val();
+        var aapi5=$('#aapi5').val();
+        var degreeid=$("#Degree").val();
+
+        if (crsStatus == "Closure") {
+
+        } else {
+            if (degreeid==1) {
+                if (parseInt(aapi1)==0) {
+                    alert('AICTE Sanctioned Intake Should not be Zero');
+                    $('#aapi1').val('');
+                    //    //$('#adi1').val('');
+                    $('#aapi1').focus();
+                    return false;
+                }
+            } else {
+                if (parseInt(aapi1)==0) {
+                    alert('AICTE Sanctioned Intake Should not be Zero');
+                    $('#aapi1').val('');
+                    //    //$('#adi1').val('');
+                    $('#aapi1').focus();
+                    return false;
+                }
+                if (parseInt(aapi2)==0) {
+                    alert('AICTE Sanctioned Intake Should not be Zero');
+                    $('#aapi2').val('');
+                    //    //$('#adi1').val('');
+                    $('#aapi2').focus();
+                    return false;
+                }
+                if (parseInt(aapi3)==0) {
+                    alert('AICTE Sanctioned Intake Should not be Zero');
+                    $('#aapi3').val('');
+                    //    //$('#adi1').val('');
+                    $('#aapi3').focus();
+                    return false;
+                }
+            }
+        }
+
+        var prop0= $("#prop0").val();
+        var api1=$("#api1").val();
+        var frmDt= $("#nbaFromDate").val();
+        var toDt= $("#nbaToDate").val();
+        //$('hdn_NBAApproveLetter').val()==''
+        if (frmDt!=""&toDt!="")
+        {
+            var fromDate = frmDt.substr(6, 4) + frmDt.substr(3, 2) + frmDt.substr(0, 2);
+            var toDate = toDt.substr(6, 4) + toDt.substr(3, 2) + toDt.substr(0, 2);
+            if (toDate < fromDate) {
+
+                alert("from date should be less than to date.");
+                return false;
+            }
+            var NBAApprvltr= $("#hdn_NBAApproveLetter").val();
+            //if (NBAApprvltr==""|NBAApprvltr==null)
+            if ( $('#NBAApproveLetter').val() == '' &&$('#UploadNBAApproveLetter').val()=='')
+            {              $('#NBAApproveLetter').addClass("required");
+                $("#err_NBAAprvLtr").show();
+                $("#err_NBAAprvLtr").text('Please select file');
+                return false;
+            }
+            else
+            {
+                $('#NBAApproveLetter').removeClass("required");
+                $("#err_NBAAprvLtr").hide();
+            }
+        }
+        var affiliated=$("#courseAffiliatedStatus").val();
+
+        if(!$("#y_Affiliated").is(":checked")&!$("#n_Affiliated").is(":checked")){
+            $("#er_Affiliated").show();
+            $("#er_Affiliated").text('please select Affiliated');
+            return false;
+        }
+        else{
+            $("#er_Affiliated").hide()
+            $("#er_Affiliated").text('');
+        }
+        if (crsStatus=="0" ||crsStatus=="") {
+            $("#errMsg").show();
+            $("#errMsg").text('please select course status.');
+            return false;
+        }
+        else {
+
+            $("#errMsg").hide();
+            var api=parseInt(aapi1);
+            var prop=parseInt(prop0);
+            if (crsStatus=="Increase") {
+                if (api>prop) {
+                    $("#err_Proposed").show();
+                    $("#err_Proposed").text('');
+                    $("#err_Proposed").text("please enter proposed intake greater than previous Intake " +aapi1+". ");
+                    return false;
+                }
+                else{
+                    $("#err_Proposed").text('');
+                }
+
+            }
+            else if (crsStatus=="Decrease") {
+                if (api<=prop) {
+                    $("#err_Proposed").show();
+                    $("#err_Proposed").text('');
+                    $("#err_Proposed").text("please enter proposed intake less than previous Intake " +aapi1+". ");
+                    return false;
+                }else{
+                    $("#err_Proposed").text('');
+                }
+
+            }
+            else if (crsStatus=="Closure") {
+                if (api!=prop && prop!=0 && api>prop) {
+                    //alert("Approved: "+api+", Praposed: "+prop+"");
+                    $("#err_Proposed").show();
+                    $("#err_Proposed").text('');
+
+                    $("#err_Proposed").text("please enter proposed intake  as 0 ");
+                    return false;
+
+                }else{
+                    $("#err_Proposed").text('');
+                }
+
+            }
+            else if (crsStatus=="Nochange") {
+                if (api!=0 && api!=prop) {
+                    //alert("Approved In Take Is : "+api+" , Praposed Intake Is: "+prop+"");
+                    $("#err_Proposed").show();
+                    $("#err_Proposed").text('');
+                    $("#err_Proposed").text("please enter proposed intake as   previous Intake " +aapi1+". ");
+                    return false;
+
+                }else{
+                    $("#err_Proposed").text('');
+                }
+
+            }
+
+        }
+
+        return true;
+
+    }
+</script>
+<script type="text/javascript">
+    var isUpdate = '@ViewBag.IsUpdate';
+    $(function(){
+        if(isUpdate.toLowerCase() == 'false')
+        {
+            //$('#courseStatus').val('New');
+            //$('#courseStatus').attr('disabled', 'disabled');
+        }else{
+            $('#courseStatus option[value="New"]').css('display', 'none');
+        }
+
+        $('#courseStatus').on('change', function(){
+            if(isUpdate.toLowerCase() == 'false')
+            {
+                $('#courseStatus').val('New');
+                return;
+            }
+
+            var value = $('#courseStatus').val();
+            if(value.toLowerCase() == 'closure')
+            {
+                $('#prop0').val('0');
+                $('#prop0').attr('disabled', true);
+
+                //AICTE Intake can take Zeros also
+
+            }
+            else
+            {
+                $('#prop0').removeAttr('disabled');
+                $('#prop0').removeAttr('readonly');
+
+            }
+        });
+    });
+</script>
+
+
+<br />
+@using (Ajax.BeginForm("RestorationAddEditRecord", "CollegeNOC", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "CollegeIntakeDialog" }, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+
+
+    <div class="details_table">
+        @if (ViewBag.IsUpdate == true)
+        {
+            @Html.HiddenFor(model => model.id)
+
+        }
+        @Html.HiddenFor(model => model.nocid)
+        @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+        @Html.HiddenFor(model => model.AICTEApprovalLettr)
+        <div class="editor-label left_width">
+            @Html.LabelFor(model => model.degreeID)
+        </div>
+        <div class="editor-field right_width">
+            @if (ViewBag.IsUpdate == true)
+            {
+                @Html.HiddenFor(model => model.degreeID)
+                @Html.DropDownListFor(model => model.degreeID,
+            new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "degreeId", "degree"),
+            "-- Select --", new { id = "Degree", @class = "width", disabled = "true" })
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.degreeID,
+            new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "degreeId", "degree"),
+            "-- Select --", new { id = "Degree", @class = "width required" })
+            }
+            @Html.ValidationMessageFor(model => model.degreeID)
+        </div>
+
+        <div class="editor-label left_width">
+            @Html.LabelFor(model => model.DepartmentID)
+        </div>
+        <div class="editor-field right_width">
+            @if (ViewBag.IsUpdate == true)
+            {
+                @Html.HiddenFor(model => model.DepartmentID)
+                @Html.DropDownListFor(model => model.DepartmentID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+            "-- Select --", new { id = "Department", @class = "width", disabled = "true" })
+                @Html.ValidationMessageFor(model => model.DepartmentID)
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.DepartmentID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+            "-- Select --", new { id = "Department", @class = "width required" })
+            }
+            @Html.ValidationMessageFor(model => model.DepartmentID)
+        </div>
+
+        <div class="editor-label left_width">
+            @Html.LabelFor(model => model.specializationId)
+        </div>
+        <div class="editor-field right_width">
+            @if (ViewBag.IsUpdate == true)
+            {
+                @Html.DropDownListFor(model => model.specializationId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "specializationName"),
+            "-- Select --", new { id = "Specialization", @class = "width", disabled = "true" })
+                @Html.ValidationMessageFor(model => model.specializationId)
+                @Html.HiddenFor(model => model.specializationId)
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.specializationId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "specializationName"),
+            "-- Select --", new { id = "Specialization", @class = "width required" })
+                @Html.ValidationMessageFor(model => model.specializationId)
+            }
+        </div>
+
+        @*@if (Model.ApprovedIntake != null && Model.ApprovedIntake != 0)
+            {*@
+        <div class="editor-label left_width" style="font-size: 12px; min-height: 38px;">
+            Approved Intake @*<br /> for A.Y. 2023-24*@
+        </div>
+        <div class="editor-field right_width" style="min-height: 38px;">
+
+            @Html.TextBoxFor(model => model.ApprovedIntake, new { @class = "required text_width", @id = "appIn", maxlength = "3", onchange = "ValidateAddmissions()", @disabled = "true" })<span style="color:red" class="hide" id="err_Proposed"></span>
+            @Html.ValidationMessageFor(model => model.ApprovedIntake)
+        </div>
+        @*  }*@
+        <div class="editor-label left_width" style="font-size: 12px; min-height: 38px;">
+            Proposed Restoration Intake as submitted to AICTE/PCI<br /> for A.Y. 2024-25
+        </div>
+        <div class="editor-field right_width" style="min-height: 58px;">
+            @Html.TextBoxFor(model => model.ProposedIntake, new { @class = "required text_width", @id = "prop0", maxlength = "3", onchange = "ValidateAddmissions()" })<span style="color:red" class="hide" id="err_Proposed"></span>
+            @Html.ValidationMessageFor(model => model.ProposedIntake)
+        </div>
+    </div>
+    <br />
+    <div>
+        <div class="editor-label left_width_down" style="background-color: transparent; padding: 0; margin: 0;line-height: 10px;">
+        </div>
+        <div class="editor-field right_width_down" style="font-size: 11px; background-color: transparent; padding: 0; margin: 0; line-height: 10px;">
+            <div style="float: left; width: 28%; text-align: center;"><b>AICTE<br /> Sanctioned</b></div>
+            <div style="float: left; width: 22%; text-align: center;">
+                <b>JNTU Sanctioned</b>
+            </div>
+            @*<div style="float: left; width: 23%; text-align: center;">
+                    <b>Admitted as per Exam Branch <span style="color: #de1c85">(R+L)</span></b>
+                </div>
+                <div style="float: left; width: 27%; text-align: center;">
+                    <b>Admitted Students</b>
+                </div>*@
+        </div>
+        <div class="editor-label left_width_down" >
+            @Html.LabelFor(model => model.approvedIntake1) @ViewBag.FirstYear
+        </div>
+        <div class="editor-field right_width_down">
+            @*@Html.DisplayFor(model => model.approvedIntake1)*@
+            @Html.TextBoxFor(model => model.AICTEapprovedIntake1, new { @class = "text_width", maxlength = "3", @id = "aapi1", onchange = "ValidateAddmissions()", Value = Model.AICTEapprovedIntake1.Equals(0) ? "0" : Model.AICTEapprovedIntake1.ToString() })
+            @*@Html.TextBoxFor(model => model.approvedIntake1, new { @class = "text_width", @disabled = "disabled", @id = "api1", onchange = "ValidateAddmissions()", Value = Model.approvedIntake1.Equals(0) ? "0" : Model.approvedIntake1.ToString() }) @*, @readonly = "readonly"*@
+            @*@Html.TextBoxFor(model => model.ExambranchadmittedIntake1, new { @class = "text_width", @disabled = "disabled", @id = "eadi1" })
+                @Html.TextBoxFor(model => model.admittedIntake1, new { @class = "text_width", maxlength = "3", @id = "adi1", onchange = "ValidateAddmissions()", Value = Model.admittedIntake1.Equals(0) ? "0" : Model.admittedIntake1.ToString() })*@
+            @Html.HiddenFor(model => model.approvedIntake1)
+            @Html.HiddenFor(model => model.ExambranchadmittedIntakeL1)
+            @Html.HiddenFor(model => model.ExambranchadmittedIntakeR1)
+        </div>
+        <div>
+            <div class="editor-label left_width_down">
+                @Html.LabelFor(model => model.approvedIntake2) @ViewBag.SecondYear
+            </div>
+            <div class="editor-field right_width_down">
+                @Html.TextBoxFor(model => model.AICTEapprovedIntake2, new { @class = "text_width", maxlength = "3", @id = "aapi2", onchange = "ValidateAddmissions()" })
+                @*@Html.TextBoxFor(model => model.approvedIntake2, new { @class = "text_width", @disabled = "disabled", @id = "api2", onchange = "ValidateAddmissions()" })*@
+                @*@Html.TextBoxFor(model => model.ExambranchadmittedIntake2, new { @class = "text_width", @disabled = "disabled", @id = "eadi1" })
+                    @Html.TextBoxFor(model => model.admittedIntake2, new { @class = "text_width", maxlength = "3", @id = "adi2", onchange = "ValidateAddmissions()" })*@
+                @Html.HiddenFor(model => model.approvedIntake2)
+                @Html.HiddenFor(model => model.ExambranchadmittedIntakeR2)
+                @Html.HiddenFor(model => model.ExambranchadmittedIntakeL2)
+
+            </div>
+
+            <div class="editor-label left_width_down">
+                @Html.LabelFor(model => model.approvedIntake3) @ViewBag.ThirdYear
+            </div>
+            <div class="editor-field right_width_down">
+                @Html.TextBoxFor(model => model.AICTEapprovedIntake3, new { @class = "text_width", maxlength = "3", @id = "aapi3", onchange = "ValidateAddmissions()" })
+                @*@Html.TextBoxFor(model => model.approvedIntake3, new { @class = "text_width", @disabled = "disabled", @id = "api3", onchange = "ValidateAddmissions()" })*@
+                @*@Html.TextBoxFor(model => model.ExambranchadmittedIntake3, new { @class = "text_width", @disabled = "disabled", @id = "eadi1" })
+                    @Html.TextBoxFor(model => model.admittedIntake3, new { @class = "text_width", maxlength = "3", @id = "adi3", onchange = "ValidateAddmissions()" })*@
+                @Html.HiddenFor(model => model.approvedIntake3)
+                @Html.HiddenFor(model => model.ExambranchadmittedIntakeR3)
+                @Html.HiddenFor(model => model.ExambranchadmittedIntakeL3)
+
+            </div>
+
+            <div class="editor-label left_width_down" style="display:none;">
+                @Html.LabelFor(model => model.approvedIntake4) @ViewBag.FourthYear
+            </div>
+            <div class="editor-field right_width_down" style="display:none;">
+                @Html.TextBoxFor(model => model.AICTEapprovedIntake4, new { @class = "text_width", maxlength = "3", @id = "aapi4", onchange = "ValidateAddmissions()" })
+                @*@Html.TextBoxFor(model => model.approvedIntake4, new { @class = "text_width", @disabled = "disabled", @id = "api4", onchange = "ValidateAddmissions()" })*@
+                @*@Html.TextBoxFor(model => model.ExambranchadmittedIntake4, new { @class = "text_width", @disabled = "disabled", @id = "eadi1" })
+            @Html.TextBoxFor(model => model.admittedIntake4, new { @class = "text_width", maxlength = "3", @id = "adi4", onchange = "ValidateAddmissions()" })*@
+                @Html.HiddenFor(model => model.approvedIntake4)
+                @Html.HiddenFor(model => model.ExambranchadmittedIntakeL4)
+                @Html.HiddenFor(model => model.ExambranchadmittedIntakeR4)
+            </div>
+
+            <div class="editor-label left_width_down" style="display:none;">
+                @Html.LabelFor(model => model.approvedIntake5) @ViewBag.FifthYear
+            </div>
+            <div class="editor-field right_width_down" style="display:none;">
+                @Html.TextBoxFor(model => model.AICTEapprovedIntake5, new { @class = "text_width", maxlength = "3", @id = "aapi5", onchange = "ValidateAddmissions()" })
+                @*@Html.TextBoxFor(model => model.approvedIntake5, new { @class = "text_width", @disabled = "disabled", @id = "api5", onchange = "ValidateAddmissions()" })*@
+                @*@Html.TextBoxFor(model => model.ExambranchadmittedIntake5, new { @class = "text_width", @disabled = "disabled", @id = "eadi1" })
+            @Html.TextBoxFor(model => model.admittedIntake5, new { @class = "text_width", maxlength = "3", @id = "adi5", onchange = "ValidateAddmissions()" })*@
+                @Html.HiddenFor(model => model.approvedIntake5)
+                @Html.HiddenFor(model => model.ExambranchadmittedIntakeL5)
+                @Html.HiddenFor(model => model.ExambranchadmittedIntakeR5)
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center">
+        <p>
+            @if (ViewBag.IsUpdate == true)
+            {
+                <input type="submit" value="Save" id="btnSave" name="cmd" class="btnclass" onclick="return Validation();" />
+            }
+            else
+            {
+                <input type="submit" value="Add" id="btnAdd" name="cmd" class="btnclass" />
+            }
+        </p>
+    </div>
+}

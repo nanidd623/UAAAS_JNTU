@@ -1,0 +1,312 @@
+﻿@model List<UAAAS.Models.EditEducationFields>
+@{
+    ViewBag.Title = "FacultyEducationRequestsForAdmin";
+    int count = 1;
+    var FID = Model.Where(z => z.facultyId != 0).Select(a => a.facultyId).FirstOrDefault();
+    var encrytId = UAAAS.Models.Utilities.EncryptString(FID.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]);
+}
+
+<h2>Education Requests</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null, null,null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+
+        $(".EditDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            var id = $(this).attr('id');
+            $("#dialog-edit").dialog({
+                title: 'NotApprove Faculty Reaquest',
+                autoOpen: false,
+                resizable: false,
+                height: 220,
+                width: 640,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/FacultyRequests/FacultyEducationRequestsForAdmin?IntFacultyId=@encrytId";
+                }
+            });
+
+            $("#dialog-edit").dialog('open');
+            return false;
+        });
+
+        $("#btneditcancel").live("click", function (e) {
+            window.location.href = "/FacultyRequests/FacultyRequestsForAdmin";
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+
+            $("#dialog-confirm").dialog({
+                title: 'Approve Record',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+    });
+
+
+</script>
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success" style="height:15px;">
+        <p style="text-align: center;font-weight: bold"><span style="color:green;font-weight:bold;">Success : </span>@TempData["SUCCESS"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;"><span style="color:red;font-weight:bold;">Error : </span>@TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+@if (Model.Count != 0)
+{
+    <table id="example" class="display" style="width: 100%;">
+        <thead>
+            <tr>
+                <th style="width: 30px; text-align: center;">
+                    S.No
+                </th>
+                <th style="text-align: center;width: 100px;">
+                    Education
+                </th>
+                <th style="text-align: center;width: 200px;">
+                    Course Studied
+                </th>
+                <th style="text-align: center;width: 40px;">
+                    Specialization
+                </th>
+                <th style="text-align: center;width: 50px;">
+                    Passed Year
+                </th>
+                <th style="text-align: center;width: 50px;">
+                    Division
+                </th>
+                <th style="text-align: center;width: 40px;">
+                    Marks Percentage
+                </th>
+                <th style="text-align: center;width: 50px;">
+                    BoardOrUniversity
+                </th>
+                <th style="text-align: center;width: 50px;">
+                    Place
+                </th>
+                <th style="text-align: center;width: 50px;">
+                    Certificate
+                </th>
+                <th style="text-align: center;width: 50px;">
+                    Supporting Docs
+                </th>
+                <th style="text-align: center;width: 130px;">
+                    Status
+                </th>
+                <th style="text-align: center;width: 250px;">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item2 in Model)
+            {
+                <tr>
+                    <td>@(count++)</td>
+
+                    <td>
+                        @item2.FieldDesc
+                    </td>
+                    <td>
+                        @item2.Coursestudied
+                    </td>
+                    <td>
+                        @item2.Specialization
+                    </td>
+                    <td>
+                        @item2.PassedYear
+                    </td>
+                    <td>
+                        @item2.Division
+                    </td>
+                    <td>
+                        @item2.MarkasPercentage
+                    </td>
+                    <td>
+                        @item2.BoardorUniversity
+                    </td>
+                    <td>
+                        @item2.PlaceofEducation
+                    </td>
+
+                    <td style="text-align:center;">
+                        @if (item2.EducationcertificateView != null)
+                        {
+                            <a href="../Content/Upload/Faculty/FieldEditSupportDocuments/@item2.EducationcertificateView" target="_blank">
+                                <span style="color:red;font-weight:bold;">View</span>
+                            </a>
+                        }
+                    </td>
+                    <td style="text-align:center;">
+                        @if (item2.AllSupportFilesView != null)
+                        {
+                            <a href="../Content/Upload/Faculty/FieldEditSupportDocuments/AllSuppDocPDF/@item2.AllSupportFilesView" target="_blank">
+                                <span style="color:red;font-weight:bold;">View</span>
+                            </a>
+                        }
+                    </td>
+                    <td>
+                        @if (item2.isApproved == 0)
+                        {
+                            <span>Pending</span>
+                        }
+                        else if (item2.isApproved == 1)
+                        {
+                            <span>Approved</span>
+                        }
+                        else if (item2.isApproved == 2)
+                        {
+                            <span>Not Approved</span>
+                        }
+                    </td>
+                
+                    <td>
+                        <a href="/FacultyRequests/AdminRequestApproval?id=@item2.Id&&type=Education" class="create_button confirmDialog" id="@item2.facultyId">Approve</a>&nbsp;&nbsp;&nbsp;
+                        <a href="/FacultyRequests/AdminRequestNotApproval?id=@item2.Id&&type=Education" class="create_button EditDialog" id="@item2.facultyId">Not Approve</a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th width="120px">
+                    <input type="text" id="i-1" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-6" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-7" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-8" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-9" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-10" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-11" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-11" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+}
+<div id="dialog-edit" style="display: none">
+</div>
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to Approve ?
+    </p>
+</div>

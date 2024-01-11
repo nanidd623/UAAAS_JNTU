@@ -1,0 +1,193 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeFaculty>
+@{
+    ViewBag.Title = "Non-Teaching Staff";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    var index = 1;
+}
+
+<h2>Non-Teaching Faculty</h2>
+
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "bStateSave": false,
+                               "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ]
+                           });
+}
+<script type="text/javascript">
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+
+    function printAdmindiv(printpage) {
+        $(".isAdmin").show();
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        $(".isAdmin").hide();
+        return false;
+    }
+</script>
+@if (ViewBag.Admin == true)
+{
+    <p class="create_link_right">
+        <input name="btnPrint" type="button" onclick="printAdmindiv('div_Admin_print');" value=" Print" class="create_button" />
+         @Html.ActionLink("Export", "ViewNonTeaching", "Faculty", new { strType = "Export" }, new {@class="create_button"})
+    </p>
+}
+
+@using (Html.BeginForm())
+{
+    int count = 0;
+    <div id="div_print">
+        <table id="example" class="display">
+            <thead>
+                <tr>
+                    <th style="width: 50px; text-align: center;">S.No
+                    </th>
+                    <th>Name
+                    </th>
+                    <th style="width: 150px; text-align: left;">Designation
+                    </th>
+                    <th style="width: 250px; text-align: left;">Department
+                    </th>
+                    <th class="ui-state-default" style="width: 70px; text-align: center;">Ratified
+                    </th>
+                    <th class="ui-state-default" style="width: 100px; text-align: center;">Photo
+                    </th>
+                    <th class="ui-state-default view_hide" colspan="3"></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="width: 50px; text-align: center;">
+                            @(index++)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.facultyFirstName)
+                            @Html.DisplayFor(modelItem => item.facultyLastName)
+                            @Html.DisplayFor(modelItem => item.facultySurname)
+                        </td>
+                        <td style="text-align: left;">
+                            @Html.DisplayFor(modelItem => item.designation)
+                            @if (item.facultyOtherDesignation != null)
+                            { <span>, @item.facultyOtherDesignation</span>}
+                        </td>
+                        <td style="text-align: left;">
+                            @Html.DisplayFor(modelItem => item.department)
+                        </td>
+                        <td style="text-align: center;">
+                            @if (item.isFacultyRatifiedByJNTU == true)
+                            { <span>Yes</span>}
+                            else
+                            {<span>No</span>}
+                        </td>
+                        <td style="text-align: center;">
+                            @* @Html.DisplayFor(modelItem => item.facultyMobile)*@
+                            @if (item.photo != null)
+                            {
+                                <img src="@item.photo.Replace("~", "")" style="width: 50px;" />
+                            }
+                        </td>
+
+                        <td style="width: 30px; text-align: center;" class="view_hide">
+                            @Html.ActionLink("Details", "View/" + @ViewContext.RouteData.Values["id"], "CollegeFaculty", new { type = ViewBag.Type, fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "edit_button1 view_hide" })
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (ViewBag.Count == 0)
+        {
+            <div class="warning" style="width: 200px; margin: 0 auto;">
+                <p>No records found</p>
+            </div>
+        }
+    </div>
+    
+    <div id="div_Admin_print">
+        <h2 style="display:none" class="isAdmin">Non-Teaching Faculty</h2>
+        <table class="four_columns isAdmin" style="width: 100%; display: none">
+            <tr style="font-weight: bold;">
+                <td style="text-align: left;" class="col11">S.No</td>
+                <td style="text-align: center; width: 140px;" class="col11">Name</td>
+                <td style="text-align: center; width: 150px;" class="col11">Designation</td>
+                <td style="text-align: center; width: 120px;" class="col11">Department</td>
+                <td style="text-align: center; width: 120px;" class="col11">Ratified</td>
+                <td style="text-align: center; width: 120px;" class="col11">Photo</td>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: left; width: 15%" class="col21">
+                        @(count = count + 1)
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col21">
+                        @Html.DisplayFor(modelItem => item.facultyFirstName)
+                        @Html.DisplayFor(modelItem => item.facultyLastName)
+                        @Html.DisplayFor(modelItem => item.facultySurname)
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col21">
+                        @Html.DisplayFor(modelItem => item.designation)
+                        @if (item.facultyOtherDesignation != null)
+                        { <span>, @item.facultyOtherDesignation</span>}
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col21">
+                        @Html.DisplayFor(modelItem => item.department)
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col21">
+                        @if (item.isFacultyRatifiedByJNTU == true)
+                        { <span>Yes</span>}
+                        else
+                        {<span>No</span>}
+                    </td>
+                    <td style="text-align: center; width: 15%" class="col21">
+                        @* @Html.DisplayFor(modelItem => item.facultyMobile)*@
+                        @if (item.photo != null)
+                        {
+                            <img src="@item.photo.Replace("~", "")" style="width: 50px;" />
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+}

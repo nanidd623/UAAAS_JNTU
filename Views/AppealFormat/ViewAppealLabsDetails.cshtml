@@ -1,0 +1,160 @@
+﻿
+@using UAAAS.Controllers.College
+@using UAAAS.Models
+@model IList<UAAAS.Controllers.College.AppealFormatController.AnonymousLabclass>
+@{
+    ViewBag.Title = "View Appeal Labs Details";
+    int labsno = 1;
+   
+}
+
+<h2>View Appeal Labs Details</h2>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        
+
+        //editlabDialogforLabsView
+        $(".editlabDialogforLabsView").live("click", function (e) {
+            debugger;
+            e.preventDefault();
+            var url;
+
+            var id = $(this).attr('id');
+            var eqipid = $(this).attr('eqpid');
+            var eqipno = $(this).attr('eqpno');
+            var collegeId = $(this).attr('collegeid');
+            //$('table .webGrid').find('tbody').find('tr').find('td .col2').find('.editlabDialogforLabsView').click(function () {
+            //   // var url1 = $(this).find(".editlabDialog").attr("id");
+            //    url = "/FacultyVerification/AddEditRecord?id=" + url1 + "&eqpid=" + $(this).find(".editDialog").attr("eqpid");
+            //});
+            var url1 = $(this).attr('id');
+            url = "/AppealFormat/ViewLabDetails?eqpid=" + eqipid + "&id=" + id + "&eqpno=" + eqipno + "&collegeId=" + collegeId;///FacultyVerification/AddEditRecord?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+            $("#lab-dialog-view").dialog({
+                title: 'View Lab Details',
+                resizable: false,
+                height: 750,
+                width: 750,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.reload();
+                    $(this).dialog("close");
+
+
+                }
+            });
+            //$myDialog.dialog('open');
+            //return false;
+        });
+
+        $('#collegeId').change(function () {
+            var collegeId = $(this).val();
+            if ($('#collegeId').val() != '') {
+                window.location = '/AppealFormat/ViewAppealLabsDetails?collegeid=' + collegeId;
+            }
+            else {
+                window.location = '/AppealFormat/ViewAppealLabsDetails';
+            }
+        });
+
+    });
+   
+
+</script>
+
+
+
+ @if (TempData["Error"] != null)
+    {
+<div class="error">
+    <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+<div class="success">
+    <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+</div>
+    }
+
+
+<br/>
+<table class="four_columns">
+    <tr>
+        <td class="col1">
+            <span>College</span>
+        </td>
+        <td class="col2" colspan="4">
+            @Html.DropDownList("collegeId",new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"),"--Select--", new { id = "collegeId" })
+        </td>
+    </tr>
+
+</table>
+
+<br />
+
+<table style="width: 100%; border: 1px; border-color: red" class="LabsAppeal">
+    <tr>
+        <th class="col3" colspan="5" style="text-align: center">LIST OF EQUIPMENTS</th>
+    </tr>
+    <tr>
+        <th class="col1" style="text-align: center;">S.No </th>
+        <th class="col1" style="text-align: left; vertical-align: middle; width: 100px">Lab Name</th>
+        <th class="col1" style="text-align: left; vertical-align: middle;">Equipment Name</th>
+        <th class="col1" style="text-align: left; vertical-align: middle;">View</th>
+@*@if (User.IsInRole("Admin"))
+{
+}*@
+    <th class="col1" style="text-align: left; vertical-align: middle;">Add</th>
+        
+
+    </tr>
+
+
+    @foreach (AppealFormatController.AnonymousLabclass t in Model)
+    {
+        string color = string.Empty;
+        if (t.IsActive == false)
+        {
+            color = "green";
+        }
+        <tr>
+            <td class="col2" style="width: 30px; text-align: center;background-color: @color">
+                @(labsno++)
+            </td>
+            <td class="col2" style="text-align: left; vertical-align: top;">@t.LabName</td>
+            <td class="col2" style="text-align: left; vertical-align: top;">@t.EquipmentName</td>
+            <td class="col2" style="text-align: left; vertical-align: middle;">
+                @if (t.id != 0)
+                {
+                    @Html.ActionLink("View", "", "", new {@id = t.id, eqpid = "undefined", eqpno = 1, collegeId = Request.QueryString["collegeId"], @class = "editlabDialogforLabsView"}) // new { @class = "editlabDialogforLabsView" }
+                }
+            </td>
+
+       <td class="col2" style="text-align: left; vertical-align: middle;">
+               
+                @if (t.IsActive == true)
+                {
+                    @Html.ActionLink("Add", "AddingLabs", "AppealFormat", new {appeallabId = t.id, collegeId = Request.QueryString["collegeId"]}, new {@class = "create_button"})
+                }              
+                @*@Html.ActionLink("Add", "RegPrincipalAdding", "AppealFormat", new { fid = UAAAS.Models.Utilities.EncryptString(ViewBag.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"] }, new { @class = "create_button" })*@
+            </td>
+
+            
+
+        </tr>
+    }
+
+
+
+</table>
+
+<div id="lab-dialog-view" style="display: none"></div>

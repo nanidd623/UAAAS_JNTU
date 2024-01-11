@@ -1,0 +1,94 @@
+﻿@model IList<UAAAS.Models.CollegeEnclosuresHardCopy>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "College Enclosures HardCopy";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+@if (ViewBag.IsEditable == true)
+{
+    
+    <h2>College Enclosures HardCopy</h2>
+    <p class="create_link_right">
+        @Html.ActionLink("Edit", "Edit", "CollegeEnclosuresHardCopy", new { @class = "create_button" /* id=Model.PrimaryKey */ })
+    </p>
+}
+else{
+    @*<p class="create_link_right">
+        <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+    </p>*@
+}
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".view_hide").show();
+    });
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+</script>
+
+<div id="div_print">
+    @if (ViewBag.IsEditable == false)
+    {
+         <h2>College Enclosures HardCopy</h2>
+    }
+    @using (Html.BeginForm())
+    {
+        if (ViewBag.Norecords == true)
+        {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No Data found</p>
+        </div>
+        }
+        else
+        {    
+        <table class="four_columns">
+
+            @for (int i = 0; i < ViewBag.Count; i++)
+            {
+                <tr>
+                    <td class="col11" style="width: 800px">
+                        @Html.LabelFor(m => m[i].documentName, Model[i].documentName == null ? string.Empty : Model[i].documentName.ToString())
+                        @Html.HiddenFor(m => m[i].id)
+                    </td>
+                    <td class="col21" style="width: 200px">
+                        @if (Model[i].isSelected == "New")
+                        {
+                            <label></label>
+                        }
+                        @if (Model[i].isSelected == "True")
+                        {
+                            <label>Yes</label>
+                        }
+                        @if (Model[i].isSelected == "False")
+                        {
+                            <label>No</label>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>   
+        }
+    }
+</div>

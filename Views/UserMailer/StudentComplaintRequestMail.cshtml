@@ -1,0 +1,47 @@
+﻿
+
+@if (@ViewBag.referenceID != string.Empty)
+{
+    <div style="border:padding: 20px;">
+        <span>
+            <b>Dear Student,</b><br />
+
+            Your <b>Student Grievance Id</b> : @ViewBag.referenceID
+            <br />
+            <br />
+            With reference to your Grievance, you are hereby informed to use Grievance id for further correspondence and can track the status of your Grievance at the same portal.
+            <br /><br />
+        </span>
+        <table style="width: 100%; border: 1px solid black;">
+            <tr style="border: 1px solid black;">
+                <td colspan="3"> <b style="margin-left: 40%">BASIC DETAILS</b></td>
+            </tr>
+            <tr>
+                <td style="width: 16%">Grievance Type</td>
+                <td style="width: 4%">:</td>
+                <td style="width: 80%">@ViewBag.ComplaiontType</td>
+            </tr>
+            <tr>
+                <td style="width: 16%">Grievance Date </td>
+                <td style="width: 4%">:</td>
+                <td style="width: 80%">@ViewBag.CompalintDate</td>
+            </tr>
+            <tr>
+                <td style="width: 16%">Grievance Id </td>
+                <td style="width: 4%">:</td>
+                <td style="width: 80%">@ViewBag.referenceID</td>
+            </tr>
+            <tr>
+                <td style="width: 16%">Grievance Details</td>
+                <td style="width: 4%">:</td>
+                <td style="width: 80%">@ViewBag.complaintDescription</td>
+            </tr>
+        </table>
+    </div>
+
+}
+<br />
+<br />
+Thanks & Regards<br />
+Director, AAC,<br />
+JNTUH, Hyderabad

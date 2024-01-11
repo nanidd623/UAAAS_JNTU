@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "Coordinators";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+
+<style>
+    .DivStlye {
+        font-size: 0.8rem;
+        font-weight: normal;
+        line-height: 1.25rem;
+        margin-left: 67px;
+        margin-right: 67px;
+    }
+
+    .Design {
+        text-align: center;
+        color: red;
+        width: auto;
+    }
+
+    .VCProfile, .DirectorProfile {
+        background-color: #2384c6;
+        width: 315px;
+    }
+</style>
+
+<h2>Coordinators</h2>
+<table width="100%" style="display:inline;">
+    <tr>
+        <td width="45%">
+            <div id="coord1">
+                <div>
+                    <b>Contact :</b><br />
+                    <hr style="width: 250px; float: left;" /><br />
+                    <b>Mr.G Praveen Babu</b><br />
+                    Associate Professor of CSE &<br />Coordinator Affiliations & Academic Audit
+                    <br />
+                    Second Floor,Administrative Block, JNTUH, Kukatpally, Hyderabad - 500 085.<br />
+                    <b>Phone:</b> 040 -3241 4600, <b>Email:</b> <a href="mailto:duaac@jntuh.ac.in">duaac@jntuh.ac.in</a>
+                </div>
+            </div>
+        </td>
+        <td width="10%"></td>
+        <td width="45%">
+            <div id="coord1">
+                <div style="float: right; width: 250px; text-align: center; margin-left: 10px; margin-bottom: 50px;">
+                    <img src="../../Content/images/gpraveenbabu.jpg" style="max-width: 150px; text-align: center;border:1px solid #0A1A32;" /><br />
+                    <div>
+                        <b>Mr.G Praveen Babu</b><br />
+                        <span style="font-size: 0.75rem;">
+                            Associate Professor of CSE & Coordinator Affiliations & Academic Audit
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+            <td>
+
+            </td>
+        </tr>
+    <tr>
+            <td width="85%">
+                <div id="coord2">
+                    <div>
+                        <b>Contact :</b><br />
+                        <hr style="width: 250px; float: left;" /><br />
+                        <b>Dr. K Vijaya Kumar</b><br />
+                        Professor of Physics - Coordinator ,<br /> Affiliations & Academic Audit, JNTUH
+                        <br />
+                    Second Floor,Administrative Block, JNTUH, Kukatpally, Hyderabad - 500 085.<br />
+                    <b>Phone:</b> 040 -3241 4600, <b>Email:</b> <a href="mailto:duaac@jntuh.ac.in">duaac@jntuh.ac.in</a>
+                    </div>
+                </div>
+            </td>
+            <td width="5%"></td>
+            <td width="10%">
+                <div id="coord1">
+                    <div style="float: right;width: 250px; text-align: center; margin-left: 10px;">
+                        <br /><img src="../../Content/images/vijaykumar.JPG" style="max-width: 150px; text-align: center;border:1px solid #0A1A32;margin-top:-60px;" /><br />
+                        <b>Dr. K Vijaya Kumar</b><br />
+                        <span style="font-size: 0.75rem;">
+                            Professor of Physics - Coordinator ,<br /> Affiliations & Academic Audit, JNTUH
+                        </span>
+                        <br />
+                        <strong>
+                            @Html.ActionLink("View Profile >>", "Coordinatorone", "AcademicAuditCell")
+                        </strong>
+                    </div>
+                </div>
+            </td>
+        </tr>
+</table>
+<div style="text-align:left;display:none">
+    <br />
+    <div id="coord1">
+        <div style="float: right; width: 250px; text-align: center; margin-left: 10px; margin-bottom: 50px;">
+            <img src="../../Content/images/gpraveenbabu.jpg" style="max-width: 150px; text-align: center;border:1px solid #0A1A32;" /><br />
+            <b>Mr.G Praveen Babu</b><br />
+            <span style="font-size: 0.75rem;">
+                M.Tech.(Computer Science)<br />
+                Affiliations & Academic Audit &<br />Associate Professor of CSE - Coordinator
+            </span>
+        </div>
+        <div>
+            <b>Contact :</b><br />
+            <hr style="width: 250px; float: left;" /><br />
+            <b>Mr.G Praveen Babu</b><br />
+            Affiliations & Academic Audit &<br />Associate Professor of CSE - Coordinator
+            @*<br />
+                Second Floor,Administrative Block, JNTUH, Kukatpally, Hyderabad - 500 085.<br />
+                <b>Phone:</b> 040 -3241 4600,  <b>Fax:</b> 040-2315 0010,  <b>Email:</b> <a href="mailto:directoruaacjntuh@gmail.com">directoruaacjntuh@gmail.com</a>*@
+        </div>
+    </div>
+    <br /><br /><br /><br /><br /><br /><br />
+    <div class="DivStlye">
+        <div class="Design">......................................................................................................................................................................................................................</div>
+    </div>
+
+    <div id="coord2">
+        <div>
+            <b>Contact :</b><br />
+            <hr style="width: 250px; float: left;" /><br />
+            <b>Dr. K Vijaya Kumar</b><br />
+            Professor of Physics - Coordinator ,<br /> Affiliations & Academic Audit,
+            @*<br />
+                Second Floor,Administrative Block, JNTUH, Kukatpally, Hyderabad - 500 085.<br />
+                <b>Phone:</b> 040 -3241 4600,  <b>Fax:</b> 040-2315 0010,  <b>Email:</b> <a href="mailto:directoruaacjntuh@gmail.com">directoruaacjntuh@gmail.com</a>*@
+        </div>
+        <div style="float: right;">
+
+            <img src="../../Content/images/vijaykumar.JPG" style="max-width: 150px; text-align: center;border:1px solid #0A1A32;margin-top:-60px;" /><br />
+            <b>Dr. K Vijaya Kumar</b><br />
+            <span style="font-size: 0.75rem;">
+                Professor of Physics - Coordinator ,<br /> Affiliations & Academic Audit, JNTUH
+            </span>
+
+
+        </div>
+
+
+
+    </div>
+</div>

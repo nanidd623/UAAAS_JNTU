@@ -1,0 +1,62 @@
+﻿@using UAAAS.Models
+@{    
+    int sno = 1;
+}
+@using (Html.BeginForm())
+{  
+    <table border="1" style="width:100%;">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color:yellow;vertical-align:top">S.No</th>
+                <th style="text-align: center; background-color:yellow;vertical-align:top">College Code</th>
+                <th style="text-align: left; background-color:yellow;vertical-align:top">College Name</th>
+                <th style="text-align: center; background-color:yellow;vertical-align:top">Order Date</th>
+                <th style="text-align: center; background-color:yellow;vertical-align:top">Inspection Date</th>
+                <th style="text-align: center; background-color:yellow;vertical-align:top">Alternate Inspection Date</th> 
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in ViewBag.SchedulingList)
+            { 
+                <tr>
+                    <td style="text-align: center;vertical-align:top">
+                        @(sno++)
+                    </td>
+                    <td style="text-align: center;vertical-align:top">
+                        @item.collegeCode
+                    </td>
+                      <td style="text-align: left;vertical-align:top">
+                        @item.collegeName
+                    </td>      
+                    
+                    
+                      <td style="text-align: center;">
+                       @if (item.orderDate != null)
+                       {
+                          @Utilities.MMDDYY2DDMMYY(@item.orderDate.ToString())
+                       }
+                    </td>
+                    <td style="text-align: center;">                      
+                       @if (item.inspectiondate != null)
+                       {
+                          @Utilities.MMDDYY2DDMMYY(@item.inspectiondate.ToString())
+                       }
+                    </td>
+                    <td style="text-align: center;">
+                       @if(item.alternateInspectionDate!=null)
+                       {
+                          @Utilities.MMDDYY2DDMMYY(@item.alternateInspectionDate.ToString())
+                       }                
+
+                    </td>
+                </tr>
+            }
+        </tbody>        
+    </table>    
+
+}
+
+
+
+

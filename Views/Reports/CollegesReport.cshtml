@@ -1,0 +1,247 @@
+﻿@model UAAAS.Models.CollegesReport
+@using UAAAS.Models
+@{
+    ViewBag.Title = "CollegesReport";
+    int sno = 1;
+}
+<h2>Colleges Report</h2>
+
+@if (TempData["Error"] != null)
+{
+     <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        $('#collegestatusId').removeClass('input-validation-error');
+        $('#districtId').removeClass('input-validation-error');
+        $('#collegeTypeId').removeClass('input-validation-error');
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 1000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+     
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Send Mail',
+            autoOpen: false,
+            resizable: false,
+            height: 560,
+            width: 640,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Send Mail'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Send Mail'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });      
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+    function onBegin() {
+        $('#loading').show();
+    }
+    function onComplate() {
+        $('#loading').hide();
+    }
+
+</script>
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+@using (Html.BeginForm())
+{    
+
+    <table>
+        <tr>
+            <td>
+                @Html.DropDownListFor(model => model.collegestatusId,
+            new SelectList(ViewBag.CollegeEditStatus as System.Collections.IEnumerable, "collegestatusId", "name"),
+            "-- All Colleges --", new { id = "collegestatusId", @class = "width" })
+            </td>
+             <td>
+                   @Html.DropDownListFor(model => model.districtId,
+            new SelectList(ViewBag.Districts as System.Collections.IEnumerable, "id", "districtName"),
+            "-- All Districts --", new { id = "districtId", @class = "width" })
+           
+            </td>
+            <td>
+                 @Html.DropDownListFor(model => model.collegeTypeId,
+            new SelectList(ViewBag.CollegeType as System.Collections.IEnumerable, "id", "collegeType"),
+            "-- All CollegeTypes --", new { id = "collegeTypeId", @class = "width" })
+            </td>
+            <td><input type="submit" value="Search" /></td>
+            <td><input type="submit" value="Export" name="cmd" /></td>
+            <td>@Html.ActionLink("Back", "Admin", "Dashboard", null, new { @class = "create_button" })</td>
+        </tr>
+    </table>
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 20px; text-align: center;">S.No</th>
+                <th style="text-align: center;">College Code</th>
+                <th style="text-align: left;">College Name</th>
+                <th style="width: 150px;text-align: left;">Address</th>
+                <th style="text-align: left;">City</th>
+                <th style="text-align: center;">Pincode</th>                
+                <th class="ui-state-default" style="text-align: center;">Mobile</th>                
+                <th class="ui-state-default" style="width: 50px; text-align: center;">SendMail</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in ViewBag.collegesReport)
+            { 
+                <tr>
+                    <td style="text-align: center;">
+                        @(sno++)
+                    </td>
+                    <td style="text-align: center;">
+                        @item.collegeCode
+                    </td>
+                      <td style="text-align: left;">
+                        @item.collegeName
+                    </td>
+                    <td style="text-align: left;">
+                        @item.address
+                    </td>
+                    <td style="text-align: left;">
+                        @item.townorCity
+                    </td>
+                    <td style="text-align: center;">
+                        @item.pincode
+                    </td>
+                    <td style="text-align: center;">
+                        @item.mobile
+                    </td>
+                    <td style="text-align: center;" class=" ui-state-default">                        
+                         @Html.ActionLink("Mail", "SendMailToCollege","CollegesReport", new { id = UAAAS.Models.Utilities.EncryptString(@item.collegeid.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"])}, new { @class = "editDialog" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th style="">
+                    <input type="text" id="i-0" style="width: 30%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="">
+                    <input type="text" id="i-1" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left">
+                    <input type="text" id="i-3" style="width:90%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="">
+                    <input type="text" id="i-4" style="width: 85%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left">
+                    <input type="text" id="i-5" style="width: 85%; text-align: left;" class="search_init">               
+                <th class=" ui-state-default" style="">
+                    <input type="text" id="i-7" style="width: 90%; text-align: left;" class="search_init">
+                </th>            
+                  <th class=" ui-state-default" style="text-align: left">
+                    <input type="text" id="i-9" style="width: 85%; text-align: left;display: none" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+      <div id="dialog-edit" style="display: none">
+</div>
+}
+

@@ -1,0 +1,546 @@
+﻿@model UAAAS.Models.FacultyComplaintsClass
+@{
+    ViewBag.Title = "FacultyComplaintScreen";
+}
+<head>
+    <title></title>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+    <link href="~/Content/Teststyle.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("PreviewScreen *").attr("disabled", "disabled").off('click');
+
+            //get file size
+            function GetFileSize(fileid, title) {
+
+                try {
+                    var fileSize = 0;
+                    //for IE
+                    if ($.browser.msie) {
+                        //before making an object of ActiveXObject,
+                        //please make sure ActiveX is enabled in your IE browser
+                        var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                        var filePath = $("#" + fileid)[0].value;
+                        var objFile = objFSO.getFile(filePath);
+                        var fileSize = objFile.size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+                        //for FF, Safari, Opeara and Others
+                    else {
+                        fileSize = $("." + title)[0].files[0].size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+
+                    return fileSize;
+                } catch (e) {
+                }
+            }
+
+            //get file path from client system
+            function getNameFromPath(strFilepath) {
+                var objRE = new RegExp(/([^\/\\]+)$/);
+                var strName = objRE.exec(strFilepath);
+
+                if (strName == null) {
+                    return null;
+                }
+                else {
+                    return strName[0];
+                }
+            }
+
+            $("#complaintid").change(function () {
+                if ($("#complaintid").val() == "17") {
+                    $("#othersdiv").css({ "display": "block" });
+                    $("#otherscomplaint").addClass("required");
+                }
+                else {
+                    $("#othersdiv").css({ "display": "none" });
+                    $("#otherscomplaint").removeClass("required");
+                }
+                $("#CompType").text($("#complaintid option:selected").text());
+            });
+
+            $("#District").change(function () {
+                $("#disctrict").text($("#District option:selected").text());
+            });
+
+            $(".complaintFile").change(function () {
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetFileSize(file, "complaintFile");
+                    size = size / 1048576;
+                    if (size > 1) {
+                        alert("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+                        $(".complaintFile > span").text("");
+                    }
+                }
+            });
+
+            $("#btnpreview").click(function (e) {
+                debugger;
+                var fd = new FormData();
+                var files = $('input[type="file"]')[0].files[0];
+                fd.append('RegistrationNumber', $("#RegistrationNumber").val());
+                fd.append('Facultyid', $("#Facultyid").val());
+                fd.append('Facultyname', $("#Facultyname").val());
+                fd.append('Email', $("#Email").val());
+                fd.append('Moblie', $("#Moblie").val());
+                fd.append('FacultyAddress', $("#FacultyAddress").val());
+                fd.append('collegeId', $("#collegeId").val());
+                fd.append('complaintid', $("#complaintid").val());
+                var complaitntype = $("#complaintid option:selected").text();
+                fd.append('District', $("#District option:selected").text());
+                if (complaitntype == 'Others') {
+                    fd.append('otherscomplaint', $("#otherscomplaint").val());
+                }
+
+                fd.append('Facultycomplaintdate', $("#Facultycomplaintdate").val());
+                fd.append('ComplaintDesc', $("#ComplaintDesc").val());
+                fd.append('FacultycomplaintFile', files);
+                fd.append('text', 'AjaxCall');
+
+                var fullame = $("#Facultyname").val();
+                $("#fregno").text(fullame);
+                $("#fname").text($("#RegistrationNumber").val());
+                $("#femail").text($("#Email").val());
+                $("#fmobile").text($("#Moblie").val());
+                $("#faddress").text($("#FacultyAddress").val());
+                $("#fdistrict").text($("#District option:selected").text());
+                $("#fctype").text($("#complaintid option:selected").text());
+
+                if ($("#complaintid option:selected").text() == 'Others') {
+                    $("#hideotherctype").css("display", "block");
+                    $("#foctype").text($("#otherscomplaint").val());
+                }
+                else {
+                    $("#hideotherctype").css("display", "none");
+                }
+
+                $("#fcdate").text($("#Facultycomplaintdate").val());
+                $("#fcollege").text($("#collegeId option:selected").text());
+                $("#fcdesc").text($("#ComplaintDesc").val());
+
+                $(".PreviewDiv").dialog({
+                    title: 'Please Preview',
+                    autoOpen: false,
+                    resizable: false,
+                    height: 500,
+                    width: 700,
+                    show: { effect: 'drop', direction: "up" },
+                    modal: true,
+                    draggable: true,
+                    buttons: {
+                        //"Yes": function () {
+                        //    $.ajax({
+                        //        type: "POST",
+                        //        url: "/FacultyComplaints/FacultyComplaintScreen?ajaxcall=AjaxCall",
+                        //        data: fd,
+                        //        processData: false,
+                        //        contentType: false,
+                        //        dataType: "json",
+                        //        success: function (result) {
+                        //            debugger;
+                        //            if (result.result != null) {
+                        //                $(this).dialog("close");
+                        //                //alert(result.result);
+                        //                window.location.href = "/FacultyComplaints/FacultyComplaintScreen"
+                        //            }
+                        //            else if (result.error != null) {
+                        //                $(this).dialog("close");
+                        //                alert(result.error);
+                        //                window.location.href = "/FacultyComplaints/FacultyComplaintScreen"
+                        //            }
+                        //        },
+                        //        error: function (error) {
+                        //            alert(error);
+                        //            $(this).dialog("close");
+                        //        }
+                        //    });
+                        //},
+                        //"No": function () {
+                        //    $(this).dialog("close");
+                        //}
+                    }
+                }).css("font-size", "15px");
+
+                $(".PreviewDiv").dialog('open');
+                return false;
+            });
+
+            //$("#ComplaintDesc").keyup(function () {
+            //    $("#CompDesc").text($(this).val());
+            //});
+
+            //$("#FacultyAddress").keyup(function (event) {
+            //    var keycode = (event.keyCode ? event.keyCode : event.which);
+            //    if (keycode == '13') {
+            //        var enteredaddress = $(this).val();
+            //        var lastChar = enteredaddress[enteredaddress.length - 1];
+            //        enteredaddress = enteredaddress.slice(0, -1);
+            //        enteredaddress = enteredaddress + ' ';
+            //        enteredaddress = enteredaddress.replace(' ', '<br>');
+            //        $('#Faddress').html(enteredaddress);
+            //    }
+            //    else {
+            //        var enteredaddress = $(this).val();
+            //        var secondlastChar = enteredaddress[enteredaddress.length - 2];
+            //        if (secondlastChar)
+            //        {
+
+            //        }
+            //        var lastChar = enteredaddress[enteredaddress.length - 1];
+
+            //        enteredaddress = enteredaddress.slice(0, -2);
+
+            //        enteredaddress = enteredaddress + ' ';
+            //        enteredaddress = enteredaddress + lastChar;
+            //        var ddddd = enteredaddress.split(' ');
+            //        enteredaddress = enteredaddress.replace(' ', '<br>');
+            //        $('#Faddress').html(enteredaddress);
+            //    }
+            //});
+        });
+    </script>
+
+    <style type="text/css">
+        #ui-datepicker-div {
+            width: 300px;
+            font-size: 10px;
+        }
+
+        .ui-dialog-buttonset {
+            width: 130px;
+            font-size: 15px;
+        }
+
+        .ui-dialog-titlebar {
+            font-size: 15px;
+        }
+    </style>
+
+</head>
+<div style="float:right;">
+    @Html.ActionLink("Track Grievance", "FacultyTrackComplaint", "FacultyComplaints", new { @class = "create_button", @style = "" }) &nbsp;&nbsp;&nbsp;&nbsp;   
+</div>
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success" style="background-color: gold; border: 1px solid #f49820;">
+        <p style="text-align: center;font-weight: bold"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error" style="background-color: red; border: 1px solid #f49820;">
+        <p style="text-align: center;font-weight: bold;color:white;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+@using (Html.BeginForm("FacultyComplaintScreen", "FacultyComplaints", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table width="100%">
+        <tr>
+            <td>
+                <div class="wrapper" style="height:600px;">
+                    <div id="ctl00_div_registration" class="second_band_internal" style="display:inline">
+                        <div class="lft"><img src="https://www.antiragging.in/site/images/abut_lft_internal.jpg" width="9" height="44"></div>
+                        <div class="rght"><img src="https://www.antiragging.in/site/images/abut_rgt_internal.jpg" width="9" height="44"></div>
+                        <div class="heading_internal">Faculty Grievance Declaration Form</div>
+                    </div>
+                    <div class="third_outer_wrap">
+                        <div class="third_outer_internal">
+                            <div style="padding-left: 0px">
+                                <div id="mydiv" style="opacity: 0.1;">
+                                </div>
+                                <table cellpadding="0" cellspacing="0" width="100%" align="center" class="form" style="border: 1px solid #A4C7E7;">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2" align="center" class="heading">
+                                                <div style="font-size: 16px; font-weight: bold; font-family: arial; text-align: center;padding-top: 15px;">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 490px;">
+                                                <b><span>Faculty Registration Number</span></b>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.RegistrationNumber)
+                                                @Html.HiddenFor(model => model.RegistrationNumber)
+                                                @Html.HiddenFor(model => model.Facultyid)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 490px;">
+                                                <b><span>Name of the Faculty</span></b>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.Facultyname)
+                                                @Html.HiddenFor(model => model.Facultyname)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 490px;">
+                                                <b><span>Faculty Mobile</span></b>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.Moblie)
+                                                @Html.HiddenFor(model => model.Moblie)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 490px;">
+                                                <b><span>Faculty Email</span></b>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.Email)
+                                                @Html.HiddenFor(model => model.Email)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 490px;">
+                                                <b><span>College</span></b>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(model => model.collegeId, new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"), "---Select---", new { @class = "", @style = "width:448px;" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 490px;">
+                                                <b><span>Grievance Type</span></b>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(model => model.complaintid, new SelectList(ViewBag.Complaints as System.Collections.IEnumerable, "id", "complaintType"), "---Select---", new { @class = "", @style = "width:448px;" })
+                                                <div id="othersdiv" style="display:none;"><br /> @Html.TextBoxFor(model => model.otherscomplaint, new { })</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 490px;">
+                                                <b><span>Grievance Date</span></b>
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(model => model.Facultycomplaintdate, new { @class = "", @disabled = "disabled" })
+                                                @Html.HiddenFor(model => model.Facultycomplaintdate)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 490px;">
+                                                <b><span>Grievance Supporting Document</span></b>
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(model => model.FacultycomplaintFile, new { type = "file", @class = "complaintFile required", @style = "vertical-align: top;" }) &nbsp;&nbsp;<span style="color: red;"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 490px;">
+                                                <b><span>Grievance Description</span></b>
+                                            </td>
+                                            <td>
+                                                @Html.TextAreaFor(model => model.ComplaintDesc, new { @maxlength = "500" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 490px;">
+                                                <b><span>Address</span></b>
+                                            </td>
+                                            <td>
+                                                @Html.TextAreaFor(model => model.FacultyAddress, new { @maxlength = "500" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 490px;">
+                                                <b><span>District</span></b>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(model => model.District, new SelectList(ViewBag.Disctricts as System.Collections.IEnumerable, "disctrictID", "disctrictName"), "---Select---", new { @class = "" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align: right">
+                                                <button id="btnpreview">Preview</button>
+                                                <input type="submit" value="Save" id="btnSave" name="cmd" class="btnclass" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            @*<td width="40%">
+                    <div id="PreviewScreen" style="border:1px solid black;height:580px;width:570px;font-weight:bold;">
+                        <div style="padding:17px 10px 10px 20px;">
+                            <div style="text-align:center;">
+                                <p style="font-size:15px;"><b><u>Preview</u></b></p>
+                            </div>
+                            <br />
+                            <div>
+                                <p>
+                                    To <br />
+                                    The Register<br />
+                                    Jawaharlal Nehru Technological University Hyderabad<br/>
+                                    Directorate of Affiliations & Academic Audit <br/>
+                                    Kukatpally, Hyderabad – 500 085, Telangana, India
+                                </p>
+                            </div>
+                            <br/>
+                            <p>Sir,</p>
+                            <div style="padding-left:50px;padding-top:7px;">
+                                <p>Sub : JNTUH - UAAAC - <span id="CompType"></span> -Reg.</p>
+                            </div>
+                            <br /><br />
+                            <div style="width:510px;text-align:justify;">
+                                <p style="width:520px;">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span id="CompDesc"></span>
+                                </p>
+                            </div>
+                            <br /><br />
+                            <div>
+                                <p id="Faddress">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </td>*@
+        </tr>
+    </table>
+
+
+}
+
+<div class="PreviewDiv" style="display:none;">
+    <table cellpadding="0" cellspacing="0" width="100%" align="center" style="line-height: 27px;">
+        <tbody>
+            <tr>
+                <td style="width: 290px;">
+                    <b><span>Registration Number</span></b>
+                </td>
+                <td>:</td>
+                <td>
+                    <span id="fregno"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 290px;">
+                    <b><span>Name</span></b>
+                </td>
+                <td>:</td>
+                <td>
+                    <span id="fname"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 290px;">
+                    <b><span>Email</span></b>
+                </td>
+                <td>:</td>
+                <td>
+                    <span id="femail"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 290px;">
+                    <b><span>Mobile</span></b>
+                </td>
+                <td>:</td>
+                <td>
+                    <span id="fmobile"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 290px;">
+                    <b><span>Address</span></b>
+                </td>
+                <td>:</td>
+                <td style="border: 1px solid black;padding: 3px;height: auto;text-align: justify;">
+                    <span id="faddress"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 290px;">
+                    <b><span>District</span></b>
+                </td>
+                <td>:</td>
+                <td>
+                    <span id="fdistrict"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 290px;">
+                    <b><span>College</span></b>
+                </td>
+                <td>:</td>
+                <td>
+                    <span id="fcollege"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 290px;">
+                    <b><span>Grievance Type</span></b>
+                </td>
+                <td>:</td>
+                <td>
+                    <span id="fctype"></span>
+                </td>
+            </tr>
+            <tr id="hideotherctype" style="display:none;">
+                <td>
+                    <b><span>Others Type</span></b>
+                </td>
+                <td>:</td>
+                <td>
+                    <span id="foctype"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 290px;">
+                    <b><span>Grievance Date</span></b>
+                </td>
+                <td>:</td>
+                <td>
+                    <span id="fcdate"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 290px;">
+                    <b><span>Grievance Description</span></b>
+                </td>
+                <td>:</td>
+                <td style="border: 1px solid black;padding: 3px;height: auto;text-align: justify;">
+                    <span id="fcdesc"></span>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+
+
+
+

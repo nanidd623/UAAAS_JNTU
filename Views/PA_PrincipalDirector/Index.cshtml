@@ -1,0 +1,273 @@
+﻿@using UAAAS.Models
+@model PrincipalDirector
+@{
+    ViewBag.Title = "Succession List Of Principals";
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+}
+<div>
+    @if (TempData["SUCCESS"] != null)
+    {
+        <div class="success" style="background-color: gold; border: 1px solid #f49820; height: 12px; text-align: center;">
+            <p style="text-align: center; font-weight: bold; margin-top: -3px;"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+        </div>
+    }
+    else if (TempData["ERROR"] != null)
+    {
+        <div class="error" style="background-color: red; border: 1px solid #f49820; height: 12px; text-align: center;">
+            <p style="text-align: center; font-weight: bold; color: white; margin-top: -3px;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+        </div>
+    }
+</div>
+
+<h2>Succession List Of Principals</h2>
+@if (ViewBag.IsEditable == true)
+{
+    <p class="create_link_right">
+        <a href="/PA_PrincipalDirector/AddPrincipal" class="create_button AddDialog">Add Previous Principal Details</a>
+    </p>
+}
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        @if (ViewBag.prinipalReglst.Count > 0)
+        {
+            <div>
+                <table class="webGrid" style="background: whitesmoke;">
+                    <thead>
+                        <tr class="col1">
+                            <th>S.No</th>
+                            <th>Academic Year</th>
+                            <th>Registration Number</th>
+                            <th>Name</th>
+                            <th>Date of Appointment</th>
+                            <th>Date of Resignation</th>
+                            <th>Photo</th>
+                            @if (ViewBag.IsEditable == true)
+                            {
+                                <th>Action</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pay in ((List<PrincipalDirector>)ViewBag.prinipalReglst).Select((value, i) => new { i = i + 1, value }))
+                        {
+                            <tr class="col2">
+                                <td>@pay.i </td>
+                                <td>@pay.value.AcademicYear</td>
+                                <td>@pay.value.RegistrationNumber</td>
+                                <td>@pay.value.firstName @pay.value.lastName</td>
+                                <td>@pay.value.dateOfAppointment</td>
+                                <td>@pay.value.PrincipaldateOfreliving</td>
+                                <td>
+                                    @if (@pay.value.PrincipalPhoto != null)
+                                    {
+                                        <a href="../Content/Upload/Faculty/Photos/@pay.value.PrincipalPhoto.Replace("~", "")" target="_blank">
+                                            <img src="../Content/Upload/Faculty/Photos/@pay.value.PrincipalPhoto.Replace("~", "")" style="height: 60px;" />
+                                        </a>
+                                    }
+                                </td>
+                                @if (ViewBag.IsEditable == true)
+                                {
+                                    <td style="vertical-align: middle;">
+                                        @*<a href="/PA_PrincipalDirector/DeletePrincipal?Id=@pay.value.id" class="create_button"><span style="color: white;">Delete</span></a>*@
+                                        @Html.ActionLink("Delete", "DeletePrincipal", "PA_PrincipalDirector", new { @id = @pay.value.id }, new { @style = "color:white;", @class = "confirmDirDialog delete_button" })
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.submit').click(function (e) {
+            if ($('#department').val() == '') {
+                alert("Please select department");
+                return false;
+            } else {
+                return true;
+            }
+            checkDateDifference($('#Item1_dateOfAppointment').val(), $('#Item1_dateOfResignation').val(), "Principal Date of Appointment should not be grater than (or) equal to Date Of Resignation");
+            checkDateDifference($('#Item2_dateOfAppointment').val(), $('#Item2_dateOfResignation').val(), "Director Date of Appointment should not be grater than (or) equal to Date Of Resignation");
+        });
+        //Edit
+        $(".EditDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-edit").dialog({
+                title: 'Edit Principal',
+                autoOpen: false,
+                resizable: false,
+                height: 520,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/PrincipalDirector/View";
+                }
+            });
+            $("#dialog-edit").dialog('open');
+            return false;
+        });
+
+        //Edit
+        $(".AddDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-add").dialog({
+                title: 'Add Previous Year Principal',
+                autoOpen: false,
+                resizable: false,
+                height: 520,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/PA_PrincipalDirector/Index";
+                }
+            });
+            $("#dialog-add").dialog('open');
+            return false;
+        });
+
+        // Delete Confirmation
+        $(".confirmDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Principal',
+                autoOpen: false,
+                resizable: false,
+                height: 520,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/PrincipalDirector/View";
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+    });
+
+    //Direction Delete Confirmation
+    $(".confirmDirDialog").live("click", function (e) {
+        var url = $(this).attr('href');
+        $("#dialog-confirmDir").dialog({
+            title: "Delete",
+            autoOpen: false,
+            resizable: false,
+            height: 170,
+            width: 350,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            buttons: {
+                "Yes": function () {
+                    $(this).dialog("close");
+                    window.location = url;
+                },
+                "No": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $("#dialog-confirmDir").dialog('open');
+        return false;
+    });
+
+    function checkDateDifference(startDate, endDate, alertString) {
+        if ((startDate != null && startDate != '') && (endDate != null && endDate != '')) {
+            startDate = $.datepicker.parseDate('dd/mm/yy', startDate);
+            endDate = $.datepicker.parseDate('dd/mm/yy', endDate);
+            var difference = (endDate - startDate) / (86400000);
+            if (difference < 0) {
+                alert(alertString);
+                dateFlag = 0;
+                return false;
+            } else {
+                dateFlag = 1;
+                return true;
+            }
+        } else {
+            dateFlag = 1;
+            return true;
+        }
+    }
+
+    function ValidateDirector() {
+        var isValid = true;
+        var firstName = $(".firstName").val();
+        var surName = $(".surName").val();
+        var dateOfappointment = $(".dateOfappointment").val();
+        var dateOfBirth = $(".dateOfBirth").val();
+        var fax = $(".fax").val();
+        var landLine = $(".landLine").val();
+        var mobile = $(".mobile").val();
+        var email = $(".email").val();
+        var qualificationtrue = $(".qualificationtrue").is(':checked');
+        var qualificationfalse = $(".qualificationfalse").is(':checked');
+        if (firstName != '') {
+            if (surName != '' && dateOfappointment != '' && dateOfBirth != '' && fax != '' && landLine != '' && mobile != '' && email != '' && (qualificationtrue != false || qualificationfalse != false)) {
+                isValid = true;
+            } else {
+                alert("please enter director details");
+                isValid = false;
+            }
+        }
+        return isValid;
+    }
+
+    function printdiv(printpage) {
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+            "<html><head><title></title></head><body>" +
+            divElements.fontsize(1) + "</body>";
+        //Print Page
+        window.print();
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        return false;
+    }
+</script>
+<div id="dialog-confirm" style="display: none"></div>
+<div id="dialog-edit" style="display: none"></div>
+<div id="dialog-add" style="display: none"></div>
+<div id="dialog-confirmDir" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>

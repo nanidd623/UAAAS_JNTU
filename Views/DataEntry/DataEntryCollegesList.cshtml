@@ -1,0 +1,277 @@
+﻿@model IEnumerable<UAAAS.Models.DataEntryColleges>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "DataEntryCollegesList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int sno = 1;
+}
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "bStateSave": false,
+                              "aoColumns": [ { "bSortable": false, "bSearchable": true }, null, null, null ]
+                           });
+}
+<h2>DataEntry CollegesList</h2>
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit DataEntryList',
+            autoOpen: false,
+            resizable: false,
+            height: 300,
+            width: 650,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add DataEntryList'
+            });
+            url = $("#openDialog").attr('href');
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        //$('.full_table').find('tr').click(function () {
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".display").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit DataEntryList'
+            });
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete DataEntryList',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Anti Ragging Committee',
+                autoOpen: false,
+                resizable: false,
+                height: 200,
+                width: 400,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+</script>
+@using (Html.BeginForm())
+{
+    <table style="width: 100%">
+        <tr>
+            <td class="create_link_right">
+                @Html.ActionLink("AddEditRecord", "DataEntryCreateCollegesList", "DataEntry", new { @id = "openDialog", @class = "create_button" })
+            </td>
+        </tr>
+    </table>
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No
+                </th>
+                <th style="width: 150px; text-align: left;">User
+                </th>
+                <th style="width: 250px; text-align: left;">College
+                </th>
+                <th class="ui-state-default" style="width: 70px; text-align: center;">Status
+                </th>
+                <th class="ui-state-default" style="width: 100px; text-align: center;">Work Status
+                </th>
+                <th class="ui-state-default" colspan="2"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in ViewBag.DataEntryList as List<UAAAS.Models.DataEntryCollegesList>)
+            {                
+                <tr>
+                    <td style="width: 50px; text-align: center;">
+                        @(sno++)
+                    </td>
+                    <td>
+                        @item.userName
+                    </td>
+                    <td>
+                        @item.collegeName
+                    </td>
+                    <td style="text-align: center;">
+                        @if (@item.isActive == true)
+                        {
+                            @*<span>Yes</span>*@
+                            <img src="/Content/images/active.png" alt="JNTU Hyderabad Logo" />
+                        }
+                        else
+                        {
+                            @*<span>No</span>*@
+                            <img src="/Content/images/inactive.png" alt="JNTU Hyderabad Logo" />
+                        }
+                    </td>
+                    <td style="text-align: center;">
+                        @if (@item.isCompleted == true)
+                        {
+                            <span>Completed</span>
+                        }
+                        else
+                        {
+                            <span>Pending</span>
+                        }
+                    </td>                   
+                    <td style="width: 30px; text-align: center;">
+                        @Html.ActionLink("Edit", "DataEntryCreateCollegesList", "DataEntry", new { id = item.id }, new { @class = "editDialog edit_button" })
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+@*<table class="four_columns" style="width: 100%;">
+    <tr style="font-weight: bold;">
+        <td style="text-align: center;   width: 30px;" class="col11">SNo</td>
+        <td style="text-align: left;   width: 60px;" class="col11">User</td>
+        <td style="text-align: left; width: 120px;" class="col11">College</td>
+        <td style="text-align: center; width: 60px;" class="col11">Status</td>
+        <td style="text-align: center; width: 60px;" class="col11">Work Status</td>
+         <td style="text-align: center; width: 100px;" class="col11"></td>
+    </tr>
+    @foreach (var item in ViewBag.DataEntryList as List<UAAAS.Models.DataEntryCollegesList>)
+    {
+        <tr>
+            <td style="width: 30px; text-align: center;" class="col21">
+                @(sno++)
+            </td>
+            <td style="text-align: left; width: 60px" class="col21">
+                @item.userName
+            </td>          
+            <td style="text-align: left; width: 120px" class="col21">
+                @item.collegeName
+            </td>
+            <td style="text-align: center; width: 60px" class="col21">
+                 @if (@item.isActive == true)
+                        {
+                         
+                            <img src="/Content/images/active.png" alt="JNTU Hyderabad Logo" />
+                        }
+                        else
+                        {
+                          
+                            <img src="/Content/images/inactive.png" alt="JNTU Hyderabad Logo" />
+                        }
+            </td>
+            <td style="text-align: center; width: 60px" class="col21">
+                @if (@item.isCompleted == true)
+                {
+                    <span>Completed</span>
+                }
+                else
+                {
+                    <span>Pending</span>
+                }
+
+            </td>
+            <td style="text-align: center; width: 100px" class="col21">
+                @Html.ActionLink("Edit", "DataEntryCreateCollegesList", "DataEntry", new { id = item.id }, new { @class = "editDialog edit_button" })
+           
+          
+            </td>
+            <td hidden="hidden">@item.createdBy</td>
+            <td hidden="hidden">@item.createdon</td>
+            <td hidden="hidden">@item.id</td>
+        </tr>
+    }
+</table>*@
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+}
+

@@ -1,0 +1,254 @@
+﻿
+@model IList<UAAAS.Models.Lab>
+@using UAAAS.Models;
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "AutonomusCollegesIntakeWithLabsDetails";
+    //Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    //if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    //{
+    //    Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    //}
+    int count = 0;
+}
+
+<h2>AutonomusCollegesIntakeWithLabsDetails</h2>
+<p style="text-align:right">
+    @Html.ActionLink("Export", "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = Request.Params["specializationId"], collegeId = Request.Params["collegeId"], year = Request.Params["year"], semester = Request.Params["semester"], type = "Excel",DegreeIds = Request.Params["DegreeIds"] }, new { @class = "create_button" })
+</p>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url; var equipmentId;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Lab',
+            autoOpen: false,
+            resizable: false,
+            height: 720,
+            width: 740,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Lab'
+            });
+            url = $("#openDialog").attr('href');
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+
+        $('.webGrid').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr("id");
+            url = "/AllCollegesIntake/AutonomousAddEditRecord?id=" + url + "&eqpid=" + $(this).find(".editDialog").attr("eqpid") + "&eqpno=" + $(this).find(".editDialog").attr("eqpno") + "&collegeId=" + $(this).find(".editDialog").attr("collegeId");
+           // alert(url);
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit Lab'
+            });
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+            var url = $(this).attr('id');
+            url = "/AllCollegesIntake/AutonomousDeleteRecord?id=" + url;
+            //alert(url);
+            $("#dialog-confirm").dialog({
+                title: 'Delete Lab',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'Lab Details',
+                autoOpen: false,
+                resizable: false,
+                height: 620,
+                width: 720,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+</script>
+
+@using (Html.BeginForm())
+{
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <br />
+
+    <table class="webGrid" style="width: 100%;">
+        <tr style="font-weight: bold;" class="gridHeader">
+            <td style="text-align: center; width: 5%;">S.No</td>
+            @*<td style="text-align: center; width: 5%;">CC</td>*@
+            <td style="text-align: left; width: 10%;">Degree</td>
+            <td style="text-align: left; width: 10%;">Department</td>
+            <td style="text-align: left;">Specialization</td>
+            <td style="text-align: left;">Semester</td>
+            <td style="text-align: center; width: 5%;">year</td>
+            <td style="text-align: left;">Lab Code</td>
+            <td style="text-align: left;">Lab Name</td>
+            <td style="text-align: left; width: 20%;">Equipment Name</td>
+            <td style="text-align: left; width: 10%;">Available</td>
+        </tr>
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            <tr>
+                <td style="text-align: center; width: 5%; background-color: #FCF1D1" class="col1">
+                    @Html.HiddenFor(m => m[i].id)
+                    @Html.HiddenFor(m => m[i].degreeId)
+                    @Html.HiddenFor(m => m[i].departmentId)
+                    @Html.HiddenFor(m => m[i].specializationId)
+                    @Html.HiddenFor(m => m[i].year)
+                    @Html.HiddenFor(m => m[i].LabName)
+                    @Html.HiddenFor(m => m[i].EquipmentName)
+                    @Html.HiddenFor(m => m[i].EquipmentNo)
+                    @(i + 1)
+                </td>
+                @*<td style="text-align: center;background-color: #FCF1D1">@Html.DisplayFor(m => m[i].RandomCode)</td>*@
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].degree)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].department)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].specializationName)</td>
+                @if (Model[i].Semester != 0)
+                {
+                    <td style="text-align: center;background-color: #FCF1D1">@Html.DisplayFor(m => m[i].Semester)</td>
+                }
+                else
+                {
+                    <td style="background-color: #FCF1D1"></td>
+                }
+                @if (Model[i].year != 0)
+                {
+                    <td style="text-align: center;background-color: #FCF1D1">@Html.DisplayFor(m => m[i].year)</td>
+                }
+                else
+                {
+                    <td style="background-color: #FCF1D1"></td>
+                }
+                <td style="text-align: center;background-color: #FCF1D1">@Html.DisplayFor(m => m[i].Labcode)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].LabName)</td>
+                <td style="background-color: #FCF1D1">@Html.DisplayFor(m => m[i].EquipmentName)</td>
+                @{
+                var eqid = Model[i].EquipmentID;
+                var id = Model[i].id;
+                var EquipmentNo = Model[i].EquipmentNo;
+                var collegeId = Model[i].collegeId;
+                count = db.jntuh_college_laboratories.Where(l => l.id == id && l.EquipmentNo == EquipmentNo && l.CollegeID == collegeId).Select(l => l.id).Count();
+                }
+
+                @if (count > 0)
+                {
+                    <td style="background-color: lightgreen;text-align:center">
+                        @Html.RadioButton("Availability" + i, true, true, new { id = Model[i].id, eqpid = "undefined", eqpno = Model[i].EquipmentNo, collegeId = Model[i].collegeId, @class = "editDialog" }) Edit &nbsp;&nbsp;
+                        @Html.RadioButton("Availability" + i, false, new { id = Model[i].id, eqpid = "undefined", eqpno = Model[i].EquipmentNo, collegeId = Model[i].collegeId, @class = "confirmDialog delete1" }) No
+                    </td>
+
+                }
+                else
+                {
+                    <td style="background-color: #f54141;text-align:center">
+                        @Html.RadioButton("Availability" + i, true, new { eqpid = Model[i].EquipmentID, id = DBNull.Value, eqpno = Model[i].EquipmentNo, collegeId = Model[i].collegeId, @class = "editDialog" }) Edit &nbsp;&nbsp;
+                        @Html.RadioButton("Availability" + i, false, true, new { eqpid = Model[i].EquipmentID, id = DBNull.Value, eqpno = Model[i].EquipmentNo, collegeId = Model[i].collegeId, @class = "confirmDialog delete1" }) No
+                    </td>
+                }
+
+            </tr>
+        }
+    </table>
+
+    if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }
+
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete this lab related details ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+}
+

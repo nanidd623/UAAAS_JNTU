@@ -1,0 +1,78 @@
+﻿@using UAAAS.Models;
+@model IList<UAAAS.Models.Governingbody>
+@{
+   
+
+}
+@using (Html.BeginForm())
+{
+    int count = 0;
+    <table border="1" style="width: 100%">
+
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    S.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Code
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Name
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Name of the Governing Body Member
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Governing Body Member Designation
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Parent Organization where working
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Designation of the member where working at parent Organization
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Date of Appointment (MM/DD/YYYY)
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Appointment Order / Proceedings	
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center; vertical-align: top">
+                        @(count = count + 1)
+                    </td>
+                    <th style="text-align: center; vertical-align: top">
+                        @item.Collegecode
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.Collegename
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.NameoftheGoverningBodyMember
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.GoverningBodyMemberDesignation
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.ParentOrganizationwhereworking
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.DesignationofthememberwhereworkingatparentOrganization
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.DateofappointmentasGoverningBodymember
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.SupportingDocumentfile
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

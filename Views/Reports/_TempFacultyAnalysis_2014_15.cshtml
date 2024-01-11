@@ -1,0 +1,117 @@
+﻿@model IList<UAAAS.Models.TempFacultyAnalysis_2014_15> 
+@{
+
+    int sno = 1;
+    ViewBag.Title = "Faculty Analasys";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+<h2>Faculty Analasys</h2>
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 500000,
+                              "bStateSave": false,
+                                "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ]
+                           });
+}
+<p class="create_link_right">
+    <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+</p>
+<script type="text/javascript">
+    function printdiv(printpage) {
+        //Get the HTML of div
+        $(".top").hide();
+        $(".bottom").hide();
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".top").show();
+        $(".bottom").show();
+        return false;
+    }
+</script>
+<div id="div_print">
+    <table id="example" class="display">
+        <thead>
+            <tr>
+
+                <th style="text-align: center; vertical-align: top;">S.No</th>
+                <th style="text-align: center; vertical-align: top;">Code</th>
+                <th style="text-align: left; vertical-align: top;">College Name</th>
+                <th style="text-align: left; vertical-align: top;" class="ui-state-default">FirstName</th>
+                <th style="text-align: left; vertical-align: top;" class="ui-state-default">LastName</th>
+                <th style="text-align: left; vertical-align: top;" class="ui-state-default">Surname</th>
+                <th style="text-align: left; vertical-align: top;" class="ui-state-default">Father</th>                
+                <th style="text-align: left; vertical-align: top;" class="ui-state-default">DOA</th>
+                <th style="text-align: left; vertical-align: top;" class="ui-state-default">DateOfBirth</th>
+                <th style="text-align: left; vertical-align: top;" class="ui-state-default">Faculty Shown in Other Colleges</th>
+                <th style="text-align: center; vertical-align: top;" class="ui-state-default">photo</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            { 
+                <tr>
+                    <td style="text-align: center; vertical-align: top;">
+                        @(sno++)
+                    </td>
+                    <td style="text-align: center; vertical-align: top;">
+                        @item.Code
+                    </td>
+                    <td style="text-align: left; vertical-align: top;">
+                        @item.CollegeName
+                    </td>
+                    <td style="text-align: left; vertical-align: top;">
+                        @item.FirstName
+                    </td>
+                    <td style="text-align: left; vertical-align: top;">
+                        @item.LastName
+                    </td>
+                    <td style="text-align: left; vertical-align: top;">
+                        @item.Surname
+                    </td>
+                    <td style="text-align: left; vertical-align: top;">
+                        @item.Father
+                    </td>              
+                    <td style="text-align: left; vertical-align: top;">
+                        @item.DateOfAppointment
+                    </td>
+                    <td style="text-align: left; vertical-align: top;">
+                        @item.DateOfBirth
+                    </td>
+                    <td style="text-align: left; vertical-align: top;">
+                        @item.facultyinothercollege
+                    </td>
+                    <td style="text-align: center; vertical-align: top;">
+                        @if (@item.photo != null)
+                        {
+                            <img src="@item.photo.Replace("~", "")" style="width: 50px;" />                    
+                        }
+                        else
+                        {
+                            <img src="" style="width: 100px;" />
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+
+

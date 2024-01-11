@@ -1,0 +1,41 @@
+﻿@model UAAAS.Models.OtherCollegesSameSociety
+@{
+    ViewBag.Title = "OtherCollegesSameSocietyDetails";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+}
+<h2>OtherCollegesSameSocietyDetails</h2>
+
+<div class="details_table">
+
+    <div class="display-label">College Name & Address</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.collegeName)
+    </div>
+      <div class="display-label">Year Of Establishment(YYYY)</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.yearOfEstablishment)
+    </div>
+       <div class="display-label">College Location</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.collegeLocation)
+    </div>
+
+    <div class="display-label">Affiliated University</div>
+    <div class="display-field">
+        @if (Model.jntuh_university.universityName.Equals("Other"))
+        {
+            @Html.DisplayFor(model => model.otherUniversityName)
+        }
+        else
+        {
+            @Html.DisplayFor(model => model.jntuh_university.universityName)
+        }
+    </div>
+
+</div>
+
+

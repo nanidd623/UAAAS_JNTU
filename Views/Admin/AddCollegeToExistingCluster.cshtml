@@ -1,0 +1,37 @@
+﻿@model UAAAS.Models.ClusterScheduleEmails
+@using UAAAS.Models;
+@{  
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "Add College";
+}
+@using (Html.BeginForm())
+{    
+    <div class="details_table">
+        <div class="editor-label">
+            <span>Cluster</span>
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.cluster)
+            @Html.HiddenFor(model => model.cluster)
+        </div>
+
+        <div class="editor-label">
+            <span>College</span>
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.collegeId, new SelectList(@db.jntuh_college.Where(c => c.isActive == true).Select(c => new { Text = c.collegeCode + "-" + c.collegeName, value = c.id }).OrderBy(c => c.Text).ToList()
+                                   as System.Collections.IEnumerable, "Value", "Text"),
+                                   "-- Select --", new { id = "cluster" ,@style="width:385px"}
+                                )
+            @*@Html.DropDownListFor(model => model.collegeId,
+            new SelectList(ViewBag.colleges as System.Collections.IEnumerable, "Text", "Value"),
+            "-- Select --", new { id = "Colleges" })*@
+
+        </div>
+        <div class="editor-field last-row" style="text-align: center">
+            <p>
+                <input type="submit" value="Add" name="cmd" />
+            </p>
+        </div>
+    </div>
+}

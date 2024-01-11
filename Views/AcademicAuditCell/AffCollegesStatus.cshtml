@@ -1,0 +1,143 @@
+﻿@model UAAAS.Controllers.AffiliatedClgsStats
+@{
+    ViewBag.Title = "Status of Affiliated Colleges";
+    Layout = "~/Views/Shared/_AcademicAuditCellLayoutPage1.cshtml";
+    var index = 1;
+    var clgindex = 1;
+    string[] courses = { "Engineering", "Pharmacy", "Standalone MBA/MCA", "Total" };
+}
+
+<!DOCTYPE html>
+<html>
+<body>
+    <h2> Details of JNTUH Affiliated Colleges granted Affiliation</h2>
+    <table class="webGrid" style="width:100%;margin:auto">
+        <thead class="col1">
+            <tr>
+                <th style="width: 50px; text-align: center;">
+                    S.No
+                </th>
+                <th style="text-align: left;width : 210px;">
+                    Degree
+                </th>
+                <th style="text-align: right;">
+                    @ViewBag.AY1
+                </th>
+                <th style="text-align: right;">
+                    @ViewBag.AY2
+                </th>
+                <th style="text-align: right;">
+                    @ViewBag.AY3
+                </th>
+                <th style="text-align: right;">
+                    @ViewBag.AY4
+                </th>
+                <th style="text-align: right;">
+                    @ViewBag.AY5
+                </th>
+            </tr>
+        </thead>
+        @foreach (var item in courses)
+        {
+            <tbody class="col2">
+                <tr>
+                    @if (item != "Total")
+                    {
+                        <td style="width: 50px; text-align: center;">
+                            @(clgindex++)
+                        </td>
+                        <td style="text-align: left;">
+                            @item
+                        </td>
+                    }
+                    else
+                    {
+                        <td colspan="2" style="text-align: center;">
+                            <b>@item</b>
+                        </td>
+                    }
+
+                    @for (int i = 0; i <= 4; i++)
+                    {
+                        if (i == 0 && item != "Total")
+                        {
+                            <td style="text-align: right;">@Model.degreewiseTotalColleges.Where(d => d.courseName == item && d.academicYearId == ViewBag.AcademicYear1).FirstOrDefault().collgesCount</td>
+                        }
+                        else if (i == 1 && item != "Total")
+                        {
+                            <td style="text-align: right;">@Model.degreewiseTotalColleges.Where(d => d.courseName == item && d.academicYearId == ViewBag.AcademicYear2).FirstOrDefault().collgesCount</td>
+                        }
+                        else if (i == 2 && item != "Total")
+                        {
+                            <td style="text-align: right;">@Model.degreewiseTotalColleges.Where(d => d.courseName == item && d.academicYearId == ViewBag.AcademicYear3).FirstOrDefault().collgesCount</td>
+                        }
+                        else if (i == 3 && item != "Total")
+                        {
+                            <td style="text-align: right;">@Model.degreewiseTotalColleges.Where(d => d.courseName == item && d.academicYearId == ViewBag.AcademicYear4).FirstOrDefault().collgesCount</td>
+                        }
+                        else if (i == 4 && item != "Total")
+                        {
+                            <td style="text-align: right;">@Model.degreewiseTotalColleges.Where(d => d.courseName == item && d.academicYearId == ViewBag.AcademicYear5).FirstOrDefault().collgesCount</td>
+                        }
+                        else if (i == 4 && item == "Total")
+                        {
+                            <td style="text-align: right;"><b>@Model.degreewiseTotalColleges.Where(d => d.courseName == item && d.academicYearId == ViewBag.AcademicYear1).LastOrDefault().totalCollges</b></td>
+                            <td style="text-align: right;"><b>@Model.degreewiseTotalColleges.Where(d => d.courseName == item && d.academicYearId == ViewBag.AcademicYear2).LastOrDefault().totalCollges</b></td>
+                            <td style="text-align: right;"><b>@Model.degreewiseTotalColleges.Where(d => d.courseName == item && d.academicYearId == ViewBag.AcademicYear3).LastOrDefault().totalCollges</b></td>
+                            <td style="text-align: right;"><b>@Model.degreewiseTotalColleges.Where(d => d.courseName == item && d.academicYearId == ViewBag.AcademicYear4).LastOrDefault().totalCollges</b></td>
+                            <td style="text-align: right;"><b>@Model.degreewiseTotalColleges.Where(d => d.courseName == item && d.academicYearId == ViewBag.AcademicYear5).LastOrDefault().totalCollges</b></td>
+                        }
+                    }
+                </tr>
+            </tbody>
+        }
+    </table>
+    <br /><br />
+    <h2> Details of Courses and Number of Seats in JNTUH Affiliated Colleges</h2>
+    <table class="webGrid" style="width:100%;margin:auto">
+        <thead class="col1">
+            <tr>
+                <th style="text-align: center;">S.No</th>
+                <th style="text-align: left;">Program</th>
+                <th style="text-align: right;">@ViewBag.AY1</th>
+                <th style="text-align: right;">@ViewBag.AY2</th>
+                <th style="text-align: right;">@ViewBag.AY3</th>
+                <th style="text-align: right;">@ViewBag.AY4</th>
+                <th style="text-align: right;">@ViewBag.AY5</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model.degreewiseLst)
+        {
+            <tbody class="col2">
+                <tr>
+                    <td style="width: 50px; text-align: center;">@(index++)</td>
+                    <td>@item.degree</td>
+                    @for (int i = 0; i <= 4; i++)
+                    {
+                        if (i == 0)
+                        {
+                            <td style="text-align: right;">@Model.degreewiseTotalIntake1.Where(d => d.degreeId == item.Id && d.academicYearId == ViewBag.AcademicYear1).FirstOrDefault().approvedIntake</td>
+                        }
+                        else if (i == 1)
+                        {
+                            <td style="text-align: right;">@Model.degreewiseTotalIntake1.Where(d => d.degreeId == item.Id && d.academicYearId == ViewBag.AcademicYear2).FirstOrDefault().approvedIntake</td>
+                        }
+                        else if (i == 2)
+                        {
+                            <td style="text-align: right;">@Model.degreewiseTotalIntake1.Where(d => d.degreeId == item.Id && d.academicYearId == ViewBag.AcademicYear3).FirstOrDefault().approvedIntake</td>
+                        }
+                        else if (i == 3)
+                        {
+                            <td style="text-align: right;">@Model.degreewiseTotalIntake1.Where(d => d.degreeId == item.Id && d.academicYearId == ViewBag.AcademicYear4).FirstOrDefault().approvedIntake</td>
+                        }
+                        else if (i == 4)
+                        {
+                            <td style="text-align: right;">@Model.degreewiseTotalIntake1.Where(d => d.degreeId == item.Id && d.academicYearId == ViewBag.AcademicYear5).FirstOrDefault().approvedIntake</td>
+                        }
+                    }
+                </tr>
+            </tbody>
+        }
+    </table>
+</body>
+</html>

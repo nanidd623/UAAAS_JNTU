@@ -1,0 +1,721 @@
+﻿@using UAAAS.Models
+@model  List<UAAAS.Models.CollegeAicteAdjustments>
+@{
+    var db = new uaaasDBContext();
+    var disvalue = "";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "UPLOAD COURSE DETAILS WHICH ARE ADJUSTED FOR A.Y 2020-21 WITH RESPECT TO AICTE APPROVED INTAKE FOR A.Y 2019-20.";
+}
+
+<!DOCTYPE html>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    var url;
+    $(document).ready(function () {
+        $.ajaxSetup({ cache: false });
+
+        //Edit Dailog Code
+        $(".editDialog").live("click", function (e) {
+            //alert($(this).attr("id"));
+            url = "/CollegeAICTECompliance/AdjustmentAicte?id=" + $(this).attr("id").split('_')[1];
+            AddAdjustment(url);
+            $("#DivEditLabs").show();
+            $("#DivEditLabs").dialog({
+                title: 'Adjustment',
+                autoOpen: false,
+                resizable: false,
+                height: 250,
+                width: 1100,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                //open: function (event, ui) {
+                //    $(this).load(url);
+                //},
+                close: function (event, ui) {
+                    window.location = "/CollegeAICTECompliance/IntakeAdjustments";
+                    // $("#DivEditLabs").dialog("close");
+                    // return false;
+                }
+            });
+            $("#DivEditLabs").dialog('open');
+            return false;
+        });
+
+        function AddAdjustment(url) {
+            $('#oldcoursestat').empty();
+            $('#newcoursestat').empty();
+            $('#degreespectxt').empty();
+            $("#oldcoursestat").css({ "background-color": "" });
+            $("#newcoursestat").css({ "background-color": "" });
+            $("#adjaicteintaketxt").css({ "background-color": "" });
+            $("#degreespectxt").css({ "background-color": "" });
+            $("#newadjaicteintaketxt").css({ "background-color": "" });
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: url,
+                dataType: "Json",
+                success: function (data) {
+                    //console.log(data);
+                    if (data != null) {
+                        $("#collegeaicteId").val(data.id);
+                        $("#collegeId").val(data.collegeId);
+                        //alert(data.oldcourseStatus);
+                        $('#oldcoursestat').append('<option value="0">----- Select -----</option>');
+                        $('#oldcoursestat').append('<option value="1">' + data.oldcourseStatus[0] + '</option>');
+                        $('#oldcoursestat').append('<option value="2">' + data.oldcourseStatus[1] + '</option>');
+
+                        $('#newcoursestat').append('<option value="0">----- Select -----</option>');
+                        $('#newcoursestat').append('<option value="1">' + data.newcourseStatus[0] + '</option>');
+                        $('#newcoursestat').append('<option value="2">' + data.newcourseStatus[1] + '</option>');
+
+                        $('#degreespectxt').append('<option value="0">-------- Select --------</option>');
+                        for (i = 0; i < data.newspecs.length; i++) {
+                            $('#degreespectxt').append($('<option>',
+                            {
+                                value: data.newspecs[i].Value,
+                                text: data.newspecs[i].Text
+                            }));
+                        }
+
+                        var value = data.degree + '-' + data.specialization;
+                        $("#degreetxt").val(value);
+                        $("#specializationId").val(data.specializationId);
+                        $("#specializationName").val(data.specialization);
+                        $("#acyrtxt").val(data.academicYear);
+                        $("#aicteintaketxt").val(data.aicteIntake);
+                        $("#remaningIntake").val(data.remaningIntake);
+                        $("#adjustmentId").val(data.adjustmentId);
+                        if (data.remaningIntake > 0 && data.remaningIntake != 99999) {
+                            $("#txtremaingingIntake").val(data.remaningIntake);
+                            //$("#txtremaingingIntake").val("Remaining Intake :- " + data.remaningIntake);
+                            $('#lblremaingingIntake').attr('style', 'display: block');
+                            $('#lblremaingingIntake').attr('style', 'font-weight: bold');
+                            $('#lblremaingingIntake').attr('style', 'float: right');
+                            $('#lblremaingingIntake').text("Remaining Intake :- " + data.remaningIntake);
+                            $("#lblremaingingIntake").css({ "background-color": "yellow" });
+                            if (parseInt(data.adjustedcoursestatus) > 0) {
+                                //alert(parseInt(data.adjustedcoursestatus));
+                                //var acoursestatusname = parseInt(data.adjustedcoursestatus) == 1 ? "Decrease" : "Closure";
+                                //$("#oldcoursestat option:first").attr('selected', 'selected');
+                                if (parseInt(data.adjustedcoursestatus) == 1) {
+                                    $("#oldcoursestat").val($("#oldcoursestat option:eq(1)").val());
+                                } else {
+                                    $("#oldcoursestat").val($("#oldcoursestat option:eq(2)").val());
+                                }
+                                $('#oldcoursestat').attr("disabled", true);
+                                $('.adjustedtd').attr('style', 'display: none');
+
+                            } else {
+                                $('#oldcoursestat').attr("disabled", false);
+                                $('.adjustedtd').attr('style', 'display: block');
+                            }
+                            //$("#txtremaingingIntake").css({ "background-color": "yellow" });
+                            // $('#txtremaingingIntake').attr('style', 'display: block');
+                            //$('#txtremaingingIntake').attr('style', 'float: right');
+                        }
+                        else if (data.remaningIntake == 99999) {
+                            $('.disabledtd').attr('style', 'display: none');
+                            $('.adjustedtd').attr('style', 'display: none');
+                            $('.submit').attr('style', 'display: none');
+                            $('#lblremaingingIntake').attr('style', 'display: block');
+                            $('#lblremaingingIntake').attr('style', 'font-weight: bold');
+                            $('#lblremaingingIntake').text("This Course doesn't have any remaining intake to adjust");
+                            $("#lblremaingingIntake").css({ "background-color": "yellow" });
+                        } else {
+                            //$("#txtremaingingIntake").val('0');
+                            $('#lblremaingingIntake').attr('style', 'display: none');
+                            $('#txtremaingingIntake').attr('style', 'display: none');
+                            //$('.disabledtd').attr('style', 'display: block');
+                            //$('.adjustedtd').attr('style', 'display: block');
+                            //$('.submit').attr('style', 'display: block');
+                        }
+                    }
+                }
+            });
+        }
+
+        $(".isadjustmentstatusno").live("click", function (e) {
+            //alert($(this).attr("id"));
+            //var data = "Id=" + $(this).attr("id").split('_')[1];
+            //$.ajax({
+            //    type: "POST",
+            //    url: "/CollegeAICTECompliance/AdjustmentNo",
+            //    contentType: "application/x-www-form-urlencoded",
+            //    data: data,
+            //    success: function (d) {
+            //        if (d != null) {
+            //            window.location = "/CollegeAICTECompliance/IntakeAdjustments";
+            //        }
+            //    }
+            //});
+        });
+
+        $("#oldcoursestat").change(function () {
+            var oldcoursestat = $(this).val();
+            if (oldcoursestat == "2") {
+                $('#adjaicteintaketxt').val("0");
+                $('#adjaicteintaketxt').attr("disabled", true);
+            } else {
+                $('#adjaicteintaketxt').val('');
+                $('#adjaicteintaketxt').attr("disabled", false);
+            }
+        });
+
+        $("#newadjaicteintaketxt").change(function () {
+            var adjaicteintaketxt = $('#adjaicteintaketxt').val();
+            var newadjaicteintaketxt = $(this).val();
+            var remainingintake = $("#txtremaingingIntake").val();
+            //alert($('#oldcoursestat').val());
+            if ($('#oldcoursestat').val() != "2") {
+                if (parseInt(remainingintake) > 0 && parseInt(newadjaicteintaketxt) > parseInt(remainingintake)) {
+                    $('#newadjaicteintaketxt').val("0");
+                    alert("Adjustment intake should be less than remaining intake");
+                    return false;
+                } else if (parseInt(newadjaicteintaketxt) > parseInt(adjaicteintaketxt)) {
+                    $('#newadjaicteintaketxt').val("0");
+                    alert("Adjustment intake should be less than remaining intake");
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+            else {
+                return true;
+            }
+        });
+
+        $("#adjaicteintaketxt").change(function () {
+            //alert($(this).val());
+            if (parseInt($(this).val()) > parseInt($("#aicteintaketxt").val())) {
+                $(this).val("0");
+                alert("Adjusted Intake for A.Y. 2020-21 should be less than AICTE Approved Intake for A.Y.2019-20");
+                return false;
+            }
+            else {
+                return true;
+            }
+        });
+
+        $(".submit").click(function (event, args) {
+            var command = $(this).val();
+            var adjaicteintaketxt = $('#adjaicteintaketxt').val();
+            var newadjaicteintaketxt = $('#newadjaicteintaketxt').val();
+            var remainingintake = $("#txtremaingingIntake").val();
+            //alert($('#oldcoursestat').val());
+            if ($('#oldcoursestat').val() == "0" || $('#oldcoursestat').val() == undefined) {
+                $("#oldcoursestat").css({ "background-color": "#fc6a6c" });
+                return false;
+            } else {
+                $("#oldcoursestat").css({ "background-color": "" });
+            }
+            if ($('#oldcoursestat').val() == "2") {
+                //alert(oldcoursestat);
+                $('#adjaicteintaketxt').val("0");
+                $('#adjaicteintaketxt').attr("disabled", true);
+                if (parseInt(newadjaicteintaketxt) > parseInt($("#aicteintaketxt").val())) {
+                    $('#newadjaicteintaketxt').val("0");
+                    alert("Adjusted intake should be less than or equal to aicte intake");
+                    return false;
+                }
+            } else {
+                //$('#adjaicteintaketxt').val('');
+                $('#adjaicteintaketxt').attr("disabled", false);
+            }
+
+            if (($('#adjaicteintaketxt').val() == undefined || $('#adjaicteintaketxt').val() == '') && (parseInt(remainingintake) == 0 || $("#txtremaingingIntake").val() == '')) {
+                //$("#adjaicteintaketxt").css("color", "red");
+                $("#adjaicteintaketxt").css({ "background-color": "#fc6a6c" });
+                return false;
+            } else {
+                $("#adjaicteintaketxt").css({ "background-color": "" });
+            }
+            if ($('#degreespectxt').val() == "0" || $('#degreespectxt').val() == undefined) {
+                $("#degreespectxt").css({ "background-color": "#fc6a6c" });
+                return false;
+            } else {
+                $("#degreespectxt").css({ "background-color": "" });
+            }
+            if ($('#newcoursestat').val() == "0" || $('#newcoursestat').val() == undefined) {
+                $("#newcoursestat").css({ "background-color": "#fc6a6c" });
+                return false;
+            } else {
+                $("#newcoursestat").css({ "background-color": "" });
+            }
+            if ($('#newadjaicteintaketxt').val() == undefined || $('#newadjaicteintaketxt').val() == '' || $('#newadjaicteintaketxt').val() == '0') {
+                $("#newadjaicteintaketxt").css({ "background-color": "#fc6a6c" });
+                return false;
+            } else {
+                $("#newadjaicteintaketxt").css({ "background-color": "" });
+            }
+
+            if (parseInt(remainingintake) > 0 && parseInt(newadjaicteintaketxt) > parseInt(remainingintake)) {
+                $('#newadjaicteintaketxt').val("0");
+                alert("Adjustment intake should be less than remaining intake");
+                return false;
+            }
+
+            if (parseInt(newadjaicteintaketxt) > parseInt(adjaicteintaketxt) && $('#oldcoursestat').val() != "2") {
+                $('#newadjaicteintaketxt').val("0");
+                alert("Adjustment intake should be less than remaining intake");
+                return false;
+            }
+
+            var formData = new FormData();
+            formData.append("AcademidYear", $("#acyrtxt").val());
+            formData.append("CollegeaicteId", $("#collegeaicteId").val());
+            formData.append("CollegeId", $("#collegeId").val());
+            formData.append("ActualaicteIntake", $("#aicteintaketxt").val());
+            formData.append("OldSpecialization", $("#specializationId").val());
+            formData.append("OldCourseStatus", $("#oldcoursestat").val());
+            formData.append("OldAicteIntake", $("#adjaicteintaketxt").val());
+            formData.append("Specialization", $("#degreespectxt").val());
+            formData.append("NewCourseStatus", $("#newcoursestat").val());
+            formData.append("NewAdjustmentAicteIntake", $("#newadjaicteintaketxt").val());
+            formData.append("RemainingIntake", parseInt(remainingintake));
+            formData.append("AdjustmentId", $("#adjustmentId").val());
+            //cmd: command
+
+            //var DegreeId = $("#degreeIds option:selected").val();
+            //if (DegreeId == null) {
+            //    DegreeId = 0;
+            //}
+            //var DepartmentId = $("#Departments option:selected").val();
+            //if (DepartmentId == null) {
+            //    DepartmentId = 0;
+            //}
+
+            var adjustments = {
+                academidYear: $("#acyrtxt").val(),
+                collegeId: $("#collegeId").val(),
+                collegeaicteId: $("#collegeaicteId").val(),
+                ActualaicteIntake: $("#aicteintaketxt").val(),
+                OldCourseStatus: $("#oldcoursestat").val(),
+                OldAicteIntake: $("#adjaicteintaketxt").val(),
+                Specialization: $("#degreespectxt").val(),
+                NewCourseStatus: $("#newcoursestat").val(),
+                NewAdjustmentAicteIntake: $("#newadjaicteintaketxt").val(),
+                RemainingIntake: parseInt(remainingintake),
+                AdjustmentId: $("#adjustmentId").val()
+            };
+            //console.log(adjustments);
+
+            $.ajax({
+                type: "POST",
+                url: "/CollegeAICTECompliance/AdjustmentAicte", // + laboratories + "&cmd=" + command,
+                contentType: false,
+                // enctype: 'multipart/form-data',
+                dataType: "json",
+                cache: false,
+                processData: false,
+                data: formData,
+                //JSON.stringify({ laboratories: formData, cmd: command }),
+                success: function (d) {
+
+                    if (d != null) {
+                        //DataTable(DegreeId, DepartmentId);
+                        $("#DivEditLabs").dialog("close");
+                        $("#DivEditLabs").hide();
+                        //console.log(d);
+                        // alert(d.jsondata);
+                        Success("dialog-result", "Success", d.jsondata);
+
+                    }
+                }
+            });
+        });
+
+        //Success  Result dailog
+        function Success(Id, Title, Message) {
+            $("#lblMessage").text(Message);
+            $("#" + Id + "").dialog({
+                autoOpen: false,
+                title: Title,
+                show: { effect: 'drop', direction: "up" },
+                //hide: 'explode',
+                width: 300,
+                height: 150,
+                top: 50,
+                position: 'center',
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                        window.location = "/CollegeAICTECompliance/IntakeAdjustments";
+                    }
+                },
+                closeOnEscape: true,
+                resizable: false
+            });
+            $("#" + Id + "").dialog('open');
+            return false;
+        }
+
+        // Delete Confirmation
+        $(".confirmDialog").live("click", function (e) {
+            //debugger;
+            var id = $(this).attr('id');
+            $("#dialog-confirm").dialog({
+                title: "Status",
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        var data = "Id=" + id.split('_')[1];
+                        $.ajax({
+                            type: "POST",
+                            url: "/CollegeAICTECompliance/AdjustmentNo",
+                            contentType: "application/x-www-form-urlencoded",
+                            data: data,
+                            success: function (d) {
+                                if (d != null) {
+                                    window.location = "/CollegeAICTECompliance/IntakeAdjustments";
+                                }
+                            }
+                        });
+                        $(this).dialog("close");
+                        window.location = url;
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(function () {
+            enable_cb();
+            $("#finaldecl").click(enable_cb);
+        });
+
+        function enable_cb() {
+            if (this.checked) {
+                //alert(this.checked);
+                $("#btnsend").attr('style', 'display: block');
+                $("#btnsend").attr('style', 'float: right');
+            } else {
+                $("#btnsend").attr('style', 'display: none');
+            }
+        }
+
+        $(".declconfirmDialog").live("click", function (e) {
+            //debugger;
+            var id = $(this).attr('id');
+            $("#decldialog-confirm").dialog({
+                title: "Data Submission",
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        //var data = "collegeId=" + @ViewBag.collegeId;
+                        var data = "collegeId=" + $('#hdnclgId').val();
+                        $.ajax({
+                            type: "POST",
+                            url: "/CollegeAICTECompliance/SubmitFinalDecl",
+                            contentType: "application/x-www-form-urlencoded",
+                            data: data,
+                            success: function (d) {
+                                if (d != null) {
+                                    window.location = "/CollegeAICTECompliance/IntakeAdjustments";
+                                }
+                            }
+                        });
+                        $(this).dialog("close");
+                        window.location = url;
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+            $("#decldialog-confirm").dialog('open');
+            return false;
+        });
+    });
+</script>
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success">
+        <p class="SuccessText" style="text-align: center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Intake Adjustments</title>
+</head>
+<body>
+    @if (Model.Count > 0)
+    {
+        using (Html.BeginForm("", "", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.ValidationSummary(true)
+            <div>
+                <div style="margin-top: 15px;">
+                    @if (ViewBag.finaldeclcond == true)
+                    {
+                        <div class="success">
+                            <p class="SuccessText" style="text-align: center;font-weight: bold">You have successfully submitted AICTE details for A.Y. 2019-20 & A.Y. 2020-21 along with course adjustments for A.Y 2020-21</p>
+                        </div><br />
+                    }
+                    <div class="alerttext" style="background-color: #008000; border: 1px solid #f49820; color: white">
+                        <p>
+                            <b>Note:&nbsp;Kindly upload the details related to any intake adjustments (if any) among the courses offered. e.g: closing B.Tech Civil (60) & proposed for new course B.Tech AIML (60). However, if no adjustments are there submit the declaration below and complete the process.  </b>
+                        </p>
+                    </div>
+                    <br />
+                    <h2>Upload course details which are adjusted for A.Y 2020-21 comparing with AICTE approved intake for A.Y 2019-20</h2><br />
+                    <table class="webGrid">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Course</th>
+                                <th>Academic Year</th>
+                                <th>AICTE Intake</th>
+                                <th>Adjustments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.Count; i++)
+                            {
+                                var sno = @i + 1;
+                                <tr>
+                                    <td>@sno </td>
+                                    <td>@Model[i].degree - @Model[i].specialization</td>
+                                    <td>@Model[i].academicYear</td>
+                                    <td>@Model[i].aicteIntake</td>
+                                    <td>
+                                        @*<input type="radio" id="isadjustmentstatusyes_@Model[i].id" class="editDialog" />Yes
+                                            <input type="radio" id="isadjustmentstatusno_@Model[i].id" class="isadjustmentstatusno" />No*@
+                                        @*<label>@Html.RadioButtonFor(model => model[i].adjustmentstatus, true, new { @id = "isadjustmentstatusyes_" + @Model[i].id, @class = "editDialog" }) Yes</label>
+                                            <label>@Html.RadioButtonFor(model => model[i].adjustmentstatus, false, new { @id = "isadjustmentstatusno_" + @Model[i].id, @class = "isadjustmentstatusno" }) No</label>*@
+
+                                        @if (ViewBag.finaldeclcond == true)
+                                        {
+                                            if (@Model[i].adjustmentstatus == 1)
+                                            {
+                                                <label><input type="radio" id="isadjustmentstatusyes_@Model[i].id" class="editDialog" checked="checked" disabled="disabled" /><b>&nbsp;Yes</b></label>
+                                                <label><input type="radio" id="isadjustmentstatusno_@Model[i].id" class="isadjustmentstatusno" disabled="disabled" /><b>&nbsp;No</b></label>
+                                                @*<label>@Html.RadioButtonFor(model => model[i].adjustmentstatus, true, new { @id = "isadjustmentstatusyes_" + @Model[i].id, @class = "editDialog", @disabled = "disabled" })Yes</label>
+                                                    <label>@Html.RadioButtonFor(model => model[i].adjustmentstatus, false, new { @id = "isadjustmentstatusno_" + @Model[i].id, @class = "isadjustmentstatusno", @disabled = "disabled" })No</label>*@
+                                                @*@Html.ValidationMessageFor(model => model[i].adjustmentstatus)*@
+                                            }
+                                            else if (@Model[i].adjustmentstatus == 2)
+                                            {
+                                                <label><input type="radio" id="isadjustmentstatusyes_@Model[i].id" class="editDialog" disabled="disabled" /><b>&nbsp;Yes</b></label>
+                                                <label><input type="radio" id="isadjustmentstatusno_@Model[i].id" class="isadjustmentstatusno" checked="checked" disabled="disabled" /><b>&nbsp;&nbsp;No</b></label>
+                                            }
+                                            else
+                                            {
+                                                <label><input type="radio" id="isadjustmentstatusyes_@Model[i].id" class="editDialog" disabled="disabled" /><b>&nbsp;Yes</b></label>
+                                                <label><input type="radio" id="isadjustmentstatusno_@Model[i].id" class="confirmDialog isadjustmentstatusno" disabled="disabled" /><b>&nbsp;No</b></label>
+                                                @*<label>@Html.RadioButtonFor(model => model[i].adjustmentstatus, true, new { @id = "isadjustmentstatusyes_" + @Model[i].id, @class = "editDialog" }) Yes</label>
+                                                    <label>@Html.RadioButtonFor(model => model[i].adjustmentstatus, false, new { @id = "isadjustmentstatusno_" + @Model[i].id, @class = "isadjustmentstatusno" }) No</label>*@
+                                                @*@Html.ValidationMessageFor(model => model[i].adjustmentstatus)*@
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (@Model[i].adjustmentstatus == 1)
+                                            {
+                                                <label><input type="radio" id="isadjustmentstatusyes_@Model[i].id" class="editDialog" checked="checked" /><b>&nbsp;Yes</b></label>
+                                                <label><input type="radio" id="isadjustmentstatusno_@Model[i].id" class="isadjustmentstatusno" disabled="disabled" /><b>&nbsp;No</b></label>
+                                                @*<label>@Html.RadioButtonFor(model => model[i].adjustmentstatus, true, new { @id = "isadjustmentstatusyes_" + @Model[i].id, @class = "editDialog", @disabled = "disabled" })Yes</label>
+                                                    <label>@Html.RadioButtonFor(model => model[i].adjustmentstatus, false, new { @id = "isadjustmentstatusno_" + @Model[i].id, @class = "isadjustmentstatusno", @disabled = "disabled" })No</label>*@
+                                                @*@Html.ValidationMessageFor(model => model[i].adjustmentstatus)*@
+                                            }
+                                            else if (@Model[i].adjustmentstatus == 2)
+                                            {
+                                                <label><input type="radio" id="isadjustmentstatusyes_@Model[i].id" class="editDialog" disabled="disabled" /><b>&nbsp;Yes</b></label>
+                                                <label><input type="radio" id="isadjustmentstatusno_@Model[i].id" class="isadjustmentstatusno" checked="checked" disabled="disabled" /><b>&nbsp;&nbsp;No</b></label>
+                                            }
+                                            else
+                                            {
+                                                <label><input type="radio" id="isadjustmentstatusyes_@Model[i].id" class="editDialog" /><b>&nbsp;Yes</b></label>
+                                                <label><input type="radio" id="isadjustmentstatusno_@Model[i].id" class="confirmDialog isadjustmentstatusno" /><b>&nbsp;No</b></label>
+                                                @*<label>@Html.RadioButtonFor(model => model[i].adjustmentstatus, true, new { @id = "isadjustmentstatusyes_" + @Model[i].id, @class = "editDialog" }) Yes</label>
+                                                    <label>@Html.RadioButtonFor(model => model[i].adjustmentstatus, false, new { @id = "isadjustmentstatusno_" + @Model[i].id, @class = "isadjustmentstatusno" }) No</label>*@
+                                                @*@Html.ValidationMessageFor(model => model[i].adjustmentstatus)*@
+                                            }
+                                        }
+
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+    <div id="dialog-edit" style="display: none"></div>
+    <div id="dialog-result" style="display: none">
+        <span style="color: green; background: white" id="lblMessage"></span>
+    </div>
+    <div id="DivEditLabs" style="display: none">
+        @using (Html.BeginForm("", "", FormMethod.Post, new { @id = "EditLabsForm" }))
+        {
+            @Html.ValidationSummary(true)
+            <table class="webGrid">
+                <thead>
+                    <tr>
+                        <th class="disabledtd">Course to be <u>adjusted</u></th>
+                        <th class="disabledtd">AICTE Approved Intake for A.Y.2019-20</th>
+                        @*<th>Academic Year</th>*@
+                        <th class="disabledtd">Course Status for A.Y. 2020-21</th>
+                        <th class="adjustedtd">Adjusted Intake for A.Y. 2020-21</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @Html.Hidden("collegeaicteId", "", new { @id = "collegeaicteId" })
+                    @Html.Hidden("collegeId", "", new { @id = "collegeId" })
+                    @Html.Hidden("specializationId", "", new { @id = "specializationId" })
+                    @Html.Hidden("acyrtxt", "", new { @id = "acyrtxt" })
+                    @Html.Hidden("remaningIntake", "", new { @id = "remaningIntake" })
+                    @Html.Hidden("adjustmentId", "", new { @id = "adjustmentId" })
+                    @Html.Label("Remaining Intake", new { @id = "lblremaingingIntake", @value = "", @style = "display:none;" })
+                    @Html.TextBox("Intake", "", new { @id = "txtremaingingIntake", @style = "background-color:yellow;display:none;", @disabled = true })
+                    <tr>
+                        <td class="disabledtd">@Html.TextBox("Degree", "", new { @id = "degreetxt", @disabled = true, @style = "width:250px;" })</td>
+                        <td class="disabledtd">@Html.TextBox("AICTEInt", "", new { @id = "aicteintaketxt", @disabled = true })</td>
+                        @*<td>@Html.TextBox("AcYear", "", new { @id = "acyrtxt", @disabled = true })</td>*@
+                        <td class="disabledtd">@Html.DropDownList("OldCourseStatus", new List<SelectListItem>(), new { @id = "oldcoursestat" }) </td>
+                        <td class="adjustedtd">@Html.TextBox("AdjustedIntake", "", new { @id = "adjaicteintaketxt", @maxlength = "3", onkeypress = "return isNumberKey(event)" })</td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th class="disabledtd">Course to be <u>adjusted with</u></th>
+                        <th class="disabledtd">Status of <u>adjusted with</u> course</th>
+                        <th class="disabledtd">Adjusted Intake for A.Y. 2020-21</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="disabledtd">@Html.DropDownList("NewSpecs", new List<SelectListItem>(), new { @id = "degreespectxt", @style = "width:250px;" }) </td>
+                        <td class="disabledtd">@Html.DropDownList("NewCourseStatus", new List<SelectListItem>(), new { @id = "newcoursestat" }) </td>
+                        <td class="disabledtd">@Html.TextBox("AdjustedIntake", "", new { @id = "newadjaicteintaketxt", @maxlength = "3", onkeypress = "return isNumberKey(event)" })</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+            <input type="button" value="Save" id="btnSave" name="cmd" style="float: right;" class="submit create_button" />
+        }
+    </div>
+</html>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure that there are no changes for this course?
+    </p>
+</div>
+<div id="decldialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure want to submit the data?
+    </p>
+</div>
+<br />
+@if (ViewBag.collegeAdjustmentslst.Count > 0)
+{
+    <div style="margin-top: 15px;">
+        <h2>View the uploaded course Adjustment Details</h2>
+        <table class="webGrid">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Course to be adjusted</th>
+                    <th>Adjusted Intake for A.Y. 2020-21</th>
+                    <th>Course Status for A.Y. 2020-21</th>
+                    <th>Course to be adjusted with</th>
+                    <th>Adjusted Intake for A.Y. 2020-21</th>
+                    <th>Status of adjusted with course</th>
+                    @*<th>Status</th>*@
+                    @if (ViewBag.finaldeclcond == false)
+                    {
+                        <th>Action</th>
+                    }
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in ((List<UAAAS.Controllers.College.CollegeAdjustmentsDt>)ViewBag.collegeAdjustmentslst).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr>
+                        <td>@pay.i </td>
+                        <td>@pay.value.AdjustedCourse</td>
+                        <td>@pay.value.AdjustedIntake</td>
+                        <td>@pay.value.AdjustedCourseStatus</td>
+                        <td>@pay.value.AdjustmentCourse</td>
+                        <td>@pay.value.AdjustmentIntake</td>
+                        <td>@pay.value.AdjustmentCourseStatus</td>
+                        @*<td style="color: red; font-weight: bold; ">@pay.value.AdjustmentStatus</td>*@
+                        @if (ViewBag.finaldeclcond == false)
+                        {
+                            <td style="text-align: left; font-weight: normal;">
+                                @Html.ActionLink("Delete", "DeleteAdjustment", new { id = @pay.value.AdjustmentId }, new { @class = "create_button", @style = "color:white;" })
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <br />
+}
+
+@if (ViewBag.finaldeclcond == false)
+{
+    <table>
+        <hr />
+        <tr style="text-align: center">
+            <h3 style="text-align: center; font-size: 20px;">
+                <b>DECLARATION</b>
+            </h3>
+            <br />
+        </tr>
+        @*@Html.CheckBoxFor(model => model.DeclarationStatusdeclconfirmDialog, false)*@
+        <input type="checkbox" id="finaldecl" />
+        @Html.HiddenFor(model => model.FirstOrDefault().collegeId)
+        <span style="font-size: 14px;">
+            I, Principal of the college, hereby declare that the information furnished by me are true and correct to the best of my knowledge. If any of the information is found to be false / incomplete / misleading and / or that have failed to disclose all the information and / or suppressed any information and / or misrepresent the information, I am liable to be prosecuted by the University.
+        </span>
+    </table>
+    <div style="text-align: right;">
+        <input type="hidden" id="hdnclgId" value="@ViewBag.collegeId" />
+        <a href="" id="btnsend" class="declconfirmDialog create_button">
+            <span>Submit</span>
+        </a>
+    </div>
+}
+
+

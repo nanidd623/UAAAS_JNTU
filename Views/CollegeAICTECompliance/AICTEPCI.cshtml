@@ -1,0 +1,108 @@
+﻿@model UAAAS.Models.Aictepci
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "UPLOAD AICTE / PCI APPROVAL RELATED DETAILS FOR A.Y 2020-21";
+}
+
+<!DOCTYPE html>
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success">
+        <p class="SuccessText" style="text-align: center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AICTEPCI</title>
+    <link href="~/Scripts/Jquerydatatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Jquerydatatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/Jquerydatatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnSubmit').live("click", function (e) {
+                debugger;
+                var colgId = $('#collegeId').val();
+                var aicteorpci = $('.isAictepciStatus:checked').val();
+                if (aicteorpci == undefined || aicteorpci == '') {
+                    $("#Aictepcitd").css({ "background-color": "#fc6a6c" });
+                    //return false;
+                } else {
+                    $("#Aictepcitd").css({ "background-color": "" });
+                    var data = "collegeId=" + colgId + "&aicteorpciStatus=" + aicteorpci;
+                    $.ajax({
+                        type: "POST",
+                        url: "/CollegeAICTECompliance/AictePci",
+                        contentType: "application/x-www-form-urlencoded",
+                        data: data,
+                        success: function (d) {
+                            if (d != null) {
+                                window.location = "/CollegeAICTECompliance/Index";
+                            }
+                        }
+                    });
+                }
+                //alert(colgId);
+                //alert(aicteorpci);
+            });
+        });
+    </script>
+
+</head>
+<body>
+    <h2>Upload AICTE / PCI Approval related details for A.Y 2020-21.</h2>
+    <br />
+    <table style="width: 100%">
+        <tr>
+            <div style="color: red; font-weight: bold; text-align: center; font-size: 17px;">Important notification to Pharmacy Institutes from AICTE for the A.Y 2020-21</div>
+            <td style="text-align: center;">
+                <a href="../Content/images/pharmacy_public_information.jpg" target="_blank">
+                    <img src="../Content/images/pharmacy_public_information.jpg" />
+                </a>
+            </td>
+        </tr>
+    </table>
+    <hr />
+    <div>
+        @using (Html.BeginForm("", "", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+        @Html.ValidationSummary(true)
+        <table class="faculty_table">
+            @Html.HiddenFor(model => model.CollegeId, new { @id = "collegeId", @value = Model.CollegeId })
+            <tr>
+                <td class="col1" colspan="2">
+                    <span><b>With reference to the above notification has your College/Institute withdrawn your application to AICTE for the A.Y. 2020-21 ?</b></span>
+                </td>
+                <td class="col4" style="width: 10%" id="Aictepcitd">
+                    <div class="" style="text-align: left;">
+                        <label><input name="Aictepci" type="radio" id="isAictepciStatusyes" class="isAictepciStatus" value="Yes" /><b>&nbsp;&nbsp;Yes &nbsp;</b></label>
+                        <label><input name="Aictepci" type="radio" id="isAictepciStatusno" class="isAictepciStatus" value="No" /><b>&nbsp;&nbsp;No</b></label>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <div style="text-align: right">
+            <p>
+                <input type="button" value="Submit" id="btnSubmit" name="cmd" class="create_button" />
+            </p>
+        </div>
+        }
+    </div>
+
+
+
+</body>
+</html>

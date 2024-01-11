@@ -1,0 +1,436 @@
+﻿@model List<UAAAS.Models.ApprovedAdmittedIntake>
+@{
+    int Count = 1;
+    int Colspan = 0;
+    var PresentYear = Model.Select(a => a.PresentYear).FirstOrDefault();
+    var FirstYear = Model.Select(a => a.FirstYear).FirstOrDefault();
+    var SecondYear = Model.Select(a => a.SecondYear).FirstOrDefault();
+    var ThirdYear = Model.Select(a => a.ThirdYear).FirstOrDefault();
+    var FourYear = Model.Select(a => a.FourYear).FirstOrDefault();
+    var FifthYear = Model.Select(a => a.FifthYear).FirstOrDefault();
+    var SixYear = Model.Select(a => a.SixYear).FirstOrDefault();
+
+    var AICTEApproved = Model.Select(a => a.AICTEApprovedIntake).FirstOrDefault();
+    var JntuApproved = Model.Select(a => a.JntuApprovedIntake).FirstOrDefault();
+    var ExamBranchAdmittedR = Model.Select(a => a.ExamsAdmittedIntakeR).FirstOrDefault();
+    var ExamBranchAdmittedL = Model.Select(a => a.ExamsAdmittedIntakeL).FirstOrDefault();
+    var CollegeAdmitted = Model.Select(a => a.CollegeAdmittedIntake).FirstOrDefault();
+
+}
+<table border="1" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                S.No
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                College Code
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                College Name
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Course
+            </th>
+            @*<th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Department
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Specialization
+                </th>*@
+            @if (PresentYear == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    PI @ViewBag.PresentYear
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    AAP @ViewBag.PresentYear
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    JAP @ViewBag.PresentYear
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    EADR @ViewBag.PresentYear
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    EADL @ViewBag.PresentYear
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    CAD @ViewBag.PresentYear
+                </th>
+            }
+            @if (FirstYear == true)
+            {
+                if (AICTEApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        AAP @ViewBag.FirstYear
+                    </th>
+                }
+                if (JntuApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        JAP @ViewBag.FirstYear
+                    </th>
+                }
+                if (ExamBranchAdmittedR == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADR @ViewBag.FirstYear
+                    </th>
+                }
+                if (ExamBranchAdmittedL == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADL @ViewBag.FirstYear
+                    </th>
+                }
+                if (CollegeAdmitted == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        CAD @ViewBag.FirstYear
+                    </th>
+                }
+            }
+            @if (SecondYear == true)
+            {
+                if (AICTEApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        AAP @ViewBag.SecondYear
+                    </th>
+                }
+                if (JntuApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        JAP @ViewBag.SecondYear
+                    </th>
+                }
+                if (ExamBranchAdmittedR == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADR @ViewBag.SecondYear
+                    </th>
+                }
+                if (ExamBranchAdmittedL == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADL @ViewBag.SecondYear
+                    </th>
+                }
+                if (CollegeAdmitted == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        CAD @ViewBag.SecondYear
+                    </th>
+                }
+
+            }
+            @if (ThirdYear == true)
+            {
+                if (AICTEApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        AAP @ViewBag.ThirdYear
+                    </th>
+                }
+                if (JntuApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        JAP @ViewBag.ThirdYear
+                    </th>
+                }
+                if (ExamBranchAdmittedR == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADR @ViewBag.ThirdYear
+                    </th>
+                }
+                if (ExamBranchAdmittedL == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADL @ViewBag.ThirdYear
+                    </th>
+                }
+                if (CollegeAdmitted == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        CAD @ViewBag.ThirdYear
+                    </th>
+                }
+
+            }
+            @if (FourYear == true)
+            {
+                if (AICTEApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        AAP @ViewBag.FourthYear
+                    </th>
+                }
+                if (JntuApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        JAP @ViewBag.FourthYear
+                    </th>
+                }
+                if (ExamBranchAdmittedR == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADR @ViewBag.FourthYear
+                    </th>
+                }
+                if (ExamBranchAdmittedL == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADL @ViewBag.FourthYear
+                    </th>
+                }
+                if (CollegeAdmitted == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        CAD @ViewBag.FourthYear
+                    </th>
+                }
+
+            }
+            @if (FifthYear == true)
+            {
+                if (AICTEApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        AAP @ViewBag.FifthYear
+                    </th>
+                }
+                if (JntuApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        JAP @ViewBag.FifthYear
+                    </th>
+                }
+                if (ExamBranchAdmittedR == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADR @ViewBag.FifthYear
+                    </th>
+                }
+                if (ExamBranchAdmittedL == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADL @ViewBag.FifthYear
+                    </th>
+                }
+                if (CollegeAdmitted == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        CAD @ViewBag.FifthYear
+                    </th>
+                }
+            }
+            @if (SixYear == true)
+            {
+                if (AICTEApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        AAP @ViewBag.SixYear
+                    </th>
+                }
+                if (JntuApproved == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        JAP @ViewBag.SixYear
+                    </th>
+                }
+                if (ExamBranchAdmittedR == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADR @ViewBag.SixYear
+                    </th>
+                }
+                if (ExamBranchAdmittedL == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        EADL @ViewBag.SixYear
+                    </th>
+                }
+                if (CollegeAdmitted == true)
+                {
+                    <th style="text-align: center; background-color: yellow; vertical-align: top">
+                        CAD @ViewBag.SixYear
+                    </th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model.OrderBy(a => a.CollegeName).ToList())
+            {
+                <tr>
+                    <td>@(Count++)</td>
+                    <td>@item.CollegeCode</td>
+                    <td>@item.CollegeName</td>
+                    @if (item.ShiftId == 2)
+                    {
+                        <td>@item.Degree - @item.Specialization -@item.ShiftId</td>
+                    }
+                    else
+                    {
+                        <td>@item.Degree - @item.Specialization </td>
+                    }
+
+                    @if (PresentYear == true)
+                    {
+                        <td>@item.ProposedIntake</td>
+                        <td>@item.PresentYearAICTEApproved</td>
+                        <td>@item.PresentYearJntuApproved</td>
+                        <td>@item.PresentYearExamsBranchRegularAdmitted</td>
+                        <td>@item.PresentYearExamsBranchLateralAdmitted</td>
+                        <td>@item.PresentYearCollegeAdmitted</td>
+                    }
+
+                    @if (FirstYear == true)
+                    {
+                        if (AICTEApproved == true)
+                        {
+                            <td>@item.FirstYearAICTEApproved</td>
+                        }
+                        if (JntuApproved == true)
+                        {
+                            <td>@item.FirstYearJntuApproved</td>
+                        }
+                        if (ExamBranchAdmittedR == true)
+                        {
+                            <td>@item.FirstYearExamsBranchRegularAdmitted</td>
+                        }
+                        if (ExamBranchAdmittedL == true)
+                        {
+                            <td>@item.FirstYearExamsBranchLateralAdmitted</td>
+                        }
+                        if (CollegeAdmitted == true)
+                        {
+                            <td>@item.FirstYearCollegeAdmitted</td>
+                        }
+                    }
+                    @if (SecondYear == true)
+                    {
+                        if (AICTEApproved == true)
+                        {
+                            <td>@item.SecondYearAICTEApproved</td>
+                        }
+                        if (JntuApproved == true)
+                        {
+                            <td>@item.SecondYearJntuApproved</td>
+                        }
+                        if (ExamBranchAdmittedR == true)
+                        {
+                            <td>@item.SecondYearExamsBranchRegularAdmitted</td>
+                        }
+                        if (ExamBranchAdmittedL == true)
+                        {
+                            <td>@item.SecondYearExamsBranchLateralAdmitted</td>
+                        }
+                        if (CollegeAdmitted == true)
+                        {
+                            <td>@item.SecondYearCollegeAdmitted</td>
+                        }
+                    }
+                    @if (ThirdYear == true)
+                    {
+                        if (AICTEApproved == true)
+                        {
+                            <td>@item.ThirdYearAICTEApproved</td>
+                        }
+                        if (JntuApproved == true)
+                        {
+                            <td>@item.ThirdYearJntuApproved</td>
+                        }
+                        if (ExamBranchAdmittedR == true)
+                        {
+                            <td>@item.ThirdYearExamsBranchRegularAdmitted</td>
+                        }
+                        if (ExamBranchAdmittedL == true)
+                        {
+                            <td>@item.ThirdYearExamsBranchLateralAdmitted</td>
+                        }
+                        if (CollegeAdmitted == true)
+                        {
+                            <td>@item.ThirdYearCollegeAdmitted</td>
+                        }
+                    }
+                    @if (FourYear == true)
+                    {
+                        if (AICTEApproved == true)
+                        {
+                            <td>@item.FourYearAICTEApproved</td>
+                        }
+                        if (JntuApproved == true)
+                        {
+                            <td>@item.FourYearJntuApproved</td>
+                        }
+                        if (ExamBranchAdmittedR == true)
+                        {
+                            <td>@item.FourYearExamsBranchRegularAdmitted</td>
+                        }
+                        if (ExamBranchAdmittedL == true)
+                        {
+                            <td>@item.FourYearExamsBranchLateralAdmitted</td>
+                        }
+                        if (CollegeAdmitted == true)
+                        {
+                            <td>@item.FourYearCollegeAdmitted</td>
+                        }
+                    }
+                    @if (FifthYear == true)
+                    {
+                        if (AICTEApproved == true)
+                        {
+                            <td>@item.FifthYearAICTEApproved</td>
+                        }
+                        if (JntuApproved == true)
+                        {
+                            <td>@item.FifthYearJntuApproved</td>
+                        }
+                        if (ExamBranchAdmittedR == true)
+                        {
+                            <td>@item.FifthYearExamsBranchRegularAdmitted</td>
+                        }
+                        if (ExamBranchAdmittedL == true)
+                        {
+                            <td>@item.FifthYearExamsBranchLateralAdmitted</td>
+                        }
+                        if (CollegeAdmitted == true)
+                        {
+                            <td>@item.FifthYearCollegeAdmitted</td>
+                        }
+                    }
+                    @if (SixYear == true)
+                    {
+                        if (AICTEApproved == true)
+                        {
+                            <td>@item.SixYearAICTEApproved</td>
+                        }
+                        if (JntuApproved == true)
+                        {
+                            <td>@item.SixYearJntuApproved</td>
+                        }
+                        if (ExamBranchAdmittedR == true)
+                        {
+                            <td>@item.SixYearExamsBranchRegularAdmitted</td>
+                        }
+                        if (ExamBranchAdmittedL == true)
+                        {
+                            <td>@item.SixYearExamsBranchLateralAdmitted</td>
+                        }
+                        if (CollegeAdmitted == true)
+                        {
+                            <td>@item.SixYearCollegeAdmitted</td>
+                        }
+                    }
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>

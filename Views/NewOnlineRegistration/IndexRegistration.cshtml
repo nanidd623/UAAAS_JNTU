@@ -1,0 +1,654 @@
+﻿@model UAAAS.Controllers.OnlineRegistration.FacultyExperience
+
+@*@model IList<UAAAS.Models.jntuRegisteredFacultyExperience>*@
+
+@{
+    ViewBag.Title = "IndexRegistration";
+    int count = 1;
+    string[] otherdesignations = { "Others1", "Others2", "Others3", "Others4" };
+}
+
+<h2>Faculty Experience Details</h2>
+
+<div class="alerttext" style="background-color: #864949; border: 1px solid #f49820; color: white">
+    <p>
+        <b>Note:&nbsp;The details once submitted here, with regard to Experience / Ph.D. are not editable at later stage. Hence, the faculty member is advised to be very cautious while submitting the details.</b>
+    </p>
+</div>
+<br />
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div><br />
+}
+    @*@if (TempData["Success"] != null)
+        {
+            <div class="success">
+                <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+            </div><br />
+        }*@
+
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+    <style type="text/css">
+        .memberbodywidth {
+            width: 95%;
+        }
+
+        .ui-autocomplete {
+            overflow: scroll;
+            height: 260px;
+        }
+    </style>
+
+    <table style="width: 100%">
+        <tr>
+            <td></td>
+            @if (@ViewBag.isSubmit == true)
+            {
+                <td class="create_link_right">
+                    <a href="/NewOnlineRegistration/Editckeckbox?facultyId=@Model.facultyId" class=" editdilog1 create_button">
+                        <span>Submit Experience</span>
+                    </a>
+                </td>
+            }
+
+        </tr>
+    </table>
+
+
+
+    @*@if (TempData["SUCCESS"] != null)
+        {
+            <div class="success">
+                <p style="text-align: center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+            </div>
+        }
+        @if (TempData["ERROR"] != null)
+        {
+            <div class="error">
+                <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+            </div>
+        }*@
+    <br />
+    <style type="text/css">
+        .col21 input {
+            width: 60px;
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#checker').change(function () {
+                alert();
+                debugger;
+                if ($(this).is(':checked')) {
+                    alert();
+                    $('#datahide').hide();
+                }
+                else {
+                    $('#datahide').show();
+                }
+            });
+
+            ///////////////////////
+            $(".editdilog1").live("click", function (e) {
+                var url = $(this).attr("href");
+                debugger;
+
+                $("#dialog-edit").dialog({
+                    title: 'DECLARATION',
+                    autoOpen: false,
+                    resizable: false,
+                    height: 200,
+                    width: 850,
+                    show: { effect: 'drop', direction: "up" },
+                    modal: true,
+                    draggable: true,
+                    closeOnEscape: true,
+                    open: function (event, ui) {
+                        $(this).load(url);
+                    },
+                    close: function (event, ui) {
+                        location.reload();
+                    }
+                });
+                $("#dialog-edit").dialog('open');
+                return false;
+            });
+
+            ///////////////////////////////
+            $(".editdilog").live("click", function (e) {
+                var url = $(this).attr("href");
+                debugger;
+
+                $("#dialog-edit").dialog({
+
+                    title: 'Edit',
+                    autoOpen: false,
+                    resizable: false,
+                    height: 400,
+                    width: 800,
+                    show: { effect: 'drop', direction: "up" },
+                    modal: true,
+                    draggable: true,
+                    closeOnEscape: true,
+                    open: function (event, ui) {
+                        $(this).load(url);
+                    },
+                    close: function (event, ui) {
+                        location.reload();
+                    }
+                });
+
+                $("#dialog-edit").dialog('open');
+                return false;
+            });
+
+            var collegeslist = @Html.Raw(Json.Encode(ViewBag.Collegeslist));
+            var Designationslist = @Html.Raw(Json.Encode(ViewBag.Designationslist));
+
+            $(".college").on("keydown", function (event) {
+                debugger;
+                // var currentvl = $(this).attr('id');
+                if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                    event.preventDefault();
+                }
+                else if (event.keyCode == 188) {
+                    return false;
+                }
+            }).autocomplete({
+                minLength: 0,
+                source: function (request, response) {
+                    // delegate back to autocomplete, but extract the last term
+                    var results = $.ui.autocomplete.filter(collegeslist, extractLast(request.term));
+                    response(results);
+                },
+                scroll: true,
+                focus: function () {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function (event, ui) {
+                    var Currentcollege = $(this).attr('id');
+                    var terms = split(this.value);
+                    if (terms.length <= 1) {
+                        // remove the current input
+                        terms.pop();
+                        // add the selected item
+                        terms.push(ui.item.value);
+                        // add placeholder to get the comma-and-space at the end
+                        terms.push("");
+                        this.value = terms.join("");
+                        //this.value = terms;
+                        $('#' + Currentcollege).focus();
+
+                        return false;
+                    }
+                    else {
+                        var last = terms.pop();
+                        $(this).val(this.value.substr(0, this.value.length - last.length - 2)); // removes text from input
+                        $(this).effect("highlight", {}, 1000);
+                        $(this).addClass("red");
+                        $("#warnings").html("<span style='color:red;'>Max people reached</span>");
+                        return false;
+                    }
+                }
+            });
+
+            $(".designation").on("keydown", function (event) {
+                debugger;
+                // var currentvl = $(this).attr('id');
+                if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                    event.preventDefault();
+                }
+                else if (event.keyCode == 188) {
+                    return false;
+                }
+            }).autocomplete({
+                minLength: 0,
+                source: function (request, response) {
+                    // delegate back to autocomplete, but extract the last term
+                    var results = $.ui.autocomplete.filter(Designationslist, extractLast(request.term));
+                    response(results);
+                },
+                scroll: true,
+                focus: function () {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function (event, ui) {
+                    var Currentdesignation = $(this).attr('id');
+                    var terms = split(this.value);
+                    if (terms.length <= 1) {
+                        // remove the current input
+                        terms.pop();
+                        // add the selected item
+                        terms.push(ui.item.value);
+                        // add placeholder to get the comma-and-space at the end
+                        terms.push("");
+                        this.value = terms.join("");
+                        //this.value = terms;
+                        $('#' + Currentdesignation).focus();
+
+                        return false;
+                    }
+                    else {
+                        var last = terms.pop();
+                        $(this).val(this.value.substr(0, this.value.length - last.length - 2)); // removes text from input
+                        $(this).effect("highlight", {}, 1000);
+                        $(this).addClass("red");
+                        $("#warnings").html("<span style='color:red;'>Max people reached</span>");
+                        return false;
+                    }
+                }
+            });
+
+            function split(val) {
+                return val.split(/,\s*/);
+            }
+            function extractLast(term) {
+                return split(term).pop();
+            }
+
+            $(".Supportingfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetFileSize(file, "Documentfile");
+                    size = size / 1048576;
+                    if (size > 0.2000000000000000) {
+                        alert("Document should not exceed 200 KB in Size");
+                        $(this).val('');
+                    } else {
+
+                    }
+                }
+
+            });
+
+            //get file size
+            function GetFileSize(fileid, title) {
+
+                try {
+                    var fileSize = 0;
+                    //for IE
+                    if ($.browser.msie) {
+                        //before making an object of ActiveXObject,
+                        //please make sure ActiveX is enabled in your IE browser
+                        var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                        var filePath = $("#" + fileid)[0].value;
+                        var objFile = objFSO.getFile(filePath);
+                        var fileSize = objFile.size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+                        //for FF, Safari, Opeara and Others
+                    else {
+                        fileSize = $("#" + title)[0].files[0].size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+
+                    return fileSize;
+                } catch (e) {
+
+                    //alert("Error is : " + e);
+                }
+            }
+
+            //get file path from client system
+            function getNameFromPath(strFilepath) {
+                var objRE = new RegExp(/([^\/\\]+)$/);
+                var strName = objRE.exec(strFilepath);
+
+                if (strName == null) {
+                    return null;
+                } else {
+                    return strName[0];
+                }
+            }
+
+            $(".confirmDialog").live("click", function (e) {
+
+                var url = $(this).attr('href');
+                $("#dialog-confirm").dialog({
+                    title: 'Delete Experience',
+                    autoOpen: false,
+                    resizable: false,
+                    height: 170,
+                    width: 350,
+                    show: { effect: 'drop', direction: "up" },
+                    modal: true,
+                    draggable: true,
+                    buttons: {
+                        "Yes": function () {
+                            $(this).dialog("close");
+                            window.location = url;
+
+                        },
+                        "No": function () {
+                            $(this).dialog("close");
+
+                        }
+                    }
+                });
+                $("#dialog-confirm").dialog('open');
+                return false;
+            });
+        });
+
+
+    </script>
+
+    @if (TempData["SUCCESS"] != null)
+    {
+        <div class="success" style="background-color: gold; border: 1px solid #f49820;">
+            <p style="text-align: center;font-weight: bold"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+        </div><br />
+    }
+    @if (TempData["ERROR"] != null)
+    {
+        <div class="error" style="background-color: red; border: 1px solid #f49820;">
+            <p style="text-align: center;font-weight: bold;color:white;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+        </div><br />
+    }
+
+    @using (Html.BeginForm("IndexRegistration", "NewOnlineRegistration", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        @Html.HiddenFor(model => model.facultyId)
+        @Html.HiddenFor(model => model.firstName)
+        @Html.HiddenFor(model => model.middleName)
+        @Html.HiddenFor(model => model.lastName)
+        @Html.HiddenFor(model => model.EId)
+        <table width="100%">
+            <tr>
+                <td class="col1">Registration Number</td>
+                <td class="col2">
+                    &nbsp; @Html.DisplayFor(model => model.RegistrationNumber)
+                    @Html.HiddenFor(model => model.RegistrationNumber)
+                </td>
+                <td>&nbsp;&nbsp;</td>
+                <td class="col3">Faculty Name</td>
+                <td class="col4">
+                    &nbsp; @Html.DisplayFor(model => model.Name)
+                    @Html.HiddenFor(model => model.Name)
+                </td>
+            </tr>
+            <tr>
+                <td class="col3">Total Experience</td>
+                <td class="col4">@TempData["TotalExperienceyears"]Years @TempData["TotalExperienceMonths"] Months @TempData["TotalExperiencedays"] Days</td>
+            </tr>
+            <tr><td style="height: 15px;"></td></tr>
+        </table>
+
+
+        if (Model.PresentCollegeid > 0)
+        {
+            <div class="note">
+                <table>
+                    <tr>
+                        <td class="td1">
+                            <b>NOTE : </b>
+                        </td>
+                        <td class="td2">
+                            <span>&nbsp;&nbsp;&nbsp;<b> Current experience automatically taken from College Portal where working</b></span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <table width="100%" border="0" class="webGrid">
+                <thead>
+                    <tr style="background-color: #C1D4E6;">
+                        <th>S.No</th>
+                        <th>CollegeCode</th>
+                        <th>CollegeName</th>
+                        <th>Designation</th>
+                        <th>Date of Appoinment</th>
+                        <th>Experience</th>
+                        <th>Appointment Order</th>
+                        @*<th>Delete</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background-color: #FCF1D1;">
+                        <td>@(count++)</td>
+                        <td>@Html.DisplayFor(model => model.PresentCollegeCode)</td>
+                        <td>@Html.DisplayFor(model => model.PresentCollegeName)</td>
+                        @if (Model.PresentDesignation == "Others")
+                        {
+                            <td>
+                                @Html.DisplayFor(model => model.PresentDesignation)
+                                <span>(@Model.PresentOtherDesignation)</span>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.DisplayFor(model => model.PresentDesignation)
+                            </td>
+                        }
+
+                        <td>@Html.DisplayFor(model => model.PresentfacultyDateOfAppointment)</td>
+                        <td>@Html.DisplayFor(model => model.PresentCollegeTotalExperience)</td>
+                        <td>
+                            @if (Model.PresentfacultyJoiningDocument != null && Model.PresentfacultyJoiningDocument != "")
+                            {
+                                <a href="~/Content/Upload/Faculty/ExperienceDocuments/@Model.PresentfacultyJoiningDocument" target="_blank">
+                                    <span style="color: red;"><b>View</b></span>
+                                </a>
+                            }
+                        </td>
+                        @*<td>
+                                <a href="/NewOnlineRegistration/DeletePresentcollegeExperience?facultyId=@(UAAAS.Models.Utilities.EncryptString(Model.facultyId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]))" class="confirmDialog delete_button"><span>Delete</span></a>
+                            </td>*@
+                    </tr>
+                </tbody>
+
+            </table>
+        }
+
+        <br />
+        <tr>
+            <td colspan="5">
+                <div class="note">
+                    <table>
+                        <tr>
+                            <td class="td1">
+                                <b>NOTE : </b>
+                            </td>
+
+                            <td class="td2">
+                                <span>&nbsp;&nbsp;&nbsp;<b>Add all your previous experiences step by step by uploading sequentially.</b></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+
+        <table style="width: 100%">
+            <tr>
+                @*<td></td>*@
+                @if (@ViewBag.isSubmit == true)
+                {
+                    <td class="create_link_right">
+                        @Html.ActionLink("Add", "FacultyExperience", "NewOnlineRegistration", new { @class = "create_button" })
+                    </td>
+                }
+            </tr>
+        </table>
+
+
+        <table width="100%" border="0" class="webGrid">
+            <tr style="background-color: #C1D4E6;">
+                <th>S.No</th>
+                <th>College Code</th>
+                <th>College Name</th>
+                <th>Designation</th>
+                <th>Date of Appoinment (MM/DD/YYYY)</th>
+                <th>Date of Relieving (MM/DD/YYYY)</th>
+                <th>Experience</th>
+                <th>Appoinment Order</th>
+                <th>Relieving Order</th>
+                <th>Salary</th>
+                <th>SCM</th>
+                @*<th>Edit</th>
+                <th>Delete</th>*@
+            </tr>
+            @if (Model.experiencelist != null)
+            {
+
+                foreach (var item in Model.experiencelist)
+                {
+                    <tr style="background-color: #FCF1D1;">
+                        <td>@(count++)</td>
+                        <td>@item.CollegeCode</td>
+                        @if (item.CollegeName == "Others")
+                        {
+                            <td>
+                                @item.OtherCollegeName
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @item.CollegeName
+                            </td>
+                        }
+                        @if (item.Designation == "Others")
+                        {
+                            <td>
+                                @item.Designation
+                                <span>(@item.OtherDesignation)</span>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @item.Designation
+                            </td>
+                        }
+                        <td>@item.facultyDateOfAppointment</td>
+                        <td>@item.facultyDateOfResignation</td>
+                        <td>@item.TotalExperience</td>
+                        <td>
+                            @if (item.facultyJoiningDocument != null && item.facultyJoiningDocument != "")
+                            {
+                                <a href="~/Content/Upload/Faculty/ExperienceDocuments/@item.facultyJoiningDocument" target="_blank">
+                                    <span style="color: red;"><b>View</b></span>
+                                </a>
+                            }
+                        </td>
+                        <td>
+                            @if (item.facultyRelievingDocument != null && item.facultyRelievingDocument != "")
+                            {
+                                <a href="~/Content/Upload/Faculty/ExperienceDocuments/@item.facultyRelievingDocument" target="_blank">
+                                    <span style="color: red;"><b>View</b></span>
+                                </a>
+                            }
+                        </td>
+                        <td>
+                            @item.facultySalary
+                        </td>
+                        <td>
+                            @if (item.facultySCMDocument != null && item.facultySCMDocument != "")
+                            {
+                                <a href="~/Content/Upload/Faculty/ExperienceDocuments/@item.facultySCMDocument" target="_blank">
+                                    <span style="color: red;"><b>View</b></span>
+                                </a>
+                            }
+                        </td>
+                        @*@if (item.isSubmitted == true)
+                        {
+                            <td></td>
+                        }
+                        else
+                        {
+                            <td>
+                                <a href="/NewOnlineRegistration/EditFacultyExperience?EId=@item.EId" class="editdilog edit_button" style="text-align: center"><span>Edit</span></a>
+                            </td>
+                        }
+                        @if (item.isSubmitted == true)
+                        {
+
+                            <td></td>
+                        }
+                        else
+                        {
+                            <td>
+                                <a href="/NewOnlineRegistration/DeletePreviouscollegeExperience?EId=@item.EId" class="confirmDialog delete_button"><span>Delete</span></a>
+                            </td>
+                        }*@
+                    </tr>
+                }
+            }
+        </table>
+
+        <div id="editDialog" style="display: none"></div>
+        <div id="dialog-confirm" style="display: none">
+            <p>
+                <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+                Are you sure to delete ?
+            </p>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+    <div id="dialog-edit" style="display: none">
+    </div>
+
+
+
+
+

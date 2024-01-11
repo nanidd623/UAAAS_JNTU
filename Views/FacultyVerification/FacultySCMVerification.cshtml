@@ -1,0 +1,490 @@
+﻿@model List<UAAAS.Models.ScmUploadedData>
+@using UAAAS.Models;
+
+@{
+    ViewBag.Title = "CollegeWiseApprovedReport";
+    var db = new uaaasDBContext();
+    int count = 1;
+    string Strdate = string.Empty;
+
+    string Designation = string.Empty;
+    string color = string.Empty;
+
+    var jntuh_designation = db.jntuh_designation.AsNoTracking().ToList();
+
+    var DegreeDept = db.jntuh_department.Join(db.jntuh_degree, d => d.degreeId, de => de.id, (d, de) => new {d = d, de = de}).Select(e => new
+    {
+        DepartmentName=e.de.degree+"-"+e.d.departmentName,
+        DeptId=e.d.id
+    }).ToList();
+
+   var collegefaculty= db.jntuh_college_faculty_registered.AsNoTracking().ToList();
+    
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#facultysearch').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 5000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#facultysearch').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $.ajaxSetup({ cache: false });
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Department',
+            autoOpen: false,
+            resizable: false,
+            height: 200,
+            width: 640,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+                $(this).load(url);
+            }
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'Deactivate Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 460,
+                width: 750,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                //buttons: {
+                //    "Close": function () {
+                //        $(this).dialog("close");
+                //    }
+                //},
+                close: function (event, ui) {
+                    $(this).load(url);
+                    window.location.reload();
+                    $(this).dialog('close');
+
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        //CheckDialog
+        $(".CheckDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-check").dialog({
+                title: 'View Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 490,
+                width: 750,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                close: function (event, ui) {
+                    // $(this).load(url);
+                    // window.location.reload();
+                    $(this).dialog('close');
+
+                }
+            });
+
+            $("#dialog-check").dialog('open');
+            return false;
+        });
+
+        ///
+
+        $(".OpenDialog").live("click", function (e) {
+            debugger;
+            alert();
+            url = $(".OpenDialog").attr('href');
+            //  e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Reason For Not Approve',
+                autoOpen: false,
+                resizable: false,
+                height: 490,
+                width: 750,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                close: function (event, ui) {
+
+                    $(this).dialog('close');
+
+                }
+            });
+
+            $("#dialog-edit").dialog('open');
+            // $myDialog.dialog('open');
+            return false;
+        });
+
+        $('#facultysearch').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Reason For Not Approve'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+
+
+
+
+
+    });
+
+    //$(".editDialog").on("click", function (e) {
+    //    debugger;
+    //    e.preventDefault();
+
+    //    var url = $(this).attr('href');
+
+    //    $("#dialog-edit").dialog({
+    //        title: 'Reason For Not Approve',
+    //        //autoOpen: false,
+    //        resizable: false,
+    //        height: 200,
+    //        width: 350,
+    //        show: { effect: 'drop', direction: "up" },
+    //        modal: true,
+    //        draggable: true,
+    //        open: function (event, ui) {
+    //            $(this).load(url);
+
+    //        },
+    //        close: function (event, ui) {
+    //            window.location.reload();
+    //            $(this).dialog('close');
+
+    //        }
+    //    });
+
+
+    //});
+
+
+
+
+</script>
+
+
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { }))
+{
+
+    <div>
+        <table id="tblcollege" width="100%">
+            @if (ViewBag.Colleges != null)
+            {
+                <tr>
+                    <td class="col1" width="15%" style="font-weight: bold"><span>Colleges</span></td>
+                    <td class="col2" width="85%">
+                        @Html.DropDownList("collegeId", new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"), "---Select--", new { @id = "collegeId", style = "max-width: none;width:700px" })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <br />
+
+    <table width="100%" id="facultysearch" class="display">
+        <thead>
+            <tr>
+                <th style="text-align: center;" rowspan="2">S.No.</th>
+                <th style="width: 165px; text-align: center;" rowspan="2">App</th>
+                <th style=" text-align: center;" rowspan="2">Registration Number</th>
+                <th style=" text-align: center;" rowspan="2">Faculty Name</th>
+                <th style=" text-align: center;" rowspan="2">Designation</th>
+                <th style="width: 180px; text-align: center;" rowspan="2">Nominee Name</th>
+                <th style=" text-align: center;" rowspan="2">SCM Date</th>
+                <th style=" text-align: center;" rowspan="2">SCM Document</th>
+                <th style=" text-align: center;" rowspan="2">Select</th>
+                <th style=" text-align: center;" rowspan="2">No SCM 17</th>
+                <th style=" text-align: center;" rowspan="2">IdentityFied</th>
+                @*<th style="text-align: center;" rowspan="2">Not Approve</th>*@
+                @*<th style="text-align: center;" rowspan="2">Reset</th>
+                <th style=" text-align: center;" rowspan="2">Remarks</th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count() != 0)
+            {
+                string DeptName = string.Empty;
+                
+                
+                
+                for (int i = 0; i < Model.Count(); i++)
+                {
+                    if (Model[i].Approved == true)
+                    {
+                        color = "green";
+                    }
+                    else if (Model[i].Approved == false)
+                    {
+                        color = "red";
+                    }
+                    else
+                    {
+                        color = "";
+                    }
+                    if ((Model[i].Checked == true && Model[i].Approved == false) || (Model[i].Checked == false && Model[i].Approved == true))
+                    {
+                        color = "yellow";
+                    }
+
+
+                    Strdate = UAAAS.Models.Utilities.MMDDYY2DDMMYY(Model[i].SCMDate.ToString());
+
+
+                    var DeptId = collegefaculty.Where(e => e.RegistrationNumber == Model[i].RegistrationNumber && e.collegeId == Model[i].CollegeId).Select(e => e.DepartmentId).FirstOrDefault();
+                    if (Model[i].DesignationId != 0)
+                    {
+                        var jntuhDesignation = jntuh_designation.FirstOrDefault(e => e.id == Model[i].DesignationId);
+                        if (jntuhDesignation != null)
+                        {
+                            Designation = jntuhDesignation.designation;
+                        }
+                    }
+
+
+                    if (DeptId != 0)
+                    {
+                        DeptName = DegreeDept.Where(e => e.DeptId == DeptId).Select(e => e.DepartmentName).FirstOrDefault();
+                    }
+
+
+
+                    <tr>
+                        @Html.HiddenFor(model => model[i].SCMId)
+                        @Html.HiddenFor(model => model[i].SpecializationId)
+                        @Html.HiddenFor(model => model[i].DegreeId)
+                        @Html.HiddenFor(model => model[i].DepartmentId)
+                        @Html.HiddenFor(model => model[i].RegistrationNumber)
+                        @Html.HiddenFor(model => model[i].CollegeId)
+                        @Html.HiddenFor(model => model[i].ScmfacultyaddedId)
+                        <td style="background-color: @color">
+                            @(i + 1)
+                        </td>
+                        <td>@Html.DisplayFor(model => model[i].Specialization)</td>
+                        <td>@Html.DisplayFor(model => model[i].RegistrationNumber)</td>
+                        <td>@Html.DisplayFor(model => model[i].FirstName)</td>
+                        <td>@Designation</td>
+                        <td>@Html.DisplayFor(model => model[i].AuditorName)</td>
+                        <td>@Strdate</td>
+                        <td>
+                            <b><a href="../Content/Upload/SCMPROCEEDINGSREQUEST/UploadSCMHardCopy/@Model[i].SCMhardcopyview" target="_blank">View</a></b>
+                        </td>
+                        <td>
+                            @if (Model[i].Checked == true)
+                            {
+                                <span>Selected</span>
+                            }
+                            else
+                            {
+                                <span>Not-Selected</span>
+                            }
+
+
+                        </td>
+                        <td>
+                           @if (Model[i].Noscm16 == true)
+                           {
+                               <span style="color:red">Yes</span>
+                           }
+                        </td>
+                        <td style="text-align: center; vertical-align: middle">
+                            <span>@DeptName</span>
+                        </td>
+                        
+                       
+                    </tr>
+
+                }
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-3" style="width: 90%; text-align: left; " class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: left; " class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 60%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-6" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-13" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-7" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-8" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-9" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-10" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-11" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                @*<th>
+                    <input type="text" id="i-11" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-12" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>*@
+            </tr>
+        </tfoot>
+    </table>
+
+
+
+
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+    <div id="dialog-check" style="display: none">
+    </div>
+
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    $("#collegeId").change(function () {
+        var collegeId = $(this).val();
+        if (collegeId !== "") {
+            window.location = '/FacultyVerification/FacultySCMVerification?collegeId=' + collegeId;
+        } else {
+            window.location = '/FacultyVerification/FacultySCMVerification';
+        }
+    });
+</script>
+<style>
+    #tbl1 tr th, #tbl1 tr td {
+        border: 1px solid #C0C0C0;
+        /*padding: 5px;*/
+    }
+</style>

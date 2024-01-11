@@ -1,0 +1,136 @@
+﻿@model IEnumerable<UAAAS.Models.CollegePaymentsDetails>
+
+
+@{
+    ViewBag.Title = "College Payments";
+    int index = 1;
+}
+
+<h2>College Payment Details</h2>
+@section onReady{
+
+    /* Initialize table and make first column non-sortable*/
+
+    $('#example').dataTable({  "bJQueryUI": true,
+    "iDisplayLength": 50,
+    "bStateSave": false,
+    "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+    "aoColumns": [ { "bSortable": true, "bSearchable": true }, null,null,null, null ],
+    "aLengthMenu": [
+    [10, 25, 50],
+    [10, 25, 50]
+    ]
+    });
+}
+
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th style="width: 10px; text-align: center;">
+                S.No
+            </th>
+            <th style="width:20px;text-align:left">
+                College Code
+            </th>
+            <th style="width: 380px; text-align: left;">
+                College Name
+            </th>
+            <th style="width: 60px; text-align: left;">
+               Transaction Amount
+            </th>
+            <th class="ui-state-default" style="width: 60px; text-align: left;">
+                Payment Type
+            </th>
+            <th class="ui-state-default" style="text-align: left;width:20px">
+                Details
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 10px; text-align: center;">
+                    @(index++)
+                </td>
+                <td style="width:20px;text-align:left">
+                    @Html.DisplayFor(modelItem => item.collegeCode)
+                </td>
+                <td style="text-align:left;width:380px">
+                    @Html.DisplayFor(modelItem => item.collegeName)
+                </td>
+                <td style="text-align: left;width:60px">
+                    @Html.DisplayFor(modelItem => item.TxnAmount)
+                </td>
+
+                <td style="text-align: left;width:60px">
+                    @Html.DisplayFor(modelItem => item.Trantype)
+                </td>
+                <td style="text-align: left;width:20px">
+                    @Html.ActionLink("Edit", "EditPaymentDetails", "CollegePayments", new { id = item.collegeCode }, new { @class = "edit_button" })
+                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div id="dialog-edit" style="display: none">
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        var mainUrl = window.location;
+        var url;        
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+          
+            title: 'Add/Edit Existing Intake',
+            autoOpen: false,
+            resizable: false,
+            height: 550,
+            width: 800,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Existing Intake'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('#example').find('tr').click(function () {
+            debugger;
+            url = $(this).find(".edit_button").attr('href');
+        });
+
+        $(".edit_button").live("click", function (e) {
+            debugger;
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'College Payment Details'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+    });
+</script>

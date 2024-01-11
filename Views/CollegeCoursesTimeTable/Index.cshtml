@@ -1,0 +1,412 @@
+﻿@model UAAAS.Controllers.College.CollegeCourseTimeTable
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "Time Table";
+}
+
+<h2>Academic Calendar (for Autonomous College)</h2>
+
+<style>
+    #example tr th {
+        /*border: 1px solid #0000cd;*/
+        background: #dcdcdc;
+        height: 40px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    #example tbody {
+        border: 1px solid black;
+        background: #FCF1D1;
+    }
+
+        #example tbody tr td {
+            padding: 2px;
+        }
+
+    table tr td input {
+        width: 75px;
+    }
+
+    select {
+        width: 170px;
+    }
+
+    .my-tooltip {
+        max-width: 110px;
+        color: white;
+        background: black;
+        padding: 2px;
+    }
+
+    .left_menu {
+        min-width: 220px;
+    }
+</style>
+<div style="justify-content:flex-start">
+    @using (Html.BeginForm("Index", "CollegeCoursesTimeTable", FormMethod.Post, new { }))
+    {
+        <table style="text-align: center" align="center">
+            <tr>
+                <th>Select Degree</th>
+                <td>
+                    @Html.DropDownListFor(m => m.Degree, new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "DegreeId", "Degree"), "---Select---", new { })
+                </td>
+            </tr>
+            <tr>
+                <th>Select Department</th>
+                <td>
+                    @Html.DropDownListFor(m => m.Department, new SelectList(ViewBag.Dept as System.Collections.IEnumerable, "Did", "Dname"), "---Select---", new { })
+                </td>
+            </tr>
+            <tr>
+                <th>Select Specilization</th>
+                <td>
+                    @Html.DropDownListFor(m => m.Specilization, new SelectList(ViewBag.Specilization as System.Collections.IEnumerable, "Sid", "Sname"), "---Select---", new { })
+                </td>
+            </tr>
+            <tr>
+                <th>Faculty Name</th>
+                <td>
+                    @Html.TextBoxFor(m => m.Slot1MFacultyname, new { @style = "width:165px", @placeholder = "Faculty Name" })
+                </td>
+            </tr>
+            <tr>
+                <th>From Time</th>
+                <td>
+                    @Html.TextBoxFor(m => m.Slot1MFromTime, new { @placeholder = "From Time", @title = "hh:MM(AM/PM)", @style = "width:165px" })
+                </td>
+            </tr>
+            <tr>
+                <th>To Time</th>
+                <td>
+                    @Html.TextBoxFor(m => m.Slot1MToTime, new { @placeholder = "To Time", @title = "hh:MM(AM/PM)", @style = "width:165px" })
+                </td>
+            </tr>
+        </table>
+
+        <br />
+        <table width="100%" border="1" id="example">
+            <tr>
+                <th rowspan="2">Days</th>
+                <th colspan="2">Slot-1</th>
+                <th colspan="2">Slot-2</th>
+                <th colspan="2">Slot-3</th>
+                <th colspan="2">Slot-4</th>
+                <th colspan="2">Slot-5</th>
+                <th colspan="2">Slot-6</th>
+                <th colspan="2">Slot-7</th>
+                <th colspan="2">Slot-8</th>
+            </tr>
+
+            <tbody>
+                <tr>
+                    <td>Monday</td>
+                    <td colspan="2">
+
+                        @Html.TextBoxFor(m => m.Slot1MSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot2MSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot3MSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot4MSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot5MSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot6MSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot7MSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot8MSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>Tuesday</td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot1TSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot2TSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot3TSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot4TSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot5TSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot6TSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot7TSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot8TSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>Wednesday</td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot1WSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot2WSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot3WSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot4WSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot5WSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot6WSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot7WSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot8WSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>Thursday</td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot1ThSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot2ThSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot3ThSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot4ThSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot5ThSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot6ThSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot7ThSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot8ThSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>Friday</td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot1FSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot2FSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot3FSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot4FSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot5FSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot6FSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot7FSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot8FSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>Saturday</td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot1SSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot2SSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot3SSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot4SSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot5SSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot6SSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot7SSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                    <td colspan="2">
+                        @Html.TextBoxFor(m => m.Slot8SSubject, new { @style = "width:170px", @placeholder = "Subject Name" })
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <input type="submit" value="submit" />
+    }
+
+</div>
+<link href="~/Scripts/Timepicker/jquery.ptTimeSelect.css" rel="stylesheet" />
+<script src="~/Scripts/Timepicker/jquery.ptTimeSelect.js"></script>
+<script src="~/Scripts/Jquery-ui.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#Slot1MFromTime").ptTimeSelect();
+
+
+        $("#Slot1MToTime").ptTimeSelect();
+
+
+        $("#Slot1MFacultyname,#Slot2MFacultyname,#Slot3MFacultyname,#Slot4MFacultyname,#Slot5MFacultyname,#Slot6MFacultyname,#Slot7MFacultyname,#Slot8MFacultyname,#Slot1TFacultyname,#Slot2TFacultyname,#Slot3TFacultyname,#Slot4TFacultyname,#Slot5TFacultyname,#Slot6TFacultyname,#Slot7TFacultyname,#Slot8TFacultyname,#Slot1WFacultyname,#Slot2WFacultyname,#Slot3WFacultyname,#Slot4WFacultyname,#Slot5WFacultyname,#Slot6WFacultyname,#Slot7WFacultyname,#Slot8WFacultyname").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/CollegeCoursesTimeTable/Getfaculty",
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        console.log(data);
+                        debugger;
+                        response($.map(data, function (item) {
+                            return { label: item, value: item };
+                        }));
+
+                    }
+                });
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+
+
+        $("#Slot1ThFacultyname,#Slot2ThFacultyname,#Slot3ThFacultyname,#Slot4ThFacultyname,#Slot5ThFacultyname,#Slot6ThFacultyname,#Slot7ThFacultyname,#Slot8ThFacultyname,#Slot1FFacultyname,#Slot2FFacultyname,#Slot3FFacultyname,#Slot4FFacultyname,#Slot5FFacultyname,#Slot6FFacultyname,#Slot7FFacultyname,#Slot8FFacultyname,#Slot1SFacultyname,#Slot2SFacultyname,#Slot3SFacultyname,#Slot4SFacultyname,#Slot5SFacultyname,#Slot6SFacultyname,#Slot7SFacultyname,#Slot8SFacultyname").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/CollegeCoursesTimeTable/Getfaculty",
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        console.log(data);
+                        debugger;
+                        response($.map(data, function (item) {
+                            return { label: item, value: item };
+                        }));
+
+                    }
+                });
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+
+
+        //$("#Slot1MFromTime,#Slot1MToTime").tooltip({
+        // tooltipClass:"my-tooltip"
+        //});
+
+
+        $("#Slot1MToTime").change(function () {
+            debugger;
+            var fromtime = $(this).val();
+            if (fromtime != null) {
+
+            }
+        });
+    });
+
+    //$("#Slot1MFromTime,#Slot1MToTime").keypress(function (e) {
+    //    var regex = ["[0-1]",
+    //    "[0-9]",
+    //    ":",
+    //    "[0-5]",
+    //    "[0-9]",
+    //    "(A|P)",
+    //    "M"],
+    //    string = $(this).val() + String.fromCharCode(e.which),
+    //    b = true;
+    //    for (var i = 0; i < string.length; i++) {
+    //        if (!new RegExp("^" + regex[i] + "$").test(string[i])) {
+    //            b = false;
+    //        }
+    //    }
+    //    return b;
+    //});
+
+    $(document).on("change", "#Slot1MToTime", function () {
+        debugger;
+        var fromtime = $(this).val();
+    });
+
+    $("input[name='Slot1MToTime']").blur(function () {
+        debugger;
+        var totime = null;
+        var fromtime = null;
+        fromtime = $("#Slot1MFromTime").val();
+        totime = $(this).val();
+        console.log(fromtime);
+        if (totime != null && totime != "") {
+            if (fromtime != null && fromtime != "") {
+                var totimehr = totime.split(':')[0];
+                var totimeminformat = totime.split(':')[1];
+                var totimemin = totimeminformat.split(' ')[0];
+                var totimeformat = totimeminformat.split(' ')[1];
+
+                var fromtimehr = fromtime.split(':')[0];
+                var fromtimeminformat = fromtime.split(':')[1];
+                var fromtimemin = fromtimeminformat.split(' ')[0];
+                var fromtimeformat = fromtimeminformat.split(' ')[1];
+
+                if (totimehr > fromtimehr) {
+                    if (totimemin > fromtimemin) {
+
+                    } else {
+
+                    }
+
+                } else {
+
+                }
+
+
+            } else {
+                alert("Please Select From time");
+            }
+        }
+
+    });
+
+
+</script>

@@ -1,0 +1,150 @@
+﻿@model List<UAAAS.Models.CollegePaymentDetails>
+@{
+
+    ViewBag.Title = "GetAllTransactions";
+    int count = 1;
+    string Datetext = "";
+}
+
+<h2>GetAllTransactions</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+    });
+</script>
+
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th class="">S.No</th>
+            <th class="">College</th>
+            <th class="">Academic year</th>
+            
+            <th class="">Nature of Payment</th>
+            <th class="">Nature of Sub-Payment</th>
+            <th class="">Bank</th>
+            <th class="">Amount</th>
+            <th class="">Payment Type</th>
+            <th class="">Trans_Number</th>
+            <th class="">Payment Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item2 in Model)
+        {
+            <tr>
+                <td class="">@(count++)</td>
+                <td class="">@item2.CollegeName</td>
+                <td class="">@item2.AcademicYear</td>
+                <td class="">@item2.FeeType</td>
+                <td class="">@item2.Sub_Purpose</td>
+                <td class="" id="@item2.BankId">@item2.Bank</td>
+                <td class="" style="text-align:center;">@item2.PaidAmount</td>
+                <td class="" style="text-align:center;">@item2.Type</td>
+                <td class="" style="text-align:center;">@item2.Trans_Number</td>
+                <td class="" style="text-align:center;">
+                    @{
+                        Datetext = item2.DDdate_New.ToString().Split(' ')[0];
+                    }
+                    @Datetext
+                </td>              
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>
+                <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-3" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-5" style="width: 90%; text-align: center" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-6" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-7" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-8" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-9" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+        </tr>
+    </tfoot>
+</table>

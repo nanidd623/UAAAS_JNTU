@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+
+    <link href="@Url.Content("~/Content/jntuh-styles.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.datepicker.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/jquery-ui.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.base.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.button.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.theme.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/modernizr-2.5.3.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.20.js")" type="text/javascript"></script>
+
+    <link href="@Url.Content("~/Content/dataTables/demo_page.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/dataTables/demo_table_jui.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            @RenderSection("onReady", required: false)
+            $(function () {
+                $('.focus :input').focus();
+                $('.disable :input').attr("disabled", "true");
+                $('.calendar').attr("readonly", "true");
+                $('.calendar').datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true,
+                    showOn: "button",
+                    buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+                    buttonImageOnly: true
+                });
+
+                $("input:text,form").attr("autocomplete", "off");
+
+                var header = parseInt($(".header").height()) + parseInt($(".header").css("borderTopWidth")) + parseInt($(".header").css("borderBottomWidth")) +
+                             parseInt($(".header").css("padding-top")) + parseInt($(".header").css("padding-bottom")) + parseInt($(".header").css("margin-top")) +
+                             parseInt($(".header").css("margin-bottom"));
+                var menu = parseInt($(".top_menu").height()) + parseInt($(".top_menu").css("borderTopWidth")) + parseInt($(".top_menu").css("borderBottomWidth")) +
+                             parseInt($(".top_menu").css("padding-top")) + parseInt($(".top_menu").css("padding-bottom")) + parseInt($(".top_menu").css("margin-top")) +
+                             parseInt($(".top_menu").css("margin-bottom"));
+                var footer = parseInt($(".footer").height()) + parseInt($(".footer").css("borderTopWidth")) + parseInt($(".footer").css("borderBottomWidth")) +
+                             parseInt($(".footer").css("padding-top")) + parseInt($(".footer").css("padding-bottom")) + parseInt($(".footer").css("margin-top")) +
+                             parseInt($(".footer").css("margin-bottom"));
+
+                $(".body_content").css("min-height", parseInt($(window).height()) - (parseInt(header) + parseInt(menu) + parseInt(footer) + 10));
+            });
+
+            $(".allownumericwithdecimal").on("keypress keyup blur", function (event) {
+                //this.value = this.value.replace(/[^0-9\.]/g,'');
+                $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+                if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                    event.preventDefault();
+                }
+            });
+
+            $(".allownumericwithoutdecimal").on("keypress keyup blur", function (event) {
+                $(this).val($(this).val().replace(/[^\d].+/, ""));
+                if ((event.which < 48 || event.which > 57)) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        @Html.Partial("_Header")
+        <div class="top_menu">
+            <div class="top_menu_left">
+                <nav>
+                    <ul>
+                        <li><a href="/Home/Index">Home</a></li>
+                        <li>
+                            <a href="/AcademicAuditCell/MandateOfTheCell">Affiliations & Academic Audit</a>
+                            @*<ul>
+                                <li><a href="/AcademicAuditCell/MandateOfTheCell">Mandate of the Cell</a></li>
+                                <li><a href="/AcademicAuditCell/Director">Director</a></li>
+                                <li><a href="/Home/DirectorsList">Succession List of Directors</a></li>
+                                <li><a href="/AcademicAuditCell/DeputyDirector">Deputy Director</a></li>
+                                <li><a href="/AcademicAuditCell/AssistantDirector">Assistant Director</a></li>
+                                <li><a href="/AcademicAuditCell/VisionMission">Vision Mission</a></li>
+                                <li><a href="/AcademicAuditCell/Objectivies">Objectivies</a></li>
+                                <li><a href="/AcademicAuditCell/Goals">Goals</a></li>
+                                <li><a href="/AcademicAuditCell/TimelinesOfAffiliationActivities">Timelines Of Affiliation Activities</a></li>
+                            </ul>*@
+                        </li>
+                        <li>
+                            <a href="#">Affiliated Colleges</a>
+                            <ul>
+                                <li><a href="/Public/oldcolleges">List of Affiliated Colleges</a></li>
+                                <li><a href="/Public/AcademicYearWiseColleges">Affiliation Granted to Colleges Year Wise</a></li>
+                                @*<li><a href="/Public/AY2015To16">A.Y. 2015-16</a></li>
+                                <li><a href="/Public/AY2016To17">A.Y. 2016-17</a></li>
+                                <li><a href="/Public/AY2017To18">A.Y. 2017-18</a></li>
+                                <li><a href="/Public/AY2018To19">A.Y. 2018-19</a></li>
+                                <li><a href="/Public/CollegeNameAndAddress">A.Y. 2019-20</a></li>
+                                <li><a href="/Public/AY2020To21">A.Y. 2020-21</a></li>*@
+                            </ul>
+                        </li>
+                        <li><a href="/Downloads/index">Downloads</a></li>
+                        <li><a href="/ContactUs/index">Contact Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="top_menu_right">
+                @Html.Partial("_LogOnPartial")
+            </div>
+            <div class="clear"></div>
+        </div>
+
+
+        <div class="body_content">
+            @RenderBody()
+        </div>
+        @Html.Partial("_Footer")
+    </div>
+</body>
+</html>

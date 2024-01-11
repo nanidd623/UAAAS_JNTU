@@ -1,0 +1,120 @@
+﻿
+@model UAAAS.Models.FacultyComplaintsClass
+@using (Html.BeginForm("FacultyTrackComplaint", "FacultyComplaints", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+ if (Model != null)
+    {
+<div>
+    <table cellpadding="0" cellspacing="0" width="100%" align="center" style="line-height: 27px;">
+
+       
+            <tbody>
+                <tr>
+                    <td class="col1" >
+                        <b><span>Name</span></b>
+                    </td>
+                
+                    <td class="col2">
+                        <span id="sname">@Model.Facultyname</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <b><span>Gender</span></b>
+                    </td>
+                 
+                    <td class="col2">
+                        <span id="sgender">@Model.gender</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <b><span>Email</span></b>
+                    </td>
+               
+                    <td class="col2">
+                        <span id="semail">@Model.Email</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <b><span>Mobile</span></b>
+                    </td>
+                
+                    <td class="col2">
+                        <span id="smobile">@Model.Moblie</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <b><span>Address</span></b>
+                    </td>
+                 
+                    <td class="col2">
+                        <span id="saddress">@Model.FacultyAddress</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <b><span>Registration Number</span></b>
+                    </td>
+                 
+                    <td class="col2">
+                        <span id="shallticketno">@Model.RegistrationNumber</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <b><span>College</span></b>
+                    </td>
+                 
+                    <td class="col2">
+                        <span id="scollege">@Model.Collegename</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <b><span>Grievance Type</span></b>
+                    </td>
+                  
+                    <td class="col2">
+                        <span id="sctype">@Model.complaintname</span>
+                    </td>
+                </tr>
+                @if (Model.complaintname == "Others")
+                {
+                    <tr>
+                        <td class="col1">
+                            <b><span>Others Grievance</span></b>
+                        </td>
+                    
+                        <td class="col2">
+                            <span id="sctype">@Model.otherscomplaint</span>
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td class="col1">
+                        <b><span>Grievance Date</span></b>
+                    </td>
+                 
+                    <td class="col2">
+                        <span id="scdate">@Model.complaintdate</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <b><span>Grievance Description</span></b>
+                    </td>
+                 
+                    <td class="col2">
+                        <span id="scdesc">@Model.ComplaintDesc</span>
+                    </td>
+                </tr>
+            </tbody>
+      
+    </table>
+</div>
+    }
+    }

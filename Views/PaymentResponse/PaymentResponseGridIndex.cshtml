@@ -1,0 +1,213 @@
+﻿@model List<UAAAS.Models.Admin.PaymentResponse>
+@{
+    ViewBag.Title = "PaymentResponseGridIndex";
+    int count = 1;
+}
+<h2>Payment Response Details</h2>
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null,null],
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $("#btnSubmit").click(function () {
+            debugger;
+            var YearId = $("#AcademicYearId").val();
+            if (YearId == null || YearId == "")
+                return false;
+        });
+
+    });
+    function MandatoryDisplay() {
+        var Result = true;
+        if ($("#PaymentTypeID").val() == "") {
+            $('.clsPaymentType').addClass("required");
+            $('.clsPaymentType').css('background-color', '#f16060');
+            Result = false;
+        }
+        else {
+            $('.clsPaymentType').removeClass("required");
+            $('.clsPaymentType').css('background-color', '');
+        }
+        if ($("#AcademicYearId").val() == "") {
+            $('.clsAcademicYear').addClass("required");
+            $('.clsAcademicYear').css('background-color', '#f16060');
+            Result = false;
+        }
+        else
+        {
+            $('.clsAcademicYear').removeClass("required");
+            $('.clsAcademicYear').css('background-color', '');
+        }
+        if (Result) {
+            $('#Error').html('');
+        }
+        return Result;
+    }
+</script>
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<br />
+@using (Html.BeginForm("PaymentResponseGridIndex", "PaymentResponse"))
+{
+    <div id="Error"></div>
+    <table width="100%">
+        <tr>
+            <td class="col1">
+                Payment Type
+            </td>
+            <td class="col2" style="width:25%;">
+                @Html.DropDownList("PaymentTypeID", new SelectList(ViewBag.objpayment as System.Collections.IEnumerable, "id", "FeeType"), "---Select Payment Type---", new { @style = "width:200px;", @class = "clsPaymentType" })&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+            <td class="col1">
+                Academic Year
+            </td>
+            <td class="col2" style="width:25%;">
+                @Html.DropDownList("AcademicYearId", new SelectList(ViewBag.AcademicYears as System.Collections.IEnumerable, "AcademicYearId", "AcademicYear"), "---Select Academic Year---", new { @style = "width:200px;", @class = "clsAcademicYear" })&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+            <td class="col2">
+                <input type="submit" id="btnSubmit" value="Get Data" name="command" onclick="return MandatoryDisplay()" />
+                <input type="submit" id="btnSubmit" value="Export" name="command" onclick="return MandatoryDisplay()" />
+            </td>
+        </tr>
+    </table>
+
+    <br /><br />
+    if (Model.Count() != 0)
+    {
+
+        <table id="example" class="display">
+            <thead>
+                <tr>
+                    <th class="">S.No</th>
+                    <th style="width:5%;">College Code</th>
+                    <th class="">College Name</th>
+                    <th class="">Txn Amount</th>
+                    <th class="">Customer ID</th>
+                    <th class="">Txn Reference No</th>
+                    <th class="">Payment Type</th>
+                    <th class="">Txn Date</th>
+                    <th class="">Txn Status</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item2 in Model)
+                {
+                    <tr>
+                        <td class="">@(count++)</td>
+                        <td style="width:3%;">@item2.CollegeId</td>
+                        <td class="">@item2.CollegeName</td>
+                        <td style="width:3%;">@item2.TxnAmount</td>
+                        <td class="">@item2.CustomerID</td>
+                        <td class="">@item2.TxnReferenceNo</td>
+                        <td class="">@item2.PaymentTypeName</td>
+                        <td style="width:14%;">@item2.TxnDate</td>
+                        @if (@item2.AuthStatus == "0300")
+                        {
+                            <td style="width:14%;">SUCCESS</td>
+                        }
+                        else
+                        {
+                            <td style="width:14%;">@item2.ErrorDescription</td>
+                        }
+                      
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>
+                        <input type="text" id="i-0" style="width: 5%; text-align: left; display: none;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-3" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-0" style="width: 80%; text-align: center; " class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-3" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                    <th>
+                        <input type="text" id="i-3" style="width: 90%; text-align: center;" class="search_init">
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+
+    }
+}
+

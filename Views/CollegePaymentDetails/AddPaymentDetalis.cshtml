@@ -1,0 +1,103 @@
+﻿@model UAAAS.Models.AddcollegePaymentDetails
+@{
+    ViewBag.Title = "AddPaymentDetalis";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm())
+{
+    <h2>AddPaymentDetalis</h2>
+    <table class="four_columns">
+       
+        <tr>
+            <td class="col1">
+                College
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DropDownListFor(model => model.Collegecode,
+             new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeCode", "collegeName"),
+             "--Select--", new { id = "collegeCode" })
+
+                @Html.ValidationMessageFor(model => model.Collegecode)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+               Customer Referance No. (Ref1)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.Customerid)
+                @Html.ValidationMessageFor(model => model.Customerid)
+            </td>
+            <td class="col3">
+                Tranction ID
+            </td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.TxnReferenceNo)
+                @Html.ValidationMessageFor(model => model.TxnReferenceNo)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                Bank Reference No.
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.BankReferenceNo)
+                @Html.ValidationMessageFor(model => model.BankReferenceNo)
+            </td>
+            <td class="col3">
+                Amount
+            </td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.TxnAmount)
+                @Html.ValidationMessageFor(model => model.TxnAmount)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                Bank Id
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.Bankid)
+                @Html.ValidationMessageFor(model => model.Bankid)
+            </td>
+            <td class="col3">
+                Bank Merchant Id
+            </td>
+            <td class="col4">
+                @Html.DisplayFor(model => model.BankMerchantid)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                Tax Date
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.TxnDate)
+                @Html.ValidationMessageFor(model => model.TxnDate)
+            </td>
+            <td class="col3">
+                Payment Type
+            </td>
+            <td class="col4">
+                @Html.DropDownListFor(model => model.Paymenttypeid,
+new SelectList(ViewBag.PaymentType as System.Collections.IEnumerable, "id", "FeeType"),
+             "--Select--", new { id = "id" })
+
+                @Html.ValidationMessageFor(model => model.Paymenttypeid)
+            </td>
+        </tr>
+ 
+        <tr>
+            <td>
+               
+
+            </td>
+            <td colspan="3" style="line-height: 1.2rem;" class="right_buttons">            
+                <input type="submit" value="Save" />
+            </td>
+        </tr>
+    </table>
+}

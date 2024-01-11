@@ -1,0 +1,138 @@
+﻿@model List<UAAAS.Models.College_DD_Payment_Report>
+
+@using (Html.BeginForm())
+{
+    int count = 1;
+    string DDNumber = string.Empty;
+    string Date = string.Empty;
+    string Date12 = string.Empty;
+    string BankName = @Model.Select(a => a.BankName).FirstOrDefault();
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th colspan="11">Account Number : 62079988430</th>
+            </tr>
+            @if (TempData["FullMonthName"] != null && TempData["FullMonthName"] != "")
+            {
+                <tr>
+                    <th colspan="11">@TempData["FullMonthName"].ToString()</th>
+                </tr>
+            }
+            else if (BankName != null)
+            {
+                <tr>
+                    <th colspan="11">@BankName</th>
+                </tr>
+            }
+            <tr>
+                <th rowspan="2" style="text-align: center; background-color: yellow; vertical-align: top">
+                    S.No
+                </th>
+                <th rowspan="2" style="text-align: center; background-color: yellow; vertical-align: top">
+                    DD.No
+                </th>
+                <th rowspan="2" style="text-align: center; background-color: yellow; vertical-align: top">
+                    Date
+                </th>
+                <th rowspan="2" style="text-align: center; background-color: yellow; vertical-align: top">
+                    C.C
+                </th>
+                <th rowspan="2" style="text-align: center; background-color: yellow; vertical-align: top">
+                    Name of the College
+                </th>
+                <th colspan="4" style="text-align: center; background-color: yellow; vertical-align: top">
+                    Nature of Payment
+                </th>
+                <th rowspan="2" style="text-align: center; background-color: yellow; vertical-align: top">
+                    Name of the Bank
+                </th>
+                <th rowspan="2" style="text-align: center; background-color: yellow; vertical-align: top">
+                    Amount
+                </th>
+            </tr>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Affiliation Fee
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    NOC
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    SCM
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Others
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="text-align: left;">@(count++)</td>
+                        <td style="text-align: left;">
+                            @{
+                                if (item.DD_No != null)
+                                {
+                                    var splitDDNo = item.DD_No.Substring(0, 1).ToString();
+                                    if (splitDDNo == "0")
+                                    {
+                                        DDNumber = "'" + item.DD_No;
+                                    }
+                                    else
+                                    {
+                                        DDNumber = item.DD_No;
+                                    }
+                                }
+                                else
+                                {
+                                    DDNumber = null;
+                                }
+                            }
+                            @DDNumber
+                        </td>
+                        @{
+                            Date = item.DD_Date.ToString();
+                            Date12 = Date.Split(' ')[0];
+                            Date12 = UAAAS.Models.Utilities.MMDDYY2DDMMYY(Date12);
+                        }
+                        <td style="text-align: left;">
+                            @Date12
+                        </td>
+                        <td style="text-align: left;">@item.CollegeCode</td>
+                        <td style="text-align: left;">@item.CollegeName</td>
+                        <td style="text-align: left;">
+                            @if (item.FeeTypeId == 1)
+                            {
+                                <span>@item.FeeType</span>
+                            }
+                        </td>
+                        <td style="text-align: left;">
+                            @if (item.FeeTypeId == 10)
+                            {
+                                <span>@item.FeeType</span>
+                            }
+                        </td>
+                        <td style="text-align: left;">
+                            @if (item.FeeTypeId == 9 && item.SubFeeTypeId == 2)
+                            {
+                                <span>SCM Fee for Faculty</span>
+                            }
+                            else if (item.FeeTypeId == 9 && item.SubFeeTypeId == 3)
+                            {
+                                <span>SCM Fee for Principal</span>
+                            }
+                        </td>
+                        <td style="text-align: left;">
+                            <span>@item.FeeType</span>
+                        </td>
+                        <td style="text-align: left;">@item.BankName</td>
+                        <td style="text-align: left;">@item.Amount</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}

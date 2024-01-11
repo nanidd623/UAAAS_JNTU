@@ -1,0 +1,89 @@
+﻿@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "Affidavit";
+}
+
+<p class="create_link_right">
+    <span style="color: red; font-style: italic; font-weight: bold;">
+        <a href="../../Content/AFFIDAVIT.docx">Download Affidavit</a>
+    </span>
+</p>
+<h2 style="text-align: center;">Affidavit</h2>
+<div style="text-align: center; font-style: italic; margin-bottom: 25px;">
+    (Format of affidavit to be submitted by the applicant on a non-judicial stamp paper of Rs.100/-)
+</div>
+<div style="margin-bottom: 30px;">
+    I/We, <<span style="font-style: italic;">name</span>>, Chairman/ Secretary, <<span style="font-style: italic;">name of the Trust/Society</span>,
+    son of _________________________, aged _____________ years and, resident of ______________ <<span style="font-style: italic;">name</span>,
+    Principal / Director, <<span style="font-style: italic;">name of the Institution</span>, son of ____________, aged ____________ years and,
+    resident of _____________________, in connection with our application dated ____________ made to JNTUH for grant of Affiliation for the A.Y. @ViewBag.NextacademicYear.
+</div>
+<div style="font-weight: bold; margin-bottom: 10px;">
+    Hereby solemnly affirm and declare as under:
+</div>
+<ol style="margin-left: 20px; margin-bottom: 20px;">
+    <li>That the information given by us in the application made to JNTUH is true and complete. Nothing is false and no material has been concealed. </li>
+    <li>That if any of the information is found to be false, incomplete, misleading and / or that we fail to disclose all the information and / or suppress any information and / or misrepresent the information, we shall be liable to be prosecuted by the University. </li>
+    <li>That the facts stated in this affidavit are true to my / our knowledge. No part of the same is false and no material has been concealed there from.</li>
+</ol>
+<div style="margin-bottom: 10px; font-weight: bold;">
+    We further certify that:
+</div>
+<ul style="margin-left: 20px; margin-bottom: 20px; list-style-type: lower-alpha;">
+    <li>The Institute is not offering any academic programme, which is not approved by JNTUH.</li>
+    <li>No other University has been approached for affiliation of the institute/courses mentioned in this application.</li>
+    <li>All Courses are conducted as per norms; standards and guidelines approved by JNTUH and all the rules and regulations of the University are being followed as specified from time to time.</li>
+    <li>All the physical deficiencies stated in the last approval letter for UG & PG programmes have been rectified (for existing institutions). </li>
+    <li>The AICTE / PCI scales of pay and allowance have been granted to the teaching faculty and other staff. </li>
+    <li>The admissions are made on merit and as per JNTUH admission guidelines and capitation fee or donation of any kind has not been charged for admission.</li>
+    <li>The teaching faculty and staff have been recruited as per qualification and experience as laid down by the AICTE / PCI. </li>
+    <li>The tuition and the other fee are charged within the criteria prescribed by the Competent Authorities. </li>
+    <li>The accounts of the institution are being maintained as per the provisions of relevant statutes and certified by a Chartered Accountant.</li>
+    <li>The intake in any of the JNTUH approved courses has not been increased beyond the sanctioned intake, without prior approval from the University.</li>
+    <li>The building and premises in which the Institution is functioning is not being utilized for any other courses/ programmes which are not approved by the council.</li>
+</ul>
+
+<div style="margin-bottom: 10px; font-weight: bold;">
+    We understand that:
+</div>
+<ul style="margin-left: 20px; margin-bottom: 20px; list-style-type: lower-alpha;">
+    <li>Liabilities if any on this count shall be the sole responsibility of the applicant’s Society/Trust and shall be settled as per the rules and regulations as applicable.</li>
+    <li>The Grant or Rejection of this affiliation application does not in any way absolve the Society/Institution from the final outcome of the Court cases pending in the High Court or any other court or any other action that may be initiated by the University or Government against the Management/Institution for the previous academic years.</li>
+    <li>The mere submission of this Application does not guarantee an Affiliation. (Affiliation is purely based on satisfaction of norms and criteria as laid down by AICTE/PCI/University from time to time.)</li>
+    <li>If any conditional affiliation is given to the Institution or College, then the University has absolute right to cancel the affiliation without prior notice if the Institution/ College does not comply with the conditions of affiliation within the time stipulated in the conditional affiliation order.</li>
+
+</ul>
+<div style="margin-bottom: 30px;">
+    We solemnly declare that all the information provided in this application form is true and if any information is found to be incorrect or false, we are liable for rejection of the application and further prosecution and legal action by the University as per University regulations.
+</div>
+
+
+<b style="display: block;">Date:</b>
+
+<b style="display: block;">Place:</b>
+
+<table style="width: 100%;">
+    <tr>
+        <td style="width: 50%; text-align: center;">
+            <b>
+                Name and Signature of the
+                <br />
+                Chairperson/Secretary of the Society
+            </b>
+        </td>
+        <td style="text-align: center;">
+            <b>
+                Name and Signature of the<br />
+                Head of the Institution
+            </b>
+        </td>
+    </tr>
+</table>
+<div style="margin-top: 30px; text-align: center; font-weight: bold;">
+    * * *
+</div>
+

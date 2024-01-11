@@ -1,0 +1,45 @@
+﻿@model UAAAS.Controllers.CopyFileClass
+@{
+    ViewBag.Title = "CopyFile";
+}
+
+<h2>CopyFile</h2>
+@using (Html.BeginForm("CopyFile", "DatabaseReports", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div style="width:50%;border:solid 1px #e6e6e6;border-top:5px solid #F2552C;box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);margin:auto;">
+        <table cellspacing="6px;" width="90%" style="margin:auto;padding:7px;">
+            <tr>
+                <td class="tdright">
+                    <span>Upload Excel</span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    @Html.TextBoxFor(model => model.RegNosExcel, new { type = "file", @class = "file required", @style = "vertical-align: top;" }) &nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td class="tdright">
+                    <span>Old Path</span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    @Html.TextBoxFor(model => model.ExcelFileFolderpath, new { @style = "vertical-align: top;" }) &nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td class="tdright">
+                    <span>New Path</span>
+                </td>
+                <td class="tdcenter">:</td>
+                <td class="tdleft">
+                    @Html.TextBoxFor(model => model.FilesCopiedpath, new { @style = "vertical-align: top;" }) &nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Copy" />
+                </td>
+            </tr>
+        </table>
+    </div>
+}

@@ -1,0 +1,219 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeIntakeExisting>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    //if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    //{
+    //    Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    //}
+    ViewBag.Title = "LateFeeDetailsandPayment";
+}
+
+<h2>Late Fee Details and Payment</h2><br />
+
+<style>
+    .not-active {
+        pointer-events: none;
+        cursor: default;
+    }
+</style>
+
+<table class="full_table" style="width: 100%; font-size: 0.7rem;">
+    <tr>
+
+        <th style="text-align: center;" rowspan="3">
+            Late Processing Fee
+        </th>
+        @*<th style="text-align: center;" colspan="4">
+                Inspection Fee
+            </th>*@
+        <th style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">
+            Total Fee
+            <br />
+
+        </th>
+        <th style="text-align: center;" rowspan="3">
+            Payment
+        </th>
+        @*<th colspan="2" style="text-align: center;" rowspan="3"></th>*@
+    </tr>
+    <tr>
+        @*<th style="text-align: center;" colspan="2">
+                UG Programme
+            </th>
+            <th style="text-align: center;" colspan="2">
+                PG Programme
+            </th>*@
+    </tr>
+    <tr>
+        @*<th style="text-align: center;" colspan="2">
+                @ViewBag.countofUgcourse
+            </th>
+            <th style="text-align: center;" colspan="2">
+                @ViewBag.countofPgcourse
+            </th>*@
+    </tr>
+    <tr>
+
+        <td style="text-align: center;" colspan="1"><label>Rs</label> @ViewBag.lateFee </td>
+        @*<td style="text-align: center;" colspan="2"><label>Rs</label> @ViewBag.ugSpecializationAmmount</td>
+            <td style="text-align: center;" colspan="2"> <label>Rs</label> @ViewBag.pgSpecializationAmmount</td>*@
+        <td style="width: 60px; text-align: center; background-color: lightgreen; font-weight: bold;">
+            <label>Rs</label> @ViewBag.totalFee
+        </td>
+
+        <td class="create_link_right" style="text-align:center;">
+            @*@if (ViewBag.IsPaymentDone)
+                {
+                    @Html.ActionLink("Pay", "", "", new { collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button not-active" })
+                }
+                else
+                {
+                    @Html.ActionLink("Pay", "", "", new { collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })
+                }*@
+            <html>
+            <body>
+                <form method="post" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment">
+                    <input name="msg" type="hidden" value=@ViewBag.msg>
+
+                    @*<form method="post" id="paymentform" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment">
+                        <input name="msg" type="hidden" value=@ViewBag.msg>*@
+
+
+                    @*@if (ViewBag.IsPaymentDone)
+                        {
+
+                            <input type="submit" value="Paid" id="pay" class="create_button not-active">
+                        }
+                        else
+                        {     <input type="checkbox" id="continuePayment" /><span>I Aggree</span><br/><text>Once payment is done colleges can not add<br/> new courses please confirm before making payment</text>
+                             <input type="submit" value="Pay" id="pay" class="create_button not-active">}*@
+
+                    @*<input type="checkbox" id="continuePayment" /><span>I Aggree</span><br /><text>Once payment is done colleges can not add<br /> new courses please confirm before making payment</text>
+                        <input type="submit" value="Pay" id="pay" class="create_button not-active">*@
+
+                    @if (ViewBag.IsLatePaymentDone && ViewBag.totalFee == 0)
+                    {
+                        <input type="submit" value="Paid" id="pay" class="create_button not-active ">
+                    }
+                    else if (ViewBag.totalFee == 0)
+                    {
+
+                    }
+                    else
+                    {
+                        if (ViewBag.NotUpload == false && Roles.IsUserInRole("College"))
+                        {
+                            <input type="checkbox" id="continuePayment" />
+                            <span>I Agree</span>
+                            <br />
+                            <text>Once payment is done colleges can not add<br /> new courses please confirm before making payment</text>
+                            <input type="submit" value="Pay" id="pay" class="create_button">
+                        }
+
+                    }
+                </form>
+            </body>
+        </html>
+</tr>
+</table>
+
+
+@if (ViewBag.Payments.Count != 0)
+{
+    <div style="margin-top:50px;">
+        <h2>Payment History</h2>
+        <table class="webGrid">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>Challan Number</th>
+                    <th>Txn Reference No.</th>
+                    <th>Txn Amount.</th>
+                    <th>Payment Type.</th>
+                    <th>Payment Status</th>
+                    <th>Payment Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in ((List<UAAAS.Models.jntuh_paymentresponse>)ViewBag.Payments).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr>
+                        <td>@pay.i </td>
+                        <td>@pay.value.CustomerID</td>
+                        <td>@pay.value.TxnReferenceNo</td>
+                        <td>@pay.value.TxnAmount</td>
+                        <td>@pay.value.PaymentType</td>
+                        <td>@pay.value.AuthStatus</td>
+                        <td>@pay.value.ErrorDescription </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+        $.ajaxSetup({ cache: false });
+
+        $("#openDialog").live("click", function (e) {
+            //e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Pay',
+                height: 300,
+                width: 650
+            });
+            url = $("#openDialog").attr('href');
+            return false;
+        });
+        $('#pay').click(function (e) {
+            var data = "challanNumber=@ViewBag.challnNumber&txnAmount=@ViewBag.totalFee&collegeCode=@ViewBag.collegeCode";
+            //alert(data);
+            //e.preventDefault();
+            $.ajax({
+                url: "/LateFee/SavePaymentRequest",
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                data: data,
+                success: function (data) {
+                    //$('#paymentform').submit();
+                },
+                error: function (event) {
+                    // $(this).prop("checked", false);
+                }
+            });
+        });
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+    });
+</script>
+
+<script>
+    function DisplayMessage(e) {
+        var retVal = confirm("Do you want to continue ?");
+        if (!retVal) {
+            e.preventDefault();
+        }
+        else {
+            alert('payment');
+            $('#paymentform').submit();
+        }
+
+    }
+    $(document).ready(function () {
+        $('#continuePayment').click(function () {
+            if ($(this).attr("checked")) {
+                $('#pay').removeClass('not-active');
+            }
+            else $('#pay').addClass('not-active');
+            //if ($(this).is(":checked")) {
+            //    alert($(this.val()));
+            //}
+        });
+    })
+</script>
+

@@ -1,0 +1,30 @@
+﻿@model UAAAS.Models.ClusterScheduleEmails
+@using UAAAS.Models;
+@{  
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "Add College";
+}
+@using (Html.BeginForm())
+{    
+    <div class="details_table">
+        <div class="editor-label">
+            <span>Cluster</span>
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.cluster)
+            @Html.HiddenFor(model => model.cluster)
+        </div>
+
+        <div class="editor-label">
+            <span>Change Cluster</span>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.newcluster)
+        </div>
+        <div class="editor-field last-row" style="text-align: center">
+            <p>
+                <input type="submit" value="Add" name="cmd" />
+            </p>
+        </div>
+    </div>
+}

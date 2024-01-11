@@ -1,0 +1,337 @@
+﻿@{
+    ViewBag.Title = "ViewTeachingStaff";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    var index = 1;
+
+    string facultyid = string.Empty;
+}
+
+<h2>Adhoc Teaching Faculty</h2>
+<html>
+<body>
+    <p class="create_link_right">
+        @*@Html.ActionLink("Add Teaching Faculty", "AddFaculty", "Faculty", new { type = ViewBag.Type, fid = DBNull.Value, collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })*@
+    </p>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+
+    @if (ViewBag.Admin == true)
+    {
+        <p class="create_link_right">
+            @Html.ActionLink("Downloadpdf", "printpdfdata", "Faculty", new { strType = "Pdf" }, new { @class = "convertPdf create_button" })
+            <input name="btnPrint" type="button" onclick=" printAdmindiv('div_Admin_print'); " value=" Print" class="create_button" />
+            @Html.ActionLink("Export", "ViewTeaching", "Faculty", new { strType = "Export" }, new { @class = "create_button" })
+        </p>
+    }
+    else
+    {
+        <p class="create_link_right">
+            @* <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+                @Html.ActionLink("Print", "PrintTeaching", "Faculty", new { @class = "create_button" })*@
+        </p>
+    }
+    <table id="example" class="display">
+        <thead style="background: #FCF1D1">
+            <tr>
+                <th style="text-align: left;">S.No</th>
+                <th style="text-align: left;">Name</th>
+                <th style="text-align: left;">Registration Number</th>
+                <th style="text-align: left;">Designation</th>
+                <th style="text-align: left;">Department</th>
+                <th style="text-align: left;">Specialization</th>
+                <th style="text-align: left;">In PlaceFcaulty</th>
+                <th style="text-align: left;">View</th>                
+                @*<th class="ui-state-default" style="width: 150px; text-align: center;">Verification Status</th>*@
+                @*<th style="text-align: left;">Pending Status</th>*@
+
+
+            </tr>
+        </thead>
+
+        @*<tfoot style="display:table-header-group">
+            <tr>
+                <th></th>
+                <th style="text-align: left;">Name</th>
+                <th style="text-align: left;">Registration Number</th>
+                <th style="text-align: left;">Designation</th>
+                <th style="text-align: left;">Department</th>
+                <th style="text-align: left;">Specialization</th>
+                <th></th>
+            </tr>
+            </tfoot>*@
+        <tbody> </tbody>
+
+    </table>
+</body>
+
+</html>
+<div id="dialog-edit" style="display: none">
+</div>
+<div id="dialog-confirm" style="display:none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>
+
+<link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+<link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+
+
+<script type="text/javascript"> </script>
+<script>
+    // var asInitVals = new Array();
+    debugger;
+
+    $(document).ready(function () {
+        var query = window.location.pathname.split("/");
+        var id = query[3];
+        console.log(query);
+        console.log(id);
+        // datatable
+        var otable = $('#example').DataTable({
+            "processing": true,
+            //"serverSide": true,
+            "ajax":
+            {
+                "type": "POST",
+                "url": "/Faculty/ViewAdhocTeachingJson?id=" + id,
+                "dataSrc": ""
+
+            },
+            // "order": [[ 1, 'asc' ]],
+            "columns": [
+                { "data": "id" },
+                { "data": "facultyFirstName" },
+                { "data": "AdocFacultyRegistrationNumber" },
+                { "data": "designation" },
+                { "data": "department" },
+                { "data": "SpecializationName" },
+                { "data": "FacultyRegistrationNumber" },
+                //  {
+                //     "data": "facultyPhoto",
+                //    "bSortable": false,
+                //    "render": function (data, type, row) {
+                //       var path = "imagepath" + data;
+                //       return '<img style="height:40px;text-align:center" src="' + path + '" />';
+                //   }
+                // },
+                //{
+                //    "data": "RegistrationNumber",
+                //    "bSortable": false,
+                {
+
+                    "render": function (data, type, full) {
+                        debugger;
+                        console.log(full);
+                        return '<a href="/Faculty/ViewAdhocFacultyDetails?fid=' + full["adhocregid"] + ' " target="_blank" class="view_button"><span>View</span></a>';
+                    }
+
+
+
+                }
+                //,
+                //{
+
+                //    "render": function (data, type, full) {
+                //        debugger;
+                //        if (full["AdocFacultyRegistrationNumber"] === null) {
+                //            return '<a href="/Faculty/AdocFacultyRegistrationNumber?fid=' + full["id"] + '" class ="EditDialog edit_button" style="text-align:center"><span>Edit</span></a>';
+                //        } else {
+                //            return '<a href="/Faculty/AdocFacultyDelete?fid=' + full["adhocid"] + '&&type=' + full["AdhocfacultyTypeId"] + '&&rid=' + full["AdhocfacultyCategoryId"] + '"  class="confirmDialog delete_button"><span>Delete</span></a>';
+                //        }
+
+                //    }
+                //}
+               //{
+                   //"render": function (data, type, full) {
+                   //    return '<a href="/Faculty/Delete?fid=' + full["id"] + '&&type=' + full["facultyTypeId"] + '&&rid=' + full["facultyCategoryId"] + '"  class="confirmDialog delete_button"><span>Delete</span></a>';
+                   //}
+               //}
+            ],
+
+        });    
+        otable.on('order.dt search.dt', function () {
+            otable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+
+    });
+
+    $(document).ready(function () {
+        debugger;
+        var mainUrl = window.location;
+
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Verify Faculty',
+            autoOpen: false,
+            resizable: false,
+            height: 520,
+            width: 640,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            debugger;
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Faculty'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Verify Faculty'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+
+        // For Deleting
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+
+            $("#dialog-confirm").dialog({
+                title: 'Delete Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'fadeIn', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        $(".EditDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+
+            $("#dialog-edit").dialog({
+                title: 'Edit Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 520,
+                width: 640,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/Faculty/Teaching";
+                }
+
+            });
+
+            $("#dialog-edit").dialog('open');
+            return false;
+        });
+        $("#btneditcancel").live("click", function (e) {
+
+            //$("#dialog-edit").close();
+            window.location.href = "/Faculty/ViewTeaching";
+        });
+    });
+</script>
+
+
+<style>
+    #example_wrapper .row {
+        border: none;
+    }
+
+    #example_filter input[type=search] {
+        border: solid 1px #c0c0c0;
+        padding: 2px;
+    }
+
+    #example thead tr th, #example tfoot tr th {
+        border: 1px solid #d3d3d3;
+    }
+
+    /*#example tbody tr td {
+        text-align: center;
+    }*/
+
+    #example_wrapper {
+        border: 1px solid #C0C0C0;
+    }
+
+    #example {
+        padding-top: 10px;
+    }
+</style>

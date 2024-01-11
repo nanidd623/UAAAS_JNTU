@@ -1,0 +1,212 @@
+﻿@model IEnumerable<UAAAS.Models.DataEntryColleges>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Data Entry Assigned Colleges";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int sno = 1;
+}
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    //rettriveing phaseId by using querystring
+    function querystring(key) {
+        var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi');
+        var r = [], m;
+        while ((m = re.exec(document.location.search)) != null) r.push(m[1]);
+        return r;
+    }
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 5000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        //PhaseId
+        var s = querystring('PhaseId');
+        if (s == '') {
+            $("#PhaseId").val("Select Inspection Phase");
+        }
+        else {
+            $("#PhaseId").val(s);
+        }
+        $("#PhaseId").change(function () {
+            var id = $('#PhaseId').val();
+
+            var s = $("#btnSearch").attr("href");
+            s = s.substring(0, s.indexOf('=') + 1);
+            $("#btnSearch").attr("href", s + id)
+
+        });
+
+    });
+
+</script>
+
+<h2>Data Entry Assigned Colleges</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+@if (!User.IsInRole("DataEntry"))
+{
+    <div class="create_link_right" style="float: left">
+
+        @Html.DropDownList("ddlPhaseId",
+            new SelectList(ViewBag.oldInspectionPhases as System.Collections.IEnumerable, "id", "name"),
+            "Select Inspection Phase", new { id = "PhaseId" })
+        @Html.ActionLink("Search", "DataEntryAssignedColleges", "DataEntryAssignedColleges", new { PhaseId = DBNull.Value }, new { @class = "create_button", id = "btnSearch" })
+
+    </div>
+}
+
+@using (Html.BeginForm())
+{
+   
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No</th>
+                <th style="width: 150px; text-align: center;">User</th>
+                <th style="width: 120px; text-align: center;">College Code</th>
+                <th style="width: 250px; text-align: left;">College Name</th>
+                <th class="ui-state-default" style="width: 100px; text-align: center;">Work Status</th>
+                @*<th class="ui-state-default" style="width: 70px; text-align: center;">Status</th>*@
+                <th style="width: 150px;" class="ui-state-default" colspan="2"></th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in ViewBag.DataEntryAssignedColleges as List<UAAAS.Models.DataEntryColleges>)
+            {                
+                <tr>
+                    <td style="width: 50px; text-align: center;">
+                        @(sno++)
+                    </td>
+                    <td style="center; width: 150px; text-align: center;">
+                        @item.userName
+                    </td>
+                    <td style="text-align: center; width: 120px;">
+                        @item.collegeCode
+                    </td>
+                    <td>
+                        @item.collegeName
+                    </td>
+                    <td style="text-align: center; width: 150px">
+                        @if (@item.isCompleted == true)
+                        {
+                            <span>Completed</span>
+                        }
+                        else
+                        {
+                            <span>Pending</span>
+                        }
+                    </td>
+                    @*<td style="text-align: center;">
+                        @if (@item.isActive == true)
+                        {
+                           
+                            <img src="/Content/images/active.png" alt="JNTU Hyderabad Logo" />
+                        }
+                        else
+                        {
+                           
+                            <img src="/Content/images/inactive.png" alt="JNTU Hyderabad Logo" />
+                        }
+                    </td>       *@
+                    <td style="width: 80px; text-align: center;">
+                        @Html.ActionLink("Data Entry", "Edit", "CollegeInformation", new { collegeId = UAAAS.Models.Utilities.EncryptString(item.collegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "edit_button1", target = "_blank" })
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="text-align: center;">
+                    <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                </th>
+                <th style="text-align: center;">
+                    <input type="text" id="i-2" style="width: 50%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left;">
+                    <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left;">
+                    <input type="text" id="i-4" style="width: 85%; text-align: left;" class="search_init">
+                </th>
+                @* <th class=" ui-state-default" style="width: 70px;">
+                    <input type="text" id="i-5" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>*@
+                <th class=" ui-state-default">
+                    <input type="text" id="i-6" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+    
+}
+
+

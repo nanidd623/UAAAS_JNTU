@@ -1,0 +1,145 @@
+﻿@model UAAAS.Models.CollegeFilter
+@{
+    ViewBag.Title = "Find College";
+    int index = 1;
+}
+
+<h2>Find College</h2>
+
+@using (Html.BeginForm("FindCollege", "Public", FormMethod.Post))
+{
+    if (TempData["Success"] != null)
+    {
+    <div class="success" style="margin-left: 435px">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    if (TempData["Error"] != null)
+    {
+    <div class="error" style="margin-left: 280px">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }    
+    <br />     
+    <table class="four_columns">
+        <tr>
+            <td class="col1">District
+            </td>
+            <td class="col2">
+                @Html.DropDownListFor(model => model.District,
+                    new SelectList(ViewBag.District as System.Collections.IEnumerable, "Id", "Name"),
+                    "-- Select --", new { id = "District", @style = "width:98%" })
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">Degree
+            </td>
+            <td class="col2">
+                @Html.DropDownListFor(model => model.Degree,
+                    new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "Id", "Name"),
+                    "-- Select --", new { id = "Degree", @style = "width:98%" })
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">Department
+            </td>
+            <td class="col2">
+                @Html.DropDownListFor(model => model.Department,
+                    new SelectList(Enumerable.Empty<SelectListItem>()),
+                    "-- Select --", new { id = "Department", @style = "width:98%" })
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">Specialization
+            </td>
+            <td class="col2">
+                @Html.DropDownListFor(model => model.Specialization,
+                    new SelectList(Enumerable.Empty<SelectListItem>()),
+                    "-- Select --", new { id = "Specialization", @style = "width:98%" })
+            </td>
+        </tr>
+    </table>
+    <div style="text-align: center">
+        <p>
+            <input type="submit" id="submit" value="Find" />
+        </p>
+    </div> 
+    @Html.Hidden("SelectedDegree", Model.Degree)
+    @Html.Hidden("SelectedDepartment", Model.Department)
+    @Html.Hidden("SelectedSpecialization", Model.Specialization)
+
+}
+
+<script type="text/javascript">
+    //alert($("#SelectedDegree").val());
+    //alert($("#SelectedDepartment").val());
+    //alert($("#SelectedSpecialization").val());
+
+    $(document).ready(function () {
+        alert('Working');
+
+        if ($("#SelectedDegree").val() != '') {
+            GetDepartments($("#SelectedDegree").val());
+        }
+
+        if ($("#SelectedDepartment").val() != '') {
+            GetSpecializations($("#SelectedDepartment").val());
+        }
+
+        $("#Degree").change(function () {
+            if ($(this).val() != '') {
+                var select = $("#Specialization");
+                select.empty();
+                select.append($('<option/>', {
+                    value: '',
+                    text: '-- Select --'
+                }));
+                GetDepartments($(this).val());
+            }
+        });
+
+        function GetDepartments(degreeId) {
+            $.getJSON("/Public/GetDepartments", { degree: degreeId },
+                   function (myData) {
+                       var select = $("#Department");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: '',
+                           text: '-- Select --'
+                       }));
+                       $.each(myData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text,
+                               selected: (itemData.Value == $("#SelectedDepartment").val() ? true : false)
+                           }));
+                       });
+                   });
+        }
+
+        $("#Department").change(function () {
+            if ($(this).val() != '') {
+                GetSpecializations($(this).val());
+            }
+        });
+
+        function GetSpecializations(departmentId) {
+            $.getJSON("/Public/GetSpecializations", { department: departmentId },
+                   function (myData) {
+                       var select = $("#Specialization");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: '',
+                           text: '-- Select --'
+                       }));
+                       $.each(myData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text,
+                               selected: (itemData.Value == $("#SelectedSpecialization").val() ? true : false)
+                           }));
+                       });
+                   });
+        }
+    });
+</script>

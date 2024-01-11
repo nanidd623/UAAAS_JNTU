@@ -1,0 +1,380 @@
+﻿@model IList<UAAAS.Controllers.FacultyVerificationNewController.CollegeFacultyWithIntakeReport>
+@using UAAAS.Models;
+
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    var jntuh_degree = db.jntuh_degree.ToList();
+    ViewBag.Title = "CollegeFacultyWithIntake";
+    int sno = 1;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/FacultyVerificationNew/CollegeFacultyWithIntakeNew?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerificationNew/CollegeFacultyWithIntakeNew';
+            }
+        });
+
+
+        $('.deficiency').click(function () {
+            $('.faculty_table > tbody  > tr').each(function () {
+                var selectedVal = "";
+                //var selected = $(".Identified input[type='radio']:checked");
+                var selected = $(this).find(".Identified input[type='radio']:checked");
+                //alert(selected.length);
+                if (selected.length == 0) {
+                    // alert('0');
+                    $(this).find('#deficiency').addClass('required');
+                    $(this).find('.Identified').css('background-color', 'red');
+
+                } else {
+                    //alert('1');
+                    $(this).find('#deficiency').removeClass('required');
+                    $(this).find('.Identified').css('background-color', '#FCF1D1');
+
+
+                }
+            });
+        });
+        $('#btnSubmit').click(function () {
+            $('.faculty_table > tbody  > tr').each(function () {
+                var selectedVal = "";
+                var selected = $(this).find(".Identified input[type='radio']:checked");
+                if (selected.length == 0) {
+                    $(this).find('#deficiency').addClass('required');
+                    $(this).find('#deficiency').css('background-color', 'red');
+                    return false;
+                } else {
+                    $(this).find('#deficiency').removeClass('required');
+                    $(this).find('.Identified').css('background-color', '#FCF1D1');
+                }
+            });
+
+        });
+    });
+</script>
+<h2>College Faculty With Intake</h2>
+@using (Html.BeginForm())
+{
+    if (@TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    <table class="faculty_table111">
+        <tr>
+            <td class="col1">
+                College
+            </td>
+            <td class="col2">
+                @Html.DropDownList("collegeId", new SelectList(@ViewBag.Colleges, "collegeId", "collegeName"),
+                "--Select--", new { id = "college", @style = "width:95%" })
+            </td>
+            <td class="col3">
+                @Html.ActionLink("Export", "CollegeFacultyWithIntakeNew", "FacultyVerificationNew", new { type = "Excel", collegeId = Request.Params["collegeId"] }, new { @class = "create_button" })
+                <input type="submit" value="Save" id="btnSubmit" class="create_button" />
+            </td>
+
+        </tr>
+    </table>
+
+    <br />
+    <table style="width: 100%; border: 1px; border-color: red" class="faculty_table">
+        <tr>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">SNo</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Code</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">College Name</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Department</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Degree</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Specialization</th>
+            @*<th class="col1" style="text-align: center; vertical-align: top; " rowspan="2">ShiftId</th>*@
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="4">Intake</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Total</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Minimum Faculty Requirement Program Wise</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Total Faculty Requirement</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Total Faculty Specialization Wise</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Adjusted Faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="8">Available Faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency of Doctorates</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Number of faculty after Last date of Submission</th>
+        </tr>
+        <tr>
+            <th class="col1" style="text-align: right; vertical-align: top;">IV Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">III Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">II Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">I Year</th>
+
+            <th class="col1" style="text-align: center; vertical-align: top;">No. Of Faculty with UG</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">No. Of Faculty with PG</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">No. Of Faculty with Ph.D</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">Total Faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">No. of faculty without PAN and Aadhaar</th>
+
+            <th class="col1" style="text-align: center; vertical-align: top; color: red">Whether minimum requirement met</th>
+            <th class="col1" style="text-align: left; vertical-align: top; color: red; min-width: 80px !important;">Deficiency</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red;">Shortage</th>
+        </tr>
+        <tbody>
+            @foreach (var collegeId in Model.Select(c => c.collegeId).Distinct().ToList())
+            {
+                var count = Model.Where(m => m.collegeId == collegeId).Select(m => m).Count();
+                var list = Model.Where(c => c.collegeId == collegeId).ToList();
+                var distDeptcount = 1;
+                var deptloop = 1;
+                decimal departmentWiseRequiredFaculty = 0;
+
+                string[] departments = new string[] { "English", "Mathematics", "Physics", "Chemistry", "Others" };
+                int totalBtechFirstYearIntake = list.Where(d => d.Degree == "B.Tech").Select(d => d.approvedIntake1).Sum();
+                var firstYearRequired = Math.Ceiling((double)totalBtechFirstYearIntake / 120);
+                int remainingFaculty = 0;
+                int remainingPHDFaculty = 0;
+
+                for (int i = 0; i < list.Count(); i++)
+                {
+
+                    @Html.HiddenFor(m => m[i].id)
+                    @Html.HiddenFor(m => m[i].collegeId)
+                    @Html.HiddenFor(m => m[i].specializationId)
+                    @Html.HiddenFor(m => m[i].shiftId)
+
+                    distDeptcount = list.Where(d => d.Department == list[i].Department).Distinct().Count();
+
+                    int indexnow = list.IndexOf(list[i]);
+
+                    if (indexnow > 0 && list[indexnow].Department != list[indexnow - 1].Department)
+                    {
+                        deptloop = 1;
+                    }
+
+                    departmentWiseRequiredFaculty = list.Where(d => d.Department == list[i].Department).Select(d => d.requiredFaculty).Sum();
+
+                    string minimumRequirementMet = string.Empty;
+                    int facultyShortage = 0;
+                    int adjustedFaculty = 0;
+                    int adjustedPHDFaculty = 0;
+
+                    int tFaculty = (int)Math.Ceiling(Convert.ToDecimal(list[i].totalFaculty));
+                    int rFaculty = (int)Math.Ceiling(list[i].requiredFaculty);
+
+                    if (departments.Contains(list[i].Department))
+                    {
+                        rFaculty = (int)firstYearRequired;
+                        departmentWiseRequiredFaculty = (int)firstYearRequired;
+                    }
+
+                    var degreeType = jntuh_degree.Where(d => d.degree == list[i].Degree).Select(d => d.jntuh_degree_type.degreeType).FirstOrDefault();
+
+                    if (deptloop == 1)
+                    {
+                        if (rFaculty <= tFaculty)
+                        {
+                            minimumRequirementMet = "YES";
+                            remainingFaculty = tFaculty - rFaculty;
+                            adjustedFaculty = rFaculty;
+                        }
+                        else
+                        {
+                            minimumRequirementMet = "NO";
+                            adjustedFaculty = tFaculty;
+                            facultyShortage = rFaculty - tFaculty;
+                        }
+
+                        remainingPHDFaculty = list[i].phdFaculty;
+
+                        if (remainingPHDFaculty > 0 && degreeType.Equals("PG"))
+                        {
+                            adjustedPHDFaculty = 1;
+                            remainingPHDFaculty = remainingPHDFaculty - 1;
+                        }
+                    }
+                    else
+                    {
+                        if (rFaculty <= remainingFaculty)
+                        {
+                            minimumRequirementMet = "YES";
+                            remainingFaculty = remainingFaculty - rFaculty;
+                            adjustedFaculty = rFaculty;
+                        }
+                        else
+                        {
+                            minimumRequirementMet = "NO";
+                            adjustedFaculty = remainingFaculty;
+                            facultyShortage = rFaculty - remainingFaculty;
+                            remainingFaculty = 0;
+                        }
+
+                        if (remainingPHDFaculty > 0 && degreeType.Equals("PG"))
+                        {
+                            adjustedPHDFaculty = 1;
+                            remainingPHDFaculty = remainingPHDFaculty - 1;
+                        }
+                    }
+
+                    if (list.IndexOf(list[i]) == 0)
+                    {
+                        <tr>
+                            <td class="col2" style="text-align: center; vertical-align: top;width:10px" rowspan="@count">@(sno++)</td>
+                            <td class="col2" style="text-align: center; vertical-align: top;width:10px; text-transform: uppercase" rowspan="@count">@list[i].collegeCode</td>
+                            <td class="col2" style="text-align: left; vertical-align: top; text-transform: uppercase" rowspan="@count">@list[i].collegeName</td>
+                            <td class="col2" style="text-align: left; vertical-align: top;" rowspan="@distDeptcount">@list[i].Department.Replace("z1", "").Replace("z2", "").Replace("z3", "").Replace("z4", "").Replace("z5", "").ToString()</td>
+                            <td class="col2" style="text-align: left; vertical-align: top;">@list[i].Degree</td>
+                            <td class="col2" style="text-align: left; vertical-align: top;">@list[i].Specialization.Replace("z1", "").Replace("z2", "").Replace("z3", "").Replace("z4", "").Replace("z5", "").ToString()</td>
+                            @*<td class="col2" style="text-align: center; vertical-align: top; ">@list[i].shiftId</td>*@
+                            <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake4</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake3</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake2</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake1</td>
+                            @if (departments.Contains(list[i].Department))
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;">@totalBtechFirstYearIntake</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@Math.Ceiling(firstYearRequired)</td>
+                            }
+                            else
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].totalIntake</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@Math.Ceiling(list[i].requiredFaculty)</td>
+                            }
+
+                            <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@Math.Ceiling(departmentWiseRequiredFaculty)</td>
+                            <td class="col2" style="text-align: center; vertical-align: top;">
+                                @Html.TextBoxFor(m => m[i].specializationWiseFaculty, new { @placeholder = "", style = "text-align: right;", @Value = list[i].specializationWiseFaculty })
+                            </td>
+                            <td class="col2" style="text-align: center; vertical-align: top;">
+                                <span>@adjustedFaculty</span>
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].ugFaculty</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].pgFaculty</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].phdFaculty</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].totalFaculty</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].facultyWithoutPANAndAadhaar</td>
+                            <td class="col2" style="text-align: center; vertical-align: top;">@minimumRequirementMet</td>
+
+                            <td class="col2" style="text-align: left; vertical-align: top;">
+                                <div class="Identified">
+                                    <span>@Html.RadioButtonFor(m => m[i].deficiency, true, new { @class = "required deficiency" })Yes</span>
+                                    <span>@Html.RadioButtonFor(m => m[i].deficiency, false, new { @class = "required deficiency" })No</span>
+                                </div>
+                            </td>
+                            <td class="col2" style="text-align: center; vertical-align: top;">
+                                @if (list[i].id == 0)
+                                {
+                                    @Html.TextBoxFor(m => m[i].shortage, new { @placeholder = "", style = "text-align: right;", Value = facultyShortage })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m[i].shortage, new { @placeholder = "", style = "text-align: right;" })
+
+                                }
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @if (adjustedPHDFaculty > 0)
+                                {
+                                    <span>NO</span>
+                                }
+                                else if (degreeType.Equals("PG"))
+                                {
+                                    <span>YES</span>
+                                }
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            @if (deptloop == 1)
+                            {
+                                <td class="col2" style="text-align: left; vertical-align: top;" rowspan="@distDeptcount">@list[i].Department.Replace("z1", "").Replace("z2", "").Replace("z3", "").Replace("z4", "").Replace("z5", "").ToString()</td>
+                            }
+
+                            <td class="col2" style="text-align: left; vertical-align: top;">@list[i].Degree</td>
+                            <td class="col2" style="text-align: left; vertical-align: top;">@list[i].Specialization.Replace("z1", "").Replace("z2", "").Replace("z3", "").Replace("z4", "").Replace("z5", "").ToString()</td>
+                            @*<td class="col2" style="text-align: center; vertical-align: top;">@list[i].shiftId</td>*@
+                            <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake4</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake3</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake2</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@list[i].approvedIntake1</td>
+                            @if (departments.Contains(list[i].Department))
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;">@totalBtechFirstYearIntake</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@Math.Ceiling(firstYearRequired)</td>
+                            }
+                            else
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;">@list[i].totalIntake</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">@Math.Ceiling(list[i].requiredFaculty)</td>
+                            }
+
+                            @if (deptloop == 1)
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@Math.Ceiling(departmentWiseRequiredFaculty)</td>
+                            }
+                            <td class="col2" style="text-align: center; vertical-align: top;">
+                                @Html.TextBoxFor(m => m[i].specializationWiseFaculty, new { @placeholder = "", style = "text-align: right;", @Value = list[i].specializationWiseFaculty })
+                            </td>
+                            <td class="col2" style="text-align: center; vertical-align: top;">
+                                <span>@adjustedFaculty</span>
+                            </td>
+
+                            @if (deptloop == 1)
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].ugFaculty</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].pgFaculty</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].phdFaculty</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].totalFaculty</td>
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@list[i].facultyWithoutPANAndAadhaar</td>
+                            }
+
+                            <td class="col2" style="text-align: center; vertical-align: top;">@minimumRequirementMet</td>
+                            <td class="col2" style="text-align: left; vertical-align: top;">
+                                <div class="Identified">
+                                    <span>@Html.RadioButtonFor(m => m[i].deficiency, true, new { @class = "required deficiency" })Yes</span>
+                                    <span>@Html.RadioButtonFor(m => m[i].deficiency, false, new { @class = "required deficiency" })No</span>
+                                </div>
+                            </td>
+                            <td class="col2" style="text-align: center; vertical-align: top;">
+                                @if (list[i].id == 0)
+                                {
+                                    @Html.TextBoxFor(m => m[i].shortage, new { @placeholder = "", style = "text-align: right;", Value = facultyShortage })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m[i].shortage, new { @placeholder = "", style = "text-align: right;" })
+
+                                }
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @if (adjustedPHDFaculty > 0)
+                                {
+                                    <span>NO</span>
+                                }
+                                else if (degreeType.Equals("PG"))
+                                {
+                                    <span>YES</span>
+                                }
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                        </tr>
+
+                    }
+                    deptloop++;
+
+                }
+
+            }
+        </tbody>
+    </table>
+}

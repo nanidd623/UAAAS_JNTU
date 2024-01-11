@@ -1,0 +1,417 @@
+﻿@model UAAAS.Models.CollegeInformation
+@using UAAAS.Models
+@{
+    //var OddColor = "#DDEEEE";
+     var OddColor = "#FFFFFF";    
+     var evenColor = "#EEFFFF";
+    var Odd = OddColor;
+}
+<br />
+    <table cellpadding="3" cellspacing="3" width="100%" border="1">
+        <tr>
+            <td  width="25%" bgcolor="@OddColor" colspan="4">
+                <b>@Html.LabelFor(model => model.collegeAffiliationTypeID)</b>                
+            </td>
+        </tr>
+        <tr>
+            <td  colspan="4"  width="100%" bgcolor="@OddColor">                
+                @foreach (var item in Model.collegeAffiliationType)
+                {
+                    var optionValue = "CAType_" + item.id;
+                    var selectValue = item.selected; 
+                    if (@selectValue == 1)
+                    {
+                    <label for="@optionValue">@item.name</label>
+                    }
+
+                    <br />
+                }
+            </td>
+        </tr>
+    </table>
+    <br />
+    <table cellpadding="3" cellspacing="3" width="100%" border="1">
+        <tr>
+            <td width="100%" bgcolor="@OddColor" colspan="4">
+                <b>College Information</b>
+            </td>
+        </tr>
+        <tr>
+            <td width="75%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.collegeName)
+            </td>
+            <td width="25%" bgcolor="@OddColor" colspan="3">
+                @Html.DisplayFor(model => model.collegeName, new { @class = "focus" })
+            </td>
+        </tr>
+        <tr>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.collegeCode)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.DisplayFor(model => model.collegeCode)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.eamcetCode)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.DisplayFor(model => model.eamcetCode)
+            </td>
+        </tr>
+        <tr>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.collegeStatusID)
+            </td>
+            <td width="25%" bgcolor="@OddColor">                   
+                @Html.DisplayFor(model => model.jntuh_college_status.collegeStatus)                
+            </td>
+
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.icetCode)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.DisplayFor(model => model.icetCode)
+            </td>
+        </tr>
+        <tr>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.address)
+            </td>
+            <td width="75%" bgcolor="@OddColor" colspan="3">
+                @Html.DisplayFor(model => model.address)
+            </td>
+        </tr>
+        <tr>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.townOrCity)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.DisplayFor(model => model.townOrCity)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.mandal)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.DisplayFor(model => model.mandal)
+            </td>
+        </tr>
+        <tr>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.stateId)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+              
+            @Html.DisplayFor(model => model.jntuh_state.stateName)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.districtId)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+              @Html.DisplayFor(model => model.jntuh_district.districtName)
+            </td>
+        </tr>
+        <tr>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.pincode)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.DisplayFor(model => model.pincode, new { @Value = Model.pincode == 0 ? "" : Model.pincode.ToString() })
+            </td>
+
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.fax)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.DisplayFor(model => model.fax)
+            </td>
+        </tr>
+        <tr>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.landline)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.DisplayFor(model => model.landline)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.mobile)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.DisplayFor(model => model.mobile)
+            </td>
+        </tr>
+        <tr>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.email)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.DisplayFor(model => model.email)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.website)
+            </td>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.DisplayFor(model => model.website)
+            </td>
+        </tr>
+
+        @{int rowNo = 1;}
+        @foreach (var item in Model.affiliationType)
+        {
+            var txtFromId = "txtfrom_" + item.id;
+            var txtToId = "txtto_" + item.id;
+            var rdoYesId = "rdoYes_" + item.id;
+            var rdoNoId = "rdoNo_" + item.id;
+            var selectedAffiliation = "affiliationTypeId" + @rowNo;
+            var fromDate = "affiliationFromDate" + @rowNo;
+            var toDate = "affiliationToDate" + @rowNo++;
+            var labelsid = "lbl_" + item.id;
+            var fieldsid = "field_" + item.id;
+            var radiosid = "radio_" + item.id;
+            
+            <tr>
+                <td width="25%" bgcolor="@OddColor">
+                    @item.name
+                </td>
+                <td width="25%" bgcolor="@OddColor">
+
+                    @if (@item.selected == 1)
+                    {                       
+                        <label>Yes</label> 
+                    }
+                    else
+                    {
+                        <label>No</label> 
+                    }
+
+                </td>
+                <td  id="@labelsid" width="25%" bgcolor="@OddColor">
+                    <table  cellpadding="3" cellspacing="3" width="100%" border="1">
+                        <tr>
+                            <td>Affiliation Period</td>
+                            <td style="height: 25px; text-align: right; width: 55px;" bgcolor="@OddColor">From :</td>
+                        </tr>
+                        <tr>
+                            <td bgcolor="@OddColor"></td>
+                            <td style="height: 25px; text-align: right; width: 60px;" bgcolor="@OddColor">Duration :</td>
+                        </tr>
+                        @if (@item.name.Contains("NAAC"))
+                        {
+                            <tr>
+                                <td bgcolor="@OddColor"></td>
+                                <td style="height: 25px; text-align: right;" bgcolor="@OddColor">
+                                    @Html.LabelFor(model => model.affiliationGrade) :
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </td>
+                <td class="col4 readonly" id="@fieldsid">
+                    <table style="width: 100%">
+                        <tr>
+                            <td>
+                                @if (@selectedAffiliation == "affiliationTypeId1")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationFromDate1.First().Equals(string.Empty)) { value = string.Empty; }
+                                    else
+                                    {
+                                        if (Model.affiliationFromDate1.First().Contains(' '))
+                                        {
+                                            value = Model.affiliationFromDate1.First().Remove(Model.affiliationFromDate1.First().IndexOf(' '));
+                                        }
+                                        else
+                                        {
+                                            value = Model.affiliationFromDate1.First();
+                                        }
+                                    }
+                        
+                                    @Html.DisplayFor(model => model.affiliationFromDate1)
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId2")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationFromDate2.First().Equals(string.Empty)) { value = string.Empty; }
+                                    else
+                                    {
+                                        if (Model.affiliationFromDate2.First().Contains(' '))
+                                        {
+                                            value = Model.affiliationFromDate2.First().Remove(Model.affiliationFromDate2.First().IndexOf(' '));
+                                        }
+                                        else
+                                        {
+                                            value = Model.affiliationFromDate2.First();
+                                        }
+                                    }
+                        
+                                    @Html.DisplayFor(model => model.affiliationFromDate2)
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId3")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationFromDate3.First().Equals(string.Empty)) { value = string.Empty; }
+                                    else
+                                    {
+                                        if (Model.affiliationFromDate3.First().Contains(' '))
+                                        {
+                                            value = Model.affiliationFromDate3.First().Remove(Model.affiliationFromDate3.First().IndexOf(' '));
+                                        }
+                                        else
+                                        {
+                                            value = Model.affiliationFromDate3.First();
+                                        }
+                                    }
+                        
+                                    @Html.DisplayFor(model => model.affiliationFromDate3)
+                                }
+
+                                <div style="height: 20px;"></div>
+                              
+                                @if (@selectedAffiliation == "affiliationTypeId1")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationToDate1.First().Equals(string.Empty)) { value = string.Empty; }
+                                    else
+                                    {
+                                        if (Model.affiliationToDate1.First().Contains(' '))
+                                        {
+                                            value = Model.affiliationToDate1.First().Remove(Model.affiliationToDate1.First().IndexOf(' '));
+                                        }
+                                        else
+                                        {
+                                            value = Model.affiliationToDate1.First();
+                                        }
+                                    }
+
+                        
+                                    @Html.DisplayFor(model => model.affiliationToDate1)
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId2")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationToDate2.First().Equals(string.Empty)) { value = string.Empty; }
+                                    else
+                                    {
+                                        if (Model.affiliationToDate2.First().Contains(' '))
+                                        {
+                                            value = Model.affiliationToDate2.First().Remove(Model.affiliationToDate2.First().IndexOf(' '));
+                                        }
+                                        else
+                                        {
+                                            value = Model.affiliationToDate2.First();
+                                        }
+                                    }
+
+                        
+                                    @Html.DisplayFor(model => model.affiliationToDate2)
+                                }
+                                else if (@selectedAffiliation == "affiliationTypeId3")
+                                {
+                                    var value = string.Empty;
+                                    if (Model.affiliationToDate3.First().Equals(string.Empty)) { value = string.Empty; }
+                                    else
+                                    {
+                                        if (Model.affiliationToDate3.First().Contains(' '))
+                                        {
+                                            value = Model.affiliationToDate3.First().Remove(Model.affiliationToDate3.First().IndexOf(' '));
+                                        }
+                                        else
+                                        {
+                                            value = Model.affiliationToDate3.First();
+                                        }
+                                    }
+
+                        
+                                    @Html.DisplayFor(model => model.affiliationToDate3)
+                                }
+
+                                @if (@item.name.Contains("NAAC"))
+                                {
+                                    <div style="height: 20px;"></div>
+                                    @Html.DisplayFor(model => model.affiliationGrade, new { style = "width:100px" })
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <script type="text/javascript">
+                if(@item.selected == 1)
+                {
+                    $("#@rdoYesId").attr('checked', 'checked');
+                    $("#@labelsid table").attr('style', 'display: block');
+                    $("#@fieldsid table").attr('style', 'display: block');
+
+                 
+                }
+                else
+                {
+                    $("#@rdoNoId").attr('checked', 'checked');
+                    $("#@labelsid table").attr('style', 'display: none');
+                    $("#@fieldsid table").attr('style', 'display: none');
+                    $("#@txtFromId").val(""); 
+                    $("#@txtToId").val(""); 
+
+                 
+                }
+
+                $("#@rdoYesId").click(function(){
+                    $("#@labelsid table").attr('style', 'display: block');
+                    $("#@fieldsid table").attr('style', 'display: block');
+
+                
+                });
+
+                $("#@rdoNoId").click(function(){
+                    $("#@labelsid table").attr('style', 'display: none');
+                    $("#@fieldsid table").attr('style', 'display: none');
+                    $("#@txtFromId").val("");
+                    $("#@txtToId").val(""); 
+
+                  
+                });
+            </script>
+        }
+
+        <tr>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.collegeTypeID)
+            </td>
+            <td width="75%" bgcolor="@OddColor" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.collegeTypeID)
+                @foreach (var item in Model.collegeType)
+                {
+                    var optionValue = "CType_" + item.id;
+                    var selectValue = item.selected; 
+
+                    if (@selectValue == 1)
+                    {
+                    <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+                    }
+
+                }
+            </td>
+        </tr>
+        <tr>
+            <td width="25%" bgcolor="@OddColor">
+                @Html.LabelFor(model => model.degreeId)
+            </td>
+            <td width="75%" bgcolor="@OddColor" colspan="3" style="line-height: 1.2rem;">
+                @Html.HiddenFor(model => model.degreeId)
+                @foreach (var item in Model.degree)
+                {
+                    var optionValue = "degree_" + item.id;
+                    var selectValue = item.selected; 
+
+                    
+                    if (@selectValue == 1)
+                    {
+                    <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.name</label>
+                    }
+                    
+
+                }
+            </td>
+        </tr>     
+    </table>
+
+

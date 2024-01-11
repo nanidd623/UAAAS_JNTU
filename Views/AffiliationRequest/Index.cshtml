@@ -1,0 +1,149 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_affiliation_requests>
+@{
+    ViewBag.Title = "Affiliation Requests";
+}
+
+<h2>Affiliation Requests</h2>
+
+@*<p>
+    @Html.ActionLink("Create New", "Create")
+</p>*@
+<table class="grid">
+    <tr>
+        <th>College Name
+        </th>
+        <th style="width: 400px;">College Address
+        </th>
+        <th style="width: 200px;">Contact Details
+        </th>
+        @*<th>Other details
+        </th>*@
+        @*<th>Submitted date
+        </th>*@
+        <th style="width: 135px; text-align: center;">Edit - Approve</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.collegeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.collegeAddress), 
+                @Html.DisplayFor(modelItem => item.townOrCity), 
+                @Html.DisplayFor(modelItem => item.mandal), 
+                @foreach (var dt in ViewBag.District as List<UAAAS.Models.jntuh_district>)
+                {
+                    if (dt.id == item.districtId)
+                    {
+                    @Html.DisplayFor(modelItem => dt.districtName)
+                    }
+                },
+                @foreach (var st in ViewBag.State as List<UAAAS.Models.jntuh_state>)
+                {
+                    if (st.id == item.stateId)
+                    {
+                    @Html.DisplayFor(modelItem => st.stateName)
+                    }
+                } - @Html.DisplayFor(modelItem => item.pincode)
+                @*<table>
+                    <tr>
+                        <td>Address</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.collegeAddress)</td>
+                    </tr>
+                    <tr>
+                        <td>City</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.townOrCity)</td>
+                    </tr>
+                    <tr>
+                        <td>Mandal</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.mandal)</td>
+                    </tr>
+                    <tr>
+                        <td>District</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.districtId)</td>
+                    </tr>
+                    <tr>
+                        <td>State</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.stateId)</td>
+                    </tr>
+                    <tr>
+                        <td>Pincode</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.pincode)</td>
+                    </tr>
+                </table>*@
+            </td>
+            <td>Landline : @Html.DisplayFor(modelItem => item.landline)<br />
+                Mobile &nbsp; &nbsp;: @Html.DisplayFor(modelItem => item.mobile)
+                @*<table>
+                    <tr>
+                        <td>Landline</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.landline)</td>
+                    </tr>
+                    <tr>
+                        <td>Mobile</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.mobile)</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.email)</td>
+                    </tr>
+                    <tr>
+                        <td>Website</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.website)</td>
+                    </tr>
+                </table>*@
+            </td>
+            @* <td>
+                <table>
+                    <tr>
+                        <td>College Type</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.collegeTypeId)</td>
+                    </tr>
+                    <tr>
+                        <td>College Status</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.collegeStatusId)</td>
+                    </tr>
+                    <tr>
+                        <td>Accredited by NAAC</td>
+                        <td>:</td>
+                        <td>
+                            @if (item.isAccreditedByNAAC == true)
+                            { <label>Yes</label>}
+                            else
+                            {<label>No</label>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Present Affiliated University</td>
+                        <td>:</td>
+                        <td>@Html.DisplayFor(modelItem => item.presentAffiliatedUniversity)</td>
+                    </tr>
+                </table>
+            </td>*@
+            @*<td>
+                @Html.DisplayFor(modelItem => item.createdOn)
+            </td>*@
+            <td style="vertical-align: middle; text-align: center;">
+                @Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "edit_button" }) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            @Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "view_button" }) 
+                @*&nbsp; &nbsp; &nbsp; &nbsp;
+            @Html.ActionLink("Delete", "Delete", new { id = item.id }, new { @class = "delete_button" })*@
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,72 @@
+﻿<div class="menu_title">
+    College Menu
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(function() {
+
+        });
+    });
+</script>
+<div class="menu_items" style="min-height: 300px;">
+    <ul>        
+        <li>@Html.ActionLink("College Information", "Create", "CollegeInformation", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Educational Society", "Create", "SocietyInformation", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Principal / Director", "Create", "PrincipalDirector", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Chairperson", "Create", "Chairperson", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Other Colleges & Other Courses", "Index", "OtherColleges", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Land Information", "Create", "LandInformation", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Administrative Land", "Create", "AdministrativeLand", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Instructional Land", "Create", "InstructionalLand", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Existing Intake", "Index", "CollegeIntakeExisting", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Proposed Intake", "Index", "CollegeIntakeProposed", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("College Overall Faculty Student Ratio","Index","CollegeOverallFacultyStudentRatio",new { collegeId = Request.QueryString["collegeId"].ToString()},null)<img src="/Content/images/latest.gif" alt="latest" /></li>
+        <li>@Html.ActionLink("PG Courses", "Index", "CollegePGCourse", new { collegeId = Request.QueryString["collegeId"].ToString()},null)<img src="/Content/images/latest.gif" alt="latest" /></li>   
+        <li>@Html.ActionLink("Academic Performance", "Index", "AcademicPerformance", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Teaching Faculty", "Teaching", "Faculty", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Non-Teaching Staff", "NonTeaching", "Faculty", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Technical Staff", "Technical", "Faculty", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Teaching Faculty Position (Department-wise)","TeachingFacultyPositionIndex", "TeachingFacultyPosition",new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Overall Faculty Student Ratio", "FacultyStudentRatioCreate", "FacultyStudentRatio",new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>         
+        @if (User.IsInRole("DataEntry"))
+         {
+             <li>@Html.ActionLink("Labs", "DataentryIndex", "Laboratories", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+         }
+        else
+         {
+            <li>@Html.ActionLink("Labs", "Index", "Laboratories", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+         }
+        <li>@Html.ActionLink("Library Information", "Create", "CollegeLibrary", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Library Books (Course Wise)", "Create", "CollegeLibraryDetails", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>        
+        <li>@Html.ActionLink("Computers - Lab", "Create", "CollegeComputerLab", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>        
+        <li>@Html.ActionLink("Computers - Students Ratio", "Create", "CollegeComputerStudentRatio", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Internet Bandwidth", "Create", "CollegeInternetBandwidth", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Legal Software", "Create", "CollegeLegalSoftwar", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Printers", "Create", "CollegePrinters", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Examination Branch", "Create", "CollegeExaminationBranch", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("EDEP Equipment", "Create", "CollegeExaminationEDEPEquipment", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Fee Reimbursement", "Index", "CollegeFeeReimbursement", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Grievance Redressal", "Index", "GrievanceRedressalCommittee", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Anti-Ragging", "Index", "AntiRaggingCommittee", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Women Protection Cell", "Index", "WomenProtectionCell", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("RTI Details", "Index", "RTIDetails", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Sports & Games", "Create", "CollegeSports", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Desirable Requirements", "Create", "OtherDesirables", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Campus Hostel", "Create", "CampusHostel", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Operational Funds", "Index", "OperationalFunds", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Income Details", "Create", "CollegeIncome", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Expenditure Details", "Create", "CollegeExpenditure", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Payment of Fees (to JNTUH)", "Create", "PaymentOfFees", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Placement Cell", "Index", "CollegePlacement", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("College Photos", "Index", "CollegeDocuments", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("College Enclosures", "Index", "CollegeEnclosures", new { collegeId = Request.QueryString["collegeId"].ToString()},null)<img src="/Content/images/latest.gif" alt="latest" /></li>
+        <li>@Html.ActionLink("College Enclosures Hardcopy", "Create", "CollegeEnclosuresHardCopy", new { collegeId = Request.QueryString["collegeId"].ToString()},null)<img src="/Content/images/latest.gif" alt="latest" /></li>
+        <li>@Html.ActionLink("Payment Details", "Index", "CollegePayment", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>        
+        <li>@Html.ActionLink("Academic PerformancePoints", "AcademicPerformancePointsCreate", "AcademicPerformancePoints", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Infrastructure Parameters", "InfrastructureParametersCreate", "InfrastructureParameters", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Miscellaneous Parameters", "MiscellaneousParametersCreate", "MiscellaneousParameters", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Committee Observations", "CommitteeObservationsCreate", "CommitteeObservations", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        <li>@Html.ActionLink("Declaration", "Create", "SubmitData", new { collegeId = Request.QueryString["collegeId"].ToString()},null)</li>
+        
+    </ul>
+</div>

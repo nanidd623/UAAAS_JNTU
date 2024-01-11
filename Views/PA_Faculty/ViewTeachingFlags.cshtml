@@ -1,0 +1,223 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeFaculty>
+@{
+    ViewBag.Title = "Teaching Faculty";
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    var index = 1;
+}
+
+<h2>Teaching Faculty</h2>
+@section onReady{
+
+    /* Initialize table and make first column non-sortable*/
+    $('#example').dataTable({  "bJQueryUI": true,
+    "iDisplayLength": 50,
+    "bStateSave": false,
+    "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+    "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null, null, null ]
+    });
+}
+<script type="text/javascript">
+
+    $(function () {
+        $('.convertPdf').click(function () {
+            var htmldata = $('#div_Admin_print').html().toString();
+
+            $.ajax({
+                type: "POST",
+                url: '/PA_Faculty/printpdf',
+                cache: false,
+                async: false,
+                data: '{htmldata:' + JSON.stringify(htmldata) + '}',
+                // data: { htmldata: dochtml },
+                dataType: "json",
+                timeout: 3000,
+                contentType: "application/json; charset=utf-8",
+                success: function (image) {
+                },
+                error: function (image) {
+                    alert("Fail" + image.toString());
+                    return false;
+                }
+            })
+        });
+
+        //function Setdata() {
+        //    var htmldata = $('#div_Admin_print').html().toString();
+
+        //    return htmldata;
+        //}
+    });
+
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+    function printAdmindiv(printpage) {
+        $(".isAdmin").show();
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        $(".isAdmin").hide();
+        return false;
+    }
+</script>
+@*@Html.ActionLink("Add Teaching Faculty", "FacultyRegistrationNumber", "Faculty", new { type = ViewBag.Type, fid = DBNull.Value, collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })*@
+@if (ViewBag.Admin == true)
+{
+    <p class="create_link_right">
+        @Html.ActionLink("Downloadpdf", "printpdfdata", "PA_Faculty", new { strType = "Pdf" }, new { @class = "convertPdf create_button" })
+        <input name="btnPrint" type="button" onclick="printAdmindiv('div_Admin_print');" value=" Print" class="create_button" />
+        @Html.ActionLink("Export", "ViewTeaching", "PA_Faculty", new { strType = "Export" }, new { @class = "create_button" })
+    </p>
+}
+else
+{
+    <p class="create_link_right">
+        @* <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+            @Html.ActionLink("Print", "PrintTeaching", "Faculty", new { @class = "create_button" })*@
+    </p>
+}
+@using (Html.BeginForm())
+{
+    int count = 0;
+    <div id="div_print">
+
+        <table id="example" class="display">
+            <thead>
+                <tr>
+                    <th style="width: 50px; text-align: center;">
+                        S.No
+                    </th>
+                    <th>
+                        Name
+                    </th>
+
+                    <th style="width: 150px; text-align: left;">
+                        Designation
+                    </th>
+                    <th style="width: 150px; text-align: left;">
+                        Department
+                    </th>
+                    <th class="ui-state-default" style="width: 150px; text-align: center;">
+                        Faculty Registration Number
+                    </th>
+                    @*<th class="ui-state-default" style="width: 150px; text-align: center;">
+                            Verification Status
+                        </th>*@
+                    <th style="width: 150px; text-align: center;">
+                       Deactivation Reason
+                    </th>
+                    @*<th class="ui-state-default view_hide" colspan="2">View</th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="width: 50px; text-align: center;">
+                            @(index++)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.facultyFirstName)
+                            @Html.DisplayFor(modelItem => item.facultyLastName)
+                            @Html.DisplayFor(modelItem => item.facultySurname)
+
+                        </td>
+
+                        <td style="text-align: left;">
+                            @Html.DisplayFor(modelItem => item.designation)
+                            @if (item.facultyOtherDesignation != null)
+                            { <span>, @item.facultyOtherDesignation</span>}
+                        </td>
+                        <td style="text-align: left;">
+                            @Html.DisplayFor(modelItem => item.department)
+                        </td>
+                        <td style="text-align: center;">
+                            @Html.DisplayFor(modelItem => item.FacultyRegistrationNumber)
+                            @*@if (item.FacultyRegistrationNumber == "")
+                                {
+                                    @Html.DisplayFor(modelItem => item.FacultyRegistrationNumber)
+                                }
+                                else
+                                {
+                                    <span><a target="_blank" href="../OnlineRegistration/FacultyNew?fid=@encString">@Html.DisplayFor(modelItem => item.FacultyRegistrationNumber)</a></span>
+                                }*@
+                        </td>
+                        @*<td style="text-align: center;">
+
+                                @if (item.FacultyVerificationStatus == 2)
+                                { <span style="color: red; font-weight: bold;"> NOT CONFIRMED</span>}
+
+
+                                else if (item.facultyCount > 0 && (item.FacultyVerificationStatus == 3 || item.FacultyVerificationStatus == 0))
+                                { <span style="color: red;  font-weight: bold; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">Verification Pending</span>}
+                                else
+                                { <span style="color: green;">CONFIRMED</span>}
+                            </td>*@
+                        <td style="text-align: center;">
+                            @*@if (item.PANDeactivationReasion=="")
+                                {
+                                    @Html.DisplayFor(modelItem => item.PANDeactivationReasion)
+                                }*@
+                            @if (item.Reason != "")
+                            {
+                                <span>@item.Reason</span>
+                            }
+                            else
+                            {
+                                <span style="color: black;">--</span>
+                            }
+
+                        </td>
+                        @*<td style="width: 30px; text-align: center;" class="view_hide">
+                            @if (!string.IsNullOrEmpty(item.FacultyRegistrationNumber))
+                            {
+                                @Html.ActionLink("View", "ViewFacultyDetails", "Faculty", new { fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "edit_button1", target = "_blank" })
+                            }
+                          
+                        </td>*@
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (ViewBag.Count == 0)
+        {
+            <div class="warning" style="width: 200px; margin: 0 auto;">
+                <p>No records found</p>
+            </div>
+        }
+    </div>
+
+
+}

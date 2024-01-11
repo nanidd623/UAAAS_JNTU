@@ -1,0 +1,118 @@
+﻿@model UAAAS.Models.RTIDetails
+@{
+    ViewBag.Title = "RTIDetails";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+}
+<h2>RTIDetails</h2>
+@using (Html.BeginForm())
+{
+    int count = 0;     
+    <table class="four_columns" style="width: 100%;">
+        <tr>
+            <td class="col11" colspan="5">
+                <b>RTI Details:</b>
+            </td>
+        </tr>
+        <tr style="font-weight: bold;">
+            <td style="text-align: center; width: 4%;" class="col11">S.No</td>
+            <td style="text-align: left; width: 32%;" class="col11">Actual Designation</td>
+            <td style="text-align: left; width: 32%;" class="col11">Designation in the committee</td>
+            <td style="text-align: left; width: 32%;" class="col11">Member Name</td>
+        </tr>
+        @foreach (var item in ViewBag.Committee)
+        {                
+            <tr>
+                <td style="text-align: center;" class="col21">
+                    @(count = count + 1)
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.actualDesignation != null)
+                    {
+                        <label>@item.actualDesignation</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.designationName != null)
+                    {
+                        <label>@item.designationName</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.memberName != null)
+                    {
+                        <label>@item.memberName</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+        if (ViewBag.CommitteeCount == 0)
+        {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+        }
+    <br />
+    <br />
+        int counter = 0;     
+    <table class="four_columns" style="width: 100%;">
+        <tr>
+            <td class="col11" colspan="4">
+                <b>RTI Complaints:</b>
+            </td>
+        </tr>
+        <tr style="font-weight: bold;">
+            <td style="text-align: center; width: 4%;" class="col11">S.No</td>
+            <td style="text-align: left; width: 43%;" class="col11">Complaint</td>
+            <td style="text-align: left; width: 43%" class="col11">Action Taken</td>
+        </tr>
+        @foreach (var item in ViewBag.Complaints)
+        {                
+            <tr>
+                <td style="text-align: center;" class="col21">
+                    @(counter = counter + 1)
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.complaintReceived != null)
+                    {
+                        <label>@item.complaintReceived</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.actionsTaken != null)
+                    {
+                        <label>@item.actionsTaken</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+            </tr>
+        }
+    </table>        
+        if (ViewBag.ComplaintsCount == 0)
+        {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+        }
+}
+
+

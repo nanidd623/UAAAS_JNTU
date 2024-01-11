@@ -1,0 +1,66 @@
+﻿@model IEnumerable<UAAAS.Models.AuditScheduleReport>
+@{
+    ViewBag.Title = "Schedule Report";
+    var index = 1;
+}
+@using (Html.BeginForm())
+{  
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top;">S.No</th>
+                <th style="text-align: left; background-color: yellow; vertical-align: top;">College</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top;">Inspection Date</th>
+                <th style="text-align: left; background-color: yellow; vertical-align: top;">FFC Members</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderBy(c => c.auditDate).ThenBy(c => c.collegeName).ToList())
+            {
+                var aIndex = 0;
+                
+                <tr>
+                    <td style="text-align: center; vertical-align: top">@(index++)</td>
+                    <td style="text-align: left; vertical-align: top; text-transform: uppercase;">@item.collegeName - [@item.collegeCode]</td>
+                    <td style="vertical-align: top; text-align: center;">
+                        @if (item.alternateAuditDate != null)
+                        {
+                            <span>
+                                @item.auditDate
+
+                                <br style="mso-data-placement: same-cell;" />
+                                &
+                                <br style="mso-data-placement: same-cell;" />
+
+                                @item.alternateAuditDate
+                            </span>
+                            
+                        }
+                        else
+                        {
+                            @item.auditDate
+                        }
+                    </td>
+                    <td style="text-align: left; vertical-align: top;">
+                        @foreach (var auditor in item.assignedAuditors)
+                        {
+                            <span>
+                                @if (aIndex != 0)
+                                {
+                                    <br style="mso-data-placement: same-cell;" />
+                                }
+
+                                @auditor.auditorName - @auditor.preferredDesignation
+                            </span>
+                                aIndex++;
+                        }
+                        <br style="mso-data-placement: same-cell;" />
+                        <br style="mso-data-placement: same-cell;" />
+                        <br style="mso-data-placement: same-cell;" />
+                    </td>
+
+                </tr>    
+            }
+        </tbody>
+    </table> 
+}

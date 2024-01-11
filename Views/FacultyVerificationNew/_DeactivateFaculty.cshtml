@@ -1,0 +1,53 @@
+﻿@model UAAAS.Models.jntuh_registered_faculty 
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+@using (Html.BeginForm())
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnSubmit').click(function () {
+                //if ($('#OrganizationName').val() == '') {
+                //    $('#OrganizationName').addClass("required");
+                //} else {
+                //    $('#OrganizationName').removeClass("required");
+                //}
+
+                if ($(".selectedReasons input[type='checkbox']:checked").length == 0) {
+                    alert("Please select a valid reason");
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            });
+        });
+    </script>
+    <div class="details_table">
+        <div class="editor-label" style="width: 150px; height: 100px">
+            Reason for Deactivation
+        </div>
+        <div class="editor-field selectedReasons" style="width: 300px">
+            @*@Html.TextAreaFor(m => m.DeactivationReason, new { @class = "required", @style = "height: 90px" })*@
+            @Html.Hidden("collegeId", new { @Value = @ViewBag.collegeId })
+            @Html.HiddenFor(Model => Model.id)
+            @foreach (var item in this.Model.DeactivationReasons)
+            {
+                var optionValue = "reason_" + item.id;
+                var selectValue = item.selected; 
+                
+                <input type="checkbox" 
+                       id="@optionValue"
+                       name="DeactivationReason"
+                       value ="@item.id" class="selectedReasons123" />
+                <label for="@optionValue" style="padding-right: 10px !important; text-align: left; display: inline-block;">@item.reason</label><br />
+            }
+        </div>
+        <br />
+        <div style="text-align: center">
+            <p>
+                <input type="submit" value="Submit" id="btnSubmit" name="cmd" class="btnclass" />
+            </p>
+        </div>
+    </div>
+}

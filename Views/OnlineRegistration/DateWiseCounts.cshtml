@@ -1,0 +1,104 @@
+﻿@model IEnumerable<UAAAS.Models.DateWiseCounts>
+@{
+    ViewBag.Title = "Faculty Registration - Date Wise Counts";
+    var index = 1;
+}
+
+<h2>Faculty Registration - Date Wise Counts</h2>
+<div style="width: 800px;">
+    <table id="example" class="tableStyle display">
+        <thead>
+            <tr>
+                <th style="width: 60px; text-align: center;">S.No
+                </th>
+                <th style="width: 150px; text-align: center;">Date
+                </th>
+                <th style="width: 120px; text-align: center;">Total Faculty Registrations
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ToList())
+            {
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">
+                        @(index++)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.TotalFacultyRegistrations)
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <th>
+                <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init"></th>
+            <th class=" ui-state-default">
+                <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init"></th>
+        </tfoot>
+    </table>
+</div>
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('.tableStyle').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('.tableStyle').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>

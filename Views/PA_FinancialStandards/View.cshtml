@@ -1,0 +1,76 @@
+﻿@model UAAAS.Models.Permanent_Affiliation.CourtCasesModel
+
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    ViewBag.Title = "Financial Standards List";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<h2>Scholarship received from social welfare department</h2>
+
+@if (ViewBag.IsEditable == true)
+{
+    <p class="create_link_right">
+        @Html.ActionLink("Add", "Edit", "PA_FinancialStandards", new
+                {
+                    collegeId = "",
+                    finStandId = ""
+                }, new { @class = "create_button" })
+    </p>
+}
+
+@if (ViewBag.FinancialStandardsList.Count > 0)
+{
+    <div style="margin-top:15px;">
+        <table class="webGrid">
+            <thead>
+                <tr class="col1">
+                    <th>S.No</th>
+                    <th>Academic Year</th>
+                    <th>Degree</th>
+                    <th>Number of Students</th>
+                    <th>Sanctioned Amount (In Lakhs.)</th>
+                    <th>Supporting Document</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in ((List<UAAAS.Controllers.Permanent_Affiliation.FinancialStandards>)ViewBag.FinancialStandardsList).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr class="col2">
+                        <td>@pay.i </td>
+                        <td>@pay.value.AcademicYear</td>
+                        <td>@pay.value.Degree</td>
+                        <td>@pay.value.NumberOfStudents</td>
+                        <td>@pay.value.TotalAmount</td>
+                        <td style="text-align: left; font-weight: normal;">
+                            @if (pay.value.ScholarshipDocumentPath != null)
+                            {
+                                <a href="../Content/Upload/College/FinancialStandards/Scholarship/@pay.value.ScholarshipDocumentPath" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+}

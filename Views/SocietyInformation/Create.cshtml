@@ -1,0 +1,427 @@
+﻿@model UAAAS.Models.SocietyInformation
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "Society Information";
+}
+
+<h2>Society / Trust / Company Information</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".calendar, .year").css("width", "75px");
+
+        if ($("#state").val() > 0) {
+            GetDistricts($("#state").val());
+        }
+
+        $("#state").change(function () {
+            var stateID = $(this).val();
+            GetDistricts(stateID);
+        });
+
+        function GetDistricts(stateID) {
+            $.getJSON("/SocietyInformation/GetDistrictList", { id: stateID },
+                   function (myData) {
+                       var select = $("#district");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: '',
+                           text: '-- Select --'
+                       }));
+                       $.each(myData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text,
+                               selected : (itemData.Value == @Model.districtId ? true : false)
+                           }));
+                       });
+                   });
+        }
+
+        $(".Supportingfile").change(function () {
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "Documentfile");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+    });
+
+</script>
+
+@using (Html.BeginForm("Edit", "SocietyInformation", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    if (ViewBag.NotUpload == true)
+    {
+        <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+    }
+    else
+    {
+        if (TempData["Error"] != null)
+        {
+            <div class="error">
+                <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+            </div>
+        }
+        if (TempData["Success"] != null)
+        {
+            <div class="success">
+                <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+            </div>
+        }
+        <table class="four_columns">
+            <tr>
+                <td class="col1" colspan="4">
+                    <b>Name & Address of the Educational Society / Trust / Company</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.societyEstablishmentYear)
+                </td>
+                <td class="col2 focus">
+                    @Html.DisplayFor(model => model.societyEstablishmentYear, new { Value = @Model.societyEstablishmentYear == 0 ? "" : @Model.societyEstablishmentYear.ToString(), @maxlength = "4" })
+                    @Html.ValidationMessageFor(model => model.societyEstablishmentYear)
+                    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+                    @Html.HiddenFor(model => model.societyEstablishmentYear)
+                </td>
+
+                <td class="col3">
+                    @Html.LabelFor(model => model.societyRegisterNumber)
+                </td>
+                <td class="col4">
+                    @Html.DisplayFor(model => model.societyRegisterNumber)
+                    @Html.ValidationMessageFor(model => model.societyRegisterNumber)
+                    @Html.HiddenFor(model => model.societyRegisterNumber)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.societyName)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.DisplayFor(model => model.societyName)
+                    @Html.ValidationMessageFor(model => model.societyName)
+                    @Html.HiddenFor(model => model.societyName)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.OldSocietyName)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.TextBoxFor(model => model.OldSocietyName, new { @style = "width:90%;" })
+                    @Html.ValidationMessageFor(model => model.OldSocietyName)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.address)
+                </td>
+                <td class="col2" colspan="3">
+                    @Html.EditorFor(model => model.address)
+                    @Html.ValidationMessageFor(model => model.address)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.townOrCity)
+                </td>
+                <td class="col2">
+                    @Html.EditorFor(model => model.townOrCity)
+                    @Html.ValidationMessageFor(model => model.townOrCity)
+                </td>
+                <td class="col3">
+                    @Html.LabelFor(model => model.mandal)
+                </td>
+                <td class="col4">
+                    @Html.EditorFor(model => model.mandal)
+                    @Html.ValidationMessageFor(model => model.mandal)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.stateId)
+                </td>
+                <td class="col2">
+                    @Html.DropDownListFor(model => model.stateId,
+                                                     new SelectList(ViewBag.State as System.Collections.IEnumerable, "id", "stateName"),
+                                                     "-- Select --", new { id = "state" })
+                    @Html.ValidationMessageFor(model => model.stateId)
+                </td>
+                <td class="col3">
+                    @Html.LabelFor(model => model.districtId)
+                </td>
+                <td class="col4">
+                    @Html.DropDownListFor(model => model.districtId,
+                                                     new SelectList(Enumerable.Empty<SelectListItem>(), "id", "districtName"),
+                                                     "-- Select --", new { id = "district" })
+                    @Html.ValidationMessageFor(model => model.districtId)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.pincode)
+                </td>
+                <td class="col2">
+                    @Html.TextBoxFor(model => model.pincode, new { Value = Model.pincode == 0 ? "" : Model.pincode.ToString() })
+                    @Html.ValidationMessageFor(model => model.pincode)
+                </td>
+
+                <td class="col3">
+                    @Html.LabelFor(model => model.fax)
+                </td>
+                <td class="col4">
+                    @Html.EditorFor(model => model.fax)
+                    @Html.ValidationMessageFor(model => model.fax)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.landline)
+                </td>
+                <td class="col2">
+                    @Html.EditorFor(model => model.landline)
+                    @Html.ValidationMessageFor(model => model.landline)
+                </td>
+                <td class="col3">
+                    @Html.LabelFor(model => model.mobile)
+                </td>
+                <td class="col4">
+                    @Html.EditorFor(model => model.mobile)
+                    @Html.ValidationMessageFor(model => model.mobile)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.email)
+                </td>
+                <td class="col2">
+                    @Html.EditorFor(model => model.email)
+                    @Html.ValidationMessageFor(model => model.email)
+                </td>
+                <td class="col3">
+                    @Html.LabelFor(model => model.website)
+                </td>
+                <td class="col4">
+                    @Html.EditorFor(model => model.website)
+                    @Html.ValidationMessageFor(model => model.website)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.RegistrationDocument)
+                </td>
+                <td class="col2">
+                    @if (String.IsNullOrEmpty(@Model.RegistrationDocumentfile))
+                    {
+                        @Html.TextBoxFor(model => model.RegistrationDocument, new { @type = "file", @class = "required" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.RegistrationDocument, new { @type = "file", @class = "" })
+                        <a href="~/Content/Upload/College/SocietyDocument/@Model.RegistrationDocumentfile" target="_blank">
+                            <span style="color: red;"><b>View</b></span>
+                        </a>
+                        @Html.HiddenFor(model => model.RegistrationDocumentfile)
+                    }
+
+                </td>
+                <td class="col3">
+                    @Html.LabelFor(model => model.MembersDetailsDocument)
+                </td>
+                <td class="col4">
+                    @if (String.IsNullOrEmpty(@Model.MembersDetailsDocumentfile))
+                    {
+                        @Html.TextBoxFor(model => model.MembersDetailsDocument, new { @type = "file", @class = "required Supportingfile" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.MembersDetailsDocument, new { @type = "file", @class = "Supportingfile" })
+                        <a href="~/Content/Upload/College/SocietyDocument/@Model.MembersDetailsDocumentfile" target="_blank">
+                            <span style="color: red;"><b>View</b></span>
+                        </a>
+                        @Html.HiddenFor(model => model.MembersDetailsDocumentfile)
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.Societymoudoc)
+                </td>
+                <td class="col2">
+                    @if (String.IsNullOrEmpty(@Model.Societymoufile))
+                    {
+                        @Html.TextBoxFor(model => model.Societymoudoc, new { @type = "file", @class = "required Supportingfile" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.Societymoudoc, new { @type = "file", @class = "Supportingfile" })
+                        <a href="~/Content/Upload/College/SocietyMOU/@Model.Societymoufile" target="_blank">
+                            <span style="color: red;"><b>View</b></span>
+                        </a>
+                        @Html.HiddenFor(model => model.Societymoufile)
+                    }
+                </td>
+                <td class="col3">
+                    @Html.LabelFor(model => model.Societybyelawsdoc)
+                </td>
+                <td class="col4">
+                    @if (String.IsNullOrEmpty(@Model.Societybylawsfile))
+                    {
+                        @Html.TextBoxFor(model => model.Societybyelawsdoc, new { @type = "file", @class = "required Supportingfile" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.Societybyelawsdoc, new { @type = "file", @class = "Supportingfile" })
+                        <a href="~/Content/Upload/College/SocietyByelaws/@Model.Societybylawsfile" target="_blank">
+                            <span style="color: red;"><b>View</b></span>
+                        </a>
+                        @Html.HiddenFor(model => model.Societybylawsfile)
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.HiddenFor(model => model.addressTye, new { Value = "SOCIETY" })
+                    @Html.HiddenFor(model => model.collegeId)
+                    @Html.HiddenFor(model => model.createdOn, new { Value = DateTime.Now })
+                </td>
+                <td colspan="3" style="line-height: 1.2rem;" class="right_buttons">
+                    <input type="submit" value="Save" />
+                </td>
+            </tr>
+        </table>
+        <table style="display: none;">
+            <tr>
+                <td class="col1" colspan="4">
+                    <b>Information on Establishment of the Institution :</b> (for existing colleges only)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" colspan="3">
+                    @Html.LabelFor(model => model.instituteEstablishedYear)
+                </td>
+                <td class="col4">
+                    @Html.DisplayFor(model => model.instituteEstablishedYear, new { @class = "year", Value = @Model.instituteEstablishedYear == 0 ? "" : @Model.instituteEstablishedYear.ToString(), @maxlength = "4" })
+                    @Html.ValidationMessageFor(model => model.instituteEstablishedYear)
+                    @Html.HiddenFor(model => model.instituteEstablishedYear)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" colspan="3">
+                    @Html.LabelFor(model => model.firstApprovalDateByAICTE)
+                </td>
+                <td class="col4">
+                    @Html.DisplayFor(model => model.firstApprovalDateByAICTE, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                    @Html.ValidationMessageFor(model => model.firstApprovalDateByAICTE)
+                    @Html.HiddenFor(model => model.firstApprovalDateByAICTE)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" colspan="3">
+                    @Html.LabelFor(model => model.firstAffiliationDateByJNTU)
+                </td>
+                <td class="col4">
+                    @Html.DisplayFor(model => model.firstAffiliationDateByJNTU, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                    @Html.ValidationMessageFor(model => model.firstAffiliationDateByJNTU)
+                    @Html.HiddenFor(model => model.firstAffiliationDateByJNTU)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" colspan="3">
+                    @Html.LabelFor(model => model.firstBatchCommencementYear)
+                </td>
+                <td class="col4">
+                    @Html.DisplayFor(model => model.firstBatchCommencementYear, new { @class = "year", Value = @Model.firstBatchCommencementYear == 0 ? "" : @Model.firstBatchCommencementYear.ToString(), @maxlength = "4" })
+                    @Html.ValidationMessageFor(model => model.firstBatchCommencementYear)
+                    @Html.HiddenFor(model => model.firstBatchCommencementYear)
+                </td>
+            </tr>
+            @*<tr>
+                    <td>
+                        @Html.HiddenFor(model => model.addressTye, new { Value = "SOCIETY" })
+                        @Html.HiddenFor(model => model.collegeId)
+                        @Html.HiddenFor(model => model.createdOn, new { Value = DateTime.Now })
+                    </td>
+                    <td colspan="3" style="line-height: 1.2rem;" class="right_buttons">
+                        <input type="submit" value="Save" />
+                    </td>
+                </tr>*@
+        </table>
+    }
+}

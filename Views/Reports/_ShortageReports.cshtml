@@ -1,0 +1,38 @@
+﻿@{
+    int sno = 1;
+}
+<table border="1" style="width: 100%">
+    <tr>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">SNo</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">College Code</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">College Name</th>
+         <th style="text-align: center; background-color: yellow; vertical-align: top;">Address</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">Mobile</th>
+        @if (@ViewBag.exportType == "RatifiedFaculty")
+        {
+            <th style="text-align: center; background-color: yellow; vertical-align: top;">Ratio</th>
+            <th style="text-align: left; background-color: yellow; vertical-align: top;">%</th>  
+        }      
+       <th style="text-align: left; background-color: yellow; vertical-align: top;">Remarks</th>       
+     
+    </tr>
+    @foreach (var item in ViewBag.shortageCollegeList)
+    {
+        <tr>
+            <th style="text-align: center; vertical-align: top;">@(sno++)</th>
+            <td style="text-align: center; vertical-align: top;">@item.collegeCode</td>
+            <td style="text-align: left; vertical-align: top;">@item.collegeName.Replace("’","'")</td>
+            <td style="text-align: left; vertical-align: top;">@item.address</td>
+            <td style="text-align: left; vertical-align: top;">@item.mobile</td>
+            @if (@ViewBag.exportType == "RatifiedFaculty")
+            {
+                <td style="text-align: center; vertical-align: top;">@item.ratifiedFacultyNo</td>
+                <td style="text-align: left; vertical-align: top;">@item.ratifiedFacultyPercentage</td>     
+            }
+           
+                <td style="text-align: left; vertical-align: top;">@item.observations</td>          
+          
+
+        </tr>
+    }
+</table>

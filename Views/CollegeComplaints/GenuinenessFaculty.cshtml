@@ -1,0 +1,99 @@
+﻿@model IList<UAAAS.Models.FacultyComplaints>
+@{
+
+}
+@using (Html.BeginForm())
+{
+    int count = 0;
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    S.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Code
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Name
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Registration No.
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Name
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Profile Departent
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Mobile
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Email
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    PHD University
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    PHD Passed Year
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Submitted Date
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Givenby
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Remarks
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center;vertical-align: top">
+                        @(count = count + 1)
+                    </td>
+                    <th style="text-align: center;vertical-align: top">
+                        @item.Collegecode
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.Collegename
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.RegistrationNumber
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.Facultyname
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.Profiledepartment
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.Moblie
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.Email
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.PhdUniversity
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.Phdpassedyear
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.Facultycomplaintdate
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.givenBy
+                    </th>
+                    <th style="text-align: left; vertical-align: top">
+                        @item.remarks
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

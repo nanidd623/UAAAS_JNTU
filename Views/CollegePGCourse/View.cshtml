@@ -1,0 +1,102 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_college_pgcourses>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "PG Courses";
+    int num = 1;
+}
+<script type="text/javascript">   
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+</script>
+
+@*<p class="create_link_right">
+    <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button" />  
+</p>*@
+<div id="div_print">
+    <h2>PG Courses</h2>
+    @using (Html.BeginForm())
+    {
+        if (ViewBag.Norecords == true)
+        {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No Data found</p>
+        </div>
+        }
+        else
+        {
+        <table class="full_table" style="width: 100%;">
+           <tr>
+            <th style="text-align: center;">S.No
+            </th>
+            <th style="text-align: left;">Department
+            </th>
+            <th style="text-align: left;">Name of the Programme
+            </th>
+            <th style="text-align: center;">Programme Type
+            </th>
+            <th style="text-align: center;">Shift
+            </th>
+            <th style="text-align: center;">Intake
+            </th>
+            <th style="text-align: center;">Professors
+            </th>
+            <th style="text-align: center;">Associate Professors
+            </th>
+            <th style="text-align: center;">Assistant Professors
+            </th>
+            <th style="text-align: center;">UG Faculty Student Ratio
+            </th>
+            <th colspan="2" style="text-align: center;" class="view_hide"></th>
+        </tr>
+
+            @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 30px; text-align: center; vertical-align: top;">
+                    @(num++)
+                </td>
+                <td style="width: 150px; text-align: left; vertical-align: top;">@item.jntuh_department.departmentName</td>
+                <td style="text-align: left; vertical-align: top;">@item.jntuh_specialization.specializationName</td>
+                <td style="width: 40px; text-align: center; vertical-align: top;">@item.Type</td>
+                <td style="width: 40px; text-align: center; vertical-align: top;">@item.jntuh_shift.shiftName</td>
+                <td style="width: 40px; text-align: center; vertical-align: top;">@item.intake</td>
+                <td style="width: 70px; text-align: center; vertical-align: top;">@item.professors</td>
+                <td style="width: 70px; text-align: center; vertical-align: top;">@item.associateProfessors</td>
+                <td style="width: 70px; text-align: center; vertical-align: top;">@item.assistantProfessors</td>
+                <td style="width: 70px; text-align: center; vertical-align: top;">@item.UGFacultyStudentRatio</td>              
+                <td style="width: 20px; text-align: center; vertical-align: top;" class="view_hide">                   
+                    @Html.ActionLink("View/Print", "Details/" + @ViewContext.RouteData.Values["id"], "CollegePGCourse", new { cpgid = item.id }, new { @class = "details_button ", style = "color: red;" })
+                </td>               
+            </tr>
+        }
+        </table>
+        }
+        if (ViewBag.Count == 0)
+        {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+        }
+
+        <div id="dialog-view" style="display: none">
+        </div>
+    }
+</div>

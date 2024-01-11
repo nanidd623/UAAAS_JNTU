@@ -1,0 +1,92 @@
+﻿@model UAAAS.Models.FeedBack
+
+@{
+    ViewBag.Title = ViewBag.FeedBackType;
+}
+
+<h2>@ViewBag.FeedBackType</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <div class="details_table">
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.college)
+        </div>
+        <div class="editor-field" style="width:83%">
+            @Html.DropDownListFor(model => model.college,
+            new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeCode","collegeName"),
+            "-- Select --",new { id = "collegeName", style = "width: 30%;" })
+            @Html.ValidationMessageFor(model => model.college)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.stackholderId)
+        </div>
+        <div class="editor-field" style="width:83%">
+            @Html.DropDownListFor(model => model.stackholderId,
+            new SelectList(ViewBag.StackHolders as System.Collections.IEnumerable, "id", "type"),
+            "-- Select --", new { id = "stackholderType" , style = "width: 30%;"})
+            @Html.ValidationMessageFor(model => model.stackholderId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.subject)
+        </div>
+        <div class="editor-field" style="width:83%">
+            @Html.TextBoxFor(model => model.subject, new { style = "width: 90%;" })
+            @Html.ValidationMessageFor(model => model.subject)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.fullName)
+        </div>
+        <div class="editor-field" style="width:83%">
+            @Html.TextBoxFor(model => model.fullName, new { style = "width: 30%;" })
+            @Html.ValidationMessageFor(model => model.fullName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.phoneNumber)
+        </div>
+        <div class="editor-field" style="width:83%">
+            @Html.TextBoxFor(model => model.phoneNumber, new { style = "width: 30%;" })
+            @Html.ValidationMessageFor(model => model.phoneNumber)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.emailAddress)
+        </div>
+        <div class="editor-field" style="width:83%">
+            @Html.TextBoxFor(model => model.emailAddress, new { style = "width: 30%;" })
+            @Html.ValidationMessageFor(model => model.emailAddress)
+        </div>
+
+        <div class="editor-label" style="height:90px">
+            @Html.LabelFor(model => model.comments)
+        </div>
+        <div class="editor-field" style="width:83%">
+            @Html.TextAreaFor(model => model.comments)
+            @Html.ValidationMessageFor(model => model.comments)
+        </div>
+
+        <p class="right_buttons">
+            <input type="submit" value="Submit" />
+        </p>
+    </div>
+}

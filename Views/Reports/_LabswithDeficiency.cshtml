@@ -1,0 +1,65 @@
+﻿@model List<UAAAS.Models.LabswithDeficiency>
+@{
+    int count = 0;
+}
+@using (Html.BeginForm())
+{
+    <table border="1" width="100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Sl.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Code
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Name
+                </th>
+
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Degree
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Department
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Specilization
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    LabName
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center;vertical-align: top">
+                        @(count = count + 1)
+                    </td>
+                    <th style="text-align: center; vertical-align: top">
+                        '@item.CollegeCode
+                    </th>
+                    <th style="text-align: center; vertical-align: top">
+                       @item.CollegeName
+                    </th>
+                    <th style="text-align: center; vertical-align: top">
+                       @item.Degree
+                    </th>
+                    <th style="text-align: center; vertical-align: top">
+                      @item.Department
+                    </th>
+                    <th style="text-align: center; vertical-align: top">
+                       @item.Specilization
+                    </th>
+                    <th style="text-align: center; vertical-align: top">
+                      @item.LabName
+                    </th>
+                   
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}

@@ -1,0 +1,82 @@
+﻿@model UAAAS.Models.jntuh_menu
+@{
+    ViewBag.Title = "Delete Item Details";
+}
+
+<h2>Delete Item Details</h2>
+
+<div class="details_table">
+
+    <div class="display-label">Menu Name</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.menuName)
+    </div>
+
+    <div class="display-label">Page Type</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.menuActionName)
+    </div>
+
+    <div class="display-label">Navigate URL</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.menuControllerName)
+    </div>
+
+    <div class="display-label">Parent Menu</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.menuParentName)
+    </div>
+
+    <div class="display-label">Roles</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Roles)
+    </div>
+
+    <div class="display-label">Menu Order</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.menuOrder)
+    </div>
+
+    <div class="display-label">Status</div>
+    <div class="display-field">
+        @*@Html.DisplayFor(model => model.isActive)*@
+        @if (this.Model.isActive == true)
+        { <label>Active</label>}
+        else
+        {<label>Inactive</label>}
+    </div>
+
+    <div class="display-label">Created Date</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.createdOn)
+    </div>
+
+    <div class="display-label">Created By</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users.name)
+    </div>
+
+    <div class="display-label">Updated Date</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.updatedOn)
+    </div>
+
+    <div class="display-label">Updated By</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users1.name)
+    </div>
+
+    <div class="display-label last-row">
+        &nbsp;
+    </div>
+    <div class="display-field last-row">
+        @using (Html.BeginForm())
+        {
+            <p>
+                <input type="submit" value="Delete" />
+                |
+        @Html.ActionLink("Back to List", "Index")
+            </p>
+        }
+    </div>
+</div>

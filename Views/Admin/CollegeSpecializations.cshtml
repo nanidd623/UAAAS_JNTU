@@ -1,0 +1,179 @@
+﻿@model UAAAS.Models.CollegeSpecializations
+@{
+    ViewBag.Title = "College Specializations";
+}
+<h2>College Specializations</h2>
+<br />
+@using (Html.BeginForm())
+{
+    int count = 0; 
+    <div class="details_table" style="margin-left: 430px">
+        <div class="editor-label" style="width: 10%">
+            <label style="font-size: 15px;">District Name</label>
+        </div>
+        <div class="editor-field focus" style="width: 15%">
+            @Html.DropDownListFor(model => model.districtId,
+            new SelectList(ViewBag.Districts as System.Collections.IEnumerable, "id", "districtName"),
+            "-- ALL Districts --", new { id = "districtName", style = "width:185px" })
+            @Html.ValidationMessageFor(model => model.districtId)
+        </div>
+        <input type="submit" value="Search" style="width: 70px;" />
+    </div>
+    <br />
+    <table class="full_table" style="width: 100%">
+        <tr>
+            <th style="text-align: center;">S.No
+            </th>
+            <th style="text-align: center;">College Code
+            </th>
+            <th>College Name
+            </th>
+            <th style="text-align: center;">Specializations
+            </th>
+        </tr>
+
+        @foreach (var item in ViewBag.CollegeSpecializations)
+        {
+            <tr>
+                <td style="width: 40px; text-align: center;">
+                    @(count = count + 1)
+                </td>
+                <td style="width: 70px;">
+                    <label style="text-transform: uppercase">@item.collegeCode</label>
+                </td>
+                <td>
+                    <label>@item.collegeName</label>
+                </td>
+                <td style="width: 550px;">
+                    @if (item.collegeSpecializations != null)
+                    {
+                        foreach (var specialization in item.collegeSpecializations)
+                        {
+                            if (specialization.intake != null && specialization.specialization != null)
+                            {
+                        <table style="border-collapse: collapse; width: 550px">
+                            <tr>
+                                <td style="border: none; text-align: left">
+                                    @if (specialization.intake.Contains("+") == true)
+                                    {
+                                        @specialization.specialization
+                                    }
+                                    @if (specialization.intake.Contains("&") == true)
+                                    {
+                                        @specialization.specialization
+                                    }
+                                    @if (specialization.intake.Contains("(") == true)
+                                    {
+                                        @specialization.specialization
+                                    }
+                                    @if (specialization.intake.Contains("$") == true)
+                                    {
+                                        @specialization.specialization
+                                    }
+                                    @if (specialization.intake.Contains("*") == true)
+                                    {
+                                        <label style="font-weight: bold">@specialization.specialization</label>                                
+                                    }
+                                    @if (specialization.intake.Contains("#") == true)
+                                    {
+                                        <label>@specialization.specialization</label>                                
+                                    }
+                                    @if (specialization.intake.Contains("@") == true)
+                                    {
+                                        <label>@specialization.specialization</label>                                
+                                    }
+                                    @if (specialization.intake.Contains("%") == true)
+                                    {
+                                        <label>@specialization.specialization</label>                                
+                                    }
+                                    @if (specialization.intake.Contains("?") == true)
+                                    {
+                                        <label>@specialization.specialization</label>                                
+                                    }
+                                    @if (specialization.intake.Contains("^") == true)
+                                    {
+                                        <label style="font-weight: bold">@specialization.specialization</label>                                
+                                    }
+                                </td>
+                                <td style="border: none; text-align: right">
+                                    @if (specialization.intake.Contains("+") == true)
+                                    {
+                                        string[] specializations = specialization.intake.Split('+');
+                                        <label>@specializations[0]</label>   
+                                        <label>+</label>
+                                        <label style="font-weight: bold">@specializations[1]</label>                               
+                                    }
+                                    @if (specialization.intake.Contains("&") == true)
+                                    {
+                                        string[] specializations = specialization.intake.Split('&');
+                                        <label>@specializations[0]</label>   
+                                        <label>-</label>
+                                        <label style="font-weight: bold">@specializations[1]</label>                               
+                                    }
+                                    @if (specialization.intake.Contains("(") == true)
+                                    {
+                                        string[] specializations = specialization.intake.Split('(');
+                                        <label>@specializations[0]</label>  
+                                        <label>(</label>
+                                        <label style="font-weight: bold">0</label> 
+                                        <label>)</label>                              
+                                    }
+                                    @if (specialization.intake.Contains("$") == true)
+                                    {
+                                        string[] specializations = specialization.intake.Split('$');
+                                        <label>@specializations[0]</label>                      
+                                    }
+                                    @if (specialization.intake.Contains("*") == true)
+                                    {
+                                        string[] specializations = specialization.intake.Split('*');
+                                        <label style="font-weight: bold">@specializations[0]</label>                           
+                                    }
+                                    @if (specialization.intake.Contains("#") == true)
+                                    {
+                                        string[] specializations = specialization.intake.Split('#');
+                                        <label>@specializations[0]</label>                         
+                                    }
+                                    @if (specialization.intake.Contains("@") == true)
+                                    {
+                                        string[] specializations = specialization.intake.Split('@');
+                                        <label>@specializations[0]</label>   
+                                        <label>-</label>
+                                        <label style="font-weight: bold">@specializations[1]</label>                        
+                                    }
+                                    @if (specialization.intake.Contains("%") == true)
+                                    {
+                                        string[] specializations = specialization.intake.Split('%');
+                                        <label>@specializations[0]</label>   
+                                        <label>+</label>
+                                        <label style="font-weight: bold">@specializations[1]</label>                        
+                                    }
+                                    @if (specialization.intake.Contains("^") == true)
+                                    {
+                                        string[] specializations = specialization.intake.Split('^');
+                                        <label style="font-weight: bold">@specializations[0]</label>                         
+                                    }
+                                    @if (specialization.intake.Contains("?") == true)
+                                    {
+                                        string[] specializations = specialization.intake.Split('?');
+                                        <label >@specializations[0]</label> 
+                                        <label>(</label>
+                                        <label style="font-weight: bold">0</label> 
+                                        <label>)</label>                           
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                            }
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+        if (ViewBag.Count == 0)
+        {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+        }
+}

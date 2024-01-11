@@ -1,0 +1,817 @@
+﻿@model UAAAS.Models.CollegeFaculty
+@{
+    ViewBag.Title = "Verify Faculty";
+    string regno = string.Empty;
+
+}
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+
+<link href="@Url.Content("~/Content/jntuh-styles.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/themes/base/jquery.ui.datepicker.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery-ui-1.8.20.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var DeptNames = null;
+    $(document).ready(function () {
+
+        var Identifiedvalue = $("input[name=facultyRecruitedFor]:checked").val();
+        var phar = '@Model.facultyDepartmentId';
+        var Mpharmacy = '@Model.facultyPGDepartmentId';
+        var id = '@Model.id';
+
+        var expvalue = $("input[name=facultyfresherexperiance]:checked").val();
+        //debugger;
+        //For Experiance and Fresher Code New on 10-02-2020
+        $(".Fresherlabel").css("display", "none");
+        $(".Experiencelabel").css("display", "none");
+
+        if (expvalue == "Fresher") {
+            $(".Fresherlabel").css("display", "none");
+            $(".Fresherlabel").css("display", "block");
+            $(".Experiencelabel").css("display", "none");
+        }
+        else if (expvalue == "Experienced") {
+
+            $(".Fresherlabel").css("display", "none");
+            $(".Fresherlabel").css("display", "block");
+            $(".Experiencelabel").css("display", "block");
+
+        }
+
+        $(".othercollege").css("display", "none");
+        $(".otherdesignation").css("display", "none");
+        $(".otherpresentdesignation").css("display", "none");
+
+        var prvcollegeid = '@Model.Previouscollegeid';
+        if (prvcollegeid == 375) {
+            $(".othercollege").css("display", "block");
+        } else {
+            $(".othercollege").css("display", "none");
+        }
+        var othdesid = '@Model.facultyDesignationId';
+        if (othdesid == 4) {
+            $(".otherdesignation").css("display", "block");
+        } else {
+            $(".otherdesignation").css("display", "none");
+        }
+
+        if (Identifiedvalue == "UG&PG" || Identifiedvalue == "PG") {
+            if (Mpharmacy == "36" || Mpharmacy == "27" || Mpharmacy == "39") {
+                $(".MpharmacySpec").css("display", "block");
+                $(".Pgdepartment").css("display", "block");
+                $(".specialization").css("display", "block");
+            }
+            else {
+                $(".MpharmacySpec").css('display', 'none');
+                $(".Pgdepartment").css("display", "block");
+                $(".specialization").css("display", "block");
+            }
+        }
+        else {
+
+            if (phar == "26") {
+                $(".MpharmacySpec").css('display', 'block');
+                $(".specialization").css("display", "none");
+                $(".departments").css("display", "block");
+            }
+            else {
+                $(".MpharmacySpec").css('display', 'none');
+                $(".specialization").css("display", "none");
+                $(".departments").css("display", "block");
+            }
+
+        }
+
+        $('.calendar').attr("readonly", "true");
+        $('.calendar').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+        });
+
+
+        $(".Supportingfile").change(function () {
+            var rdid = $(this).attr('id');
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, rdid);
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+
+                }
+            }
+
+        });
+
+        $(".Form16Supportingfile").change(function () {
+            var rdid = $(this).attr('id');
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, rdid);
+                size = size / 1048576;
+                if (size > 1) {
+                    alert("Document should not exceed 1 MB in Size");
+                    $(this).val('');
+                } else {
+
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+        $("#designation").change(function () {
+            ////debugger;
+            var desig = $(this).val();
+            if (desig == 4) {
+                $(".otherdesignation").css("display", "block");
+            } else {
+                $(".otherdesignation").css("display", "none");
+            }
+        });
+
+
+        var prsntothdesid = '@Model.facultyPresentDesignationId';
+        if (prsntothdesid == 4) {
+            $(".otherpresentdesignation").css("display", "block");
+        } else {
+            $(".otherpresentdesignation").css("display", "none");
+        }
+        $("#presentdesignation").change(function () {
+            //debugger;
+            var desig = $(this).val();
+            if (desig == 4) {
+                $(".otherpresentdesignation").css("display", "block");
+            } else {
+                $(".otherpresentdesignation").css("display", "none");
+            }
+        });
+
+    });
+    $("#UgdepartmentName").change(function () {
+
+        var deptid = $(this).val();
+        if (deptid == "26") {
+            $(".MpharmacySpec").css('display', 'block');
+        }
+        else if (deptid == "") {
+
+        }
+        else {
+
+            $(".MpharmacySpec").css('display', 'none');
+        }
+    });
+    $(".departmentPg").on('change', function () {
+
+        var deptValue = $(this).val();
+
+
+        if (deptValue == "36" || deptValue == "27" || deptValue == "39") {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "/Faculty/GetSpecializations?id=" + deptValue,
+                dataType: "Json",
+                success: function (data) {
+                    debugger
+                    // console.log(data);
+                    // first remove the current options if any
+                    $("#SpecializationId").find('option').remove();
+                    var item = "<option value=''>---Select---</option>";
+
+                    $.each(data.data, function (i, state) {
+                        // $(".Specialization").append($("<option></option>").val(state.Specid).html(state.Specname));
+                        item += "<option value='" + state.Specid + "'>" + state.Specname + "</option>";
+                        // $("#Specialization").append($('<option></option>').val(item.Value).html(item.Text));
+                    });
+                    $("#SpecializationId").html(item);
+
+                },
+                error: function ajaxError(response) {
+                    alert(response.status + ' ' + response.statusText);
+                }
+            });
+            $(".MpharmacySpec").css('display', 'block');
+        }
+        else if (deptValue == "") {
+
+        }
+        else {
+
+            $(".MpharmacySpec").css('display', 'none');
+
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "/Faculty/GetSpecializations?id=" + deptValue,
+                dataType: "Json",
+                success: function (data) {
+
+                    // console.log(data);
+                    // first remove the current options if any
+                    $("#SpecializationId").find('option').remove();
+                    var item = "<option value=''>---Select---</option>";
+
+                    $.each(data.data, function (i, state) {
+                        // $(".Specialization").append($("<option></option>").val(state.Specid).html(state.Specname));
+                        item += "<option value='" + state.Specid + "'>" + state.Specname + "</option>";
+                        // $("#Specialization").append($('<option></option>').val(item.Value).html(item.Text));
+                    });
+                    $("#SpecializationId").html(item);
+
+                },
+                error: function ajaxError(response) {
+                    alert(response.status + ' ' + response.statusText);
+                }
+            });
+        }
+    });
+
+
+    $(".IdentifiedFor").click(function () {
+
+        var selectedValue = $(this).val();
+        var mphar = $(".departmentPg").val();
+        var specdata = $(".Specialization").val();
+
+        if (selectedValue == "UG&PG" || selectedValue == "PG") {
+            $(".Pgdepartment").css("display", "block");
+            // $(".Specialization").find('option').remove();
+            var item = "<option value=''>---Select---</option>";
+            // item +="<option>"+specdata+"</option>";
+            $(".Specialization").html(item);
+            $(".specialization").css("display", "block");
+            $(".departments").css("display", "none");
+            if (mphar == "36" || mphar == "27") {
+                $(".MpharmacySpec").css("display", "block");
+            }
+            else {
+                $(".MpharmacySpec").css('display', 'none');
+            }
+        }
+        else {
+            $(".Pgdepartment").css("display", "none");
+            $(".specialization").css("display", "none");
+            $(".departments").css("display", "block");
+            $(".MpharmacySpec").css('display', 'none');
+        }
+
+
+    });
+
+    //For Experiance and Fresher Code New on 10-02-2020
+    $(".Fresherlabel").css("display", "none");
+    $(".Experiencelabel").css("display", "none");
+    $(".Experience").click(function () {
+        //debugger;
+        var selectedValue = $(this).val();
+        if (selectedValue == "Fresher") {
+            $(".Fresherlabel").css("display", "none");
+            $(".Fresherlabel").css("display", "block");
+            $(".Experiencelabel").css("display", "none");
+        }
+        else {
+            $(".Fresherlabel").css("display", "none");
+            $(".Fresherlabel").css("display", "block");
+            $(".Experiencelabel").css("display", "block");
+
+        }
+    });
+
+    $("#previouscollege").change(function () {
+        //debugger;
+        var college = $(this).val();
+        if (college == 375) {
+            $(".othercollege").css("display", "block");
+        } else {
+            $(".othercollege").css("display", "none");
+        }
+    });
+
+
+
+    $(".aadhaarfile1").change(function () {
+
+        var file = getNameFromPath($(this).val());
+        var flag;
+        if (file != null) {
+            var extension = file.substr((file.lastIndexOf('.') + 1));
+            switch (extension) {
+                case 'jpg':
+                case 'JPG':
+                case 'jpeg':
+                case 'JPEG':
+                    flag = true;
+                    break;
+                default:
+                    flag = false;
+            }
+        }
+
+        if (flag == false) {
+            alert("Aadhaar Card document should be in JPEG format only");
+            $(this).val('');
+            return false;
+        }
+        else {
+            var size = GetCertificateSize(this.id);
+
+            if (size > 102400) {
+                alert("Aadhaar Card document size should not exceed 100 KB in Size");
+                $(this).val('');
+            }
+            else {
+                //$(".certificates > span").text("");
+            }
+        }
+    });
+
+    //get file path from client system
+    function getNameFromPath(strFilepath) {
+        var objRE = new RegExp(/([^\/\\]+)$/);
+        var strName = objRE.exec(strFilepath);
+
+        if (strName == null) {
+            return null;
+        }
+        else {
+            return strName[0];
+        }
+    }
+    //get file size
+    function GetCertificateSize(fileid) {
+
+        try {
+            var fileSize = 0;
+            //for IE
+
+            if ($.browser.msie) {
+                //before making an object of ActiveXObject,
+                //please make sure ActiveX is enabled in your IE browser
+                var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                var filePath = $("#" + fileid)[0].value;
+                var objFile = objFSO.getFile(filePath);
+                var fileSize = objFile.size; //size in kb
+                //fileSize = fileSize / 1048576; //size in mb
+            }
+                //for FF, Safari, Opeara and Others
+            else {
+                fileSize = $("#" + fileid)[0].files[0].size //size in kb
+                //fileSize = fileSize / 1048576; //size in mb
+            }
+
+            return fileSize;
+        }
+        catch (e) {
+
+            //alert("Error is : " + e);
+        }
+    }
+
+</script>
+@*@using (Html.BeginForm())*@
+@using (Ajax.BeginForm("EditFaculty", "Faculty", new AjaxOptions(), new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+
+    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    @Html.HiddenFor(model => model.id, new { @Value = Model.id })
+    @Html.HiddenFor(model => model.experienceId)
+    
+    <fieldset>
+        <legend></legend>
+
+        @if (Model.id > 0)
+        {
+            <div class="editor-label" style="width: 250px;">
+                <span>Registration Number</span>
+            </div>
+            @*<div class="editor-field" style="width: 380px;">DepartmentId,DepartmentName
+                    @Html.TextBoxFor(model => model.FacultyRegistrationNumber, new { @maxlength = "25", @placeholder = "Enter Faculty Registration Number", style = "width: 300px;" })
+                </div>*@
+            <div class="editor-field" style="width: 380px;">
+
+                @Html.DisplayFor(model => model.FacultyRegistrationNumber)
+                @Html.HiddenFor(model => model.FacultyRegistrationNumber)
+            </div>
+            <div class="editor-label" style="width: 250px;">
+                @Html.Label("Faculty Name")
+            </div>
+            <div class="editor-field" style="width: 380px;">
+                @Html.DisplayFor(model => model.facultyFirstName)
+                @Html.DisplayFor(model => model.facultyLastName)
+                @Html.DisplayFor(model => model.facultySurname)
+            </div>
+            <div class="editor-label" style="width: 250px;">
+                <span>Present Designation</span>
+            </div>
+            <div class="editor-field" style="width: 380px;">
+                @*@Html.DisplayFor(model => model.designation)
+                    @if (Model.facultyOtherDesignation != null)
+                    {
+                        <span>, @Model.facultyOtherDesignation</span>}*@
+                @Html.DropDownListFor(model => model.facultyPresentDesignationId, new SelectList(ViewBag.Designation as System.Collections.IEnumerable, "Id", "designation"),
+                        "--Select--", new { id = "presentdesignation", style = "" })
+            </div>
+            <div class="editor-label otherpresentdesignation" style="width: 250px;">
+                <span>Other Designation</span>
+            </div>
+            <div class="editor-field otherpresentdesignation" style="width: 380px;">
+                @Html.TextBoxFor(model => model.facultyPresentOtherDesignation, new { @class = "required", @maxlength = "20" })
+            </div>
+            if (true)
+            {
+
+                <div class="editor-label" style="width: 250px;">
+                    <span>Aadhaar Number</span>
+                </div>
+                <div class="editor-field" style="width: 380px;">
+                    @Html.TextBoxFor(model => model.facultyAadhaarNumber, new { @id = "facultyAadhaarNumber", @placeholder = "Enter AadhaarNumber" })
+                    @Html.ValidationMessageFor(model => model.facultyAadhaarNumber)
+                </div>
+                <div class="editor-label" style="width: 250px;">
+                    <span>Aadhaar Document</span>
+                </div>
+                <div class="editor-field" style="width: 380px;">
+                    @if (!string.IsNullOrEmpty(@Model.facultyAadharDocument))
+                    {
+                        <a href="../Content/Upload/Faculty/AADHAARCARDS/CollegeFacultyAadhaar/@Model.facultyAadharDocument.Replace("~", "")" target="_blank">
+                            <span style="font-weight: bold; color: red;">View</span>
+                        </a>
+
+                        if (@Model.facultyAadharDocument != null)
+                        {
+                            @Html.TextBoxFor(model => model.facultyAadharPhotoDocument, new { type = "file", @class = "aadhaarfile1" })
+                            @Html.HiddenFor(model => model.facultyAadharDocument)
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.facultyAadharPhotoDocument, new { type = "file", @class = "aadhaarfile1 required" })
+                        }
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.facultyAadharPhotoDocument, new { type = "file", @class = "aadhaarfile1 required" })
+                    }
+                </div>
+            }
+            @*else
+                {
+
+                    <div class="editor-label" style="width: 250px;">
+                        <span>Aadhaar Number</span>
+                    </div>
+                    <div class="editor-field" style="width: 380px;">
+                        @Html.DisplayFor(model => model.facultyAadhaarNumber, new { @id = "facultyAadhaarNumber", @placeholder = "Enter AadhaarNumber" })
+                        @Html.HiddenFor(model => model.facultyAadhaarNumber)
+                        @Html.ValidationMessageFor(model => model.facultyAadhaarNumber)
+                    </div>
+
+                    <div class="editor-label" style="width: 250px;">
+                        <span>Aadhaar Document</span>
+                    </div>
+                    <div class="editor-field" style="width: 380px;">
+                        @if (!string.IsNullOrEmpty(@Model.facultyAadharDocument))
+                        {
+                            <a href="../Content/Upload/Faculty/AADHAARCARDS/CollegeFacultyAadhaar/@Model.facultyAadharDocument.Replace("~", "")" target="_blank">
+                                <span style="font-weight: bold; color: red;">View</span>
+                            </a>
+                            @Html.HiddenFor(model => model.facultyAadharDocument)
+                            if (@Model.facultyAadharDocument != null)
+                            {
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.facultyAadharPhotoDocument, new { type = "file", @class = "aadhaarfile1 required" })
+                            }
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.facultyAadharPhotoDocument, new { type = "file", @class = "aadhaarfile1 required" })
+                        }
+
+                    </div>
+                }*@
+        }
+        <div class="editor-label" style="width: 250px;">
+            <span>Identified For</span>
+        </div>
+        <div class="editor-field" style="width: 380px;">
+            @Html.RadioButtonFor(model => model.facultyRecruitedFor, "UG", new { id = "UG", @class = "IdentifiedFor" }) UG &nbsp;&nbsp;
+            @Html.RadioButtonFor(model => model.facultyRecruitedFor, "PG", new { id = "PG", @class = "IdentifiedFor" }) PG &nbsp;&nbsp;
+            @Html.ValidationMessageFor(model => model.facultyRecruitedFor)
+        </div>
+        <div class="Pgdepartment" style="display: none;">
+            <div class="editor-label" style="width: 250px;">
+                <span>PG Departments</span>
+            </div>
+            <div class="editor-field" style="width: 380px;">
+                @Html.DropDownListFor(model => model.facultyPGDepartmentId,
+new SelectList(ViewBag.PGDepartments as System.Collections.IEnumerable, "PGdeptid", "PGDeptname"),
+"-- Select --", new { id = "departmentName", @class = "departmentPg required" })
+            </div>
+        </div>
+
+        <div class="specialization" style="display: none;">
+            <div class="editor-label" style="width: 250px;">
+                <span>PG Specialization</span>
+            </div>
+            <div class="editor-field" style="width: 380px;">
+                @Html.DropDownListFor(model => model.SpecializationId, new SelectList(ViewBag.PGSpecializations as System.Collections.IEnumerable, "specid", "Specializationname"),
+                 "-- Select --", new { style = "width: 250px", @class = "Specialization required" })
+
+            </div>
+        </div>
+
+        <div class="departments" style="display: none;">
+            <div class="editor-label" style="width: 250px;">
+                <span>Departments </span>
+            </div>
+            <div class="editor-field" style="width: 380px;">
+                @Html.DropDownListFor(model => model.facultyDepartmentId,
+new SelectList(ViewBag.departments as System.Collections.IEnumerable, "DepartmentId", "DepartmentName"),
+"-- Select --", new { id = "UgdepartmentName", @class = "departmentUg required" })
+            </div>
+        </div>
+        <div class="editor-label" style="width: 250px; height: 37px;">
+            <span>Faculty Type</span>
+        </div>
+        <div class="editor-field" style="width: 380px;">
+            @Html.RadioButtonFor(model => model.facultyfresherexperiance, "Fresher", new { id = "Fresher", @class = "Experience" }) Faculty member with no previous experience <br />
+            @Html.RadioButtonFor(model => model.facultyfresherexperiance, "Experienced", new { id = "Experienced", @class = "Experience" }) Faculty member with previous experience &nbsp;&nbsp;
+            @Html.ValidationMessageFor(model => model.facultyfresherexperiance)
+        </div>
+        <div>
+            @*@if (@Model.facultyfresherexperiance == "Fresher" || @Model.facultyfresherexperiance == "Experienced")
+                {*@
+            <div class="Fresherlabel">
+                <div class="editor-label" style="width: 250px;">
+                    <span>Date of Appointment</span>
+                </div>
+                <div class="editor-field Fresherlabel" style="width: 380px;">
+                    @Html.TextBoxFor(model => model.dateOfAppointment, new { @class = "calendar required", @placeholder = "DD/MM/YYYY" })
+                </div>
+
+                <div class="editor-label" style="width: 250px;">
+                    <span>Appointment Order & Joining Letter</span>
+                </div>
+                <div class="editor-field" style="width: 380px;">
+                    @if (!string.IsNullOrEmpty(@Model.ViewAppointmentOrderDocument))
+                    {
+                        <a href="../Content/Upload/College/Faculty/AppointmentLetters/@Model.ViewAppointmentOrderDocument.Replace("~", "")" target="_blank">
+                            <span style="font-weight: bold; color: red;">View</span>
+                        </a>
+                        if (@Model.ViewAppointmentOrderDocument != null)
+                        {
+                            @Html.TextBoxFor(model => model.AppointmentOrderDocument, new { type = "file", @class = "Supportingfile" })
+                            @Html.HiddenFor(model => model.ViewAppointmentOrderDocument)
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.AppointmentOrderDocument, new { type = "file", @class = "Supportingfile required" })
+                        }
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.AppointmentOrderDocument, new { type = "file", @class = "Supportingfile required" })
+                    }
+                </div>
+                <div class="editor-label" style="width: 250px;">
+                    <span>Pay Scale (RS.)</span>
+                </div>
+                <div class="editor-field" style="width: 380px;">
+                    @Html.TextBoxFor(model => model.facultySalary, new { @class = "required", @maxlength = "20", @placeholder = "Enter Pay Scale" })
+                </div>
+                <div class="editor-label" style="width: 250px;">
+                    <span>Gross Salary (RS.)</span>
+                </div>
+                <div class="editor-field" style="width: 380px;">
+                    @Html.TextBoxFor(model => model.facultyGrossSalary, new { @class = "required", @maxlength = "10", onkeypress = "return isNumberKey(event)", @placeholder = "Enter Gross Salary" })
+                </div>
+                <div class="editor-label" style="width: 250px;">
+                    <span>Form 16 & 26AS</span>
+                </div>
+                <div class="editor-field" style="width: 380px;">
+
+                    @if (!string.IsNullOrEmpty(@Model.ViewfacultyForm16))
+                    {
+                        <a href="../Content/Upload/College/Faculty/Form16_26AS/@Model.ViewfacultyForm16.Replace("~", "")" target="_blank">
+                            <span style="font-weight: bold; color: red;">View</span>
+                        </a>
+                        if (@Model.ViewfacultyForm16 != null)
+                        {
+                            @Html.TextBoxFor(model => model.facultyForm16, new { @type = "file", @class = "Form16Supportingfile" })
+                            @Html.HiddenFor(model => model.ViewfacultyForm16)
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.facultyForm16, new { @type = "file", @class = "Form16Supportingfile" })
+                        }
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.facultyForm16, new { @type = "file", @class = "Form16Supportingfile" })
+                    }
+                </div>
+            </div>
+
+            <div class="Experiencelabel">
+                <div class="editor-label" style="width: 250px;">
+                    <span>Previous Working College</span>
+                </div>
+                <div class="editor-field" style="width: 380px;">
+                    @Html.DropDownListFor(model => model.Previouscollegeid, new SelectList(ViewBag.Institutions as System.Collections.IEnumerable, "Value", "Text"),
+                    "--Select--", new { id = "previouscollege", style = "width: 65%" })
+
+                </div>
+
+                <div class="editor-label othercollege" style="width: 250px;">
+                    <span>Other College</span>
+                </div>
+                <div class="editor-field othercollege" style="width: 380px;">
+                    @Html.TextBoxFor(model => model.Otherscollegename, new { @class = "required" })
+                </div>
+
+
+                <div class="editor-label" style="width: 250px;">
+                    <span>Previous college Designation</span>
+                </div>
+                <div class="editor-field" style="width: 380px;">
+                    @Html.DropDownListFor(model => model.facultyDesignationId, new SelectList(ViewBag.Designation as System.Collections.IEnumerable, "Id", "designation"),
+                    "--Select--", new { id = "designation", style = "" })
+
+                </div>
+
+                <div class="editor-label otherdesignation" style="width: 250px;">
+                    <span>Other Designation</span>
+                </div>
+                <div class="editor-field otherdesignation" style="width: 380px;">
+                    @Html.TextBoxFor(model => model.facultyOtherDesignation, new { @class = "required", @maxlength = "20" })
+                </div>
+
+
+                <div class="editor-label" style="width: 250px;">
+                    <span>Previous College SCM (if any)</span>
+                </div>
+                <div class="editor-field" style="width: 380px;">
+                    @if (!string.IsNullOrEmpty(@Model.ViewSelectionCommitteeDocument))
+                    {
+                        <a href="../Content/Upload/College/Faculty/PreviousSCMs/@Model.ViewSelectionCommitteeDocument.Replace("~", "")" target="_blank">
+                            <span style="font-weight: bold; color: red;">View</span>
+                        </a>
+                        if (@Model.ViewAppointmentOrderDocument != null)
+                        {
+                            @Html.TextBoxFor(model => model.SelectionCommitteeDocument, new { type = "file", @class = "Supportingfile" })
+                            @Html.HiddenFor(model => model.ViewAppointmentOrderDocument)
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.SelectionCommitteeDocument, new { type = "file", @class = "Supportingfile" })
+                        }
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.SelectionCommitteeDocument, new { type = "file", @class = "Supportingfile" })
+                    }
+                </div>
+                <div class="editor-label" style="width: 250px;">
+                    <span>Date of Resignation</span>
+                </div>
+                <div class="editor-field" style="width: 380px;">
+
+
+                    @Html.TextBoxFor(model => model.dateOfResignation, new { @class = "calendar required", @placeholder = "DD/MM/YYYY" })
+                </div>
+
+                <div class="editor-label" style="width: 250px;">
+                    <span>Relieving Letter & Service Certificate</span>
+                </div>
+                <div class="editor-field" style="width: 380px;">
+                    @if (!string.IsNullOrEmpty(@Model.ViewRelivingDocument))
+                    {
+                        <a href="../Content/Upload/College/Faculty/RelevingLetters/@Model.ViewRelivingDocument.Replace("~", "")" target="_blank">
+                            <span style="font-weight: bold; color: red;">View</span>
+                        </a>
+
+                        if (@Model.ViewRelivingDocument != null)
+                        {
+                            @Html.TextBoxFor(model => model.RelivingDocument, new { type = "file", @class = "Supportingfile" })
+                            @Html.HiddenFor(model => model.ViewAppointmentOrderDocument)
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.RelivingDocument, new { type = "file", @class = "Supportingfile required" })
+                        }
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.RelivingDocument, new { type = "file", @class = "Supportingfile required" })
+                    }
+                </div>
+            </div>
+            @*}*@
+        </div>
+        <div style="text-align: center">
+            <p>
+                <input type="submit" value="Submit" id="btnsend" name="cmd" />
+                @*@Html.ActionLink("Cancel", "Teaching", "Faculty", null, new { @class = "create_button" })*@
+                <input type="button" class="create_button" name="Cancel" id="btneditcancel" value="Cancel" />
+            </p>
+        </div>
+    </fieldset>
+}

@@ -1,0 +1,152 @@
+﻿@model IList<UAAAS.Models.colleges_groups>
+@using UAAAS.Models;
+@{
+    ViewBag.Title = "CollegeGroups";
+    uaaasDBContext db = new uaaasDBContext();
+}
+<h2>College Groups</h2>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#cluster').change(function () {
+            var clusterName = $(this).val();
+            //alert(clusterName);
+
+            if ($('#cluster').val() != '') {
+                window.location = '/CollegeGroups/CollegeGroupsIndex?cluster=' + clusterName;
+            }
+            else {
+                window.location = '/CollegeGroups/CollegeGroupsIndex';
+            }
+        });
+        $('#btnsubmit').click(function () {
+            var count = $('#mytbody').children().length;        
+            for (var i = 0; i < count; i++) {               
+                if ($('#firstMemberGroup' + i).val() == '') {
+                    $('#firstMemberGroup' + i).focus();
+                    $('#firstMemberGroup' + i).addClass('input-validation-error')
+                    return false;
+                }
+                else {
+                    $('#firstMemberGroup' + i).removeClass('input-validation-error')
+                }              
+                if ($('#SecondMemberGroup' + i).val() == '') {
+                    $('#SecondMemberGroup' + i).focus();
+                    $('#SecondMemberGroup' + i).addClass('input-validation-error')
+                    return false;
+                }
+                else {
+                    $('#SecondMemberGroup' + i).removeClass('input-validation-error')
+                }
+            }           
+           
+        });
+    });
+
+</script>
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 5000,
+                              "bStateSave": false,
+     "sDom": '<"top"lfip>rt<"bottom"ip<"clear">'
+});
+}
+@if (@TempData["Success"] != null)
+{
+    <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+}
+@if (@TempData["Error"] != null)
+{
+    <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+}
+@using (Html.BeginForm())
+{  
+    <table class="four_columns" style="width: 50%; margin-left: auto; margin-right: auto">
+
+        <tr>
+            <td class="col1">Cluster Name
+            </td>
+            <td class="col2" colspan="2">
+                @Html.DropDownList("cluster",
+                new SelectList(@db.college_clusters.Where(c => 1 == 1).OrderBy(c => c.clusterName).Select(c => c.clusterName).Distinct().ToList()),
+                "-- Select --", new { id = "cluster" })
+             
+            </td>           
+        </tr>
+
+    </table>
+
+   
+    if (@ViewBag.Collegesgroups == true)
+    {
+    <div style="text-align: right">
+        @if( Model.Count()!=0)
+        {
+        <input type="submit" id="btnsubmit" value="Save"/>
+        }
+    </div>
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 40px; text-align: center;">S.No</th>
+                <th style="text-align: left;">Cluster Name</th>
+                <th style="text-align: center;">College Code</th>
+                 <th style="text-align: center;">College Name</th>
+                <th style="text-align: center;">College Group</th>
+                <th style="text-align: center;">First Member Group</th>
+                <th style="text-align: center;">Second Member Group</th>
+                <th style="text-align: center;">Status</th>
+            </tr>
+        </thead>
+        <tbody id="mytbody">
+            @for (int i = 0; i < Model.Count(); i++)
+            {           
+                <tr>
+                    <td style="text-align: center;">
+                        @(i + 1)
+                    </td>
+                    <td style="text-align: left; text-transform: uppercase;">
+                        @Html.DisplayFor(model => model[i].clusterName)
+                        @Html.HiddenFor(model => model[i].id)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase;">
+                        @Html.DisplayFor(model => model[i].collegeCode)
+                        @Html.HiddenFor(model => model[i].collegeCode)
+                    </td>
+                    <td style="text-align: left; text-transform: uppercase;">
+                       @* @Html.Display("collegeName",new{@Value=@db.jntuh_college.Where(c=>c.collegeCode==Model[i].collegeCode).Select(c=>c.collegeName).FirstOrDefault()})
+                         @db.jntuh_college.Where(c=>c.collegeCode==Model[i].collegeCode).Select(c=>c.collegeName).FirstOrDefault()*@
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase;">
+                        @Html.TextBoxFor(model => model[i].collegeGroup,new {@style="text-align: center",@placeholder="College Group"})
+                      
+                    </td>
+
+                    <td style="text-align: center; text-transform: uppercase;">
+                       @Html.TextBoxFor(model => model[i].firstMemberGroup, new {id="firstMemberGroup"+i ,@style="text-align: center",@placeholder="Group 1"})                          
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase;">                    
+                        @Html.TextBoxFor(model => model[i].SecondMemberGroup , new {id="SecondMemberGroup"+i ,@style="text-align: center",@placeholder="Group 2"})                        
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model[i].isActive)
+                        @if (Model[i].isActive == true)
+                        {
+                            <span>Active</span>
+                        }
+                        else
+                        {
+                            <span>In-Active</span>
+                        }
+                            
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+
+}
+

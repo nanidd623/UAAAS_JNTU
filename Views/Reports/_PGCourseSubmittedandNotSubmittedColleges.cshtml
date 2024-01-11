@@ -1,0 +1,18 @@
+﻿@{
+    int sno = 1;
+}
+<table border="1" style="width: 100%">
+    <tr>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">SNo</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">College Code</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;">College Name</th>        
+    </tr>
+    @foreach (var item in ViewBag.collegePGCoursesList)
+    {
+        <tr>
+            <th style="text-align: center; vertical-align: top;">@(sno++)</th>
+            <td style="text-align: center; vertical-align: top;">@item.collegeCode</td>
+            <td style="text-align: left; vertical-align: top;">@item.collegeName.Replace("’","'")</td>          
+        </tr>
+    }
+</table>

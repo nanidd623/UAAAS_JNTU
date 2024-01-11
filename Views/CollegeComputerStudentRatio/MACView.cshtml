@@ -1,0 +1,58 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_college_macaddress>
+
+@{
+    ViewBag.Title = "MACView";
+    
+}
+
+<h2>MACView</h2>
+
+<table>
+    <tr>
+        <th>
+            S.No
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.macaddress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.location)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.labname)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.collegeId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.macaddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.location)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.labname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsActive)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.createdOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.createdBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.updatedOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.updatedBy)
+        </td>
+    </tr>
+}
+
+</table>

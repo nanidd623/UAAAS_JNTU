@@ -1,0 +1,243 @@
+﻿@model IEnumerable<UAAAS.Models.ugstudents>
+@{
+    ViewBag.Title = "CollegeUgStudents";
+    int sno = 1;
+}
+
+<h2>CollegeUgStudents</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#openDialog").live("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+
+            $("#dialog-add").dialog({
+                title: 'Add Student',
+                autoOpen: false,
+                resizable: false,
+                height: 450,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    location.reload();
+                    //$(this).dialog("close");
+                }
+
+            });
+            $("#dialog-add").dialog('open');
+            return false;
+        });
+
+
+
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 25,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        $('#Id').change(function () {
+            debugger;
+            var DeptID = $("#Id option:selected").val();;
+            var aId ='';
+            if ($('#Id').val() != '') {
+
+                window.location = '/Student/CollegeUgStudents?id=' + DeptID + "&Value=" + aId;
+            }
+            else {
+                window.location = '/Student/CollegeUgStudents';
+            }
+        });
+
+        $('#Value').change(function () {
+            debugger;
+            var DeptID = $("#Id option:selected").val();;
+            var aId = $(this).val();
+            if ($('#Id').val() != '' && aId!='') {
+
+                window.location = '/Student/CollegeUgStudents?id=' + DeptID + "&Value=" + aId;
+            }
+            else {
+                window.location = '/Student/CollegeUgStudents';
+            }
+        });
+
+
+    });
+
+
+</script>
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success" style="background-color: gold; border: 1px solid #f49820;">
+        <p style="text-align: center;font-weight: bold"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+    </div>
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error" style="background-color: red; border: 1px solid #f49820;">
+        <p style="text-align: center;font-weight: bold;color:white;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+    </div>
+}
+
+<table class="four_columns">
+    <tr>
+        <td class="col1">
+            <span>Department</span>
+        </td>
+        <td class="col2" colspan="4">
+            @Html.DropDownList("Id", new SelectList(ViewBag.Departments as System.Collections.IEnumerable, "Id", "departmentName"), "-Select-", new {id = "Id"})
+        </td>
+    </tr>
+    <tr></tr>
+    <tr>
+        <td class="col1">
+            <span>Year</span>
+        </td>
+        <td class="col2" colspan="4">
+            @Html.DropDownList("Value", new SelectList(ViewBag.Years as System.Collections.IEnumerable, "Value", "Text"), "-Select-", new { Value = "Value" })
+        </td>
+    </tr>
+</table>
+<br />
+
+
+
+<table id="example" class="display" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="width: 50px; text-align: center;">
+                S.No
+            </th>
+            <th style="width: 150px; text-align: center;">
+               StudentName
+            </th>
+            <th style="width: 150px; text-align: center;">
+              HallTicketNumber
+            </th>
+            <th style="width: 150px; text-align: center;">
+                ADD
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            int i = 0;
+            foreach (var item in Model)
+            {
+                @Html.HiddenFor(modelItem => item.Id)
+                <tr>
+                    @if(item.AadhaarNumber == null)
+                    {
+                    <td style="text-align: center;">
+                        @( i = i + 1)
+                    </td>
+                    }
+                    else
+                    {
+                    <td style="text-align: center;background-color:green;">
+                        @( i = i + 1)
+                    </td>
+                    }
+
+                    <td style="text-align: center; text-transform: uppercase;">
+                        @Html.DisplayFor(modelItem => item.studentName)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase;">
+                        @Html.DisplayFor(modelItem => item.HallTicketNumber)
+                    </td>
+
+                    <td style="text-align: center; text-transform: uppercase;">
+                        @Html.ActionLink("View", "CreateUgStudent", "Student", new { @sid = UAAAS.Models.Utilities.EncryptString(item.Id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @id = "openDialog", @class = "create_button", @style = "color:white" })
+                    </td>
+
+
+
+                </tr>
+
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">
+                    <p style="color:red">Select Department for student informasion</p>
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+
+
+<div id="dialog-add" style="display: none">
+</div>

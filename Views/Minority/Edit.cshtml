@@ -1,0 +1,225 @@
+﻿@model UAAAS.Models.Permanent_Affiliation.MinorityModel
+
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    ViewBag.Title = "Minority Information";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $(".calendarnew").css("width", "160px");
+
+        $('.calendarnew').attr("readonly", "true");
+        $('.calendarnew').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: "-180M",
+            maxDate: "+180M",
+            yearRange: '2000:2050',
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+        });
+
+        $(".Supportingfile").change(function () {
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "Documentfile");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+    });
+</script>
+
+<h2>Minority Details</h2><br />
+
+@using (Html.BeginForm("AddEditRecord", "Minority", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    <table class="faculty_table" style="text-align: center; width: 100%">
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.AcademicYear)
+            </td>
+            <td class="col2">
+                @Html.HiddenFor(model => model.AcademicYear)
+                @Html.DropDownListFor(model => model.AcademicYear,
+                    new SelectList(ViewBag.AcademicYears as System.Collections.IEnumerable, "id", "academicYear"),
+                    "-- Select --", new { id = "academicyear", @class = "width" })
+                @Html.ValidationMessageFor(model => model.AcademicYear)
+            </td>
+            <td class="col1">
+                @Html.LabelFor(model => model.CollegeStatus)
+            </td>
+            <td class="col2">
+                @Html.HiddenFor(model => model.CollegeStatus)
+                @Html.DropDownListFor(model => model.CollegeStatus,
+             new SelectList(ViewBag.CollegeStatus as System.Collections.IEnumerable, "id", "collegeStatus"),
+                    "-- Select --", new { id = "academicyear", @class = "width" })
+                @Html.ValidationMessageFor(model => model.CollegeStatus)
+            </td>
+        </tr>
+        <tr>
+            <td class="col3">
+                @Html.LabelFor(model => model.StatusFromDate)
+            </td>
+            <td class="col4">
+                @Html.TextBoxFor(model => model.StatusFromDate, new { @id = "fromDate", @name = "@fromDate", @class = "calendarnew" })
+                @Html.ValidationMessageFor(model => model.StatusFromDate)
+            </td>
+            <td class="col1">
+                @Html.LabelFor(model => model.StatusToDate)
+            </td>
+            <td class="col2">
+                @Html.TextBoxFor(model => model.StatusToDate, new { @id = "fromDate", @name = "@fromDate", @class = "calendarnew" })
+                @Html.ValidationMessageFor(model => model.StatusToDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                @Html.LabelFor(model => model.StatusFile)
+            </td>
+
+            <td class="col2">
+                @if (Model.StatusFile != null)
+                {
+                    @Html.TextBoxFor(model => model.StatusFile, new { type = "file", @id = "@txtFile", @name = "@file", @class = "Supportingfile" })
+                    <a href="~/Content/Upload/College/NAAC/@Model.StatusFile" target="_blank">
+                        <span style="color: red;"><b>View</b></span>
+                    </a>
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.StatusFile, new { type = "file", @id = "@txtFile", @name = "@file", @class = "required Supportingfile" })
+                }
+                @Html.ValidationMessageFor(model => model.StatusFile)
+            </td>
+        </tr>
+    </table>
+
+    <div style="text-align: right">
+        <p>
+            <input type="submit" value="Add" id="btnAdd" name="cmd" class="btnclass" />
+        </p>
+    </div>
+}
+<br />
+@if (ViewBag.MinorityList.Count > 0)
+{
+    <div style="margin-top:15px;">
+        <h2>List of Minorities</h2><br />
+        <table class="webGrid">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>College Status</th>
+                    <th>Academic Year</th>
+                    <th>Status From Date (DD/MM/YYYY)</th>
+                    <th>Status To Date (DD/MM/YYYY)</th>
+                    <th>Supporting Document</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in ((List<UAAAS.Controllers.Permanent_Affiliation.Minority>)ViewBag.MinorityList).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr>
+                        <td>@pay.i </td>
+                        <td>@pay.value.CollegeStatus</td>
+                        <td>@pay.value.AcademicYear</td>
+                        <td>@pay.value.StatusFromDate</td>
+                        <td>@pay.value.StatusToDate</td>
+                        <td style="text-align: left; font-weight: normal;">
+                            @if (pay.value.StatusFile != null)
+                            {
+                                <a href="../Content/Upload/College/NBAAccredited_Latest/@pay.value.StatusFile" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

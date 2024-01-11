@@ -1,0 +1,234 @@
+﻿@model IList<UAAAS.Controllers.Reports.AllCollegesIntakeController.CollegesIntakeWithLabs>
+@using UAAAS.Models;
+@{
+    //uaaasDBContext db = new uaaasDBContext();
+    int sno = 1;
+}
+<table border="1" style="width: 100%">
+    <tr>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" rowspan="3">SNo</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" rowspan="3">Code</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;" rowspan="3">College Name</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;" rowspan="3">Degree</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;" rowspan="3">Department</th>
+        <th style="text-align: left; background-color: yellow; vertical-align: top;" rowspan="3">Specialization</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" rowspan="3">ShiftId</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="4">Intake</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="24">Labs</th>
+    </tr>
+    <tr>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="4"></th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="3">IV - 1</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="3">IV - 2</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="3">III - 1</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="3">III - 2</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="3">II - 1</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="3">II - 2</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="3">I - 1</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;" colspan="3">I - 2</th>
+    </tr>
+    <tr>
+        <th style="text-align: right; background-color: yellow; vertical-align: top;">IV Year</th>
+        <th style="text-align: right; background-color: yellow; vertical-align: top;">III Year</th>
+        <th style="text-align: right; background-color: yellow; vertical-align: top;">II Year</th>
+        <th style="text-align: right; background-color: yellow; vertical-align: top;">I Year</th>
+
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">R</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">U</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">NU</th>
+
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">R</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">U</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">NU</th>
+
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">R</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">U</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">NU</th>
+
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">R</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">U</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">NU</th>
+
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">R</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">U</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">NU</th>
+
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">R</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">U</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">NU</th>
+
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">R</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">U</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">NU</th>
+
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">R</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">U</th>
+        <th style="text-align: center; background-color: yellow; vertical-align: top;">NU</th>
+
+
+    </tr>
+
+    @foreach (var collegeId in Model.Select(c => c.collegeId).Distinct().ToList())
+    {
+        var count = Model.Where(m => m.collegeId == collegeId).Select(m => m).Count();
+        var list = Model.Where(c => c.collegeId == collegeId).ToList();
+
+        foreach (var item in list)
+        {
+            if (list.IndexOf(item) == 0)
+            {
+        <tr>
+            <td style="text-align: center; vertical-align: top;" rowspan="@count">@(sno++)</td>
+            <td style="text-align: center; vertical-align: top; text-transform: uppercase" rowspan="@count">@item.collegeCode</td>
+            <td style="text-align: left; vertical-align: top; text-transform: uppercase" rowspan="@count">@item.collegeName</td>
+            <td style="text-align: left; vertical-align: top;">@item.Degree</td>
+            <td style="text-align: left; vertical-align: top;">@item.Department</td>
+            <td style="text-align: left; vertical-align: top;">@item.Specialization</td>
+            <td style="text-align: center; vertical-align: top;">@item.shiftId</td>
+            <td style="text-align: right; vertical-align: top;">@item.approvedIntake4</td>
+            <td style="text-align: right; vertical-align: top;">@item.approvedIntake3</td>
+            <td style="text-align: right; vertical-align: top;">@item.approvedIntake2</td>
+            <td style="text-align: right; vertical-align: top;">@item.approvedIntake1</td>
+            @if (item.Degree == "B.Tech" || item.Degree == "B.Pharmacy")
+            {
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs41</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs41</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs41</td>
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs42</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs42</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs42</td>
+
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs31</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs31</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs31</td>
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs32</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs32</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs32</td>
+
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs21</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs21</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs21</td>
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs22</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs22</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs22</td>
+
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs11</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs11</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs11</td>
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs12</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs12</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs12</td>
+            }
+            else
+            {
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs11</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs11</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs11</td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+            }
+
+        </tr>
+            }
+            else
+            {
+        <tr>
+
+            <td style="text-align: left; vertical-align: top;">@item.Degree</td>
+            <td style="text-align: left; vertical-align: top;">@item.Department</td>
+            <td style="text-align: left; vertical-align: top;">@item.Specialization</td>
+            <td style="text-align: center; vertical-align: top;">@item.shiftId</td>
+            <td style="text-align: right; vertical-align: top;">@item.approvedIntake4</td>
+            <td style="text-align: right; vertical-align: top;">@item.approvedIntake3</td>
+            <td style="text-align: right; vertical-align: top;">@item.approvedIntake2</td>
+            <td style="text-align: right; vertical-align: top;">@item.approvedIntake1</td>
+            @if (item.Degree == "B.Tech" || item.Degree == "B.Pharmacy")
+            {
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs41</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs41</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs41</td>
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs42</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs42</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs42</td>
+
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs31</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs31</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs31</td>
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs32</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs32</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs32</td>
+
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs21</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs21</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs21</td>
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs22</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs22</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs22</td>
+
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs11</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs11</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs11</td>
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs12</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs12</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs12</td>
+            }
+            else
+            {
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+
+                <td style="text-align: right; vertical-align: top;">@item.requiredLabs11</td>
+                <td style="text-align: right; vertical-align: top;">@item.uplodedLabs11</td>
+                <td style="text-align: right; vertical-align: top;">@item.notuplodedLabs11</td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+                <td style="text-align: right; vertical-align: top;"></td>
+            }
+        </tr>
+            }
+
+        }
+
+    }
+
+</table>

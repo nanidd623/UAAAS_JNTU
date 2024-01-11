@@ -1,0 +1,561 @@
+﻿@using System.Collections.Concurrent
+
+@model UAAAS.Controllers.College.ScmProceedingsRequest
+@using UAAAS.Models
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "Appeal SCM Proceedings Request";
+    int sno = 1;
+    string requestDate = string.Empty;
+
+
+    var pharmacyids = new[]{24,27,30,33,34,44,47,52,55,65,78,83,95,97,104,105,107,110,114,117,118,127,135,136,139,146,150,159,169,202,204,213,219,234,239,253,
+                262,263,267,275,283,284,290,295,297,298,301,303,314,317,320,348,353,362,376,377,379,384,392,395,410,427,428,436,442,445,448,454,457,458,6,
+                45,54,58,90,120,206,237,302,313,318,319,389,60,66,252,255,315,370,9, 18, 39, 42, 75, 140, 180, 332, 364,375};
+    uaaasDBContext db = new uaaasDBContext();
+    var userId = Convert.ToInt32(Membership.GetUser(User.Identity.Name).ProviderUserKey);
+    var userCollegeId = db.jntuh_college_users.Where(u => u.userID == userId).Select(u => u.collegeID).FirstOrDefault();
+    List<int> phrmacyDegreeIds = new List<int>() { 2, 5, 9, 10 };
+}
+
+<h2>Appeal Selection Committee Request</h2>
+<br />
+<p style="color: red; font-size: 16px;"> Once submit button is clicked, you can’t add any request further. Hence all the colleges are advised to press submit button only after adding the requisite faculty in all the departments.</p><br />
+
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function () {
+
+
+        //get pdf file size
+        function GetNotificationFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#ScmNotificationSupportDoc")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+
+        //change function for pdf doc
+        $(function () {
+            $(".scmnotificationsupportdocfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    $(".scmnotificationsupportdocfiles > span").text("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".scmnotificationsupportdocfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $(".scmnotificationsupportdocfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+    });
+</script>
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<br />
+
+@using (Html.BeginForm("AppealCollegeScmProceedingsRequest", "PA_CollegeSCMProceedingsRequest", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        <table class="faculty_table" style="text-align: center; width: 100%">
+            <tr>
+                <td class="col1" style="font-weight: bold; width: 15%;">
+                    <span>Department *</span>
+                </td>
+                <td class="col2" colspan="2" style="width: 85%;">
+                    @Html.DropDownListFor(model => model.SpecializationId,
+                        new SelectList(ViewBag.departments as System.Collections.IEnumerable, "SpecializationId", "SpecializationName"),
+                        "-- Select --", new { id = "department", style = "" })
+
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="font-weight: bold; width: 15%;">
+                    <span>Total No of Faculty Required As For AICTE / PCI *</span>
+                </td>
+                <td class="col2" colspan="2" style="width: 85%;">
+                    @Html.TextBoxFor(model => model.TotalFacultyRequired, new { @placeholder = "Total No of Faculty Required", @minlength = "1", @maxlength = "3", @style = "width:260px" })
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <table class="faculty_table" style="text-align: center; width: 100%">
+                        <tr>
+                            <td class="col1" style="font-weight: bold; width: 30%;">
+                                <span>Faculty Type</span>
+                            </td>
+                            <td class="col1" style="width: 30%; font-weight: bold">
+                                <span>Number of Available Faculty</span>
+                            </td>
+                            <td class="col1" style="width: 40%; font-weight: bold">
+                                <span>Number of Required Faculty</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col1" style="font-weight: bold; width: 30%;">
+                                <span>@Html.LabelFor(model => model.ProfessorVacancies) *</span>
+                            </td>
+                            <td class="col2" style="width: 35%;">
+                                @Html.TextBoxFor(model => model.ProfessorVacancies, new { @placeholder = "Available Professor", @minlength = "1", @maxlength = "2" })
+                                @Html.ValidationMessageFor(model => model.ProfessorVacancies)
+                            </td>
+                            <td class="col2" style="width: 35%;">
+                                @Html.TextBoxFor(model => model.RequiredProfessorVacancies, new { @placeholder = "Required Professor", @minlength = "1", @maxlength = "2" })
+                                @Html.ValidationMessageFor(model => model.RequiredProfessorVacancies)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col1" style="font-weight: bold; width: 30%;">
+                                <span>@Html.LabelFor(model => model.AssociateProfessorVacancies) *</span>
+                            </td>
+                            <td class="col2" style="width: 35%;">
+                                @Html.TextBoxFor(model => model.AssociateProfessorVacancies, new { @placeholder = "Available Associate Professor", @minlength = "1", @maxlength = "2" })
+                                @Html.ValidationMessageFor(model => model.AssociateProfessorVacancies)
+                            </td>
+                            <td class="col2" style="width: 35%;">
+                                @Html.TextBoxFor(model => model.RequiredAssociateProfessorVacancies, new { @placeholder = "Required Associate Professor", @minlength = "1", @maxlength = "2" })
+                                @Html.ValidationMessageFor(model => model.RequiredAssociateProfessorVacancies)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col1" style="font-weight: bold; width: 30%;">
+                                <span>@Html.LabelFor(model => model.AssistantProfessorVacancies) *</span>
+                            </td>
+                            <td class="col2" style="width: 35%;">
+                                @Html.TextBoxFor(model => model.AssistantProfessorVacancies, new { @placeholder = "Available Assistant Professor", @minlength = "1", @maxlength = "2" })
+                                @Html.ValidationMessageFor(model => model.AssistantProfessorVacancies)
+                            </td>
+                            <td class="col2" style="width: 35%;">
+                                @Html.TextBoxFor(model => model.RequiredAssistantProfessorVacancies, new { @placeholder = "Required Assistant Professor", @minlength = "1", @maxlength = "2" })
+                                @Html.ValidationMessageFor(model => model.RequiredAssistantProfessorVacancies)
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col1" style="font-weight: bold; width: 15%; vertical-align: middle">
+                    <span>Reason for New Staff Selection Committee</span>
+                </td>
+                <td class="col2" colspan="2" style="width: 85%;">
+                    @Html.TextAreaFor(model => model.Remarks, new { @style = "resize:none", @rows = "2", @cols = "3", @maxlength = "450" })
+
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="font-weight: bold; width: 15%; vertical-align: middle">
+                    <span>Paper Notification Date</span>
+                </td>
+                <td class="col2" colspan="2" style="width: 85%;">
+                    @Html.TextBoxFor(model => model.NotificationDate, new { style = "width:200px", @class = "calendar" })
+
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="font-weight: bold; width: 30%; vertical-align: middle; height: 30px">
+                    <div>
+                        <span>
+                            Paper Notification *
+                            <br />
+                            <span style="color: blue;">(PDF should be less than 1MB size)</span>
+                        </span>
+                    </div>
+                </td>
+                <td class="col2" colspan="2" style="width: 85%; height: 20px">
+                    <div class="editor-field scmnotificationsupportdocfiles">
+                        @Html.TextBoxFor(model => model.ScmNotificationSupportDoc, new { type = "file", @class = "scmnotificationsupportdocfile", @required = "true" })
+
+                        <br />
+                        <span style="color: red;"></span>
+                    </div><br /><br />
+
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: right">
+            <p style="text-align: right">
+                @*&& (ViewBag.RequestSubmittedDatecount == 0 || ViewBag.RequestSubmittedDatecount == null)*@
+                @if (ViewBag.editable == false && ViewBag.OneRequest == false)
+                {
+                    if (pharmacyids.Contains(userCollegeId))
+                    {
+                        <input type="submit" value="Add Request" id="btnsend" name="cmd" />
+                    }
+
+                }
+            </p>
+        </div>
+    </div>
+}
+
+
+
+@using (Html.BeginForm("AppealCollegeScmPrint", "PA_CollegeSCMProceedingsRequest", FormMethod.Post, new { }))
+{
+
+    if (ViewBag.collegescmrequestslist.Count != 0)
+    {
+        <div style="margin-top: 20px;">
+
+            <h2>Selection Committee Request List</h2><br />
+
+            @if (TempData["Error1"] != null)
+            {
+                <div class="error">
+                    <p><strong>Error:</strong> @TempData["Error1"].ToString()</p>
+                </div>
+            }
+            @if (TempData["Success1"] != null)
+            {
+                <div class="success">
+                    <p><strong>Success:</strong> @TempData["Success1"].ToString()</p>
+                </div>
+            }
+
+
+
+            <p style="text-align: right"><b>You should  press submit button in order to add the requests.</b></p>
+            <p style="text-align: right">
+                @*@Html.ActionLink("Submit", "AllSCMRequestSubmission", "PA_CollegeSCMProceedingsRequest", new {@class = "create_button confirmDialog"})*@
+                @*&& (ViewBag.RequestSubmittedDatecount == 0 || ViewBag.RequestSubmittedDatecount == null)*@
+                @if (ViewBag.editable == false && ViewBag.OneRequest == false)
+                {
+                    if (pharmacyids.Contains(userCollegeId))
+                    {
+                        <input type="button" value="Submit" class="create_button confirmDialog" />
+                    }
+                }
+
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="submit" class="create_button" value="Print" id="btn_print" name="cmd" />
+            </p>
+            <table class="webGrid">
+                <thead>
+                    <tr class="gridHeader">
+                        <th>S.No.</th>
+                        <th>Print</th>
+                        @*<th>College</th>*@
+                        <th>Specialization</th>
+                        <th>Available Prof </th>
+                        <th>Available Assoc.Prof</th>
+                        <th>Available Assist.Prof</th>
+                        <th>Required Prof</th>
+                        <th>Required Assoc.Prof</th>
+                        <th>Required Assist.Prof</th>
+                        <th>Request Date</th>
+                        <th style="width:100px">Add Faculty</th>
+                        <th style="width:100px">Request Submitted</th>
+                        <th style="width:105px">View Faculty</th>
+                    </tr>
+                </thead>
+                <tbody style="background: #FCF1D1;">
+                    @for (int i = 0; i < Model.ScmProceedingsRequestslist.OrderByDescending(e => e.CreatedDate).Count(); i++)
+                    {
+                        requestDate = "";
+                        if (Model.ScmProceedingsRequestslist[i].RequestSubmittedDate != null)
+                        {
+                            requestDate = UAAAS.Models.Utilities.MMDDYY2DDMMYY(Model.ScmProceedingsRequestslist[i].RequestSubmittedDate.ToString());
+                        }
+                        else
+                        {
+                            requestDate = "--";
+
+                        }
+
+                        <tr>
+                            <td style="text-align:center">
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].Id)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].CollegeId)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].CollegeName)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].CollegeCode)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].SpecializationId)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].SpecializationName)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].ProfessorVacancies)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].AssociateProfessorVacancies)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].AssistantProfessorVacancies)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].RequiredProfessorVacancies)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].RequiredAssistantProfessorVacancies)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].RequiredAssociateProfessorVacancies)
+                                @Html.HiddenFor(m => m.ScmProceedingsRequestslist[i].ScmNotificationpath)
+                                @(i + 1)
+                            </td>
+                            @if (Model.ScmProceedingsRequestslist[i].RequestSubmittedDate == null)
+                            {
+                                <td>
+                                    <span class="activate_button"></span>
+                                </td>
+
+                            }
+                            else
+                            {
+                                <td>@Html.CheckBoxFor(m => m.ScmProceedingsRequestslist[i].Checked, new { name = "Options" })</td>
+
+                            }
+
+                            <td>@Html.DisplayFor(m => m.ScmProceedingsRequestslist[i].SpecializationName)</td>
+                            <td>@Html.DisplayFor(m => m.ScmProceedingsRequestslist[i].ProfessorVacancies)</td>
+                            <td>@Html.DisplayFor(m => m.ScmProceedingsRequestslist[i].AssociateProfessorVacancies)</td>
+                            <td>@Html.DisplayFor(m => m.ScmProceedingsRequestslist[i].AssistantProfessorVacancies)</td>
+                            <td>@Html.DisplayFor(m => m.ScmProceedingsRequestslist[i].RequiredProfessorVacancies)</td>
+                            <td>@Html.DisplayFor(m => m.ScmProceedingsRequestslist[i].RequiredAssociateProfessorVacancies)</td>
+                            <td>@Html.DisplayFor(m => m.ScmProceedingsRequestslist[i].RequiredAssistantProfessorVacancies)</td>
+                            <td>@requestDate</td>
+                            @*<td style="text-align: center; vertical-align: middle;">
+                                    @if (!string.IsNullOrEmpty(Model.ScmProceedingsRequestslist[i].ScmNotificationpath))
+                                    {
+                                        <span><a href="../Content/Upload/SCMPROCEEDINGSREQUEST/ScmNotificationDocuments/@Model.ScmProceedingsRequestslist[i].ScmNotificationpath" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+                                    }
+                                </td>*@
+                            @*&& ViewBag.RequestSubmittedDatecount == 0*@
+                            @if (Model.ScmProceedingsRequestslist[i].RequestSubmittedDate == null)
+                            {
+                                <td style="width: 100px; text-align: center">
+                                    @if (ViewBag.editable == false)
+                                    {
+                                        if (pharmacyids.Contains(userCollegeId) && phrmacyDegreeIds.Contains(Model.ScmProceedingsRequestslist[i].DegreeId))
+                                        {
+                                            @Html.ActionLink("Add", "AppealAddRegistrationNumber", "PA_CollegeSCMProceedingsRequest", new { @id = Model.ScmProceedingsRequestslist[i].Id }, new { @id = "openDialog", @class = "create_button" })
+                                        }
+                                    }
+
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="width: 100px;text-align:center">
+                                    <span class="activate_button"></span>
+                                </td>
+                            }
+                            @if (Model.ScmProceedingsRequestslist[i].RequestSubmittedDate == null)
+                            {
+                                <td style="width: 100px; text-align: center">
+                                    @*@if (ViewBag.editable == false)
+                                        {
+                                            @Html.ActionLink("Submit", "SCMRequestSubmission", "PA_CollegeSCMProceedingsRequest", new { @id = Model.ScmProceedingsRequestslist[i].Id }, new { @class = "create_button" })
+                                        }*@
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="width: 100px;text-align:center">
+                                    <span class="deactivate_button"></span>
+                                </td>
+                            }
+
+                            <td style="width: 105px; text-align: center">
+                                @Html.ActionLink("View", "AppealViewFaculty", "PA_CollegeSCMProceedingsRequest", new { @scmid = Model.ScmProceedingsRequestslist[i].Id }, new { @class = "view_button" })
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+
+
+
+<div id="dialog-edit">
+</div>
+<div id="dialog-confirm" style="display: none">
+    <b>Are you sure?Do you want to submit all SCM Requests.</b>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+
+
+
+
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add Registration Number',
+            autoOpen: false,
+            resizable: false,
+            height: 350,
+            width: 640,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $("#openDialog").live("click", function (e) {
+            // e.preventDefault();
+            url = $(this).attr('href');
+            $("#dialog-edit").dialog({
+                title: 'Add Registration Number'
+            });
+            //  url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+
+            return false;
+        });
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+        window.setInterval(changeerror, 1000);
+
+
+        $(".confirmDialog").live("click", function (e) {
+            // e.preventDefault();
+            var url = "/PA_CollegeSCMProceedingsRequest/AllSCMRequestSubmission";
+            $("#dialog-confirm").dialog({
+                //
+                title: 'Confirmation',
+                //  autoOpen: true,
+                resizable: false,
+                height: 220,
+                width: 450,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                close: function (event, ui) {
+                    $(this).dialog("close");
+                    window.location.reload();
+                },
+                buttons: {
+                    OK: function (event, ui) {
+                        $(this).load(url);
+                        location.reload();
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+
+
+            return false;
+        });
+    });
+
+    var c = 1;
+
+    function changeerror() {
+
+        switch (c) {
+            case 0:
+                $(".alerttext p,.submitalert").css("color", "yellow");
+                //$(".error p").attr({"color": "red","text-align"});
+                c = 1;
+                break;
+            case 1:
+                $(".alerttext p,.submitalert").css("color", "black");
+                c = 2;
+                break;
+            case 2:
+                $(".alerttext p,.submitalert").css("color", "brown");
+                c = 0;
+                break;
+        }
+    }
+
+
+
+
+
+</script>
+<style>
+    .webGrid a:link, .webGrid a:visited {
+        color: white;
+        text-decoration: none;
+    }
+</style>

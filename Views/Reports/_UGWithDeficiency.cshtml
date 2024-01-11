@@ -1,0 +1,207 @@
+﻿@using (Html.BeginForm())
+{
+    int count = 0;    
+    <table border="1" style="width: 150%">
+        <tr>
+            <th style="text-align: center; background-color: yellow; width: 3%" rowspan="2">S.No
+            </th>
+            <th rowspan="2" style="text-align: center; background-color: yellow; width: 20%">College Name
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 4%" rowspan="2">College Code
+            </th>            
+            <th style="text-align: center; background-color: yellow; width: 50%" rowspan="2">Specializations
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Labs (shortage)
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Computers (shortage)
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Principal
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Faculty (shortage)
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 13%" colspan="2">Ratified
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Library (shortage)
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Deficiencies / Remarks (*)
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 10%" rowspan="2">Grade
+            </th>
+        </tr>
+        <tr>
+            <th style="text-align: center; background-color: yellow; width: 50%">Number	
+            </th>
+            <th style="text-align: center; background-color: yellow; width: 50%">%
+            </th>
+        </tr>
+        @foreach (var item in ViewBag.CollegeSpecializations)
+        {
+            <tr>
+                <td style="text-align: center; vertical-align: top">
+                    @(count = count + 1)
+                </td>
+                <td style="text-align: left; vertical-align: top">
+                    <table style="border-collapse: collapse; width: 550px">
+                        <tr>
+                            <td style="border: none; text-align: left; vertical-align: top">
+                                <label>@item.CollegeName</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; text-align: left; vertical-align: top">
+                                <label>@item.CollegeAddress</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; text-align: left; vertical-align: top">
+                                <label>@item.IsPermanentCollege</label>
+                            </td>
+                        </tr>
+                    </table>                    
+                </td>
+                <td style="text-align: center; vertical-align: top">
+                    <table style="border-collapse: collapse; width: 550px">
+                        <tr>
+                            <td style="border: none; text-align: center; vertical-align: top">
+                                <label style="text-transform: uppercase">@item.CollegeCode</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; text-align: center; vertical-align: top">
+                                <label>@item.Establishyear</label>
+                            </td>
+                        </tr>
+                    </table>                   
+                </td>                
+                <td style="">
+                    @if (item.CollegeSpecializations != null)
+                    {
+                        foreach (var specialization in item.CollegeSpecializations)
+                        {
+                            if (specialization.Intake != null && specialization.Intake != string.Empty &&
+                                 specialization.Specialization != null && specialization.Specialization != string.Empty)
+                            {
+                        <table style="border-collapse: collapse; width: 100%">
+                            <tr>
+                                <td style="border: none; text-align: left; vertical-align: top">
+                                    @if (specialization.Intake.Contains("#") == true)
+                                    { 
+                                        <b>@specialization.Specialization</b>    
+                                    }
+                                    else
+                                    {
+                                        <label>@specialization.Specialization</label>  
+                                    }
+                                </td>
+                                <td style="border: none; text-align: right; vertical-align: top">
+                                    @if (specialization.Intake.Contains("$") == true)
+                                    {
+                                        string[] specializations = specialization.Intake.Split('$');
+                                        <label>@specializations[0]</label>                      
+                                    }
+                                    else if (specialization.Intake.Contains("*") == true)
+                                    {
+                                        string[] specializations = specialization.Intake.Split('*');
+                                        <b>@specializations[0]</b>    
+                                    }
+                                    else if (specialization.Intake.Contains("#") == true)
+                                    {
+                                        string[] specializations = specialization.Intake.Split('#');
+                                        <b>@specializations[0]</b>   
+                                    }
+                                    else
+                                    {
+                                        <label>@specialization.Intake</label>          
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                            }
+                        }
+                    }
+                </td>
+                <td style="text-align: center; text-align: center">
+                    <table style="border-collapse: collapse; width: 550px">
+                        <tr>
+                            <td style="border: none; text-align: center; vertical-align: top">
+                                <label>@item.LabsShortage</label>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="text-align: center;">
+                    @if (item.ComputersShortage != null)
+                    {
+                        foreach (var ComptersShortage in item.ComputersShortage)
+                        {
+                        <table style="border-collapse: collapse; text-align: center">
+                            <tr>
+                                <td style="border: none; text-align: center; vertical-align: top">
+                                    @ComptersShortage
+                                </td>
+                            </tr>
+                        </table>
+                        }
+                    }
+                </td>
+                <td style="text-align: center; text-align: center">
+                    <table style="border-collapse: collapse; width: 550px">
+                        <tr>
+                            <td style="border: none; text-align: center; vertical-align: top">
+                                <label>@item.PrincipalGrade</label>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="text-align: center;">
+                    @if (item.FacultyShortage != null)
+                    {
+                        foreach (var FacultyShortage in item.FacultyShortage)
+                        {
+                        <table style="border-collapse: collapse; text-align: center">
+                            <tr>
+                                <td style="border: none; text-align: center; vertical-align: top">
+                                    @FacultyShortage
+                                </td>
+                            </tr>
+                        </table>
+                        }
+                    }
+                </td>
+                <td style="width: 200px; text-align: center; vertical-align: top">
+                    <label>@item.Number</label>
+                </td>
+                <td style="width: 200px; text-align: center; vertical-align: top">
+                    <label>@item.Percentage</label>
+                </td>
+                <td style="width: 200px; text-align: center; vertical-align: top">
+                    <label>@item.LibraryShortage</label>
+                </td>
+                <td style="width: 200px; text-align: left; vertical-align: top">
+                    @if (item.UGObservations != null)
+                    {
+                        int i = 1;
+                        foreach (var UGObservations in item.UGObservations)
+                        {
+                        <table style="border-collapse: collapse; width: 550px">
+                            <tr>
+                                <td style="border: none; text-align: left; vertical-align: top">
+                                    <label>@(i++)</label>.@UGObservations<label></label>
+                                </td>
+                            </tr>
+                        </table>
+                        }
+                    }
+                </td>
+                <td style="width: 200px; text-align: center; vertical-align: top">
+                </td>
+            </tr>
+        }
+    </table>
+        if (ViewBag.Count == 0)
+        {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+        }
+}

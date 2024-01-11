@@ -1,0 +1,248 @@
+﻿@model UAAAS.Models.CollegeOverallFacultyStudentRatio
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<style type="text/css">
+    .width {
+        width: 80%;
+    }
+
+    .text_width {
+        width: 38%;
+        text-align: center;
+    }
+</style>
+<script type="text/javascript">  
+    $(document).ready(function () {      
+             
+        GetSpecialization(@Model.DepartmentID);
+        $('.calendar').attr("readonly", "true");
+        $('.calendar').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true         
+        });
+    
+
+        if ($("#Degree").val() > 0) {
+            GetDepartments($("#Degree").val());
+        }
+        
+        
+        $("#Degree").change(function () {
+            var DegreeID = $(this).val();
+            GetDepartments(DegreeID);
+        });
+        if($("#Department").val() > 0)
+        {
+            GetSpecialization($("#Department").val());
+        }
+        $("#Department").change(function(){
+            var DepartmentID = $(this).val();
+            GetSpecialization(DepartmentID);
+        });
+        function GetDepartments(DegreeID){
+            $.getJSON("/CollegeOverallFacultyStudentRatio/GetDepartments",{ id : DegreeID},
+                function(DepartmentsData){
+                    var select = $("#Department");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(DepartmentsData,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.DepartmentID ? true : false)
+                        }));
+                    });
+                });
+            }
+
+        function GetSpecialization(DepartmantID){
+            $.getJSON("/CollegeIntakeProposed/GetSpecialization" ,{id : DepartmantID},
+                function(Specializationdata){
+                    var select = $("#Specialization");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(Specializationdata,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.specializationId ? true : false)
+                        }));
+                    });
+                });
+            }
+    });
+
+</script>
+
+@using (Ajax.BeginForm("AddEditFirstYearUGFaculty", "CollegeOverallFacultyStudentRatio", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "CollegeIntakeDialog" }))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    if (ViewBag.Count == 0)
+    {
+    <div class="warning" style="width: 550px; margin: 0 auto;">
+        <p>Please select your courses in "College Information" page before filling up this page.</p>
+    </div>
+    }
+    <div class="details_table">       
+        @if (ViewBag.IsUpdate == true)
+        {
+            @Html.HiddenFor(model => model.id)           
+        }
+        @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+
+        <div class="editor-label" style="width: 280px">
+            @Html.LabelFor(model => model.degreeID)
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @if (ViewBag.IsUpdate == true)
+            {
+                @Html.HiddenFor(model => model.degreeID)
+                @Html.DropDownListFor(model => model.degreeID,
+            new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "degreeId", "degree"),
+            "-- Select --", new { id = "Degree", @class = "width", disabled = "true" })
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.degreeID,
+            new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "degreeId", "degree"),
+            "-- Select --", new { id = "Degree", @class = "width" })
+            }
+            @Html.ValidationMessageFor(model => model.degreeID)
+        </div>
+
+        <div class="editor-label" style="width: 280px">
+            @Html.LabelFor(model => model.DepartmentID)
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @if (ViewBag.IsUpdate == true)
+            {
+                @Html.HiddenFor(model => model.DepartmentID)
+                @Html.DropDownListFor(model => model.DepartmentID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+            "-- Select --", new { id = "Department", @class = "width", disabled = "true" })
+                @Html.ValidationMessageFor(model => model.DepartmentID)
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.DepartmentID,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+            "-- Select --", new { id = "Department", @class = "width" })
+            }
+            @Html.ValidationMessageFor(model => model.DepartmentID)
+        </div>
+
+        <div class="editor-label" style="width: 280px">
+            @Html.LabelFor(model => model.specializationId)
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @if (ViewBag.IsUpdate == true)
+            {            
+                @Html.DropDownListFor(model => model.specializationId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "specializationName"),
+            "-- Select --", new { id = "Specialization", @class = "width", disabled = "true" })
+                @Html.ValidationMessageFor(model => model.specializationId)
+                @Html.HiddenFor(model => model.specializationId)            
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.specializationId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "specializationName"),
+            "-- Select --", new { id = "Specialization", @class = "width" })
+                @Html.ValidationMessageFor(model => model.specializationId)
+            }
+        </div>
+
+        <div class="editor-label" style="width: 280px">
+            @Html.LabelFor(model => model.shiftId)
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @if (ViewBag.IsUpdate == true)
+            {            
+                @Html.DropDownListFor(model => model.shiftId,
+            new SelectList(ViewBag.Shift as System.Collections.IEnumerable, "id", "shiftName"),
+            new { id = "Shift", @style = "width: 50px", disabled = "true" })
+                @Html.ValidationMessageFor(model => model.shiftId) 
+                @Html.HiddenFor(model => model.shiftId)    
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.shiftId,
+            new SelectList(ViewBag.Shift as System.Collections.IEnumerable, "id", "shiftName"),
+            new { id = "Shift", @style = "width: 50px" })
+                @Html.ValidationMessageFor(model => model.shiftId)   
+            }
+
+        </div>
+
+
+         <div class="editor-label" style="width: 280px">
+            @Html.Label("First Year UG(Engg) Total Strength") 
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @Html.TextBoxFor(model => model.approvedIntake1, new { @class = "text_width", Value = Model.approvedIntake1.Equals(0) ? "" : Model.approvedIntake1.ToString() }) <span style="color:red">(Only Humanities)</span>
+             @Html.ValidationMessageFor(model => model.approvedIntake1)   
+        </div>
+
+        <div class="editor-label" style="width: 280px">
+           @Html.Label("First Year UG(Engg) Total Faculty") 
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @Html.TextBoxFor(model => model.totalFaculty, new { @class = "text_width", Value = Model.totalFaculty.Equals(0) ? "" : Model.totalFaculty.ToString() }) <span style="color:red">(Only Humanities)</span>
+             @Html.ValidationMessageFor(model => model.totalFaculty)   
+        </div>
+
+        <div class="editor-label" style="width: 280px">
+            @Html.Label("First Year UG(Engg) Total Ratified Faculty")
+        </div>
+        <div class="editor-field" style="width: 360px">
+            @Html.TextBoxFor(model => model.ratifiedFaculty, new { @class = "text_width", Value = Model.ratifiedFaculty.Equals(0) ? "" : Model.ratifiedFaculty.ToString() }) <span style="color:red">(Only Humanities)</span>
+             @Html.ValidationMessageFor(model => model.ratifiedFaculty)   
+        </div>
+
+    </div>
+    <br />
+    <div>
+         @Html.HiddenFor(model => model.isActive)
+        @Html.HiddenFor(model => model.createdBy)
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.academicYearId)      
+
+        <div style="text-align: center">
+            <p>
+                @if (ViewBag.IsUpdate == true)
+                {
+                    <input type="submit" value="Save" id="btnSave" name="cmd" />                    
+                }
+                else
+                {
+                    <input type="submit" value="Add" id="btnAdd" name="cmd" />
+                }
+            </p>
+        </div>
+
+    </div>
+}

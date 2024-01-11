@@ -1,0 +1,300 @@
+﻿@using System.Collections.Concurrent
+
+@model UAAAS.Controllers.College.SCMPrincipal
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "Appeal SCM Proceeding Principal";
+    int sno = 1;
+    string requestDate = string.Empty;
+
+}
+<h2>Appeal SCM Proceeding For Principal</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<br />
+
+
+@using (Html.BeginForm("AppealCollegeScmProceedingsPrincipalRequest", "CollegeSCMProceedingsRequest", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        <table class="faculty_table" style="text-align: center; width: 100%">
+            <tr>
+                <td class="col1" style="font-weight: bold; width: 15%; vertical-align: middle">
+                    <span>Registration Number * </span>
+                </td>
+                <td class="col2" colspan="2" style="width: 85%;">
+                    @Html.TextBoxFor(model => model.RegistrationNo, new { style = "width:200px", })
+                    @Html.ValidationMessageFor(model => model.RegistrationNo)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="font-weight: bold; width: 15%; vertical-align: middle">
+                    <span>Previous Working College * </span>
+                </td>
+                <td class="col2" colspan="2" style="width: 85%;">
+                    @Html.DropDownListFor(model => model.PreviousCollegeId, new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"), "---Select---", new { style = "width:430px", })
+                    @Html.ValidationMessageFor(model => model.PreviousCollegeId)
+                    &nbsp;&nbsp;
+                    @Html.TextBoxFor(model => model.PreviousCollegeName, new { @style = "display:none;width:290px", @placeholder = "Enter Working College Name" })
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="font-weight: bold; width: 15%; vertical-align: middle">
+                    <span>Paper Notification Date * </span>
+                </td>
+                <td class="col2" colspan="2" style="width: 85%;">
+                    @Html.TextBoxFor(model => model.NotificationDate, new { style = "width:200px", @class = "calendar" })
+
+                </td>
+            </tr>
+            <tr>
+                <td class="col1" style="font-weight: bold; width: 30%; vertical-align: middle; height: 30px">
+                    <div>
+                        <span>
+                            Paper Notification *
+                            <br />
+                            <span style="color: blue;">(PDF should be less than 1MB size)</span>
+                        </span>
+                    </div>
+                </td>
+                <td class="col2" colspan="2" style="width: 85%; height: 20px">
+                    <div class="editor-field scmnotificationsupportdocfiles">
+                        @Html.TextBoxFor(model => model.ScmNotificationSupportDoc, new { type = "file", @class = "scmnotificationsupportdocfile", @required = "true" })
+
+                        <br />
+                        <span style="color: red;"></span>
+                    </div><br /><br />
+
+                </td>
+            </tr>
+        </table>
+
+        <div style="text-align: right">
+            <p style="text-align: right">
+                @if (ViewBag.editable == false)
+                {
+                    <input type="submit" value="Submit" id="btnsend" name="cmd" />
+                }
+
+            </p>
+        </div>
+    </div>
+}
+
+@if (ViewBag.SCMPrincipal != null)
+{
+    if (ViewBag.SCMPrincipalcount != 0)
+    {
+        <div style="margin-top: 20px;">
+
+            <h2>Appeal Selection Committee Principal Request List</h2><br />
+            @using (Html.BeginForm("AppealSCMPrincipalRequestSubmission", "CollegeSCMProceedingsRequest", FormMethod.Get, new { }))
+            {
+                <table class="webGrid">
+                    <thead>
+                        <tr class="gridHeader">
+                            <th>S.No.</th>
+                            <th>Registration No</th>
+                            <th>Faculty Name</th>
+                            <th>Request Date</th>
+                         
+                            <th style="width: 105px">View Faculty</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background: #FCF1D1;">
+                        @foreach (var item in ViewBag.SCMPrincipal)
+                        {
+                            if (@item.createdDate != null)
+                            {
+                                requestDate = UAAAS.Models.Utilities.MMDDYY2DDMMYY(item.createdDate.ToString());
+                            }
+                            else
+                            {
+                                requestDate = "--";
+                            }
+                            <tr>
+                                <td>
+                                    @(sno++)
+                                </td>
+                                <td>
+                                    @item.RegistrationNo
+                                </td>
+                                <td>
+                                    @item.FirstName
+                                </td>
+                                <td>
+                                    @requestDate
+                                </td>
+
+                                @*<td>
+                                        <b><a href="../Content/Upload/SCMPROCEEDINGSREQUEST/ScmNotificationDocuments/@item.scmnotificationdocview" target="_blank">View</a></b>
+                                    </td>*@
+                                @*@if (item.createdDate == null)
+                                    {
+                                        <td style="width: 100px;text-align:center">
+                                            @Html.ActionLink("Submit", "SCMPrincipalRequestSubmission", "CollegeSCMProceedingsRequest", new { @id = item.SCMId }, new { @class = "create_button" })
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="width: 100px;text-align:center">
+                                            <span class="deactivate_button"></span>
+                                        </td>
+                                    }*@
+                                <td>
+                                    @Html.ActionLink("View", "ViewFacultyDetails", "CollegeSCMProceedingsRequest", new { fid = UAAAS.Models.Utilities.EncryptString(item.FacultyId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "view_button" })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <br />
+                <p style="text-align: right">
+                    @if (ViewBag.VisiableRequestSumissionButton != 0)
+                    {
+                        if (ViewBag.editable == false)
+                        {
+                            <input type="submit" value="Submit SCM Request" />
+                        }
+                    }
+
+                </p>
+            }
+
+
+        </div>
+    }
+}
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //get pdf file size
+        function GetNotificationFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#ScmNotificationSupportDoc")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+
+        //change function for pdf doc
+        $(function () {
+            $(".scmnotificationsupportdocfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    debugger;
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+
+                }
+
+                if (flag == false) {
+                    $(".scmnotificationsupportdocfiles > span").text("You can upload only  Pdf files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetNotificationFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".scmnotificationsupportdocfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+
+                        $(".scmnotificationsupportdocfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+        $("#PreviousCollegeId").change(function () {
+            debugger;
+            var previouscollegeId = $(this).val();
+            if (previouscollegeId !== '') {
+                if ($(this).val() === "-1") {
+                    $("#PreviousCollegeName").show();
+                    $("#PreviousCollegeName").addClass("required");
+                } else {
+                    $("#PreviousCollegeName").hide();
+                    $("#PreviousCollegeName").removeClass("required");
+                }
+            }
+        });
+
+
+    });
+</script>
+<style>
+    .webGrid a:link, .webGrid a:visited {
+        color: white;
+        text-decoration: none;
+    }
+</style>

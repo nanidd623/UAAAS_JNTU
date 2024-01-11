@@ -1,0 +1,547 @@
+﻿@model UAAAS.Models.AdminDashbord
+@{
+    ViewBag.Title = "Admin Home";
+}
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["corechart"] });
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+
+        var b = $('#activeColleges').val();
+        // alert(b);
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Colleges Char'],
+          ['Active', parseInt(b)],
+          ['Colsed', parseInt($('#closerColleges').val())],
+          ['Deleted', parseInt($('#inActiveColleges').val())],
+          ['Permanent', parseInt($('#permanentColleges').val())],
+          ['New', parseInt($('#newColleges').val())]
+        ]);
+
+        var options = {
+            title: '',
+            is3D: true,
+            backgroundColor: '#E5ECEA',
+            pieSliceText: 'value'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+    }
+    google.setOnLoadCallback(drawdataentryChart);
+    function drawdataentryChart() {
+
+        var b = $('#activeColleges').val();
+        // alert(b);
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'DataEntry'],
+          ['Submitted', parseInt($('#committeeSubmittedCollegesCount').val())],
+          ['Pending', parseInt($('#CommitteePendingSubmittedCollegesCount').val())],
+          ['Asigned', parseInt($('#dataentryAssignedCollegesCount').val())],
+          ['Completed', parseInt($('#dataentryCompletedCollegesCount').val())],
+          ['Verified', parseInt($('#dataentryVerifiedCollegesCount').val())]
+        ]);
+
+        var options = {
+            title: '',
+            is3D: true,
+            backgroundColor: '#EEEBE8',
+            pieSliceText: 'value'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('dataentrypiechart'));
+        chart.draw(data, options);
+    }
+
+    google.load("visualization", "1", { packages: ["corechart"] });
+    google.setOnLoadCallback(drawbarChart);
+    function drawbarChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2004', 1000, 400],
+          ['2005', 1170, 460],
+          ['2006', 660, 1120],
+          ['2007', 1030, 540]
+        ]);
+
+        var options = {
+            title: 'Company Performance',
+            vAxis: { title: 'Year', titleTextStyle: { color: 'red' } }
+        };
+
+        var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+
+
+</script>
+
+<table border="1" style="width: 100%; display: none;">
+    <tr>
+
+        <td style="width: 33%">
+            <div id="chart_div"></div>
+        </td>
+    </tr>
+</table>
+
+<h2>DASHBOARD</h2>
+<table border="1" style="width: 100%">
+    <tr>
+        <td style="width: 33%; background-color: #E6EAEE; padding: 5px;" class="rounded_corners_box">
+            <table border="1" style="width: 100%">
+                <tr>
+                    <td colspan="2" style="text-align: left"><b><u>Colleges</u></b></td>
+                </tr>
+                <tr>
+                    <td>@Html.ActionLink("Total", "AdminDashbordColleges", "AdminDashbord", new { strtype = "All Colleges" }, null)</td>
+                    <td style="width: 20%; text-align: right;">
+                        @Html.DisplayFor(model => model.totalColleges)
+                        @Html.HiddenFor(model => model.totalColleges, new { id = "totalColleges" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.ActionLink("Active", "AdminDashbordColleges", "AdminDashbord", new { strtype = "Active Colleges" }, null)</td>
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(model => model.activeColleges)
+                        @Html.HiddenFor(model => model.activeColleges, new { id = "activeColleges" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.ActionLink("Closed", "AdminDashbordColleges", "AdminDashbord", new { strtype = "Closed Colleges" }, null)</td>
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(model => model.closerColleges)
+                        @Html.HiddenFor(model => model.closerColleges, new { id = "closerColleges" })
+                    </td>
+                </tr>
+                @*<tr>
+                    <td>@Html.ActionLink("Deleted", "AdminDashbordColleges", "AdminDashbord", new { strtype = "Deleted Colleges" }, null)</td>
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(model => model.inActiveColleges)
+                        @Html.HiddenFor(model => model.inActiveColleges, new { id = "inActiveColleges" })
+                    </td>
+                </tr>*@
+                <tr>
+                    <td>@Html.ActionLink("Permanent", "AdminDashbordColleges", "AdminDashbord", new { strtype = "Permanent Colleges" }, null)</td>
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(model => model.permanentColleges)
+                        @Html.HiddenFor(model => model.permanentColleges, new { id = "permanentColleges" })
+                    </td>
+                </tr>
+                @*<tr>
+                    <td>@Html.ActionLink("New", "AdminDashbordColleges", "AdminDashbord", new { strtype = "New Colleges" }, null)</td>
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(model => model.newColleges)
+                        @Html.HiddenFor(model => model.newColleges, new { id = "newColleges" })
+                    </td>
+                </tr>*@
+                <tr>
+                    <td>@Html.ActionLink("Autonomous", "AdminDashbordColleges", "AdminDashbord", new { strtype = "Autonomous Colleges" }, null)</td>
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(model => model.AutonomousColleges)
+                        @Html.HiddenFor(model => model.AutonomousColleges, new { id = "AutonomousColleges" })
+                    </td>
+                </tr>
+            </table>
+            @*<div id="piechart" style="border-top: solid 1px #fff; margin-top: 15px;"></div>*@
+        </td>
+        <td style="width: 33%; background-color: #E6EAEE; padding: 5px;" class="rounded_corners_box">
+            <table border="1" style="width: 100%;">
+                <tr>
+                    <th style="text-align: left;"><u><b>Users</b></u></th>
+                    <th style="text-align: center;">Total</th>
+                    <th style="text-align: center;">Active</th>
+                    <th style="text-align: center;">In-Active</th>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Admin</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.adminTotalUsersCount)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.adminActiveUsersCount)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.adminInActiveUsersCount)</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Committee</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.committeeTotalUsersCount)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.committeeActiveUsersCount)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.committeeInActiveUsersCount)</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">College</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.collegeTotalUsersCount)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.collegeActiveUsersCount)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.collegeInActiveUsersCount)</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Data Entry</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.dataentryTotalUsersCount)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.dataentryActiveUsersCount)</td>
+                    <td style="text-align: center;">@Html.DisplayFor(model => model.dataentryInActiveUsersCount)</td>
+                </tr>
+            </table>
+        </td>
+        <td style="width: 33%; background-color: #E6EAEE; padding: 5px;" class="rounded_corners_box">
+            <table border="1" style="width: 100%">
+                <tr>
+                    <td colspan="2" style="text-align: left"><b><u>Alerts</u>..!</b></td>
+                </tr>
+               @* <tr>
+        <td>
+            @if (@ViewBag.SMS != "Credit balance is not found")
+            {
+                if (Model.activeColleges > Convert.ToInt32(@ViewBag.SMS))
+                {
+               <span style="color: red; font-weight: normal;">SMS Credits - (Insufficient, <a href="http://www.mvaayoo.com/" target="_blank" style="color: red;">recharge immediately</a>)</span>
+                }
+                else
+                {
+                <span style="color: green; font-weight: normal;">SMS Credits</span>
+                }
+            }
+            else
+            {
+                <span style="color: red; font-weight: normal;">SMS Credits</span>
+            }
+        </td>
+        <td style="text-align: right;">
+            @if (@ViewBag.SMS != "Credit balance is not found")
+            {
+                if (Model.activeColleges > Convert.ToInt32(@ViewBag.SMS))
+                {
+                <span style="color: red; font-weight: normal;">@ViewBag.SMS</span>
+                }
+                else
+                {
+                <span style="color: green; font-weight: normal;">@ViewBag.SMS</span>
+                }
+            }
+            else
+            {
+                <span style="color: red; font-weight: normal;">Credit balance is not found</span>
+            }
+        </td>
+    </tr>*@
+                <tr style="color: red; font-weight: normal;">
+                    <td>
+                        @if (ViewBag.OnlineUsers > 100)
+                        {
+                            <span style="color: red; font-weight: normal;">@Html.ActionLink("Online Users", "Index", "Admin", new { strtype = "Closed Colleges" }, new { style = "color: red;", target = "_blank" })</span>
+                        }
+                        else
+                        {
+                            <span style="color: green; font-weight: normal;">@Html.ActionLink("Online Users", "Index", "Admin", new { strtype = "Closed Colleges" }, new { style = "color: green;", target = "_blank" })</span>
+                        }
+                    </td>
+                    <td style="text-align: right;">
+                        @if (ViewBag.OnlineUsers > 100)
+                        {
+                            <span style="color: red; font-weight: normal;">@ViewBag.OnlineUsers</span>
+                        }
+                        else
+                        {
+                            <span style="color: green; font-weight: normal;">@ViewBag.OnlineUsers</span>
+                        }
+
+                    </td>
+                </tr>
+                <tr style="color: red;">
+                    <td>
+                        @if (Model.editstatusCount > 0)
+                        {
+                            <span style="color: red; font-weight: normal;">Data Editable Colleges</span>
+                        }
+                        else
+                        {
+                            <span style="color: green; font-weight: normal;">Data Editable Colleges</span>
+                        }
+                    </td>
+                    <td style="text-align: right;">
+                        @if (Model.editstatusCount > 0)
+                        {
+                            <span style="color: red; font-weight: normal;">@Html.DisplayFor(model => model.editstatusCount)</span>
+                        }
+                        else
+                        {
+                            <span style="color: green; font-weight: normal;">@Html.DisplayFor(model => model.editstatusCount)</span>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr style="display: none;">
+        @*    <td style="width: 33%; padding: 5px; background-color: #E6EAEE" class="rounded_corners_box">
+            <table border="1" style="width: 100%;">
+
+               <tr>
+                    <td colspan="2" style="text-align: left"><b><u>A-114 Submission</u></b></td>
+                </tr>
+                <tr>
+                    <td>Total Colleges</td>
+                    <td style="text-align: right;">@Html.DisplayFor(model => model.activeColleges)</td>
+                </tr>
+                <tr>
+                    <td>Submitted Colleges</td>
+                    <td style="text-align: right;">@Html.DisplayFor(model => model.submissionCount)</td>
+                </tr>
+                <tr>
+                    <td>Not Submitted Colleges</td>
+                    <td style="text-align: right;">@Html.DisplayFor(model => model.submissionPendingCount)</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td style="text-align: right;"></td>
+                </tr>
+
+            </table>
+        </td>*@
+        <td style="width: 33%; padding: 5px; background-color: #E6EAEE" class="rounded_corners_box">
+            @*<table border="1" style="width: 100%;">
+                <tr>
+                    <td colspan="2" style="text-align: left"><b><u>FFC Schedules</u></b></td>
+                </tr>
+                <tr>
+                    <td>Total Colleges</td>
+                    <td style="text-align: right; width: 20%;">
+                        @Html.DisplayFor(model => model.activeColleges)
+                    </td>
+                </tr>
+                <tr>
+                    <td>Total Schedules</td>
+                    <td style="text-align: right; width: 20%;">
+                        @Html.DisplayFor(model => model.schedulecount)
+                    </td>
+                </tr>
+                <tr>
+                    <td>Schedules Pending</td>
+                    <td style="text-align: right; width: 20%;">
+                        @Html.DisplayFor(model => model.pendingSchedulecount)
+                    </td>
+                </tr>
+                <tr>
+                    <td>Orders sent</td>
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(model => model.orderscount)
+                    </td>
+                </tr>
+                <tr>
+                    <td>Orders Pending</td>
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(model => model.pendingOrderscount)
+                    </td>
+                </tr>
+            </table>*@
+        </td>
+        <td style="width: 33%; padding: 5px; background-color: #E6EAEE" class="rounded_corners_box">
+          
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 33%; padding: 5px; background-color: #E6EAEE" class="rounded_corners_box">
+
+            <table border="1" style="width: 100%">              
+                <tr>
+                    <th colspan="2" style="text-align: left;">
+                        <b><u>A.Y. - @ViewBag.AcademicYear1 Intake</u></b> @Html.ActionLink("[Download]", "Admin", "Dashboard", new { exportType = "Export" }, new { title = "Export Intake Summary" })
+                    </th>
+                    <th colspan="2" style="text-align: left;">
+                        <b><u>Proposed</u></b> @Html.ActionLink("[Download]", "Admin", "Dashboard", new { exportType = "ProposedExport" }, new { title = "Export Intake Summary" })
+                    </th>
+                </tr>
+                <tr>
+                    <th style="text-align: left;">Degree</th>
+                    <th style="text-align: right;">Proposed Courses</th>
+                    <th style="text-align: right;">Proposed</th>
+                    <th style="text-align: right;">Approved</th>
+                    <th style="text-align: right;">Admitted</th>
+                </tr>
+                @foreach (var item in Model.degreewiseTotalIntake1)
+                {
+                    <tr>
+                        <td>@item.degree</td>
+                        <td style="text-align: right; width: 25%;">@item.ProposedCourses</td>
+                        <td style="text-align: right; width: 25%;">@item.proposedIntake</td>
+                        <td style="text-align: right; width: 25%;">@item.approvedIntake</td>
+                        <td style="text-align: right; width: 25%;">@item.admittedIntake</td>
+                    </tr>
+                }
+            </table>
+
+        </td>
+        <td style="width: 33%; padding: 5px; background-color: #E6EAEE" class="rounded_corners_box">
+            <table border="1" style="width: 100%">
+                <tr>
+                    <th colspan="4" style="text-align: left;">
+                        <b><u>SCM Requests</u></b>
+                    </th>
+                </tr>
+                <tr>
+                    <th style="text-align: left;"></th>
+                    <th style="text-align: right;">Not Submitted<br/>Colleges</th>
+                    <th style="text-align: right;">Submitted<br/>Colleges</th>                  
+                    <th style="text-align: right;">Facultycount</th>
+                    @*<th style="text-align: right;">Admitted</th>*@
+                </tr>
+                <tr>
+                    <td style="text-align: left; width: 25%; color: deeppink; font-weight: bold">
+                        <span style="color: red; font-weight: normal;">@Html.ActionLink("Faculty SCM", "SCMRequestsList", "CollegeSCMProceedingsRequest", null,new { @style = "color: deeppink;font-weight: bold", target = "_blank" })</span>
+                    </td>
+                    <td style="text-align: right; width: 25%; color: red; font-weight: bold">@ViewBag.FSCMnorequestColleges</td>
+                    <td style="text-align: right; width: 25%; color: green; font-weight: bold">@ViewBag.FSCMrequestColleges</td>
+                    <td style="text-align: right; width: 25%; color: deeppink; font-weight: bold"><a href="/AdminDashbord/DownloadFacultyExcel?cmd=excel" style="text-align: right; width: 25%; color: deeppink; font-weight: bold">@ViewBag.FSCMrequestfaculty</a></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left; width: 25%; color: deeppink; font-weight: bold">Principal SCM</td>
+                    <td style="text-align: right; width: 25%; color: red; font-weight: bold">@ViewBag.PSCMnorequestColleges</td>
+                    <td style="text-align: right; width: 25%; color: green; font-weight: bold">@ViewBag.PSCMrequestColleges</td>
+                    <td style="text-align: right; width: 25%; color: deeppink; font-weight: bold"><a href="/AdminDashbord/DownloadPrinipalExcel?cmd=excel" style="text-align: right; width: 25%; color: deeppink; font-weight: bold">@ViewBag.PSCMrequestfaculty</a> </td>
+                </tr>
+            </table>
+            <br/>
+            <br />
+                <table border="1" style="width: 100%">
+                    <tr>
+                        <td>Total Registered Faculty</td>
+                        <td style="text-align: right">@ViewBag.TotalRegisteredFaculty</td>
+                    </tr>
+                    <tr>
+                        <td>Total Teaching Faculty </td>
+                        <td style="text-align: right">@ViewBag.TotalTeachingFaculty</td>
+                        @*<td colspan="2">@Html.ActionLink("PG Course Not Submitted Colleges", "PGCourseSubmittedandNotSubmittedColleges", "PGCourses", new { strtype = "Not Submitted" }, null)</td>*@
+                    </tr>
+
+                    <tr>
+                        <td>Total BlackList Faculty</td>
+                        <td style="text-align: right">@ViewBag.BlackListFaculty</td>
+                        @*<td colspan="2">@Html.ActionLink("Deficiency With Count", "AllColleges", "DeficiencyReport", new { strtype = "WithCount" }, null)</td>*@
+                    </tr>
+                    @*<tr>
+                    <td>Total Teaching Faculty SCM Upload</td>
+                    <td style="text-align: right">@ViewBag.TotalTeachingFacultyscmuploadcount</td>
+
+                </tr>*@
+                    @*<tr>
+                    <td colspan="2">@Html.ActionLink("Deficiency Shortage Count", "AllColleges", "DeficiencyReport", new { strtype = "ShortageCount" }, null)</td>
+                </tr>*@
+                    @*  <tr>
+                    <th style="text-align: left;"><b><u>A.Y. - @ViewBag.AcademicYear2 Intake</u></b> @Html.ActionLink("[Download]", "Admin", "Dashboard", new { exportType = "Export" }, new { title = "Export Intake Summary" })
+
+                    </th>
+                    <th style="text-align: right;">Total</th>
+                    <th style="text-align: right;">Admitted</th>
+                </tr>
+                @foreach (var item in Model.degreewiseTotalIntake2)
+                {
+                    <tr>
+                        <td>@item.degree</td>
+                        <td style="text-align: right; width: 25%;">@item.totalIntake</td>
+                        <td style="text-align: right; width: 25%;">@item.admittedIntake</td>
+                    </tr>
+                }*@
+                </table>         
+</td>
+        <td style="width: 33%; padding: 5px; background-color: #E6EAEE" class="rounded_corners_box">
+            <div style="color:red;">
+                <b><u>Links</u></b>
+            </div>
+            @*<div>
+                <p style="font-weight: bold;">
+                    @Html.ActionLink("Colleges Login Sessions", "Index1", "CollegeLoginInformation")
+                </p>
+            </div>*@
+            @*<div>
+                <p style="font-weight: bold;">
+                   @Html.ActionLink("Selection Committee Request", "CollegeScmProceedingsRequest", "CollegeSCMProceedingsRequestForAdmin")
+                </p>
+            </div>*@
+            @*<div>
+                <p style="font-weight: bold;">
+                  @Html.ActionLink("Not Matching In SCM", "NotMatching416and415", "FacultyVerification")
+                </p>
+            </div>*@
+            @*<div>
+                <p style="font-weight: bold;">
+                   @Html.ActionLink("SI and AICTE Flags For Colleges", "SIandAICTEFlagsforColleges", "Colleges")
+                </p>
+            </div>*@
+            @*<div>
+                <p style="font-weight: bold;">
+                    @Html.ActionLink("All Clear", "AffiliationLetter1", "AffiliationProceedingsReport", new { type = "AllClear" }, new { @class = "edit_button1", target = "_blank" })
+                </p>
+            </div>*@
+            @*<div>
+                <p style="font-weight: bold;">@Html.ActionLink("Schedule Order Link", "Index", "AuditScheduleReport", new {strtype = "ShortageCount"}, null)</p>
+            </div>*@
+            <div>
+                <p style="font-weight:bold;">@Html.ActionLink("Pharmacy Dashboard", "Index", "Pharmacyreport", new { }, null)</p>
+            </div>
+            <div>
+                <p style="font-weight: bold;">@Html.ActionLink("BAS Faculty Appeal Revrification", "AppealFacultyVerification", "FacultyBASFlag", new {}, null)</p>
+            </div>
+            <div>
+                <p style="font-weight: bold;">@Html.ActionLink("Students Complaints Counts", "Complaints", "FacultyComplaints", new { }, null)  - @ViewBag.StudentsComplaints</p> 
+            </div>
+            <div>
+                <p style="font-weight: bold;">@Html.ActionLink("Faculty Complaints Counts", "FacultyComplaintsList", "FacultyComplaints", new { }, null) - @ViewBag.Facultycomplaints</p> 
+            </div>
+            <div>
+                <p style="font-weight: bold;">@Html.ActionLink("College NOC Types Export", "Download_Excel", "CollegeNOC", new { }, null)</p>
+            </div>
+            <div>
+                <p style="font-weight: bold;">@Html.ActionLink("Labs Upload", "importExcel", "LabsInsertAndDeletion", new {}, null)</p>
+            </div>
+            @*<div>
+                <p style="font-weight: bold;">@Html.ActionLink("Students/Staff API Data", "APIData", "APIDataPush", new { }, null)</p>
+            </div>*@
+            <div>
+                <p style="font-weight: bold;">@Html.ActionLink("AICTE/PCI EOA DETAILS FOR A.Y. 2023-24", "DownloadAICTEPCIExcel", "AdminDashbord", new { }, null)</p>
+            </div>
+            @*<div>
+                <p style="font-weight: bold;">@Html.ActionLink("Covid-19 Report Download", "Download_ExcelCovid", "AdminDashbord", new { }, null)</p>
+            </div>*@
+                @*<table border="1" style="width: 100%">
+                <tr>
+                    <th style="text-align: left;"><b><u>A.Y. - @ViewBag.AcademicYear3 Intake</u></b> @Html.ActionLink("[Download]", "Admin", "Dashboard", new { exportType = "Export" }, new { title = "Export Intake Summary" })
+
+                    </th>
+                    <th style="text-align: right;">Total</th>
+                    <th style="text-align: right;">Admitted</th>
+                </tr>
+                @foreach (var item in Model.degreewiseTotalIntake3)
+                {
+                    <tr>
+                        <td>@item.degree</td>
+                        <td style="text-align: right; width: 25%;">@item.totalIntake</td>
+                        <td style="text-align: right; width: 25%;">@item.admittedIntake</td>
+                    </tr>
+                }
+            </table>*@
+
+                @*<table border="1" style="width: 100%;">
+                <tr>
+                    <td colspan="2" style="text-align: left"><b><u>Shrtage Reports</u></b></td>
+                </tr>
+                <tr>
+                    <td colspan="2">@Html.ActionLink("Shortage of Ratified Faculty 0-25%", "ShortageReport", "ShortageReport", new { @class = "create_button", exportType = "Shortage of Ratified Faculty 0-25%" }, null)</td>
+                </tr>
+                <tr>
+                    <td colspan="2">@Html.ActionLink("Shortage of Ratified Faculty 26-50%", "ShortageReport", "ShortageReport", new { @class = "create_button", exportType = "Shortage of Ratified Faculty 26-50%" }, null)</td>
+                </tr>
+                <tr>
+                    <td colspan="2">@Html.ActionLink("Shortage of Ratified Faculty 51-75%", "ShortageReport", "ShortageReport", new { @class = "create_button", exportType = "Shortage of Ratified Faculty 51-75%" }, null)</td>
+                </tr>
+                <tr>
+                    <td colspan="2">@Html.ActionLink("Shortage of Ratified Faculty 76-100%", "ShortageReport", "ShortageReport", new { @class = "create_button", exportType = "Shortage of Ratified Faculty 76-100%" }, null)</td>
+                </tr>
+                <tr>
+                    <td colspan="2">@Html.ActionLink("Year Wise Established Colleges", "YearWiseEstablishedColleges", "ShortageReport", new { @class = "create_button", exportType = "Year Wise Established Colleges" }, null)</td>
+                </tr>
+
+            </table>*@
+</td>
+    </tr>
+</table>
+
+
+

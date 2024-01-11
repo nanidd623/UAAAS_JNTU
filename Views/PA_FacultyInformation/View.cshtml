@@ -1,0 +1,127 @@
+﻿@model UAAAS.Models.Permanent_Affiliation.FacultyInformationModel
+
+@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    ViewBag.Title = "Faculty Information List";
+}
+<h2>Faculty Information</h2>
+
+@if (ViewBag.IsEditable == true)
+{
+    <p class="create_link_right">
+        @Html.ActionLink("Edit", "Edit", "PA_FacultyInformation", new { @class = "create_button" })
+    </p>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div><br />
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div><br />
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+
+@if (ViewBag.FacultyInformationList.Count > 0)
+{
+    <div style="margin-top:15px;">
+        <table class="webGrid">
+            <thead style="text-align: center;">
+                <tr class="col1">
+                    <th>S.No</th>
+                    <th>Academic Year</th>
+                    <th>Degree</th>
+                    <th>Staff: Student Ratio</th>
+                    <th>Total No. of Faculty on Role</th>
+                    <th>Total No. of Faculty Terminated / Resigned</th>
+                    <th>Retention Percentage</th>
+                    <th>Pay scale implemented</th>
+                    <th>Assistant Prof. Pay scale</th>
+                    <th>Assistant Prof. Pay</th>
+                    <th>Associate Prof. Pay scale</th>
+                    <th>Associate Prof. Pay</th>
+                    <th>Professor Pay scale</th>
+                    <th>Professor Pay</th>
+                    <th>Oppurtunities Provided to faculty</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pay in ((List<UAAAS.Controllers.Permanent_Affiliation.FacultyInfo>)ViewBag.FacultyInformationList).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr class="col2">
+                        <td>@pay.i </td>
+                        <td style="width: 6%;">@pay.value.AcademicYear</td>
+                        <td>@pay.value.Degree</td>
+                        <td style="width: 12%;">@pay.value.Staff : @pay.value.Students</td>
+                        <td>@pay.value.FacultyOnRole</td>
+                        <td>@pay.value.FacultyTerminatedResigned</td>
+                        <td>@pay.value.RetentionPercentage</td>
+                        <td>@pay.value.PayscaleSelected</td>
+                        @if (string.IsNullOrEmpty(pay.value.AssiProfPayScale))
+                        {
+                            <td>NA</td>
+                        }
+                        else
+                        {
+                            <td>@pay.value.AssiProfPayScale</td>
+                        }
+                        @if (string.IsNullOrEmpty(pay.value.AssiProfPay))
+                        {
+                            <td>NA</td>
+                        }
+                        else
+                        {
+                            <td>@pay.value.AssiProfPay</td>
+                        }
+                        @if (string.IsNullOrEmpty(pay.value.AssoProfPayScale))
+                        {
+                            <td>NA</td>
+                        }
+                        else
+                        {
+                            <td>@pay.value.AssoProfPayScale</td>
+                        }
+                        @if (string.IsNullOrEmpty(pay.value.AssoProfPay))
+                        {
+                            <td>NA</td>
+                        }
+                        else
+                        {
+                            <td>@pay.value.AssoProfPay</td>
+                        }
+                        @if (string.IsNullOrEmpty(pay.value.ProfPayScale))
+                        {
+                            <td>NA</td>
+                        }
+                        else
+                        {
+                            <td>@pay.value.ProfPayScale</td>
+                        }
+                        @if (string.IsNullOrEmpty(pay.value.ProfPay))
+                        {
+                            <td>NA</td>
+                        }
+                        else
+                        {
+                            <td>@pay.value.ProfPay</td>
+                        }
+                        <td>@pay.value.Oppurtunities</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+}

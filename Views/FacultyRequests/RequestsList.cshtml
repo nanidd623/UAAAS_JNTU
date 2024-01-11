@@ -1,0 +1,389 @@
+﻿@model UAAAS.Models.FacultyEditFieldnames
+@{
+    ViewBag.Title = "RequestsList";
+    int count = 1;
+    int index = 1;
+    int ticketrowspan = 1;
+    var fid = Model.facultyId;
+    int fieldRowspan = 0;
+    int eduRowspan = 0;
+    if (Model.EditCheckboxs != null)
+    {
+        fieldRowspan = Model.EditCheckboxs.Where(a => a.ticketId != null).Select(s => s.ticketId).Count();
+    }
+    if (Model.EditCheckboxs != null)
+    {
+        eduRowspan = Model.EditEducationCheckboxs.Where(a => a.ticketId != null).Select(s => s.ticketId).Count();
+    }
+}
+
+<h2>Request Fields List</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#exampledemo').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#exampledemo').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success" style="height:15px;">
+        <p style="text-align: center;font-weight: bold"><span style="color:green;font-weight:bold;">Success : </span>@TempData["SUCCESS"].ToString()</p>
+    </div><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;"><span style="color:red;font-weight:bold;">Error : </span>@TempData["ERROR"].ToString()</p>
+    </div><br />
+}
+    @*<div style="float:right;">
+            @if (TempData["EditFieldsLink"] == "true")
+            {
+                @Html.ActionLink("Edit", "EditfieldsRequests", "FacultyRequests", new { fid = UAAAS.Models.Utilities.EncryptString(@fid.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "create_button" })
+            }
+            <br /><br />
+        </div>*@
+    <div style="float:right;">
+        @if (TempData["AcknowledgementLink"] == "true")
+        {
+            @Html.ActionLink("Download Acknowledge", "FacultyRequestPDF", "FacultyRequests", new { preview = 0, strfacultyId = UAAAS.Models.Utilities.EncryptString(@fid.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "create_button" })
+        }
+        <br /><br />
+    </div>
+
+    <table width="100%" border="0" class="webGrid">
+        <tr style="background-color:#C1D4E6;">
+            <th style="width: 30px; text-align: center;">
+                S.No
+            </th>
+            <th style="width: 30px; text-align: center;">
+                Ticket Id
+            </th>
+            <th style="width: 80px; text-align: center;">
+                Request Field
+            </th>
+            <th style="text-align: center;width: 200px;">
+                Request Reason
+            </th>
+            <th style="text-align: center;width: 200px;">
+                Supporting Doc
+            </th>
+            <th style="text-align: center;width: 50px;">
+                Approved Status
+            </th>
+            <th style="text-align: center;width: 100px;">
+                Request Date
+            </th>
+        </tr>
+        <tbody>
+            @if (Model.EditCheckboxs != null)
+            {
+                foreach (var item in Model.EditCheckboxs)
+                {
+                    <tr style="background-color:#FCF1D1;">
+                        
+                        @if (ticketrowspan == 1)
+                        {
+                            ticketrowspan++;
+                            <td style="text-align: center;" rowspan="@fieldRowspan">@(count++)</td>
+                            <td style="text-align: center;" rowspan="@fieldRowspan">
+                                @item.ticketId
+                            </td>
+                           
+                        }
+                      
+                        <td style="text-align: center;">
+                            @item.Field
+                        </td>
+                        <td style="text-align:center;">
+                            @if (item.FieldId == 12 || item.FieldId == 13 || item.FieldId == 14 || item.FieldId == 15)
+                            {
+                                if (item.requestReason != null)
+                                {
+                                    <a href="../Content/Upload/Faculty/FieldEditSupportDocuments/@item.requestReason" target="_blank">
+                                        <span style="color:red;font-weight:bold;">View</span>
+                                    </a>
+                                }
+                            }
+                            else
+                            {
+                                <span>@item.requestReason</span>
+                            }
+                        </td>
+                        <td style="text-align: center;">
+                            @if (item.SuportdocumentView != null)
+                            {
+                                <a href="../Content/Upload/Faculty/FieldEditSupportDocuments/AllSuppDocPDF/@item.SuportdocumentView" target="_blank">
+                                    <span style="color:red;font-weight:bold;">View</span>
+                                </a>
+                            }
+                        </td>
+                        <td style="text-align: center;">
+                            @if (item.isApproved == 0)
+                            {
+                                <span>Pending</span>
+                            }
+                            else if (item.isApproved == 1)
+                            {
+                                <span>Approved</span>
+                            }
+                            else if (item.isApproved == 2)
+                            {
+                                <span>Not Approved</span>
+                            }
+                        </td>
+                        <td style="text-align: center;">
+                            @item.createddate
+                        </td>
+                    </tr>
+                }
+
+            }
+            else
+            {
+                <tr style="background-color:#FCF1D1;">
+                    <td colspan="7" style="text-align:center;font-weight:bold;">Requests are Empty</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br /><br />
+    <table width="100%" border="0" class="webGrid">
+        <thead>
+            <tr style="background-color:#C1D4E6;">
+                <th style="width: 30px; text-align: center;">
+                    S.No
+                </th>
+                <th style="width: 30px; text-align: center;">
+                    Ticket Id
+                </th>
+                <th style="width: 80px; text-align: center;">
+                    Request Field
+                </th>
+                <th style="text-align: center;width: 200px;">
+                    Education
+                </th>
+                <th style="text-align: center;width: 200px;">
+                    Course Studied
+                </th>
+                <th style="text-align: center;width: 50px;">
+                    Branch / Specialization
+                </th>
+                <th style="text-align: center;width: 100px;">
+                    Year of Passing (YYYY)
+                </th>
+                <th style="width: 80px; text-align: center;">
+                    % of
+                    <br />
+                    Marks / CGPA
+                </th>
+                <th style="text-align: center;width: 200px;">
+                    Division
+                </th>
+                <th style="text-align: center;width: 200px;">
+                    Board/University
+                </th>
+                <th style="text-align: center;width: 100px;">
+                    Place
+                </th>
+                <th style="text-align: center;width: 100px;">
+                    Certificate
+                </th>
+                <th style="text-align: left;width: 100px;">
+                    Supporting Docs
+                </th>
+                <th style="text-align: left;width: 100px;">
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.EditEducationCheckboxs != null)
+            {
+                ticketrowspan = 1;
+                foreach (var item3 in Model.EditEducationCheckboxs)
+                {
+                    <tr style="background-color:#FCF1D1;">
+                        @if (ticketrowspan == 1)
+                        {
+                            ticketrowspan++;
+                            <td style="text-align: center;" rowspan="@eduRowspan">@(index++)</td>
+                            <td style="text-align: center;" rowspan="@eduRowspan">
+                                @item3.ticketId
+                            </td>
+
+                        }
+                        <td style="text-align: center;">
+                            @item3.Field
+                        </td>
+                        <td style="text-align: center;">
+                            @item3.Field
+                        </td>
+                        <td style="text-align:center;">
+                            @item3.Coursestudied
+                        </td>
+                        <td style="text-align: center;">
+                            @item3.Specialization
+                        </td>
+                        <td style="text-align: center;">
+                            @item3.PassedYear
+                        </td>
+                        <td style="text-align: center;">
+                            @item3.MarkasPercentage
+                        </td>
+                        <td style="text-align:center;">
+                            @item3.Division
+                        </td>
+                        <td style="text-align:center;">
+                            @item3.BoardorUniversity
+                        </td>
+                        <td style="text-align: center;">
+                            @item3.PlaceofEducation
+                        </td>
+                        <td style="text-align: center;">
+                            @if (item3.EducationcertificateView != null)
+                            {
+                                <a href="../Content/Upload/Faculty/FieldEditSupportDocuments/@item3.EducationcertificateView" target="_blank">
+                                    <span style="color:red;font-weight:bold;">View</span>
+                                </a>
+                            }
+                        </td>
+                        <td style="text-align: center;">
+                            @if (item3.AllSupportFilesView != null)
+                            {
+                                <a href="../Content/Upload/Faculty/FieldEditSupportDocuments/AllSuppDocPDF/@item3.AllSupportFilesView" target="_blank">
+                                    <span style="color:red;font-weight:bold;">View</span>
+                                </a>
+                            }
+                        </td>
+                        <td style="text-align: center;">
+                            @if (item3.isApproved == 0)
+                            {
+                                <span>Pending</span>
+                            }
+                            else if (item3.isApproved == 1)
+                            {
+                                <span>Approved</span>
+                            }
+                            else if (item3.isApproved == 2)
+                            {
+                                <span>Not Approved</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr style="background-color:#FCF1D1;">
+                    <td colspan="14" style="text-align:center;font-weight:bold;">Education Requests are Empty</td>
+                </tr>
+            }
+        </tbody>
+    </table>

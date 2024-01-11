@@ -1,0 +1,431 @@
+﻿@model UAAAS.Models.FacultyFieldsClass
+@{
+    int count = 1;
+}
+
+<table border="1" style="width: 100%">
+    <thead>
+        <tr>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                S.No
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                College Association
+            </th>
+            @if (Model.RegistrationNumber == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">RegistrationNumber</th>
+            }
+            @if (Model.Name == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Name</th>
+            }
+            @if (Model.FathersName == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">FathersName</th>
+            }
+            @if (Model.MothersName == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">MothersName</th>
+            }
+            @if (Model.Gender == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Gender</th>
+            }
+            @if (Model.DateofBirth == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Date ofBirth</th>
+            }
+            @if (Model.Email == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Email</th>
+            }
+            @if (Model.Mobile == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Mobile</th>
+            }
+            @if (Model.Photo == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Photo</th>
+            }
+            @if (Model.PANNumber == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PAN Number</th>
+            }
+            @if (Model.PANDocument == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PANDocument</th>
+            }
+            @if (Model.AadhaarNumber == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Aadhaar Number</th>
+            }
+            @if (Model.AadhaarDocument == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">AadhaarDocument</th>
+            }
+            @if (Model.Designation == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Designation</th>
+            }
+            @if (Model.Department == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">College Department</th>
+            }
+            @if (Model.Specialization == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">Specialization</th>
+            }
+            @if (Model.GrossSalary == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">GrossSalary</th>
+            }
+            @if (Model.AICTEFacultyId == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">AICTEFacultyId</th>
+            }
+            @if (Model.TotalExperience == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">TotalExperience</th>
+            }
+            @if (Model.PresentExperience == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">TotalExperiencePresentCollege</th>
+            }
+            @if (Model.DateofAppointment == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">DateofAppointment</th>
+            }
+            @if (Model.DeactivationReason == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">DeactivationReason</th>
+            }
+            @if (Model.PHDTwoPagesFormat == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PHDTwoPagesFormat</th>
+            }
+            @if (Model.SSC == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">SSC_CourseStudied</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">SSC_Specialization</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">SSC_PassedYear</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">SSC_Percentage</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">SSC_Division</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">SSC_University</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">SSC_PlaceOfEducation</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">SSC_Certificate</th>
+            }
+            @if (Model.UG == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">UG_CourseStudied</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">UG_Specialization</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">UG_PassedYear</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">UG_Percentage</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">UG_Division</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">UG_University</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">UG_PlaceOfEducation</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">UG_Certificate</th>
+            }
+            @if (Model.PG == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PG_CourseStudied</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PG_Specialization</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PG_PassedYear</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PG_Percentage</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PG_Division</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PG_University</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PG_PlaceOfEducation</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PG_Certificate</th>
+            }
+            @if (Model.MPHIL == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">MPhil_CourseStudied</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">MPhil_Specialization</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">MPhil_PassedYear</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">MPhil_Percentage</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">MPhil_Division</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">MPhil_University</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">MPhil_PlaceOfEducation</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">MPhil_Certificate</th>
+            }
+            @if (Model.PHD == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PhD_CourseStudied</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PhD_Specialization</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PhD_PassedYear</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PhD_Percentage</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PhD_Division</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PhD_University</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PhD_PlaceOfEducation</th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">PhD_Certificate</th>
+            }
+            @if (Model.AllCertificates == true)
+            {
+                <th style="text-align: center; background-color: yellow; vertical-align: top">AllCertificatesPDF</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model.FacultyDetails)
+            {
+                <tr>
+                    <td style="text-align: left;">@(count++)</td>
+                    <td style="text-align: left;">
+                        @if (string.IsNullOrEmpty(item.collegeCode))
+                        {
+                            <span>No College Association</span>
+                        }
+                        else
+                        {
+                            <span>@item.collegeName &nbsp;(@item.collegeCode)</span>
+                        }
+                    </td>
+                    @if (Model.RegistrationNumber == true)
+                    {
+                        if (item.FacultyPrincipalCase == "Yes")
+                        {
+                            <td style="text-align: left;">@item.FacultyRegistrationNumber <span style="color:red;font-weight:bold;"> (Principal) </span></td>
+                        }
+                        else
+                        {
+                            <td style="text-align: left;">@item.FacultyRegistrationNumber</td>
+                        }
+                    }
+                    @if (Model.Name == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyName</td>
+                    }
+                    @if (Model.FathersName == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyFathersName</td>
+                    }
+                    @if (Model.MothersName == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyMothersName</td>
+                    }
+                    @if (Model.Gender == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyGender</td>
+                    }
+                    @if (Model.DateofBirth == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyDateofBirth</td>
+                    }
+                    @if (Model.Email == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyEmail</td>
+                    }
+                    @if (Model.Mobile == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyMobile</td>
+                    }
+                    @if (Model.Photo == true)
+                    {
+                        <td style="text-align: left;">
+                            <span>http://jntuhaac.in/Content/Upload/Faculty/Photos/@item.FacultyPhoto</span>
+                        </td>
+                    }
+                    @if (Model.PANNumber == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyPANNumber</td>
+                    }
+                    @if (Model.PANDocument == true)
+                    {
+                        <td style="text-align: left;">
+                            <span>http://jntuhaac.in/Content/Upload/Faculty/PANCARDS/@item.FacultyPANDocument</span>
+                        </td>
+                    }
+                    @if (Model.AadhaarNumber == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyAadhaarNumber</td>
+                    }
+                    @if (Model.AadhaarDocument == true)
+                    {
+                        <td style="text-align: left;">
+                            <span>http://jntuhaac.in/Content/Upload/Faculty/AADHAARCARDS/@item.FacultyAadhaarNumber</span>
+                        </td>
+                    }
+                    @if (Model.Designation == true)
+                    {
+                        if (item.FacultyDesignation == "Others")
+                        {
+                            <td style="text-align: left;">@item.FacultyDesignation<span>(@item.FacultyOtherDesignation)</span></td>
+                        }
+                        else
+                        {
+                            <td style="text-align: left;">@item.FacultyDesignation</td>
+                        }
+                    }
+                    @if (Model.Department == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyDepartment</td>
+                    }
+                    @if (Model.Specialization == true)
+                    {
+                        <td style="text-align: left;">@item.FacultySpecialization</td>
+                    }
+                    @if (Model.GrossSalary == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyGrossSalary</td>
+                    }
+                    @if (Model.AICTEFacultyId == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyAICTEFacultyId</td>
+                    }
+                    @if (Model.TotalExperience == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyTotalExperience</td>
+                    }
+                    @if (Model.PresentExperience == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyPresentExperience</td>
+                    }
+                    @if (Model.DateofAppointment == true)
+                    {
+                        if (item.FacultyDateofAppointment == "01-01-0001")
+                        {
+                            <td style="text-align: left;"></td>
+                        }
+                        else
+                        {
+                            <td style="text-align: left;">@item.FacultyDateofAppointment</td>
+                        }
+                    }
+                    @if (Model.DeactivationReason == true)
+                    {
+                        <td style="text-align: left;">@item.FacultyDeactivationReason</td>
+                    }
+                    @if (Model.PHDTwoPagesFormat == true)
+                    {
+                        <td style="text-align: left;">
+                            <span>http://jntuhaac.in/Content/Upload/Faculty/PhdDocument/@item.FacultyPHDTwoPagesFormat</span>
+                        </td>
+                    }
+                    @if (Model.SSC == true)
+                    {
+                        <td style="text-align: left;">@item.SSC_studiedEducation</td>
+                        <td style="text-align: left;">@item.SSC_specialization</td>
+                        <td style="text-align: left;">@item.SSC_passedYear</td>
+                        <td style="text-align: left;">@item.SSC_percentage</td>
+                        <td style="text-align: left;">@item.SSC_division</td>
+                        <td style="text-align: left;">@item.SSC_university</td>
+                        <td style="text-align: left;">@item.SSC_place</td>
+                        <td style="text-align: left;"><span>http://jntuhaac.in/Content/Upload/Faculty/Certificates/@item.SSC_certificate</span></td>
+                        @*<td style="text-align: left;">
+                                <span>
+                                    @item.SSC_studiedEducation<br />
+                                    @item.SSC_specialization<br />
+                                    @item.SSC_passedYear<br />
+                                    @item.SSC_percentage<br />
+                                    @item.SSC_division<br />
+                                    @item.SSC_university<br />
+                                    @item.SSC_place<br />
+                                    <span>http://jntuhaac.in/Content/Upload/Faculty/Certificates/@item.SSC_certificate</span>
+                                </span>
+                            </td>*@
+                    }
+                    @if (Model.UG == true)
+                    {
+                        <td style="text-align: left;">@item.UG_studiedEducation</td>
+                        <td style="text-align: left;">@item.UG_specialization</td>
+                        <td style="text-align: left;">@item.UG_passedYear</td>
+                        <td style="text-align: left;">@item.UG_percentage</td>
+                        <td style="text-align: left;">@item.UG_division</td>
+                        <td style="text-align: left;">@item.UG_university</td>
+                        <td style="text-align: left;">@item.UG_place</td>
+                        <td style="text-align: left;"><span>http://jntuhaac.in/Content/Upload/Faculty/Certificates/@item.UG_certificate</span></td>
+                        @*<td style="text-align: left;">
+                                <span>
+                                    @item.UG_studiedEducation<br />
+                                    @item.UG_specialization<br />
+                                    @item.UG_passedYear<br />
+                                    @item.UG_percentage<br />
+                                    @item.UG_division<br />
+                                    @item.UG_university<br />
+                                    @item.UG_place<br />
+                                    <span>http://jntuhaac.in/Content/Upload/Faculty/Certificates/@item.UG_certificate</span>
+                                </span>
+                            </td>*@
+                    }
+                    @if (Model.PG == true)
+                    {
+                        <td style="text-align: left;">@item.PG_studiedEducation</td>
+                        <td style="text-align: left;">@item.PG_specialization</td>
+                        <td style="text-align: left;">@item.PG_passedYear</td>
+                        <td style="text-align: left;">@item.PG_percentage</td>
+                        <td style="text-align: left;">@item.PG_division</td>
+                        <td style="text-align: left;">@item.PG_university</td>
+                        <td style="text-align: left;">@item.PG_place</td>
+                        <td style="text-align: left;"><span>http://jntuhaac.in/Content/Upload/Faculty/Certificates/@item.PG_certificate</span></td>
+                        @*<td style="text-align: left;">
+                                <span>
+                                    @item.PG_studiedEducation<br />
+                                    @item.PG_specialization<br />
+                                    @item.PG_passedYear<br />
+                                    @item.PG_percentage<br />
+                                    @item.PG_division<br />
+                                    @item.PG_university<br />
+                                    @item.PG_place<br />
+                                    <span>http://jntuhaac.in/Content/Upload/Faculty/Certificates/@item.PG_certificate</span>
+                                </span>
+                            </td>*@
+                    }
+                    @if (Model.MPHIL == true)
+                    {
+                        <td style="text-align: left;">@item.MPhil_studiedEducation</td>
+                        <td style="text-align: left;">@item.MPhil_specialization</td>
+                        <td style="text-align: left;">@item.MPhil_passedYear</td>
+                        <td style="text-align: left;">@item.MPhil_percentage</td>
+                        <td style="text-align: left;">@item.MPhil_division</td>
+                        <td style="text-align: left;">@item.MPhil_university</td>
+                        <td style="text-align: left;">@item.MPhil_place</td>
+                        <td style="text-align: left;"><span>http://jntuhaac.in/Content/Upload/Faculty/Certificates/@item.MPhil_certificate</span></td>
+                        @*<td style="text-align: left;">
+                                <span>
+                                    @item.MPhil_studiedEducation<br />
+                                    @item.MPhil_specialization<br />
+                                    @item.MPhil_passedYear<br />
+                                    @item.MPhil_percentage<br />
+                                    @item.MPhil_division<br />
+                                    @item.MPhil_university<br />
+                                    @item.MPhil_place<br />
+                                    <span>http://jntuhaac.in/Content/Upload/Faculty/Certificates/@item.MPhil_certificate</span>
+                                </span>
+                            </td>*@
+                    }
+                    @if (Model.PHD == true)
+                    {
+                        <td style="text-align: left;">@item.PhD_studiedEducation</td>
+                        <td style="text-align: left;">@item.PhD_specialization</td>
+                        <td style="text-align: left;">@item.PhD_passedYear</td>
+                        <td style="text-align: left;">@item.PhD_percentage</td>
+                        <td style="text-align: left;">@item.PhD_division</td>
+                        <td style="text-align: left;">@item.PhD_university</td>
+                        <td style="text-align: left;">@item.PhD_place</td>
+                        <td style="text-align: left;"><span>http://jntuhaac.in/Content/Upload/Faculty/Certificates/@item.PhD_certificate</span></td>
+                        @*<td style="text-align: left;">
+                                <span>
+                                    @item.PhD_studiedEducation<br />
+                                    @item.PhD_specialization<br />
+                                    @item.PhD_passedYear<br />
+                                    @item.PhD_percentage<br />
+                                    @item.PhD_division<br />
+                                    @item.PhD_university<br />
+                                    @item.PhD_place<br />
+                                    <span>http://jntuhaac.in/Content/Upload/Faculty/Certificates/@item.PhD_certificate</span>
+                                </span>
+                            </td>*@
+                    }
+                    @if (Model.AllCertificates == true)
+                    {
+                        <td style="text-align: left;">
+                            <span>http://jntuhaac.in/Content/Upload/Faculty/Certificates/CertificatesPDF/@item.All_certificate</span>
+                        </td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>

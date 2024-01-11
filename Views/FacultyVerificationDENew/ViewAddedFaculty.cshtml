@@ -1,0 +1,423 @@
+﻿@model List<UAAAS.Models.FacultyRegistration>
+@{
+    ViewBag.Title = "ViewAddedFaculty";
+    int count = 1;
+}
+
+<h2>View Added Faculty</h2>
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null,null,null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $('#example').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $("#btncancel").live("click", function (e) {
+            debugger;
+            $("#dialog-edit").dialog("close");
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            var collegeid = $("#collegeId").val();
+            //var CheckedStatus = $('#Check')
+            var id = $(".confirmDialog").attr('id');
+
+            if ($("#Check").prop('checked') == true)
+            {
+                var url = "/FacultyVerificationDENew/DeleteAllAddedFaculty?collegeid=" + collegeid + "&&Status=DeleteAll";
+            }
+            else
+            {
+                var url = $(this).attr('href');
+                //var array = url.split['/'];
+                ////url += "/null/null";
+                //var url = "/FacultyVerificationDENew/DeleteAddedFaculty?id=" + array[0] + "&&collegeid=null&&Status=null";
+            }
+
+            $("#dialog-confirm").dialog({
+                title: 'Delete Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $("#collegeId").change(function () {
+            var collegeid = $(this).val();
+            if (collegeid != null && collegeid != " ") {
+                window.location = "/FacultyVerificationDENew/ViewAddedFaculty?collegeId=" + collegeid;
+            }
+            else {
+                window.location = "/FacultyVerificationDENew/ViewAddedFaculty";
+            }
+        });
+        $("#DegreeId").change(function () {
+            debugger;
+            var degreeid = $(this).val();
+            var collegeId = $("#collegeId").val();
+            if(degreeid != null || degreeid != "")
+            {
+                if(degreeid == 5)
+                {
+                    $.ajax({
+                        type: "GET",
+                        url: "/FacultyVerificationDENew/GetGroups?DegreeId=" + degreeid,
+                        dataType: "json",
+                        ContentType: "application/json",
+                        success: function (data) {
+                            debugger;
+                            $("#GroupId").find('option').remove();
+                            var item = "<option value=''>---Select---</option>";
+                            if(data != null)
+                            {
+                                $.each(data.data, function (i, state)
+                                {
+                                    item += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                                });
+                                $("#GroupId").html(item);
+                            }
+
+                        },
+                        error: function () {
+
+
+                        }
+
+                    });
+                }
+                else
+                {
+                    $.ajax({
+                        type:"GET",
+                        url: "/FacultyVerificationDENew/GetSpecializations?DegreeId=" + degreeid + "&&collegeId=" + collegeId,
+                        dataType:"json",
+                        ContentType:"application/json",
+                        success: function (data) {
+                            debugger;
+                            $("#GroupId").find('option').remove();
+                            var item ="<option>--Select---</option>";
+                            if(data!=null)
+                            {
+                                $.each(data.data,function(i,state){
+                                    item += "<option value='" + state.id + "'>" + state.Specname + "</option>";
+                                });
+                                $("#GroupId").html(item);
+                            }
+                        },
+                        error :function(){
+
+                        }
+                    });
+                }
+            }
+
+        });
+
+        $("#Check").click(function () {
+            debugger;
+            $(".Checkall").attr("Checked", this.checked);
+        });
+
+    });
+</script>
+
+<div>
+    <table>
+        <tr>
+            <td class="col1">Colleges</td>
+            <td class="col2">
+                @Html.DropDownList("collegeId", new SelectList(ViewBag.PharmacyCollegeList as System.Collections.IEnumerable, "collegeId", "collegeName"), "---Select---", new { id = "collegeId" })
+            </td>
+
+        </tr>
+    </table>
+</div>
+<br />
+<div>
+    @if(TempData["Success"] != null)
+    {
+        <p style="color:green">@TempData["Success"].ToString()</p>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <p style="color:red">@TempData["Error"].ToString()</p>
+    }
+</div>
+<br/>
+@using (Html.BeginForm())
+{
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">
+                    S.No
+                </th>
+                <th style="width: 400px; text-align: center;">
+                    Registration ID
+                </th>
+                <th style="text-align: left;width:315px">
+                    Full Name
+                </th>
+                <th style="text-align: left;width:315px">
+                    Specialization
+                </th>
+                <th style="width: 120px; text-align: center;">
+                    IdentfiedFor
+                </th>
+                <th style="text-align: left;width:315px">
+                    Faculty Specialization
+                </th>
+                <th style="width: 120px; text-align: center;">
+                    Department-Specialization
+                </th>
+                <th style="text-align: left;width:315px">
+                    Groups
+                </th>
+                <th style="text-align: left;width:315px">
+                    CheckAll
+                </th>
+                <th style="text-align: left;width:315px">
+                    Delete
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    @Html.HiddenFor(model => item.id)
+                    @Html.HiddenFor(model => item.CollegeId)
+                    <tr>
+                        <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">@(count++)</td>
+                        <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                            @Html.DisplayFor(model => item.RegistrationNumber)
+                        </td>
+                        <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                            @if (item.PHD != null)
+                            {
+                                if (ViewBag.Prinicipal == item.RegistrationNumber)
+                                {
+                                    @Html.DisplayFor(model => item.FirstName)
+                                    @Html.DisplayFor(model => item.MiddleName)
+                                    @Html.DisplayFor(model => item.LastName)
+                                    if (item.NotconsiderPhd == true)
+                                    {
+                                        <span style="color:blue;font-weight:bold;">Prinicipal(Ph.D)</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color:red;font-weight:bold;">Prinicipal(Ph.D)</span>
+                                    }
+
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(model => item.FirstName)
+                                    @Html.DisplayFor(model => item.MiddleName)
+                                    @Html.DisplayFor(model => item.LastName)
+                                    if (item.NotconsiderPhd == true)
+                                    {
+                                        <span style="color:blue;font-weight:bold;">(Ph.D)</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color:red;font-weight:bold;">(Ph.D)</span>
+                                    }
+
+                                }
+
+                            }
+                            else
+                            {
+                                if (ViewBag.Prinicipal == item.RegistrationNumber)
+                                {
+                                    @Html.DisplayFor(model => item.FirstName)
+                                    @Html.DisplayFor(model => item.MiddleName)
+                                    @Html.DisplayFor(model => item.LastName)
+                                    <span style="color:red;">Prinicipal</span>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(model => item.FirstName)
+                                    @Html.DisplayFor(model => item.MiddleName)
+                                    @Html.DisplayFor(model => item.LastName)
+
+                                }
+
+                            }
+                            
+                             @*@Html.DisplayFor(model => item.FirstName)
+                            @Html.DisplayFor(model => item.MiddleName)
+                            @Html.DisplayFor(model => item.LastName)*@
+                        </td>
+                        <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                            @Html.DisplayFor(model => item.SpecializationName)
+                        </td>
+                        <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                            @Html.DisplayFor(model => item.IdentfiedFor)
+                        </td>
+                        <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                            @Html.DisplayFor(model => item.PGSpecializationName)
+                        </td>
+                        <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                            @Html.DisplayFor(model => item.department) -
+                            @Html.DisplayFor(model => item.designation)
+                        </td>
+                        <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                          @if (item.department == "B.Pharmacy")
+                          {
+                            if (item.Eid == 1)
+                            {
+                                <span>Group1</span>
+                            }
+                            else if (item.Eid == 2)
+                            {
+                                <span>Group2</span>
+                            }
+                            else if (item.Eid == 3)
+                            {
+                                <span>Group3</span>
+                            }
+                            else if (item.Eid == 4)
+                            {
+                                <span>Group4</span>
+                            }
+                          }
+                          else
+                          {
+                            @Html.DisplayFor(model => item.designation)
+                          }
+                             
+                        </td>
+                        <td style="text-align:center;">
+                            @Html.CheckBox("CheckAll", false, new { @class = "Checkall" ,@style="text-align:center;"})
+                        </td>
+                        <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                            @Html.ActionLink("Delete", "DeleteAddedFaculty", "FacultyVerificationDENew", new { Id = item.id }, new { @class ="confirmDialog delete_button" })
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="checkbox" id="Check" style="width: 90%; text-align: center" />
+                </th>
+                <th>
+                    <input type="text" id="i-6" style="width: 90%; text-align: center" class="search_init">
+                </th>
+
+
+            </tr>
+        </tfoot>
+    </table>
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>

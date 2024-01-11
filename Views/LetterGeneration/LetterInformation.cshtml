@@ -1,0 +1,110 @@
+﻿@model UAAAS.Controllers.genereatedColumns
+@{
+    ViewBag.Title = "LetterInformation";
+}
+
+<h2>LetterInformation</h2>
+<html>
+<head>
+    <title></title>
+    <script src="@Url.Content("~/Scripts/tinymce/tiny_mce.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        (function () {
+
+            tinyMCE.init({
+
+                // General options
+                mode: "textareas",
+                elements: "@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)",
+                theme: "advanced",
+                height: "400",
+                width: "1050",
+                verify_html: false,
+                plugins: "pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave",
+
+                // Theme options
+                theme_advanced_buttons1: "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+                theme_advanced_buttons2: "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+                theme_advanced_buttons3: "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+                theme_advanced_buttons4: "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak,restoredraft,codehighlighting,netadvimage",
+                theme_advanced_toolbar_location: "top",
+                theme_advanced_toolbar_align: "left",
+                theme_advanced_statusbar_location: "bottom",
+                theme_advanced_resizing: false,
+
+                // Example content CSS (should be your site CSS)
+                //content_css : "css/content.css",
+
+                @*content_css: "@Url.Content("~/Scripts/tinymce/css/content.css")",*@
+                convert_urls: false,
+
+                // Drop lists for link/image/media/template dialogs
+                template_external_list_url: "lists/template_list.js",
+                external_link_list_url: "lists/link_list.js",
+                external_image_list_url: "lists/image_list.js",
+                media_external_list_url: "lists/media_list.js",
+
+            });
+
+        })();
+    </script>
+</head>
+<body>
+    @using (Html.BeginForm("LetterInformation", "LetterGeneration"))
+    {
+        @Html.HiddenFor(model => model.id)
+        <div class="editor-label">
+            <span>Letter Code</span>
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.lettercode, new { @class = "required" })
+        </div>
+        <div class="editor-label">
+            <span>Letter Code Description</span>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.lettercodedesc, new { @class = "required", @style = "width:1000px;" })
+        </div>
+        <div class="editor-label">
+            <span>Letter Subject</span>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.lettersub, new { @class = "required", @style = "width:1000px;" })
+        </div>
+        <div class="editor-label">
+            <span>Reference Status</span>
+        </div>
+        <div class="editor-field">
+            <label>@Html.RadioButtonFor(model => model.isref, true) Yes </label>
+            <label>@Html.RadioButtonFor(model => model.isref, false) No </label>
+        </div>
+        <div class="editor-label">
+            <span>Letter Reference</span>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.letterref, new { @class = "required", @style = "width:1000px;" })
+        </div>
+        <div class="editor-label">
+            <span>Letter Generated Date</span>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.generatedDate, new { @class = "calendar", @placeholder = "DD/MM/YYYY", @style = "width:1000px;" })
+
+        </div>
+        <div class="editor-label">
+            <span>Letter Description</span>
+        </div>
+        <div class="form-group">
+            <div class=" input-group col-sm-12">
+                @Html.TextAreaFor(model => model.letterdesc, new { @class = "form-control", @required = true })
+            </div>
+        </div>
+        <div style="text-align: center">
+            <p>
+                <a href="/LetterGeneration/LetterInformationTest" class="create_button" style="text-align:center" target="_blank"><span>Edit</span></a>
+                <input type="button" class="create_button" value="Cancel" id="btnaddcancel" />
+            </p>
+        </div>
+    }
+</body>
+</html>

@@ -1,0 +1,166 @@
+﻿@using System.Web.UI.WebControls
+@using UAAAS.Models
+@model IEnumerable<UAAAS.Models.FacultyRegistration>
+@{
+    ViewBag.Title = "GetRegisteredFaculty";
+    var index = 1;
+}
+
+<h2>GetRegisteredFaculty</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null,null,null,null,null],
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+<br />
+
+
+@using (Html.BeginForm())
+{
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No</th>
+                <th style="width: 140px; text-align: center;">Registration ID</th>
+                <th style="text-align: left;width:315px">Full Name</th>
+                <th style="text-align: left;width:315px">Pan Number</th>
+                <th style="text-align: left;width:315px">Email</th>
+                <th style="text-align: left;width:315px">Mobile</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Take(200))
+            {
+                <tr>
+                    <td>
+                        @(index++)
+                    </td>
+                    <td>
+                        <a href="/NewOnlineRegistration/CollegeViewFacultyDetails?fid=@UAAAS.Models.Utilities.EncryptString(@item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"])" target="_blank">
+                            @item.RegistrationNumber
+                        </a>                     
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                        <span>&nbsp;&nbsp;</span>
+                        @Html.DisplayFor(modelItem => item.MiddleName)
+                        <span>&nbsp;&nbsp;</span>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem=>item.PANNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mobile)
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-3" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 90%; text-align: center;" class="search_init">
+                </th>
+                
+            </tr>
+        </tfoot>
+    </table>
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-editSpec" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+    <div id="dialog-check" style="display: none">
+    </div>
+    <div id="dialog-BAS" style="display: none">
+    </div>
+
+}
+
+
+
+
+
+
+
+
+

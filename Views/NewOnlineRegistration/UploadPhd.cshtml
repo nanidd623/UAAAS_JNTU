@@ -1,0 +1,470 @@
+﻿@model UAAAS.Controllers.OnlineRegistration.PhDUpload
+@{
+    ViewBag.Title = "UploadPhd";
+    var style = "alt_row";
+}
+
+<h2>Upload Phd</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<style>
+    .ui-autocomplete {
+        overflow: scroll;
+        height: 260px;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var pgspecializations = @Html.Raw(Json.Encode(Model.total_specializations.Distinct()));
+        var universitys = @Html.Raw(Json.Encode(Model.universitys.Distinct()));
+        var places = @Html.Raw(Json.Encode(Model.places.Distinct()));
+        var Courses = @Html.Raw(Json.Encode(Model.Courses.Distinct()));
+
+        $("#PhD_certificate").change(function (e) {
+            debugger;
+            if (this.disabled) return alert('File upload not supported!');
+            var F = this.files;
+            if (F && F[0]) for (var i = 0; i < F.length; i++) readDocument(F[i], '600x800', '100', 'Ph.D Document');
+
+        });
+
+        $("#CeritificateMessage").hover(function () {
+            $("#CeritificateMessage").attr("title", "Minimum 600x800 pixels and less than 100 KB size");
+        });
+
+        $("#PhD_university").on("keydown", function (event) {
+            debugger;
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            }
+            else if (event.keyCode == 188) {
+                return false;
+            }
+        }).autocomplete({
+            minLength: 0,
+            source: function (request, response) {
+                // delegate back to autocomplete, but extract the last term
+                var results = $.ui.autocomplete.filter(universitys, extractLast(request.term));
+                response(results);
+            },
+            scroll : true,
+            focus: function () {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function (event, ui) {
+                var CurrentUniversity = $(this).val();
+                var terms = split(this.value);
+                if (terms.length <= 1) {
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push(ui.item.value);
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push("");
+                    this.value = terms.join("");
+                    //this.value = terms;
+                    $('#' + CurrentUniversity).focus();
+
+                    return false;
+                }
+                else {
+                    var last = terms.pop();
+                    $(this).val(this.value.substr(0, this.value.length - last.length - 2)); // removes text from input
+                    $(this).effect("highlight", {}, 1000);
+                    $(this).addClass("red");
+                    $("#warnings").html("<span style='color:red;'>Max people reached</span>");
+                    return false;
+                }
+            }
+        });
+
+        $("#PhD_place").on("keydown", function (event) {
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            }
+            else if (event.keyCode == 188) {
+                return false;
+            }
+        }).autocomplete({
+            minLength: 0,
+            source: function (request, response) {
+                // delegate back to autocomplete, but extract the last term
+                var results = $.ui.autocomplete.filter(places, extractLast(request.term));
+                response(results);
+            },
+            focus: function () {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function (event, ui) {
+
+                var CurrentPlace = $(this).val();
+                var terms = split(this.value);
+                if (terms.length <= 1) {
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push(ui.item.value);
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push("");
+                    this.value = terms.join("");
+                    //this.value = terms;
+                    $('#' + CurrentPlace).focus();
+
+                    return false;
+                }
+                else {
+                    var last = terms.pop();
+                    $(this).val(this.value.substr(0, this.value.length - last.length - 2)); // removes text from input
+                    $(this).effect("highlight", {}, 1000);
+                    $(this).addClass("red");
+                    $("#warnings").html("<span style='color:red;'>Max people reached</span>");
+                    return false;
+                }
+            }
+        });
+
+  
+        $("#PhD_specialization").on("keydown", function (event) {
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+
+                event.preventDefault();
+            }
+            else if (event.keyCode == 188) {
+                return false;
+            }
+        }).autocomplete({
+            minLength: 0,
+            source: function (request, response) {
+                // delegate back to autocomplete, but extract the last term
+                var results = $.ui.autocomplete.filter(pgspecializations, extractLast(request.term));
+                response(results);
+            },
+            focus: function () {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function (event, ui) {
+                var CurrentPlace = $(this).val();
+                var terms = split(this.value);
+                if (terms.length <= 1) {
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push(ui.item.value);
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push("");
+                    this.value = terms.join("");
+                    //this.value = terms;
+                    $('#' + CurrentPlace).focus();
+
+                    return false;
+                }
+                else {
+                    var last = terms.pop();
+                    $(this).val(this.value.substr(0, this.value.length - last.length - 2)); // removes text from input
+                    $(this).effect("highlight", {}, 1000);
+                    $(this).addClass("red");
+                    $("#warnings").html("<span style='color:red;'>Max people reached</span>");
+                    return false;
+                }
+            }
+        });
+
+        $("#PhD_studiedEducation").on("keydown", function (event) {
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            }
+            else if (event.keyCode == 188) {
+                return false;
+            }
+        }).autocomplete({
+            minLength: 0,
+            source: function (request, response) {
+                // delegate back to autocomplete, but extract the last term
+                var results = $.ui.autocomplete.filter(Courses, extractLast(request.term));
+                response(results);
+            },
+            focus: function () {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function (event, ui) {
+
+                var CurrentPlace = $(this).val();
+                var terms = split(this.value);
+                if (terms.length <= 1) {
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push(ui.item.value);
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push("");
+                    this.value = terms.join("");
+                    //this.value = terms;
+                    $('#' + CurrentPlace).focus();
+
+                    return false;
+                }
+                else {
+                    var last = terms.pop();
+                    $(this).val(this.value.substr(0, this.value.length - last.length - 2)); // removes text from input
+                    $(this).effect("highlight", {}, 1000);
+                    $(this).addClass("red");
+                    $("#warnings").html("<span style='color:red;'>Max people reached</span>");
+                    return false;
+                }
+            }
+        });
+
+        function split(val) {
+            return val.split(/,\s*/);
+        }
+        function extractLast(term) {
+            return split(term).pop();
+        }
+    });
+
+    function readDocument(file, minimum, fsize, title) {
+        debugger;
+        var reader = new FileReader();
+        var image = new Image();
+
+        reader.readAsDataURL(file);
+        reader.onload = function (_file) {
+            image.src = _file.target.result; // url.createObjectURL(file);
+            image.onload = function () {
+
+                var w = this.width,
+                    h = this.height,
+                    t = file.type, // ext only: // file.type.split('/')[1],
+                    n = file.name,
+                    s = ~~(file.size / 1024); //s = ~~(file.size/1024) +'KB';
+
+                if (w < minimum.split('x')[0] || h < minimum.split('x')[1] || s > fsize) {
+                    alert(title + " should be Minimum - " + minimum + " pixels and less than " + fsize + " KB size");
+                    var filephoto;
+                    if (title == 'Ph.D Document') {
+                        filephoto = $('#PhD_certificate');
+                    }
+
+                    file.replaceWith(filephoto.val('').clone(true));
+                    return false;
+                }
+
+                if (t != 'image/jpeg') {
+                    alert(title + " should be in JPEG/JPG format only");
+                    var filephoto;
+                    if (title == 'Ph.D Document') {
+                        filephoto = $('#PhD_certificate');
+                    }
+
+                    file.replaceWith(filephoto.val('').clone(true));
+                    return false;
+                }
+            };
+            image.onerror = function () {
+                //alert('Invalid file type: ' + file.type);
+                alert(title + " should be in JPEG/JPG format only");
+                var filephoto;
+                if (title == 'Ph.D Document') {
+                    filephoto = $('#PhD_certificate');
+                }
+
+                file.replaceWith(filephoto.val('').clone(true));
+                return false;
+            };
+        };
+    }
+
+    function isNumberKeyForPercentage(evt) {
+
+        var len = $('.txtPercentage').val().length;
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57 || len > 6) && charCode != 46)
+            return false;
+        else if (len >= 3) {
+            return true;
+        }
+        else {
+            var index = $('.txtPercentage').val().indexOf('.');
+            if (index > 0 && charCode == 46) {
+                return false;
+            }
+            if (index > 0) {
+                var CharAfterdot = (len + 1) - index;
+                if (CharAfterdot > 3 && charCode != 8) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+   
+
+</script>
+<br />
+@if (TempData["SUCCESS"] != null)
+{
+<div class="success" style="background-color: gold; border: 1px solid #f49820;">
+    <p style="text-align: center;font-weight: bold"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+</div>
+}
+@if (TempData["ERROR"] != null)
+{
+<div class="error" style="background-color: red; border: 1px solid #f49820;">
+    <p style="text-align: center;font-weight: bold;color:white;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+</div>
+}
+<br />
+@using (Html.BeginForm("UploadPhd", "NewOnlineRegistration", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+<table class="faculty_table education" id="tblQualification" style="border: solid 1px #ccc;">
+    <thead>
+        <tr>
+            <td class="row" colspan="10">
+                <b>Educational Qualifications</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="row" style="text-align: center; width: 100px;"></td>
+            <td class="row" style="text-align: center; width: 125px;">HallTicket Number / RegistrationNumber</td>
+            <td class="row" style="text-align: center; width: 125px;">Course Studied</td>
+            <td class="row" style="text-align: center; width: 125px;">Branch / Specialization</td>
+            <td class="row" style="text-align: center; width: 100px;">Year of Passing (YYYY)</td>
+            <td class="row" style="text-align: center; width: 80px;">
+                % of
+                <br />
+                Marks / CGPA
+            </td>
+            <td class="row" style="text-align: center; width: 80px;">Division</td>
+            <td class="row" style="text-align: center;">Board/University</td>
+            <td class="row" style="text-align: center; width: 180px;">Place</td>
+            <td class="row" style="text-align: center; width: 200px !important;">
+                Scanned Certificate<br />
+                &nbsp;&nbsp;<img id="CeritificateMessage" src="../Content/images/question-mark-1750942_1280.png" />
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        @if (TempData["status"].ToString() == "true")
+        {
+        <tr>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                <span>Ph.D</span>
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.DisplayFor(model => model.PhD_hallticketno)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.DisplayFor(model => model.PhD_studiedEducation)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.DisplayFor(model => model.PhD_specialization)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.DisplayFor(model => model.PhD_passedYear)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.DisplayFor(model => model.PhD_percentage)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.DisplayFor(model => model.PhD_division)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.DisplayFor(model => model.PhD_university)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.DisplayFor(model => model.PhD_place)
+            </td>
+            <td class="@style certificates" style="text-align: center; vertical-align: top;">
+                @if (@Model.PhD_facultyCertificate != null)
+                {
+                <a href="../Content/Upload/Faculty/Certificates/@Model.PhD_facultyCertificate.Replace(" ~", "" )" target="_blank">
+                    <img src="../Content/Upload/Faculty/Certificates/@Model.PhD_facultyCertificate.Replace(" ~", "" )" style="height: 60px;" id="PHDPreview" />
+                </a>
+                }
+
+            </td>
+        </tr>
+        }
+        else
+        {
+        <tr>
+            @Html.HiddenFor(model => model.facultyId)
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                <span>Ph.D</span>
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.TextBoxFor(model => model.PhD_hallticketno, new { style = "width: 90%", @maxlength = "50", @class = "", @placeholder = "Hall Ticket Number"})
+                @Html.ValidationMessageFor(model => model.PhD_hallticketno)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.TextBoxFor(model => model.PhD_studiedEducation, new { style = "width: 90%", @maxlength = "50",  @class = "", @placeholder = "Course Studied", @onkeypress = "return checkSpcialChar(event)" })
+                @Html.ValidationMessageFor(model => model.PhD_studiedEducation)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.TextBoxFor(model => model.PhD_specialization, new { style = "width: 90%", @maxlength = "50", @class = "", @placeholder = "Branch/Specialization", @onkeypress = "return checkSpcialChar(event)" })
+                @Html.ValidationMessageFor(model => model.PhD_specialization)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.DropDownListFor(model => model.PhD_passedYear,
+                new SelectList(ViewBag.years as System.Collections.IEnumerable, "value", "text"),
+                "-- Select --", new { id = "PhD_passedYear", style = "width: 100%;", @class = "" })
+                @Html.ValidationMessageFor(model => model.PhD_passedYear)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.TextBoxFor(model => model.PhD_percentage, new { style = "width: 85%; text-align: center;", @class = "txtPercentage", @onkeypress = "return isNumberKeyForPercentage(event)", @placeholder = "% of Marks / CGPA" })
+                @Html.ValidationMessageFor(model => model.PhD_percentage)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.DropDownListFor(model => model.PhD_division,
+                new SelectList(ViewBag.division as System.Collections.IEnumerable, "value", "text"),
+                "-- Select --", new { id = "PhD_division", style = "width: 100%;", @class = "" })
+                @Html.ValidationMessageFor(model => model.PhD_division)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.TextBoxFor(model => model.PhD_university, new { style = "width: 95%", @maxlength = "50", @class = "", @placeholder = "University", @onkeypress = "return checkSpcialChar(event)" })
+                @Html.ValidationMessageFor(model => model.PhD_university)
+            </td>
+            <td class="@style" style="text-align: center; vertical-align: top;">
+                @Html.TextBoxFor(model => model.PhD_place, new { style = "width: 90%", @maxlength = "50", @class = "", @placeholder = "Place", @onkeypress = "return checkSpcialChar(event)" })
+                @Html.ValidationMessageFor(model => model.PhD_place)
+            </td>
+            <td class="@style certificates" style="text-align: center; vertical-align: top;">
+                @if (@Model.PhD_facultyCertificate != null)
+                {
+                @Html.TextBoxFor(model => model.PhD_certificate, new { type = "file", @style = "width: 180px;", @class = "" })
+                <a href="../Content/Upload/Faculty/Certificates/@Model.PhD_facultyCertificate.Replace(" ~", "" )" target="_blank">
+                    <span style="color:red;"><b>View</b></span>
+                </a>
+                @Html.ValidationMessageFor(model => model.PhD_certificate)
+                }
+                else
+                {
+                @Html.TextBoxFor(model => model.PhD_certificate, new { type = "file", @style = "width: 180px;", @class = "" })
+                @Html.ValidationMessageFor(model => model.PhD_certificate)
+                }
+                @Html.HiddenFor(model => model.PhD_facultyCertificate)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<br />
+    if (TempData["status"].ToString() != "true")
+    {
+<div style="float:right;">
+    <input type="submit" value="Submit" />
+</div>
+    }
+}
+

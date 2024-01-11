@@ -1,0 +1,175 @@
+﻿@model UAAAS.Models.Principal
+@{
+    ViewBag.Title = "College Principal Details";
+    
+}
+<h2>College Principal Details</h2>
+<br />
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        $('#DistrictId').removeClass('input-validation-error');
+        $('#CollegeTypeId').removeClass('input-validation-error');
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#PrinciaplDetails').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#PrinciaplDetails').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null],
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+@using (Html.BeginForm())
+{
+    int count = 0; 
+    <div class="details_table">
+        <div class="editor-field focus" style="width: 15%">
+            @Html.DropDownListFor(model => model.SelectedCollegeType,
+            new SelectList(ViewBag.SelectedCollegeTypes as System.Collections.IEnumerable),
+            new { id = "SelectedCollegeType", style = "width:100%" })
+        </div>
+        <div class="editor-field" style="width: 12%">
+            @Html.DropDownListFor(model => model.DistrictId,
+            new SelectList(ViewBag.Districts as System.Collections.IEnumerable, "id", "districtName"),
+            "-- ALL Districts --", new { id = "DistrictId", style = "width:100%" })
+        </div>
+        <div class="editor-field" style="width: 12%">
+            @Html.DropDownListFor(model => model.CollegeTypeId,
+            new SelectList(ViewBag.CollegeTypes as System.Collections.IEnumerable, "id", "collegeType"),
+            "-- All College Types --", new { id = "CollegeTypeId", style = "width:100%" })
+        </div>
+        <div>
+            <input type="submit" value="Search" style="width: 70px;" />    
+            <input type="submit" value="Export To Excel" name="cmd" style="width: 120px;" />           
+        </div>
+    </div>
+    <br />
+    <div id='dvData'>
+    <table id="PrinciaplDetails" class="display" style="width: 100%">
+        <thead>
+            <tr style="background-color: gainsboro">
+                <th style="text-align: center; width: 10px">S.No
+                </th>
+                <th style="text-align: center; width: 10px">College Code
+                </th>
+                <th style="text-align: center; width: 600px;">College Name
+                </th>
+                <th style="text-align: center; width: 500px">Princiapl Name
+                </th>
+                <th style="text-align: center; width: 170px">Phone Number
+                </th>
+                <th style="text-align: center; width: 170px">Mobile Number
+                </th>
+                <th style="text-align: center; width: 200px">Email
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ViewBag.PrincipalDetails != null)
+            {
+                foreach (var item in ViewBag.PrincipalDetails)
+                {
+                <tr>
+                    <td style="text-align: center;">
+                        @(count = count + 1)
+                    </td>
+                    <td style="text-align: center;">
+                        <label style="text-transform: uppercase">@item.CollegeCode</label>
+                    </td>
+                    <td style="text-align: left;">
+                        <label>@item.CollegeName</label>
+                    </td>
+                    <td style="text-align: left;">
+                        <label>@item.PrincipalName</label>
+                    </td>
+                    <td style="text-align: center;">
+                        <label>@item.PhoneNumber</label>
+                    </td>
+                    <td style="text-align: center;">
+                        <label>@item.MobileNumber</label>
+                    </td>
+                    <td style="text-align: left;">
+                        <label>@item.Email</label>
+                    </td>
+                </tr>
+                }
+            }
+        </tbody>
+        <tfoot>
+            <tr style="background-color: gainsboro">
+                <th style="width: 10px;">
+                    <input type="text" id="i-0" style="text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="width: 10px;">
+                    <input type="text" id="i-1" style="text-align: left; width: 50px;" class="search_init">
+                </th>
+                <th style="width: 600px;">
+                    <input type="text" id="i-2" style="text-align: left; width: 350px" class="search_init">
+                </th>
+                <th style="width: 500px;">
+                    <input type="text" id="i-3" style="text-align: left; width: 200px" class="search_init">
+                </th>
+                <th style="width: 170px;">
+                    <input type="text" id="i-4" style="text-align: left; width: 100px" class="search_init">
+                </th>
+                <th style="width: 170px;">
+                    <input type="text" id="i-5" style="text-align: left; width: 100px" class="search_init">
+                </th>
+                <th style="width: 200px;">
+                    <input type="text" id="i-6" style="text-align: left; width: 200px" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+        </div>
+            if (ViewBag.Count == 0)
+            {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+            }
+}

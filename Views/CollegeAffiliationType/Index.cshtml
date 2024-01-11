@@ -1,0 +1,97 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_college_affiliation_type>
+
+@{
+    ViewBag.Title = "College Affiliation Type";
+}
+
+<h2>College Affiliation Type</h2>
+<p class="create_link_right">
+    @Html.ActionLink("Add College Affiliation Type", "Create", null, new { @class = "create_button" })
+</p>
+@*<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            collegeAffiliationType
+        </th>
+        <th>
+            collegeAffiliationTypeDescription
+        </th>
+        <th>
+            isActive
+        </th>
+        <th>
+            createdOn
+        </th>
+        <th>
+            my_aspnet_users
+        </th>
+        <th>
+            updatedOn
+        </th>
+        <th>
+            my_aspnet_users1
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.collegeAffiliationType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.collegeAffiliationTypeDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isActive)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.createdOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.my_aspnet_users.name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.updatedOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.my_aspnet_users1.name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>*@
+@{
+    var grid = new WebGrid(Model.Select((element, index) => new { Data = element, Index = index }),
+        canPage: true,
+        rowsPerPage: 10,
+        selectionFieldName: "selectedRow",
+        ajaxUpdateContainerId: "gridContent"
+        );
+    grid.Pager(WebGridPagerModes.NextPrevious);
+}
+<div id="gridContent">
+    @grid.GetHtml(tableStyle: "webGrid",
+                headerStyle: "gridHeader",
+                alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: grid.Columns(
+                grid.Column("ID", "S.No.", format: item => item.Index + 1, style: "row_number", canSort: true),
+                grid.Column("Data.collegeAffiliationType", "College Affiliation Type", null, style: "align_left", canSort: true),
+                grid.Column("Data.collegeAffiliationTypeDescription", "Description", null, style: "align_left", canSort: true),
+                grid.Column("Data.isActive", "Status", format: @<text>@if (item.Data.isActive == true)
+                                                                      { <img src="@Url.Content("~/Content/images/active.png")" alt="JNTU Hyderabad Logo" />}
+                                                                      else
+                                                                      {<img src="@Url.Content("~/Content/images/inactive.png")" alt="JNTU Hyderabad Logo" />}</text>, style: "status", canSort: true),
+                grid.Column("Edit", "Edit", format: @<text>@Html.ActionLink("Edit", "Edit", new { id = item.Data.id }, new { @class = "edit_button" }) </text>, style: "edit", canSort: true),
+                grid.Column("Detail", format: @<text>@Html.ActionLink("Details", "Details", new { id = item.Data.id }, new { @class = "view_button" }) </text>, style: "view", canSort: true)
+         ))
+</div>

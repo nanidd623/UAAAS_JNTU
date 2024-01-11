@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    ViewBag.Title = "Permanent Affiliation Information";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<div style="margin-top:15px;">
+    <h2>Permanent Affiliation History</h2><br />
+    <table class="webGrid">
+        <thead>
+            <tr class="col1">
+                <th>S.No</th>
+                <th>Academic Year</th>
+                <th>Affiliation From Date (DD/MM/YYYY)</th>
+                <th>Affiliation To Date (DD/MM/YYYY)</th>
+                <th>Duration</th>
+                <th>Supporting Document</th>
+            </tr>
+        </thead>
+        <tbody class="col2">
+            @if (ViewBag.PAList.Count > 0)
+            {
+                foreach (var pay in ((List<UAAAS.Controllers.Permanent_Affiliation.PermanentAffiliation>)ViewBag.PAList).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr class="col2">
+                        <td>@pay.i </td>
+                        <td>@pay.value.AcademicYear</td>
+                        <td>@pay.value.AffiliationFromDate</td>
+                        <td>@pay.value.AffiliationToDate</td>
+                        <td>@pay.value.Duration</td>
+
+                        <td style="text-align: left; font-weight: normal;">
+                            @if (pay.value.FilePath != null)
+                            {
+                                <a href="../Content/Upload/College/PermanentAffiliation/@pay.value.FilePath" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8" style="text-align:center;"><span style="font-size:18px; ">No Data found</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

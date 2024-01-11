@@ -1,0 +1,66 @@
+﻿@using System.Web.Configuration
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>College NOC Requests</h2>
+<style type="text/css">
+
+
+    </style>
+<style>
+    html, body {
+        height: 100%;
+    }
+
+    #tableContainer-1 {
+        height: 100%;
+        width: 100%;
+        display: table;
+    }
+
+    #tableContainer-2 {
+        vertical-align: middle;
+        display: table-cell;
+        height: 100%;
+        width: 10%;
+    }
+
+    #myTable {
+        margin: 0 auto;
+    }
+    .test {
+        line-height: 0px;
+    }
+</style>
+<div id="tableContainer-1">
+    <div id="tableContainer-2">
+        <table id="myTable">
+            <tr>
+                <td>
+                    @Html.ActionLink("Closure of College / Institute / Course(s) ", "College_NocAction", "CollegeNOC", new {@class = "create_button test"})
+                </td>
+                
+            </tr>
+            <tr><td><br /></td></tr>
+            <tr><td>@Html.ActionLink("New Course(s) / Increased in Intake(s) / Reduction in Intake(s)", "Intakechange", "CollegeNOC", new { @class = "create_button test" })</td></tr>
+            <tr><td><br /></td></tr>
+
+            <tr>
+                <td>@Html.ActionLink("Change of Name of the College / Institute", "Collegename", "CollegeNOC", new { @class = "create_button test" })</td>
+            </tr>
+            <tr><td><br /></td></tr>
+            <tr> <td>@Html.ActionLink("Change of Name of the Society", "Societyaddress", "CollegeNOC", new { @class = "create_button test" })</td></tr>
+            <tr><td><br /></td></tr>
+            <tr> <td>@Html.ActionLink("Merger of Colleges", "MergeCollegeNoc", "CollegeNOC", new { @class = "create_button test" })</td></tr>
+            <tr><td><br /></td></tr>
+            <tr> <td>@Html.ActionLink("Merger of Courses", "MergeCourseIntakechange", "CollegeNOC", new { @class = "create_button test" })</td></tr>
+            <tr><td><br /></td></tr>
+            <tr> <td>@Html.ActionLink("Restoration of Intakes", "RestorationIntakeExisting", "CollegeNOC", new { @class = "create_button test" })</td></tr>
+            @*<tr><td><br /></td></tr>*@
+            @*<tr><td>@Html.ActionLink("Change of Location", "Collegeaddress", "CollegeNOC", new { @class = "create_button test" })</td></tr>*@
+        </table>
+    </div>
+</div>
+
+

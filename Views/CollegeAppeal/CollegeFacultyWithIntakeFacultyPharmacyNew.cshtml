@@ -1,0 +1,431 @@
+﻿@using UAAAS.Models;
+@model IList<UAAAS.Models.PharmacyReportsClass>
+@{
+    ViewBag.Title = "CollegeFacultyWithIntakeFacultyPharmacyNew";
+    var index = 1;
+    int loop = 0;
+    uaaasDBContext db = new uaaasDBContext();
+    var CollegeId = Model.Select(a => a.Collegeid).FirstOrDefault();
+    int BPharmacyFaculty = db.jntuh_appeal_faculty_registered.Count(c => c.academicYearId == 11 && c.collegeId == CollegeId && (c.DepartmentId == 26 || c.DepartmentId == 36 || c.DepartmentId == 27 || c.DepartmentId == 39) && c.AppealReverificationSupportingDocument == null);
+    //int MPharmacyFaculty = db.jntuh_appeal_faculty_registered.Count(c => c.academicYearId == 11 && c.collegeId == CollegeId && (c.DepartmentId == 36) && c.AppealReverificationSupportingDocument == null);
+}
+
+<h2 style="text-align:center;">Submission Of Online Appeal Faculty</h2>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".editDialog").live("click", function (e) {
+            debugger;
+            e.preventDefault();
+            var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+            var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+            var degree = $('input[type=checkbox]:checked').attr('degree');
+            var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+            var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+            var url = "/CollegeAppeal/AddComplianceFaculty?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+
+            $("#dialog-edit").dialog({
+                title: 'Add New Faculty Appointed',
+                resizable: false,
+                height: 410,
+                width: 850,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    debugger;
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    $(this).dialog("close");
+                }
+            });
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".editreverificationDialog").live("click", function (e) {
+            e.preventDefault();
+
+            var CollegeId = $('input[type=checkbox]:checked').attr('collegeId');
+            var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+            var degree = $('input[type=checkbox]:checked').attr('degree');
+            var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+            var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+            var url = "/CollegeAppeal/AppealReverificationFaculty?collegeId=" + CollegeId;
+            window.open(url);
+        });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Lab',
+            autoOpen: false,
+            resizable: false,
+            height: 700,
+            width: 720,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+
+            }
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+    });
+</script>
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+<p style="text-align:right">
+    @Html.ActionLink("View Added Faculty", "AppealCollegeFacultyDetails", "CollegeAppeal", new { @class = "create_button", @target = "_blank" })
+</p>
+<br>
+@using (Html.BeginForm())
+{
+    <table style="width: 100%; border: 1px; border-color: red" class="faculty_table">
+        <thead>
+            <tr>
+                <th class="col2" style="width: 50px; text-align: center;">
+                    S.No
+                </th>
+
+                <th class="col2" style="width: 100px; text-align: center;">
+                    Department
+                </th>
+                <th class="col2" style="width: 100px; text-align: center;">
+                    Degree
+                </th>
+                <th class="col2" style="text-align: left;">
+                    Specialization
+                </th>
+                <th class="col2" style="width: 120px; text-align: center;">
+                    Total Intake
+                </th>
+                <th class="col2" style="width: 120px; text-align: center;">
+                    Proposed Intake
+                </th>
+                <th class="col2" style="width: 120px; text-align: center;">
+                    No.of Faculty Required
+                </th>
+                <th class="col2" style="width: 120px; text-align: center;">
+                    No.of Faculty Available
+                </th>
+                <th class="col2" style="width: 150px; text-align: center;">
+                    Pharmacy Specializations
+                </th>
+                <th class="col2" style="width: 80px; text-align: center;">
+                    Specialization Wise Faculty Required
+                </th>
+                <th class="col2" style="width: 80px; text-align: center;">
+                    Specialization Wise Faculty Available
+                </th>
+                <th class="col2" style="width: 80px; text-align: center;">
+                    Deficiency
+                </th>
+                <th class="col2" style="width: 80px; text-align: center;">
+                    No. of Ph.D faculty
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderBy(a=>a.SpecializationId).ToList())
+            {
+
+                <tr>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @(index++)
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        <span>Pharmacy</span>
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.Department
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.Specialization
+                    </td>
+                    @if (item.DepartmentId != 26)
+                    {
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @item.TotalIntake
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @if (item.DepartmentId == 26)
+                            {
+                                if (item.ProposedIntake > 100)
+                                {
+                                    <span>100</span>
+                                }
+                                else
+                                {
+                                    <span>@item.ProposedIntake</span>
+                                }
+                            }
+                            else if (item.DepartmentId == 36)
+                            {
+                                <span>15</span>
+                            }
+                            else
+                            {
+                                <span>@item.ProposedIntake</span>
+                            }
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @item.NoOfFacultyRequired
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @item.NoOfAvilableFaculty
+                        </td>
+                        
+                    }
+                    else if (item.IsActive == true)
+                    {
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @item.TotalIntake
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @if (item.DepartmentId == 26)
+                            {
+                                if (item.ProposedIntake > 100)
+                                {
+                                    <span>100</span>
+                                }
+                                else
+                                {
+                                    <span>@item.ProposedIntake</span>
+                                }
+                            }
+                            else if (item.DepartmentId == 36)
+                            {
+                                <span>15</span>
+                            }
+                            else
+                            {
+                                <span>@item.ProposedIntake</span>
+                            }
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @item.NoOfFacultyRequired
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @item.NoOfAvilableFaculty
+                        </td>
+                        
+                    }
+                    else
+                    {
+                        <td class="col1" style="text-align: left; vertical-align: top;"></td>
+                        <td class="col1" style="text-align: left; vertical-align: top;"></td>
+                        <td class="col1" style="text-align: left; vertical-align: top;"></td>
+                        <td class="col1" style="text-align: left; vertical-align: top;"></td>
+                    }
+
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.PharmacySpecialization
+                    </td>
+                    @if (item.IsActive == true)
+                    {
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @item.NoOfFacultyRequired
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @item.NoOfAvilableFaculty
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @item.SpecializationwiseRequiredFaculty
+                        </td>
+                        <td class="col1" style="text-align: left; vertical-align: top;">
+                            @item.SpecializationwiseAvilableFaculty
+                        </td>
+                    }
+
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.Deficiency
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.PHdFaculty
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br /><br />
+    <h2>Appeal for faculty deficiency (Department / Specialization Wise)</h2> <br />
+    <table style="width: 100%; border: 1px; border-color: red" class="webGrid">
+        <thead>
+            <tr>
+                <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Department</th>
+                <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Degree</th>
+                <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Specialization</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency of faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency of Ph.D faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Appointed New Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Faculty Existing-Reverify </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.GroupBy(a => new { a.SpecializationId }).Select(w => w.First()).OrderBy(z=>z.SpecializationId).ToList())
+            {
+                <tr>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        Pharmacy
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.Department
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @item.Specialization
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @if (item.DepartmentId == 26)
+                        {
+                            var DeficiencyStatus = Model.Where(a => a.IsActive == true).Select(a => a.Deficiency).FirstOrDefault();
+                            <span>@DeficiencyStatus</span>
+                        }
+                        else
+                        {
+                            @item.Deficiency
+                        }
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @if (item.DepartmentId == 26)
+                        {
+                            var DeficiencyStatus = Model.Where(a => a.IsActive == true).Select(a => a.Deficiency).FirstOrDefault();
+                            if (DeficiencyStatus == "Deficiency")
+                            {
+                                var Deffaculty = item.NoOfFacultyRequired - item.NoOfAvilableFaculty;
+                                <span>@Deffaculty</span>
+                            }
+                            else
+                            {
+                                <span>0</span>
+                            }
+                        }
+                        else
+                        {
+                            if (item.Deficiency == "Deficiency")
+                            {
+                                var Deffaculty = item.NoOfFacultyRequired - item.NoOfAvilableFaculty;
+                                <span>@Deffaculty</span>
+                            }
+                            else
+                            {
+                                <span>0</span>
+                            }
+                        }
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @if (item.DepartmentId == 26 || item.DepartmentId == 27 || item.DepartmentId == 39)
+                        {
+                            <span>0</span>
+                        }
+                        else if (item.DepartmentId == 36)
+                        {
+                            if (item.Deficiency == "Deficiency" && item.PHdFaculty < 1)
+                            {
+                                <span>1</span>
+                            }
+                            else
+                            {
+                                <span>0</span>
+                            }
+                        }
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @if (item.DepartmentId == 26)
+                        {
+                            var DeficiencyStatus = Model.Where(a => a.IsActive == true).Select(a => a.Deficiency).FirstOrDefault();
+                            if (DeficiencyStatus == "Deficiency")
+                            {
+                                if (BPharmacyFaculty < 4)
+                                {
+                                    @Html.CheckBox("Compliance", false, new { collegeId = CollegeId, deficencycount = 1, degree = item.Department, departmentid = item.DepartmentId, specializationid = item.SpecializationId, @class = "editDialog" });
+                                }
+                                else if (BPharmacyFaculty >= 4)
+                                {
+                                    <span>Compliance faculty limit exceeded.</span>
+                                }
+                            }
+                            else
+                            {
+                                <span>@item.Deficiency</span>
+                            }
+                        }
+                        else if (item.DepartmentId == 36)
+                        {
+                            if (item.Deficiency == "Deficiency")
+                            {
+                                if (BPharmacyFaculty < 4)
+                                {
+                                    @Html.CheckBox("Compliance", false, new { collegeId = CollegeId, deficencycount = 1, degree = item.Department, departmentid = item.DepartmentId, specializationid = item.SpecializationId, @class = "editDialog" });
+                                }
+                                else if (BPharmacyFaculty >= 4)
+                                {
+                                    <span>Compliance faculty limit exceeded.</span>
+                                }
+                            }
+                            else
+                            {
+                                <span>@item.Deficiency</span>
+                            }
+                        }
+                    </td>
+                    <td class="col1" style="text-align: left; vertical-align: top;">
+                        @if (item.DepartmentId == 26)
+                        {
+                            var DeficiencyStatus = Model.Where(a => a.IsActive == true).Select(a => a.Deficiency).FirstOrDefault();
+                            if (DeficiencyStatus == "Deficiency")
+                            {
+                                @*@Html.CheckBox("reverification", false, new { collegeId = CollegeId, deficencycount = 1, degree = item.Department, departmentid = item.DepartmentId, specializationid = item.SpecializationId, @class = "editreverificationDialog" });*@
+                             @Html.CheckBox("reverification", false, new { collegeId = UAAAS.Models.Utilities.EncryptString(item.Collegeid.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), deficencycount =1, degree = item.Degree, departmentid = item.DepartmentId, specializationid = item.SpecializationId, @class = "editreverificationDialog" })
+                            }
+                            else
+                            {
+                                <span>@item.Deficiency</span>
+                            }
+                        }
+                        else if (item.DepartmentId == 36)
+                        {
+                            if (item.Deficiency == "Deficiency")
+                            {
+                                @Html.CheckBox("reverification", false, new { collegeId = UAAAS.Models.Utilities.EncryptString(item.Collegeid.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), deficencycount =1, degree = item.Degree, departmentid = item.DepartmentId, specializationid = item.SpecializationId, @class = "editreverificationDialog" })
+                            }
+                            else
+                            {
+                                <span>@item.Deficiency</span>
+                            }
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<div id="dialog-edit" style="display: none">
+</div>

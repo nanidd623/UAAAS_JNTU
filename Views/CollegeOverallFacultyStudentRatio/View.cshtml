@@ -1,0 +1,286 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeOverallFacultyStudentRatio>
+@using UAAAS.Models;
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Overall Faculty Student Ratio";
+    int num = 1;
+    uaaasDBContext db = new uaaasDBContext();
+}
+
+@if (ViewBag.IsEditable == true)
+{
+    <h2>College Overall Faculty Student Ratio</h2>
+    <p class="create_link_right">
+        @Html.ActionLink("Edit", "Edit", "CollegeOverallFacultyStudentRatio", new { @class = "create_button" /* id=Model.PrimaryKey */ })
+    </p>
+}
+@*<p class="create_link_right">
+    <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+</p>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+        $(".view_hide").show();
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit College Overall Faculty Student Ratio',
+            autoOpen: false,
+            resizable: false,
+            height: 610,
+            width: 710,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View College Overall Faculty Student Ratio',
+                autoOpen: false,
+                resizable: false,
+                height: 610,
+                width: 710,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+</script>
+@using (Html.BeginForm())
+{
+<div id="div_print">
+    <h2>College Overall Faculty Student Ratio</h2>
+    @if (ViewBag.Norecords == true)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No Data found</p>
+        </div>
+    }
+    else
+    {
+        
+          <table class="full_table" style="width: 100%; font-size: 0.7rem;">
+        <tr>
+            <th style="width: 150px; text-align: left;">Program</th>
+            <th style="width: 250px; text-align: left;">Spelization
+            </th>
+            <th style="text-align: center;">Sanctioned Strength
+            </th>
+            <th style="width: 100px; text-align: center;">Total Faculty
+            </th>
+            <th style="width: 100px; text-align: center;">Ratified Faculty
+            </th>
+             <th style="width: 20px; text-align: center;">
+            </th>
+
+        </tr>
+    </table>
+    
+    <span>
+        <br />
+    </span>
+    
+        var count = 0;
+        var prev_degree = string.Empty;
+        List<string> degree = Model.Select(d => d.Degree).Distinct().ToList();
+        var btechSummary = 0;
+        foreach (var degreename in degree)
+        {
+            if (degreename.ToUpper().Equals("B.TECH"))
+            {
+
+                foreach (var item in Model)
+                {
+                    if (degreename == item.Degree)
+                    {
+                        var duration = db.jntuh_degree.Where(d => d.id == item.degreeID).Select(d => d.degreeDuration).FirstOrDefault();
+                        var FYUG = db.jntuh_college_overall_faculty_studentratio.Where(s => s.collegeId == item.collegeId && s.specializationId == 39).Select(s => s).FirstOrDefault();
+
+                        if (btechSummary == 0 && count == 0 && FYUG != null)
+                        {
+                            <table class="full_table" style="width: 100%; font-size: 0.7rem;">
+                                <tr>
+                                    <td style="width: 150px; text-align: left;"><span>First Year UG (Engg.)</span></td>
+                                    <td style="width: 250px; text-align: left;"><span>All Branches</span></td>
+                                    <td style="text-align: center;">@FYUG.sanctionedIntake</td>
+                                    <td style="width: 100px; text-align: center;">@FYUG.totalFaculty</td>
+                                    <td style="width: 100px; text-align: center;">@FYUG.ratifiedFaculty</td>                                    
+                                    <td style="width: 20px; text-align: center;">
+                                        @Html.ActionLink("Details", "FirstYearUGFacultyDetails", new { id = FYUG.id }, new { @class = "viewDialog view_button" })
+                                    </td>
+                                   
+                                </tr>
+                            </table> 
+                            <span>
+                                <br />
+                            </span>
+                            btechSummary = 1;
+                        }
+                    }
+                }
+            }
+        
+    <table class="full_table" style="width: 100%; font-size: 0.7rem;">
+
+        @foreach (var item in Model)
+        {
+            if (degreename == item.Degree && item.Specialization != "Humanities")
+            {
+                var duration = db.jntuh_degree.Where(d => d.id == item.degreeID).Select(d => d.degreeDuration).FirstOrDefault();
+                
+            <tr>
+                @if (count == 0)
+                {
+                    <td rowspan="@Model.Count()" style="width: 150px; text-align: left;">@degreename</td>
+                }
+
+                @if (item.shiftId == 1)
+                {
+                    <td style="width: 250px; text-align: left;">@item.Specialization</td>
+                }
+                else
+                {
+                    <td style="width: 250px; text-align: left;">@item.Specialization - @item.shiftId</td>
+                }
+
+                @if (degreename.ToUpper().Equals("B.TECH"))
+                {
+                    if (duration >= 1)
+                    {
+                    <td style="text-align: center;">@item.approvedIntake2</td>
+                    }
+                    if (duration >= 2)
+                    {
+                    <td style="text-align: center;">@item.approvedIntake3</td>
+                    }
+                    if (duration >= 3)
+                    {
+                    <td style="text-align: center;">@item.approvedIntake4</td>
+                    }
+
+                }
+                else
+                {
+                    if (duration >= 1)
+                    {
+                    <td style="text-align: center;">@item.approvedIntake1</td>
+                    }
+                    if (duration >= 2)
+                    {
+                    <td style="text-align: center;">@item.approvedIntake2</td>
+                    }
+                    if (duration >= 3)
+                    {
+                    <td style="text-align: center;">@item.approvedIntake3</td>
+                    }
+                    if (duration >= 4)
+                    {
+                    <td style="text-align: center;">@item.approvedIntake4</td>
+                    }
+                    if (duration >= 5)
+                    {
+                    <td style="text-align: center;">@item.approvedIntake5</td>
+                    }
+                    if (duration >= 6)
+                    {
+                    <td style="text-align: center;">@item.approvedIntake6</td>
+                    }
+                }
+                <td style="width: 100px; text-align: center;">@item.totalFaculty</td>
+                <td style="width: 100px; text-align: center;">@item.ratifiedFaculty</td>                
+            <td style="width: 20px; text-align: center;">
+                @Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "viewDialog view_button" })
+            </td>
+          
+
+                  
+            </tr>
+                count++;
+
+            }
+        }
+
+    </table>
+        
+    <span>
+        <br />
+    </span>
+        
+        prev_degree = degreename;
+        count = 0;
+        }
+
+
+
+
+
+
+        if (ViewBag.Count == 0)
+        {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+        }
+        <div id="dialog-view" style="display: none">
+        </div>
+
+    }
+</div>
+}

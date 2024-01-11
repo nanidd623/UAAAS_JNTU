@@ -1,0 +1,109 @@
+﻿@model List<UAAAS.Models.CollegeFacultyTracking>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "Faculty Tracking";
+    var index = 1;
+}
+
+<h2>Faculty Tracking</h2><br />
+
+<table class="webGrid" style="width: 100%;">
+    <tr>
+        <td class="col1">
+            Name
+        </td>
+        <td class="col2">
+            @ViewBag.FacultyName
+        </td>
+        <td class="col1">
+            Registration Number
+        </td>
+        <td class="col2">
+            @ViewBag.RegistrationNumber
+        </td>
+    </tr>
+</table>
+<br /><br />
+<div style="margin-top:15px;">
+    <table class="webGrid">
+        <thead>
+            <tr class="col1">
+                <th>S.No</th>
+                <th>Department</th>
+                <th>Specialization</th>
+                <th>Aadhaar Number</th>
+                <th>Aadhaar Document</th>
+                <th>Faculty Join Date</th>
+                <th>Faculty Join Document</th>
+                <th>Relieving Date</th>
+                <th>Relieving Document</th>
+                <th>SCM Document</th>
+                <th>Pay Scale</th>
+                <th>Designation</th>
+                <th>Faculty Type</th>
+                <th>Created On</th>
+            </tr>
+        </thead>
+        <tbody class="col2">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @(index++)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Department)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Specialization)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AadhaarNumber)
+                    </td>
+                    <td style="text-align:center">
+                        @if (!string.IsNullOrEmpty(item.AadhaarDoc))
+                        {
+                            <a href="../Content/Upload/Faculty/AADHAARCARDS/CollegeFacultyAadhaar/@item.AadhaarDoc" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FacultyJoinDate)
+                    </td>
+                    <td style="text-align:center">
+                        @if (!string.IsNullOrEmpty(item.FacultyJoinDoc))
+                        {
+                            <a href="../Content/Upload/College/Faculty/AppointmentLetters/@item.FacultyJoinDoc" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReleavingDate)
+                    </td>
+                    <td style="text-align:center">
+                        @if (!string.IsNullOrEmpty(item.ReleavingDoc))
+                        {
+                            <a href="../Content/Upload/College/Faculty/RelevingLetters/@item.ReleavingDoc" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                        }
+                    </td>
+                    <td style="text-align:center">
+                        @if (!string.IsNullOrEmpty(item.ScmDoc))
+                        {
+                            <a href="../Content/Upload/College/Faculty/PreviousSCMs/@item.ScmDoc" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Payscale)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Designation)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FacultyType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedOn)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

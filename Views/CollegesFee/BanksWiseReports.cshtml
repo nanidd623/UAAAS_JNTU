@@ -1,0 +1,230 @@
+﻿@model UAAAS.Models.MonthlyReport
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "BanksWiseReports";
+    var index = 1;
+    string Date = string.Empty;
+    string Date12 = string.Empty;
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 5000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+    });
+</script>
+
+@using (Html.BeginForm("BanksWiseReports", "CollegesFee"))
+{
+    <div style="float:left;min-height:450px;padding-top:18px;border-radius:5px;width:1120px;">
+        <div style="padding-left:10px;">
+            <h2>BanksWise Reports</h2>
+        </div>
+        @Html.HiddenFor(model => model.PaymentTypeId)
+        <hr />
+        <br/>
+        <div style="text-align:-webkit-center;">
+            <br />
+            <div style="padding-right:20px;">
+                <span><b>Banks</b></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                @Html.DropDownListFor(model => model.BankId, new SelectList(ViewBag.Banks as System.Collections.IEnumerable, "Value", "Text"), "---Select---", new { @style="width:400px;" })
+            </div>
+            <br />
+            <table >
+                <tr>
+                    <td>
+                        @Html.TextBoxFor(model => model.fromdate, new { @class = "calendar", style = "", @placeholder = "From Date" })
+                    </td>
+
+                    <td width="35px;"></td>
+                    <td>
+                        @Html.TextBoxFor(model => model.todate, new { @class = "calendar", style = "", @placeholder = "To Date" })
+                    </td>
+                    <td width="35px;"></td>
+                    @if (ViewBag.Payments != null)
+                    {
+                        <td>
+                            <input type="submit" value="Download" name="command" style="border-color:#337ab7;background-color:#337ab7;height:25px;border-radius:5px;" />
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <input type="submit" value="Submit" name="command" style="border-color:#337ab7;background-color:#337ab7;height:25px;border-radius:5px;" />
+                        </td>
+                    }
+                   
+                </tr>
+            </table>
+            @if (ViewBag.Payments != null)
+            {
+                <table id="example" class="display" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px; text-align: center;" rowspan="2">
+                                S.No
+                            </th>
+                            <th style="width: 80px; text-align: center;" rowspan="2">
+                                DD Number
+                            </th>
+                            <th style="text-align: left;" rowspan="2">
+                                DD Date
+                            </th>
+                            <th style="text-align: left;" rowspan="2">
+                                Code
+                            </th>
+                            <th style="text-align: left;" rowspan="2">
+                                Name of the College
+                            </th>
+                            <th style="text-align: left;" rowspan="2">
+                                Nature of Payment
+                            </th>
+                            <th style="text-align: left;" rowspan="2">
+                                Name of the Bank
+                            </th>
+                            <th style="text-align: left;" rowspan="2">
+                                Amount
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.Payments)
+                        {
+                            <tr>
+                                <td style="text-align: center;">
+                                    @(index++)
+                                </td>
+                                <td style="text-align: center; text-transform: uppercase;">
+                                    @item.DD_No
+                                </td>
+                                @{
+                                    Date = item.DD_Date.ToString();
+                                    Date12 = Date.Split(' ')[0];
+                                    Date12 = UAAAS.Models.Utilities.MMDDYY2DDMMYY(Date12);
+                                }
+                                <td style="text-align: left;">
+                                    @Date12
+                                </td>
+                                <td style="text-align: center; font-weight: normal;">
+                                    @item.CollegeCode
+                                </td>
+                                <td style="text-align: left; text-transform: uppercase;">
+                                    @item.CollegeName
+                                </td>
+                                <td style="text-align: left;">
+                                    @if (item.FeeTypeId == 9 && item.SubFeeTypeId == 2)
+                                    {
+                                        <span>SCM Fee for Faculty</span>
+                                    }
+                                    else if (item.FeeTypeId == 9 && item.SubFeeTypeId == 3)
+                                    {
+                                        <span>SCM Fee for Principal</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.FeeType</span>
+                                    }
+                                </td>
+                                <td style="text-align: center; font-weight: normal;">
+                                    @item.BankName
+                                </td>
+                                <td style="text-align: center; font-weight: normal;">
+                                    @item.Amount
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>
+                                <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                            </th>
+                            <th>
+                                <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                            </th>
+                            <th>
+                                <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                            </th>
+                            <th class=" ui-state-default">
+                                <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+                            </th>
+                            <th class=" ui-state-default">
+                                <input type="text" id="i-4" style="width: 90%; text-align: left; display: none;" class="search_init">
+                            </th>
+                            <th>
+                                <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+                            </th>
+                            <th class=" ui-state-default">
+                                <input type="text" id="i-6" style="width: 90%; text-align: left; display: none;" class="search_init">
+                            </th>
+                            <th class=" ui-state-default">
+                                <input type="text" id="i-7" style="width: 90%; text-align: left; display: none;" class="search_init">
+                            </th>
+                        </tr>
+                </table>
+            }
+        </div>
+    </div>
+}

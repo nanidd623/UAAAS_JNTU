@@ -1,0 +1,235 @@
+﻿@model Tuple<UAAAS.Models.PrincipalDirector, UAAAS.Models.CollgeDirector>
+@{
+   
+    
+}
+
+<br />
+
+
+<table class="four_columns" border="1">
+    <tr>
+        <td class="col1" colspan="4">
+            <b>Principal Details</b>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.Item1.firstName)
+        </td>
+        <td class="col2 focus">
+            @Html.DisplayFor(model => model.Item1.firstName)
+        </td>
+        <td class="col3">
+            @Html.LabelFor(model => model.Item1.lastName)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.Item1.lastName)
+        </td>
+    </tr>
+
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.Item1.surname)
+        </td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.Item1.surname)
+        </td>
+
+        <td class="col3">
+            @Html.LabelFor(model => model.Item1.qualificationId)
+        </td>
+        <td class="col4">
+            @if (Model.Item1.qualificationId == 1)
+            {
+                <label>Doctorate</label>
+            }
+            else
+            {
+                <label>Non-Doctorate</label>
+            }
+        </td>
+    </tr>
+
+    <tr>
+        <td class="col1">@Html.LabelFor(model => model.Item1.phdId)</td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.Item1.jntuh_phd_subject.phdSubjectName)
+        </td>
+
+
+        <td class="col3"></td>
+        <td class="col4"></td>
+    </tr>
+
+    <tr>
+        <td class="col1">@Html.LabelFor(model => model.Item1.phdFromUniversity)</td>
+        <td class="col2">@Html.DisplayFor(model => model.Item1.phdFromUniversity)
+
+        <td class="col3">@Html.LabelFor(model => model.Item1.phdYear)</td>
+        <td class="col4">@Html.DisplayFor(model => model.Item1.phdYear, new { Value = Model.Item1.phdYear == 0 ? string.Empty : Model.Item1.phdYear.ToString() })
+
+
+    </tr>
+
+    <tr>
+        <td class="col1">@Html.LabelFor(model => model.Item1.departmentId)</td>
+        <td class="col2">
+        @Html.DisplayFor(model => model.Item1.jntuh_department.departmentName)
+        <td class="col3">@Html.LabelFor(model => model.Item1.dateOfAppointment)</td>
+        <td class="col4">@Html.DisplayFor(model => model.Item1.dateOfAppointment, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) 
+    </tr>
+
+    <tr>
+        <td class="col1">@Html.LabelFor(model => model.Item1.isRatified)</td>
+        <td class="col2">
+            @if (Convert.ToBoolean(Model.Item1.isRatified) == true)
+            {
+                <label>Yes</label>
+            }
+            else
+            {
+                <label>No</label>
+            }
+        </td>
+        <td class="col3 ">
+            <div class="ratifed">@Html.LabelFor(model => model.Item1.ratificationPeriodFrom)
+                @Html.LabelFor(model => model.Item1.ratificationPeriodTo)
+            </div>
+        </td>
+        <td class="col4 ">
+            <div class="ratifed">@Html.DisplayFor(model => model.Item1.ratificationPeriodFrom, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) 
+                &nbsp; To &nbsp;
+                        @Html.DisplayFor(model => model.Item1.ratificationPeriodTo, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" })
+            </div>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="col1">@Html.LabelFor(model => model.Item1.dateOfBirth)</td>
+        <td class="col2">@Html.DisplayFor(model => model.Item1.dateOfBirth, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) 
+        <td class="col3">@Html.LabelFor(model => model.Item1.fax)</td>
+        <td class="col4">@Html.DisplayFor(model => model.Item1.fax)
+    </tr>
+
+    <tr>
+        <td class="col1">@Html.LabelFor(model => model.Item1.landline)</td>
+        <td class="col2">@Html.DisplayFor(model => model.Item1.landline)
+        <td class="col3">@Html.LabelFor(model => model.Item1.mobile)</td>
+        <td class="col4">@Html.DisplayFor(model => model.Item1.mobile)
+    </tr>
+
+    <tr>
+        <td class="col1">@Html.LabelFor(model => model.Item1.email)</td>
+        <td class="col2">@Html.DisplayFor(model => model.Item1.email)
+        <td class="col3"></td>
+        <td class="col4"></td>
+    </tr>
+</table>
+
+<br />
+@Html.HiddenFor(model => model.Item2.collegeId, new { Value = 7 })
+@Html.HiddenFor(model => model.Item2.type, new { Value = "DIRECTOR" })
+<table class="four_columns" border="1">
+    <tr>
+        <td class="col1" colspan="4">
+            <b>Director Details</b>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.Item2.firstName)
+        </td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.Item2.firstName, new { @class = "firstName" })
+
+        </td>
+        <td class="col3">
+            @Html.LabelFor(model => model.Item2.lastName)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.Item2.lastName)
+
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.Item2.surname)
+        </td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.Item2.surname, new { @class = "surName" })
+
+        </td>
+        <td class="col3">
+            @Html.LabelFor(model => model.Item2.qualificationId)
+        </td>
+        <td class="col4">
+            @if (Model.Item1.qualificationId == 1)
+            {
+                <label>Doctorate</label>
+            }
+            else
+            {
+                <label>Non-Doctorate</label>
+            }
+        </td>
+    </tr>
+
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.Item2.dateOfAppointment)
+        </td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.Item2.dateOfAppointment, new { @class = "dateOfappointment", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" })
+
+        </td>
+        <td class="col3">
+            @Html.LabelFor(model => model.Item2.dateOfBirth)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.Item2.dateOfBirth, new { @class = "dateOfBirth", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" })
+
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.Item2.fax)
+        </td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.Item2.fax, new { @class = "fax" })
+
+        </td>
+        <td class="col3">
+            @Html.LabelFor(model => model.Item2.landline)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.Item2.landline, new { @class = "landLine" })
+
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.Item2.mobile)
+        </td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.Item2.mobile, new { @class = "mobile" })
+
+        </td>
+        <td class="col3">
+            @Html.LabelFor(model => model.Item2.email)
+        </td>
+        <td class="col4">
+            @Html.DisplayFor(model => model.Item2.email, new { @class = "email" })
+
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.HiddenFor(model => model.Item2.phdYear, new { Value = 1234 })
+            @Html.HiddenFor(model => model.Item2.isRatified, new { Value = false })
+
+        </td>
+
+    </tr>
+</table>
+

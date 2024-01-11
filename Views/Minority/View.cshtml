@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    ViewBag.Title = "Minority Information";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+
+<div style="margin-top:15px;">
+    <h2>List of Minorities</h2><br />
+    @if (ViewBag.MinorityList.Count > 0)
+    {
+        <table class="webGrid">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>College Status</th>
+                    <th>Academic Year</th>
+                    <th>Status From Date (DD/MM/YYYY)</th>
+                    <th>Status To Date (DD/MM/YYYY)</th>
+                    <th>Supporting Document</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var pay in ((List<UAAAS.Controllers.Permanent_Affiliation.Minority>)ViewBag.MinorityList).Select((value, i) => new { i = i + 1, value }))
+                {
+                    <tr>
+                        <td>@pay.i </td>
+                        <td>@pay.value.CollegeStatus</td>
+                        <td>@pay.value.AcademicYear</td>
+                        <td>@pay.value.StatusFromDate</td>
+                        <td>@pay.value.StatusToDate</td>
+                        <td style="text-align: left; font-weight: normal;">
+                            @if (pay.value.StatusFile != null)
+                            {
+                                <a href="../Content/Upload/College/NBAAccredited_Latest/@pay.value.StatusFile" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No Data found</p>
+        </div>
+
+    }
+</div>

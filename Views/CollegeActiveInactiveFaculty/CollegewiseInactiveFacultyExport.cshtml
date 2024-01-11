@@ -1,0 +1,89 @@
+﻿@using UAAAS.Models;
+@model IList<UAAAS.Models.FacultyRegistration>
+@{
+    var model = Model;
+    uaaasDBContext db = new uaaasDBContext();
+    var jntuh_department = (from Dept in db.jntuh_department
+                            join Deg in db.jntuh_degree on Dept.degreeId equals Deg.id
+                            select new
+                                {
+                                    DeptId = Dept.id,
+                                    DeptName = Dept.departmentName,
+                                    DegreeName = Deg.degree
+                                }).ToList();
+    var jntuh_Specalization = db.jntuh_specialization.ToList();
+
+}
+@using (Html.BeginForm())
+{
+    int count = 0;
+    int count1 = 0;
+    int DeptCount = 0;
+    string DepartmentName = "";
+    string DepartmentName1 = "";
+    <table border="1" style="width: 100%">
+
+        <thead>
+            <tr>
+                <td colspan="6" style="font-size: 20px;color: red">
+                    @ViewBag.CollegeName
+                </td>
+            </tr>
+        <tr>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                S.No
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Registration ID
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Faculty Name
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Department
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                PG Specialization
+            </th>
+            <th style="text-align: center; background-color: yellow; vertical-align: top">
+                Reason
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item1 in Model)
+        {
+            string DeptName = string.Empty;
+            string SpecializationName = string.Empty;
+
+            if (item1.DepartmentId != null)
+            {
+                DeptName = jntuh_department.Where(e => e.DeptId == item1.DepartmentId).Select(e => e.DegreeName + "-" + e.DeptName).FirstOrDefault();
+            }
+            <tr>
+                <td style="text-align: center; vertical-align: top">
+                    @(count = count + 1)
+                </td>
+                <th style="text-align: center; vertical-align: top">
+                    @item1.RegistrationNumber
+                </th>
+                <th style="text-align: left; vertical-align: top">
+                    @item1.FirstName
+                </th>
+                <th style="text-align: left; vertical-align: top">
+                    @DeptName
+                </th>
+                <th style="text-align: left; vertical-align: top">
+                    @if (item1.jntuh_registered_faculty_education.Count() != 0)
+                    {
+                        @item1.jntuh_registered_faculty_education.Where(e => e.jntuh_education_category.educationCategoryName == "PG").Select(e => new {name = e.courseStudied + "-" + e.specialization}).Select(e => e.name).FirstOrDefault()
+                    }
+                </th>
+                <th style="text-align: left; vertical-align: top">
+                    @item1.DeactivationReason
+                </th>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

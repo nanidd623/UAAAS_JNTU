@@ -1,0 +1,38 @@
+﻿@model UAAAS.Models.Laboratories
+<div class="display-label" style="width: 40%;">Degree</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.degree)
+    </div>
+    <div class="display-label" style="width: 40%;">Department</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.department)
+    </div>
+<div class="display-label" style="width: 40%;">Specialization</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.specializationName)
+    </div>
+<div class="display-label" style="width: 40%;">Shift</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.shiftName)
+    </div>
+<div class="display-label" style="width: 40%;">Year</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.year)
+    </div>
+<div class="display-label" style="width: 40%;">Name of the Laboratory</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.labName)
+    </div>
+<div class="display-label" style="width: 40%;"> @Html.LabelFor(model => model.IsShared)</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.IsShared)
+    </div>
+<div class="display-label" style="width: 40%;">No. of Experiments</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.totalExperiments)
+    </div>
+<div class="display-label" style="width: 40%;">Floor Area(in Sqm)</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.labFloorArea)
+    </div>
+

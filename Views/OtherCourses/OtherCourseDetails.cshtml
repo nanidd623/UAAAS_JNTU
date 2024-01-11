@@ -1,0 +1,74 @@
+﻿@model UAAAS.Models.OtherCourse
+@{
+    ViewBag.Title = "OtherCourseDetails";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+}
+
+<h2>OtherCourseDetails</h2>
+
+<fieldset>
+    <legend>OtherCourses</legend>
+
+    <div class="display-label">collegeId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.collegeId)
+    </div>
+
+    <div class="display-label">courseName</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.courseName)
+    </div>
+
+    <div class="display-label">affiliatedUniversityId</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.affiliatedUniversityId)
+    </div>
+
+    <div class="display-label">otherUniversityName</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.otherUniversityName)
+    </div>
+
+    <div class="display-label">isActive</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.isActive)
+    </div>
+
+    <div class="display-label">createdOn</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.createdOn)
+    </div>
+
+    <div class="display-label">createdBy</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.createdBy)
+    </div>
+
+    <div class="display-label">updatedOn</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.updatedOn)
+    </div>
+
+    <div class="display-label">updatedBy</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.updatedBy)
+    </div>
+
+    <div class="display-label">universityName</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.universityName)
+    </div>
+
+    <div class="display-label">rowNumber</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.rowNumber)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,127 @@
+﻿@using UAAAS.Models
+@{ Layout = "~/Views/Shared/_Layout.cshtml"; }
+@model UAAAS.Models.jntuh_error_log
+@{
+    ViewBag.Title = "Error Log";
+}
+
+<h2>Error Log</h2>
+<p class="create_link_right">
+    @Html.ActionLink("Back", "Index", null, new { @class = "back_button" })
+</p>
+
+@*<fieldset>
+    <legend>jntuh_error_log</legend>
+
+    <div class="display-label">exception</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.exception)
+    </div>
+
+    <div class="display-label">controller</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.controller)
+    </div>
+
+    <div class="display-label">action</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.action)
+    </div>
+
+    <div class="display-label">StackTrace</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.StackTrace)
+    </div>
+
+    <div class="display-label">createdOn</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.createdOn)
+    </div>
+
+    <div class="display-label">my_aspnet_users</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users.name)
+    </div>
+
+    <div class="display-label">updatedOn</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.updatedOn)
+    </div>
+
+    <div class="display-label">my_aspnet_users1</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users1.name)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>*@
+@if (Model != null)
+{
+    <div style="line-height: 1.2rem;">
+        <table style="width: 100%;">
+             <tr>
+                <td style="width: 120px;"><b>Created On</b></td>
+                <td style="width: 10px;">:</td>
+                <td>
+                    <div style="color: red; display: inline-block;">  @Utilities.MMDDYY2DDMMYY(@Model.createdOn.ToString())</div>
+                </td>
+            </tr>
+             <tr>
+                <td style="width: 120px;"><b>Created By</b></td>
+                <td style="width: 10px;">:</td>
+                <td>
+                    <div style="color: red; display: inline-block;">@Model.createdBy</div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 120px;"><b>College Id</b></td>
+                <td style="width: 10px;">:</td>
+                <td>
+                    @if(@ViewBag.CollegeId!=null)
+                    {
+                    <div style="color: red; display: inline-block;">@ViewBag.CollegeId</div>
+                    }
+                </td>
+            </tr>
+             <tr>
+                <td style="width: 120px;"><b>Inner Exception</b></td>
+                <td style="width: 10px;">:</td>
+                <td>
+                    <div style="color: red; display: inline-block;">@Model.innerException</div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 120px;"><b>Exception</b></td>
+                <td style="width: 10px;">:</td>
+                <td>
+                    <div style="color: red; display: inline-block;">@Model.exception</div>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Controller</b></td>
+                <td>:</td>
+                <td>
+                    <div style="color: red; display: inline-block;">@Model.controller</div>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Action</b></td>
+                <td>:</td>
+                <td>
+                    <div style="color: red; display: inline-block;">@Model.action</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div style="overflow: scroll;width:1250px">
+                        <pre>
+                            @Model.StackTrace
+                        </pre>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+}

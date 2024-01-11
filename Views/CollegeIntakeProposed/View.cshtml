@@ -1,0 +1,153 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeIntakeProposed>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "Proposed Intake";
+    int num = 1;
+}
+
+
+<p class="create_link_right">
+    @*<input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">*@
+    @if (User.IsInRole("Admin"))
+    {@Html.ActionLink("Edit", "AdminEdit", new { id = ViewContext.RouteData.Values["id"] }, new { @class = "submit_button" }) }
+</p>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".view_hide").show();
+        var mainUrl = window.location;
+        var url;
+        $(".view_hide").show();
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit College',
+            autoOpen: false,
+            resizable: false,
+            height: 450,
+            width: 600,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View College Proposed Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 450,
+                width: 600,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+    });
+
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+</script>
+<div id="div_print">
+    <h2>Proposed Intake</h2>
+    @using (Html.BeginForm())
+    {
+        if (ViewBag.Norecords == true)
+        {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No Data found</p>
+        </div>
+        }
+        else
+        {
+        <table class="four_columns" style="width: 100%;">
+            <tr style="font-weight: bold;">
+                <td style="text-align: center; width: 50px;" class="col11">S.No</td>
+                <td style="text-align: left; width: 250px;" class="col11">Degree</td>
+                <td style="text-align: left;" class="col11">Department</td>
+                <td style="text-align: left;" class="col11">Specialization</td>
+                <td style="text-align: left;" class="col11">Shift</td>
+                <td style="text-align: left;" class="col11">Course Status</td>
+                <td style="text-align: left;" class="col11">Approved Intake for the A.Y. @ViewBag.AcademicYear </td>
+                <td style="text-align: left;" class="col11">Proposed Intake for the A.Y. @ViewBag.NextAcademicYear</td>
+                <td style="text-align: left;" class="col11 view_hide"></td>
+            </tr>
+
+            @foreach (var item in ViewBag.IntakeExisting as List<UAAAS.Models.CollegeIntakeProposed>)
+            {
+                <tr>
+                    <td style="width: 30px; text-align: center;" class="col21">
+                        @(num++)
+                    </td>
+                    <td style="width: 60px;" class="col21">@item.Degree</td>
+                    <td style="width: 50px;" class="col21">@item.Department</td>
+                    <td style="width: 50px;" class="col21">@item.Specialization</td>
+                    <td style="width: 50px;" class="col21">@item.Shift</td>
+                    <td style="width: 50px;" class="col21">@item.CourseAffiliationStatusCode</td>
+                    <td style="width: 50px;" class="col21">@item.ExistingIntake</td>
+                    <td style="width: 50px;" class="col21">@item.proposedIntake</td>
+                    <td style="width: 20px; text-align: center;" class="col21 view_hide">
+                        @Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "viewDialog view_button" })
+                    </td>
+                </tr>
+            }
+        </table>
+        }
+        if (ViewBag.Count == 0)
+        {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+        }
+
+        <div id="dialog-view" style="display: none">
+        </div>
+    }
+</div>

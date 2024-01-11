@@ -1,0 +1,171 @@
+﻿@model IEnumerable<UAAAS.Models.AuditorWiseReport>
+@{
+    ViewBag.Title = "AuditorWiseReport";
+    int sno = 1;
+}
+<h2>AuditorWise Report</h2>
+@*@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 10,
+                              "bStateSave": false,
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ]
+                           });    
+}*@
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null],            
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+        $('#ddl').change(function () {
+            var a = $('#ddl').val();
+            //alert(a);         
+            if (a != 0) {
+                oTable.fnFilter(a);
+            }
+            else {
+                //alert('b');
+                a = '';
+                oTable.fnFilter(a);
+            }
+        });
+        $("#btnExport").click(function (e) {
+            window.open('data:application/vnd.ms-excel,' + $('#dvData').html());
+            e.preventDefault();
+        });
+
+    });
+
+</script>
+<br />
+
+<input type="button" id="btnExport" value=" Export Table data into Excel " style="display: none" />
+@using (Html.BeginForm("ExportData", "AuditorWiseReport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table>
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" name="Export" id="Export" value="Export" /></td>
+        </tr>
+
+    </table>
+}
+<div id="dvData">
+    <table id="example" class="display">
+
+        <thead>
+            <tr style="background-color: gainsboro">
+                <th style="width: 60px; text-align: center;">S.No
+                </th>
+                <th style="width: 200px; text-align: left;">Auditor
+                </th>
+                <th style="width: 300px; text-align: left;">Designation
+                </th>
+                <th style="text-align: left;">College
+                </th>
+                <th style="width: 140px; text-align: left;" class=" ui-state-default">Inspection Date
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="width: 60px; text-align: center;">
+                        @(sno++)
+                    </td>
+                    <td style="width: 200px; text-align: left;">
+                        @Html.DisplayFor(modelitem => item.auditorName)
+                    </td>
+                    <td style="width: 300px; text-align: left;">
+                        @Html.DisplayFor(modelitem => item.auditorPreferredDesignation)  @Html.DisplayFor(modelitem => item.auditorPlace)
+                    </td>
+                    <td style="text-align: left; text-transform: uppercase;">
+                        @Html.DisplayFor(modelitem => item.collegeName) [ @Html.DisplayFor(modelitem => item.collegeCode)]
+                    </td>
+                    <td style="width: 140px; text-align: left;">
+                        @Html.DisplayFor(modelitem => item.strinspectionDate)
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+        <tfoot>
+            <tr style="background-color: gainsboro">
+                <th style="width: 60px;">
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="width: 200px;">
+                    <input type="text" id="i-1" style="width: 90%; text-align: left;" class="search_init"></th>
+                <th style="width: 300px;">
+                    <input type="text" id="i-2" style="width: 90%; display: none; text-align: left;" class="search_init">
+                    <select id="ddl" style="width: 90%; text-align: left;" class="search_init">
+                        <option value="0">--Select--</option>
+                        <option value="Professor" class="search_init">Professor</option>
+                        <option value="Asso.Professor" class="search_init">Asso.Professor</option>
+                        <option value="Asst.Professor" class="search_init">Asst.Professor</option>
+                    </select></th>
+                <th>
+                    <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init"></th>
+                <th style="width: 140px;" class=" ui-state-default">
+                    <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init"></th>
+
+            </tr>
+        </tfoot>
+
+    </table>
+</div>
+

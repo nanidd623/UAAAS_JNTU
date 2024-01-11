@@ -1,0 +1,186 @@
+﻿@model List<UAAAS.Controllers.CollegeAddress>
+
+
+
+@{
+
+    ViewBag.Title = "A.Y 2020-21";
+    int count = 1;
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+
+
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, ],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+@using (Html.BeginForm())
+{
+    <table class="display">
+        <tr>
+            <td>
+                <br />
+                <p style="font-weight: bold;font-size: 14px; font-family:Bookman Old Style;">
+                    Jawaharlal Nehru Technological University Hyderabad is one of the largest Affiliating Universities in the State of Telangana offering quality education through various courses both at Under Graduate and Post Graduate levels, in Engineering, Pharmacy and Management. In order to consistently maintain the Academic standards in the Affiliated Colleges, the University monitors and regulates all the academic activities of the Affiliated Colleges including Affiliation process on annual basis.
+
+
+                </p>
+                <br />
+                <p style="font-weight: bold;font-size: 14px; font-family:Bookman Old Style;"> The following is the list of Affiliated Colleges of JNTUH which are granted Affiliation<span style="font-size:16px; color:red"> for the Academic Year 2020-21:</span></p>
+                <br />
+            </td>
+        </tr>
+    </table>
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">
+                    S.No
+                </th>
+                <th style="text-align: center;">
+                    College Code
+                </th>
+                <th style="width: 300px; text-align: center;">
+                    College Name
+                </th>
+
+                <th style="text-align: center;">
+                    Address
+                </th>
+                <th style="text-align: center;">
+                    District
+                </th>
+                <th style="text-align: center; width: 200px;">
+                    Website
+                </th>
+                @*<th style="text-align: left;">
+                        Mobile
+                    </th>
+                    <th style="text-align: left;">
+                        Email
+                    </th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count() > 0)
+            {
+                foreach (var item in Model.OrderBy(c => c.CollegeName).ToList())
+                {
+                    <tr>
+                        <td style="width: 50px; text-align: center;">
+                            @(count++)
+                        </td>
+                        <td style="text-align: center;">
+                            @item.CollegeCode
+                        </td>
+                        <td style="width: 75px; text-align: left; text-transform: uppercase;">
+                            @item.CollegeName
+                        </td>
+
+                        <td style="text-align: left;">
+                            @item.Address,
+                            @item.TownorCity,
+                            @item.Mandal,
+                            @item.District,
+                            @item.State,
+                            @item.Pincode
+                        </td>
+                        <td style="text-align: left;">
+                            @item.District
+                        </td>
+                        <td style="text-align: left;">
+
+                            <a href="http://@item.Website" target="_blank">@item.Website</a>
+                        </td>
+                        @*<td style="text-align: left;">
+                                @item.Mobile
+                            </td>
+                            <td style="text-align: left;">
+                                @item.Email
+                            </td>*@
+
+                    </tr>
+                }
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th style="width: 50px;">
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="width: 50px;">
+                    <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th style="width: 50px;">
+                    <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="width: 50px;">
+                    <input type="text" id="i-4" style="width: 60%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                @*<th style="width: 50px;">
+                        <input type="text" id="i-6" style="width: 90%; text-align: left; display: none;" class="search_init">
+                    </th>*@
+            </tr>
+        </tfoot>
+    </table>
+}

@@ -1,0 +1,113 @@
+﻿@{
+    int sno = 1;
+}
+<table border="1" style="width: 100%">
+    <thead>
+        <tr>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>S.No</th>
+            <th style='text-align: left; background-color: yellow; vertical-align: top;'>Department</th>
+            <th style='text-align: left; background-color: yellow; vertical-align: top;'>Degree</th>
+            <th style='text-align: left; background-color: yellow; vertical-align: top;'>Specialization</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Total Intake *</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Total Faculty *</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Specialization Wise Faculty Required</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Specialization Wise Faculty Available</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>No Form16</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Not Qualified as per AICTE</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>No SCM</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Bold Comments</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Faculty Absent</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Invalid PAN/No PAN</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Incomplete Certificates</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Adjunct Faculty</th>
+           @* <th style='text-align: center; background-color: yellow; vertical-align: top;'>Adjunct Faculty Verified</th>*@
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Deficiency</th>
+            <th style='text-align: center; background-color: yellow; vertical-align: top;'>Deficiency of Ph.D faculty</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.facultylist)
+        {
+            <tr>
+                <td style="text-align: center; vertical-align: top;">
+                    @(sno++)
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.Department 
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.Degree
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                   @item.Specialization
+                </td>
+
+                @if (item.Department == "English" || item.Department == "Mathematics" || item.Department == "Physics" || item.Department == "Chemistry" || item.Department == "Others")
+                {
+                    <td style="text-align: left; vertical-align: top;">
+                   @item.totalBtechFirstYearIntake
+                    </td>
+                    <td style="text-align: center; vertical-align: top;">
+                       @item.A416TotalFaculty
+                    </td>
+                    <td style="text-align: center; vertical-align: top;">
+                       @item.firstYearRequired
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align: left; vertical-align: top;">
+                    @item.totalIntake
+                    </td>
+                    <td style="text-align: center; vertical-align: top;">
+                       @item.A416TotalFaculty
+                    </td>
+                    <td style="text-align: center; vertical-align: top;">
+                       @Math.Ceiling(item.requiredFaculty)
+                    </td>
+                }
+               
+                <td style="text-align: left; vertical-align: top;">
+                    @item.adjustedFaculty
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    @item.form16count
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    @item.aictecount
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.NOSCM
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    @item.DeactivationReasionsCount
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    @item.FacultyAbsentCount
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    @item.InvalidPanCount
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    @item.incompletecerificatesCount
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    @item.adjointfacultycount
+                </td>
+                @*<td style="text-align: center; vertical-align: top;">
+
+                </td>*@
+                <td style="text-align: center; vertical-align: top;">
+                    @item.minimumRequirementMet
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    @item.PHDminimumRequirementMet
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+

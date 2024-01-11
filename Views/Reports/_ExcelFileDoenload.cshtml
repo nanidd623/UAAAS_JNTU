@@ -1,0 +1,35 @@
+﻿@model List<UAAAS.Controllers.Reports.DeficiencyReportWordController.BasFlagClass>
+@{
+    ViewBag.Title = "ExcelFileDownload";
+    int Count = 1;
+    Layout = null;
+}
+@using (Html.BeginForm())
+{
+    int data = 0;
+    <table style="width: 100%; border: 1px;" border="1">
+        <tr>
+            <th style="text-align: center; vertical-align: top; background-color:yellow">SNo</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">CollegeCode</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">CollegeName</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">TotalCollegeFaculty</th>
+            <th style="text-align: center; vertical-align: top; background-color: yellow">BasFlagFAculty</th>
+          
+
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align: left; vertical-align: top;">@Count</td>
+
+                <td style="text-align: left; vertical-align: top;">@item.CollegeCode</td>
+                <td style="text-align: left; vertical-align: top;">@item.CollegeName</td>
+                <td style="text-align: left; vertical-align: top;">@item.TotalTeachingFaculty</td>
+                <td style="text-align: left; vertical-align: top;">@item.BasFlagFacultyCount</td>
+               
+            </tr>
+            Count++;
+        }
+
+    </table>
+}

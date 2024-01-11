@@ -1,0 +1,119 @@
+﻿@model UAAAS.Models.ChairPerson
+@{
+    var OddColor = "#DDEEEE";
+    var evenColor = "#EEFFFF";
+    var Odd = OddColor;
+}
+<br />
+<table cellpadding="3" cellspacing="3" width="100%" border="1">
+
+    <tr>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.firstName)
+        </td>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.firstName)
+        </td>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.lastName)
+        </td>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.lastName)
+        </td>
+    </tr>
+    <tr>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.surname)
+        </td>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.surname)
+        </td>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.designationId)
+        </td>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.jntuh_chairperson_designation.designationName)
+            @Html.DisplayFor(model => model.otherDesignation)
+        </td>
+    </tr>
+    <tr>
+        <td  width="50%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.address)
+        </td>
+        <td  width="50%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.address)
+        </td>
+
+    </tr>
+
+    <tr>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.townOrCity)
+        </td>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.townOrCity)
+        </td>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.mandal)
+        </td>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.mandal)
+        </td>
+    </tr>
+    <tr>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.stateId)
+        </td>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.jntuh_state.stateName)
+        </td>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.districtId)
+        </td>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.jntuh_district.districtName)
+        </td>
+
+    </tr>
+    <tr>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.pincode)
+        </td>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.pincode)
+        </td>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.fax)
+        </td>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.fax)
+        </td>
+
+    </tr>
+    <tr>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.landline)
+        </td>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.landline)
+        </td>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.LabelFor(model => model.mobile)
+        </td>
+        <td  width="25%" bgcolor="@OddColor">
+            @Html.DisplayFor(model => model.mobile)
+        </td>
+
+    </tr>
+    <tr>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.LabelFor(model => model.email)
+        </td>
+        <td  width="25%" bgcolor="@evenColor">
+            @Html.DisplayFor(model => model.email)
+        </td>
+        <td  width="25%" bgcolor="@evenColor"></td>
+        <td  width="25%" bgcolor="@evenColor"></td>
+
+    </tr>
+</table>

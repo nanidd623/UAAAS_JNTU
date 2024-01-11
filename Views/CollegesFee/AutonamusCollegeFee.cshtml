@@ -1,0 +1,124 @@
+﻿@model UAAAS.Controllers.AutonamusCollegeFee
+@{
+    ViewBag.Title = "Autonamus College";
+    int duesfee = 0;
+    int Width = 0;
+
+    if (ViewBag.DuesFee != null)
+    {
+        Width = 342;
+    }
+    else
+    {
+        Width = 340;
+    }
+}
+
+@*<div>
+    <table width="100%">
+        <tr>
+            <td width="50%">
+                <h2>
+                    Affiliation Fee
+                    @if (!string.IsNullOrEmpty(Model.CollegeName))
+                    {
+                        <span> : </span><span style="color: blue">@Model.CollegeName</span>
+                    }
+
+                </h2>
+            </td>
+            <td width="40%" style="text-align:right">
+                @if (TempData["afrcFee"] != null)
+                {
+                    <div style="font-size:20px;">
+                        <span style="text-align:right;color:#f49820;font-weight:bold;">College AFRC FEE &nbsp;:&nbsp;  <span style="color:black;">@TempData["afrcFee"].ToString()</span></span>
+                    </div>
+
+                }
+            </td>
+            <td width="10%"></td>
+        </tr>
+    </table>
+
+
+</div>*@
+<h2>
+        Affiliation Fee
+        @if (!string.IsNullOrEmpty(Model.CollegeName))
+        {
+            <span> : </span><span style="color: blue">@Model.CollegeName</span>
+        }
+
+    </h2>
+
+<br />
+<br />
+<br />
+<br />
+@if (Model.CollegeName == null || Model.CollegeName == "")
+{
+    <div style="text-align:left;width:@(Width)px;margin:auto;border:1px solid red;padding:5px;font-family:'Times New Roman';font-weight:bold;font-size:1.25em;background-color:lightyellow;line-height:1.50rem;padding-left:15px;border-radius:5px;">
+
+        <table>
+
+            <tr>
+                <td style="color:blue;">Affiliation Fee Due Up to 2016-17 </td>
+                <td style="color:blue;">&nbsp; &#8377</td>
+                <td> :&nbsp;</td>
+                <td></td>
+
+
+            </tr>
+
+
+            <tr>
+                <td style="color:blue;">Affiliation Fee for the A.Y. 2017-18 </td>
+                <td style="color:blue;">&nbsp; &#8377</td>
+                <td> :&nbsp;</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="color:red;"><b>Grand Total </b></td>
+                <td style="color:red;">&nbsp; &#8377</td>
+                <td> :&nbsp;</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+}
+else
+{
+    <div style="text-align:left;width:@(Width)px;margin:auto;border:1px solid red;padding:5px;font-family:'Times New Roman';font-weight:bold;font-size:1.25em;background-color:lightyellow;line-height:1.50rem;padding-left:15px;border-radius:5px;">
+        <table>
+            @if (ViewBag.DuesFee != null)
+            {
+                <tr>
+                    <td style="color:blue;">Affiliation Fee Due Up to 2016-17 </td>
+                    <td style="color:blue;">&nbsp; &#8377</td>
+                    <td> :&nbsp;</td>
+                    <td> @ViewBag.DuesFee</td>
+                    @{
+                duesfee = Convert.ToInt32(ViewBag.DuesFee);
+                    }
+
+                </tr>
+            }
+
+            <tr>
+                <td style="color:blue;">Affiliation Fee for the A.Y. 2017-18 </td>
+                <td style="color:blue;">&nbsp; &#8377</td>
+                <td> :&nbsp;</td>
+                <td> @Model.Fee</td>
+            </tr>
+            <tr>
+                <td style="color:red;"><b>Grand Total </b></td>
+                <td style="color:red;">&nbsp; &#8377</td>
+                <td> :&nbsp;</td>
+                <td> @(duesfee + Model.Fee)</td>
+            </tr>
+        </table>
+    </div>
+}
+
+
+

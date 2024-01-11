@@ -1,0 +1,44 @@
+﻿@model IList<UAAAS.Models.CollegeEDEPDetails>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Equipment for EDEP Examination";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+}
+<h2>Equipment for EDEP Examination</h2>
+@using (Html.BeginForm())
+{
+    if (ViewBag.Norecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+    }
+    else
+    {
+    <table class="four_columns" style="width: 100%;">
+        <tr style="font-weight: bold;">
+            <td style="text-align: left; width: 50%" class="col11">Equipment</td>
+            <td style="text-align: center; width: 50%" class="col11">Actual Value</td>
+        </tr>
+        @for (int i = 0; i < ViewBag.Count; i++)
+        {
+            <tr>
+                <td style="text-align: left;" class="col21">
+                    @Html.LabelFor(m => m[i].EDEPEquipment, Model[i].EDEPEquipment == null ? string.Empty : Model[i].EDEPEquipment.ToString())
+                    @Html.HiddenFor(m => m[i].EDEPEquipmentId)
+                </td>
+                <td style="text-align: center;" class="col21 focus">
+                    @if (ViewBag.ActualValue == true)
+                    {
+                        @Html.DisplayFor(m => m[i].ActualValue, new { Value = Model[i].ActualValue == string.Empty ? "0" : Model[i].ActualValue.ToString(), style = "text-align: center;" })
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(m => m[i].ActualValue, new { Value = Model[i].ActualValue == null ? string.Empty : Model[i].ActualValue.ToString(), style = "text-align: center;" })
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    }
+}

@@ -1,0 +1,90 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeEnclosures>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Enclosures";
+    int num = 1;
+}
+@*<p class="create_link_right">
+    <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+</p>*@
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".view_hide").show();
+    });
+
+    function printdiv(printpage) {
+        //$(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+            "<html><head><title></title></head><body>" +
+            divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        //$(".view_hide").show();
+        return false;
+    }
+</script>
+<h2>College Enclosures</h2>
+<table style="width: 100%;">
+
+    <tr>
+        <td class="create_link_left" style="width: 200px;">
+           @* @Html.ActionLink("Previous Enclosures", "PreviousView", "CollegeEnclosures", new {target = "_blank", @class = "create_button"})*@
+        </td>
+        <td class="create_link_right" style="width: 200px;">
+
+        </td>
+    </tr>
+    <tr style="width: 200px"></tr>
+</table>
+<br/>
+<div id="div_print">
+    
+    <table class="four_columns" style="width: 100%;">
+        <tr>
+            <th style="text-align: center;" class="col11">S.No
+            </th>
+            <th class="col11">Name Of Document
+            </th>
+            <th style="text-align: center;" class="col11">Document
+            </th>
+        </tr>
+
+        @foreach (var item in ViewBag.CollegeEnclosures as List<UAAAS.Models.CollegeEnclosures>)
+        {
+            <tr>
+                <td style="width: 30px; text-align: center; vertical-align: top;" class="col21">
+                    @(num++)
+                </td>
+                <td style="vertical-align: top;" class="col21">@item.documentName</td>
+                <td style="width: 50px; vertical-align: top;" class="col21">
+                    @if (item.path != null)
+                    {
+                    <a href="@item.path.Replace("~", "")" target="_blank" style="color:green;">Download</a>                   
+                    }
+                    else
+                    {
+                       <span></span>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    @if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }
+</div>
+

@@ -1,0 +1,245 @@
+﻿@model List<UAAAS.Models.ComplianceQuestionnaire>
+
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "Compliance of the College / Institute for the following questionnaire.";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <link href="~/Scripts/Jquerydatatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Jquerydatatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/Jquerydatatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <script src="~/Scripts/RotateImage.js" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".iscompliancestatusyes").click(function () {
+                var radiobtnyess_id = "#txtFile_" + $(this).attr('id').split('_')[1];
+                $(radiobtnyess_id).attr('style', 'display: block');
+            });
+            $(".iscompliancestatusno").click(function () {
+                var radiobtnnoo_id = "#txtFile_" + $(this).attr('id').split('_')[1];
+                $(radiobtnnoo_id).attr('style', 'display: none');
+                $(".SupportingfileSpan_" + $(this).attr('id').split('_')[1]).text("");
+                $(".SupportingfileSpan_" + $(this).attr('id').split('_')[1]).css("color", "");
+            });
+
+            $(".Supportingfile").change(function () {
+                var rdid = $(this).attr('id').split('_')[1];
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    //alert("You can upload only  PDF files");
+                    $(".SupportingfileSpan_" + rdid).text("You can upload only  PDF files");
+                    $(".SupportingfileSpan_" + rdid).css("color", "red");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetFileSize(file, "Documentfile");
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".SupportingfileSpan_" + rdid).text("Document should not exceed 1 MB in Size");
+                        $(".SupportingfileSpan_" + rdid).css("color", "red");
+                        $(this).val('');
+                    } else {
+                        $(".SupportingfileSpan_" + rdid).text("");
+                    }
+                }
+            });
+
+            //get file path from client system
+            function getNameFromPath(strFilepath) {
+                var objRE = new RegExp(/([^\/\\]+)$/);
+                var strName = objRE.exec(strFilepath);
+
+                if (strName == null) {
+                    return null;
+                } else {
+                    return strName[0];
+                }
+            }
+
+            //get file size
+            function GetFileSize(fileid, title) {
+
+                try {
+                    var fileSize = 0;
+                    //for IE
+                    if ($.browser.msie) {
+                        //before making an object of ActiveXObject,
+                        //please make sure ActiveX is enabled in your IE browser
+                        var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                        var filePath = $("#" + fileid)[0].value;
+                        var objFile = objFSO.getFile(filePath);
+                        var fileSize = objFile.size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+                        //for FF, Safari, Opeara and Others
+                    else {
+                        fileSize = $(".Supportingfile")[0].files[0].size; //size in kb
+                        //fileSize = fileSize / 1048576; //size in mb
+                    }
+
+                    return fileSize;
+                } catch (e) {
+
+                    //alert("Error is : " + e);
+                }
+            }
+        });
+    </script>
+</head>
+
+<body>
+    @using (Html.BeginForm("Create", "CollegeCompliance", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+        if (ViewBag.compliances.Count > 0)
+        {
+            <div>
+                @{int rowNo = 0;}
+                <h2>Compliance of the College / Institute for the following questionnaire</h2>
+                <br />
+                @for (int i = 0; i < @ViewBag.compliances.Count; i++)
+                {
+                    var sno = @i + 1;
+                    var txtFile = "txtFile" + @rowNo;
+                    <div>
+                        @Html.HiddenFor(model => model[i].complainceid)
+                        @if (@ViewBag.compliances[i].complaincetype == 1)
+                        {
+                            <table class="faculty_table">
+                                <tr>
+                                    <td class="col1" style="width:5%">@sno</td>
+                                    <td class="col1" colspan="3" style="width:50%">
+                                        @ViewBag.compliances[i].compliencdescription
+                                    </td>
+                                    <td class="col4" style="width:18%">
+                                        <div class="Identified" style="text-align:center;">
+                                            @if (@ViewBag.compliances[i].id == 1 || @ViewBag.compliances[i].id == 2)
+                                            {
+                                                <label>@Html.RadioButtonFor(model => model[i].complaincestatus, true, new { @id = "iscompliancestatusyes_" + i, @class = "iscompliancestatusyes" }) Yes </label>
+                                                <label>@Html.RadioButtonFor(model => model[i].complaincestatus, false, new { @id = "iscompliancestatusno_" + i, @class = "iscompliancestatusno" }) No</label>
+                                                @Html.ValidationMessageFor(model => model[i].complaincestatus)
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(model => model[i].complaincestatus, new { @id = "comp_status_txtbox_" + i, @class = "required", onkeypress = "return isNumberKey(event)", @placeholder = "Enter number", @maxlength = "4" })
+                                                @Html.ValidationMessageFor(model => model[i].complaincestatus)
+                                            }
+                                        </div>
+                                    </td>
+                                    <td class="col4 readonly">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    @if (@ViewBag.compliances[i].id == 1)
+                                                    {
+                                                        @Html.TextBoxFor(model => model[i].circulardoc, new { @type = "file", @id = "txtFile_" + i, @name = "@file", @class = "required Supportingfile", @style = "display:none" })
+                                                        <span class="SupportingfileSpan_@i style=" color red;"></span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+                        else if (@ViewBag.compliances[i].complaincetype == 2)
+                        {
+                            if (@ViewBag.compliances[i].id == 8)
+                            {
+                                <br />
+                                <h2>FILL IN THE DETAILS PERTAINING TO PAYMENT OF SALARY TO THE FACULTY AND STAFF FOR THE MONTHS MARCH TO MAY 2020:</h2>
+                                <br />
+                            }
+                            <table class="faculty_table">
+                                @*@Html.HiddenFor(model => model[i].complainceid, new { @Value = @ViewBag.compliances[i].id })*@
+                                <tr>
+                                    <td class="col1" style="width:5%">@sno</td>
+                                    <td class="col1" colspan="3" style="width:50%">
+                                        @ViewBag.compliances[i].compliencdescription
+                                    </td>
+                                    <td class="col4" style="width:18%">
+                                        <div class="Identified" style="text-align:center;">
+                                            @Html.TextBoxFor(model => model[i].complaincestatus, new { @id = "comp_status_txtbox_" + i, @class = "required", onkeypress = "return isNumberKey(event)", @placeholder = "Enter number", @maxlength = "4" })
+                                            @Html.ValidationMessageFor(model => model[i].complaincestatus)
+                                        </div>
+                                    </td>
+                                    <td class="col4 readonly">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    @if (@ViewBag.compliances[i].id == 9)
+                                                    {
+                                                        <b>Percentage:</b>
+                                                        @Html.TextBoxFor(model => model[i].remarks, new { @id = "remarks_txtbox_" + i, @class = "required", @placeholder = "Enter Percentage", @style = "width:65%", @maxlength = "3", onkeypress = "return isNumberKey(event)" })
+                                                        @Html.ValidationMessageFor(model => model[i].remarks)
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+                        else
+                        {
+                            <br />
+                            <h2>FILL IN THE DETAILS PERTAINING TO PAYMENT OF SALARY TO THE FACULTY AND STAFF FOR THE MONTHS JUNE-JULY 2020:</h2>
+                            <br />
+                            <table class="faculty_table">
+                                @*@Html.HiddenFor(model => model[i].complainceid, new { @Value = @ViewBag.compliances[i].id })*@
+                                <tr>
+                                    <td class="col1" style="width:5%">@sno</td>
+                                    <td class="col1" colspan="3" style="width:50%">
+                                        @ViewBag.compliances[i].compliencdescription
+                                    </td>
+                                    <td class="col4" style="width:18%">
+                                        <div class="Identified" style="text-align:center;">
+                                            <label>@Html.RadioButtonFor(model => model[i].complaincestatus, true, new { @id = "iscompliancestatusyes_" + i, @class = "iscompliancestatusyes" }) Yes </label>
+                                            <label>@Html.RadioButtonFor(model => model[i].complaincestatus, false, new { @id = "iscompliancestatusno_" + i, @class = "iscompliancestatusno" }) No</label>
+                                            @Html.ValidationMessageFor(model => model[i].complaincestatus)
+                                        </div>
+                                    </td>
+                                    <td class="col4 readonly" style="width:30%">
+                                        <table>
+                                            <tr></tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+                    </div>
+                }
+            </div>
+            <div style="text-align: right">
+                <p>
+                    <input type="submit" value="Submit" id="btnSubmit" name="cmd" />
+                </p>
+            </div>
+        }
+    }
+</body>
+</html>

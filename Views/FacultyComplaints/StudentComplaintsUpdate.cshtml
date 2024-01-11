@@ -1,0 +1,195 @@
+﻿@model UAAAS.Models.FacultyComplaintsClass
+@using UAAAS.Models;
+
+@{
+    ViewBag.Title = "Student Complaints Update";
+}
+
+<h2>Student GRIEVANCE Update</h2><br />
+<style>
+    /*.col2, .col4 {
+        width: 10px;
+    }*/
+    b {
+        font-weight: normal;
+    }
+
+    .faculty_table {
+        width: 100%;
+    }
+
+    tbody tr td:nth-child(5).col1 {
+        width: 25%;
+    }
+</style>
+<div style="float:left;">
+    @if (TempData["Success"] != null)
+    {
+        <p style="color:forestgreen"><strong><b>Success</b> : </strong>@TempData["Success"].ToString()</p>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <p style="color:red"><strong><b>Error</b> : </strong>@TempData["Error"].ToString()</p>
+    }
+</div>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+@using (Html.BeginForm("StudentComplaintsUpdate", "FacultyComplaints", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.id, new { @Value = Model.id })
+    @Html.HiddenFor(model => model.complaintid, new { @Value = Model.complaintid })
+    @Html.HiddenFor(model => model.TicketId)
+    <div id="divNewFaculty">
+        <table id="example" class="faculty_table">
+            <tbody>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Name</span></b>
+                    </td>
+
+                    <td class="col2">
+                        <span id="sname">@Model.Facultyname</span>
+                        @*@Html.DisplayFor(model => model.fa)*@
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Registration Number</span></b>
+                    </td>
+
+                    <td class="col2">
+                        <span id="shallticketno">@Model.RegistrationNumber</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Address</span></b>
+                    </td>
+
+                    <td class="col2">
+                        @*style="border: 1px solid black;padding: 3px;height: auto;text-align: justify;"*@
+                        <span id="saddress">@Model.FacultyAddress</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>College</span></b>
+                    </td>
+
+                    <td class="col2">
+                        <span id="scollege">@Model.Collegename</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Compliant Type</span></b>
+                    </td>
+
+                    <td class="col2">
+                        <span id="sctype">@Model.complaintname</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Complaint Date</span></b>
+                    </td>
+
+                    <td class="col2">
+                        <span id="scdate">@Model.complaintdate</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Complaint Description</span></b>
+                    </td>
+
+                    <td class="col2">
+                        @*style="border: 1px solid black;padding: 3px;height: auto;text-align: justify;"*@
+                        <span id="scdesc">@Model.ComplaintDesc</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Supporting Document</span></b>
+                    </td>
+
+                    <td class="col2">
+                        @*style="border: 1px solid black;padding: 3px;height: auto;text-align: justify;"*@
+                        @*<span id="scdesc">@Model.FacultycomplaintFileview</span>*@
+                        <a href="/Content/Upload/ComplaintsGivenbyStudents/ComplaintFile/@Model.FacultycomplaintFileview" target="_blank" title="Supporting Document">
+                            <span style="color:red;">View</span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Status</span></b>
+                    </td>
+
+                    <td class="col2">
+                        <span id="scdesc">@Model.complaintStatusName</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Reply File</span></b>
+                    </td>
+
+                    <td class="col2">
+                        @if (Model.Replaycomplaintsfile != null)
+                        {
+                            <a href="/Content/Upload/FacultyComplaints/CollegeGrievancesupportdoc/@Model.Replaycomplaintsfile" target="_blank" title="Lab Deficiency">
+                                <span style="color: red;">View</span>
+                            </a>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Reply Remarks</span></b>
+                    </td>
+
+                    <td class="col2">
+                        @if (Model.Replayremarks != null)
+                        {
+                            <span id="scdesc">@Model.Replayremarks</span>
+                        }
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Action</span></b>
+                    </td>
+
+                    <td class="col2">
+                        @Html.DropDownListFor(m => m.complaintStatusId, new SelectList(ViewBag.cmpltStats as System.Collections.IEnumerable, "cmpltId", "cmpltName"), "--Select--", new { id = "cmpltId", @class = "required" })
+                        @Html.ValidationMessageFor(m => m.complaintStatusId)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        @*<table>
+                <tr>
+                    <td>
+                        @Html.ActionLink("Givance Not Understood", "stuGivanceNotunderstood", "FacultyComplaints", new { id = Model.id, ticketid = Model.TicketId }, new { @class = "create_button approve_link" })
+                    </td>
+                    <td>
+                        @Html.ActionLink("Grievance Canotbe Addressed", "stuGrievancecanotbeaddressed", "FacultyComplaints", new { id = Model.id, ticketid = Model.TicketId }, new { @class = "create_button approve_link" })
+                    </td>
+                    <td>
+                        @Html.ActionLink("Proced To college", "stuGrievanceProcedtocollege", "FacultyComplaints", new { id = Model.id, ticketid = Model.TicketId }, new { @class = "create_button approve_link" })
+                    </td>
+
+                </tr>
+            </table>*@
+        <div style="text-align: right">
+            <p>
+                <input type="submit" value="Save" id="btnSave" name="cmd" class="btnclass" />
+                @Html.ActionLink("Cancel", "Complaints", new { }, new { @class = "create_button" })
+            </p>
+        </div>
+    </div>
+}

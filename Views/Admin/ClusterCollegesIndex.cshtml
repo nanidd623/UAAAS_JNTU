@@ -1,0 +1,196 @@
+﻿@model IList<UAAAS.Models.college_clusters>
+@using UAAAS.Models;
+@{
+    ViewBag.Title = "ClusterColleges";
+    uaaasDBContext db = new uaaasDBContext();
+}
+<h2>Cluster Colleges</h2>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#cluster').change(function () {
+            var clusterName = $(this).val();
+            //alert(clusterName);
+
+            if ($('#cluster').val() != '') {
+                window.location = '/ClusterColleges/ClusterCollegesIndex?cluster=' + clusterName;
+            }
+            else {
+                window.location = '/ClusterColleges/ClusterCollegesIndex';
+            }
+        });
+        $('.checkall').click(function () {
+            $('.forcheckbox').attr('checked', this.checked);
+        });
+
+
+
+        var mainUrl = window.location;
+        var url;
+       // alert(url);
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit College',
+            autoOpen: false,
+            resizable: false,
+            height: 250,
+            width: 550,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add College'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $("#openDialogone").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Cahnge Cluster'
+            });
+            url = $("#openDialogone").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        
+
+        $('.display').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit College'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+     
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+
+
+    });
+</script>
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 5000,
+                              "bStateSave": false,
+     "sDom": '<"top"lfip>rt<"bottom"ip<"clear">'
+});
+}
+@if (@TempData["Success"] != null)
+{
+    <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+}
+@if (@TempData["Error"] != null)
+{
+    <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+}
+@using (Html.BeginForm())
+{
+    <table class="four_columns" style="width: 50%; margin-left: auto; margin-right: auto">
+
+        <tr>
+            <td class="col1">Cluster Name
+            </td>
+            <td class="col2" colspan="2">
+                @Html.DropDownList("cluster",
+                new SelectList(@db.college_clusters.Where(c => 1 == 1).OrderBy(c => c.clusterName).Select(c => c.clusterName).Distinct().ToList()),
+                "-- Select --", new { id = "cluster" })    
+
+            </td>
+            <td class="col1">
+                @Html.ActionLink("Add Cluster", "AddClusterColleges", "ClusterColleges", new { @class = "create_button" })
+            </td>
+        </tr>
+
+    </table>
+
+   
+    if (@ViewBag.ClusterColleges == true)
+    {
+    <table align="right">
+        <tr>
+            <td style="text-align: right">
+                @Html.ActionLink("Change Cluster", "ChangeClusterName",  new { cluster = Request.QueryString["cluster"] }, new { @id = "openDialogone", @class = "create_button" })               
+            </td>
+            <td style="text-align: right">    
+                @Html.ActionLink("Add College", "AddCollegeToExistingCluster", new { cluster = Request.QueryString["cluster"] }, new { @id = "openDialog", @class = "create_button" })              
+                
+            </td>
+            <td style="text-align: right">
+                <input type="submit" value="Change Status" onclick="return confirm('Are you sure you want to change status selected/deselected records');" />
+            </td>
+        </tr>
+    </table>
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 40px; text-align: center;">S.No
+                </th>
+                <th style="text-align: left;">Cluster Name
+                </th>
+                <th style="text-align: left;">College
+                </th>
+                <th style="text-align: center;">
+                    <span>Status</span>
+                    <input type="checkbox" id="chkselectall" name="Status" class="checkall" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count(); i++)
+            {           
+                <tr>
+                    <td style="text-align: center;">
+                        @(i + 1)
+                    </td>
+                    <td style="text-align: left; text-transform: uppercase;">
+                        @Html.DisplayFor(model => model[i].clusterName)
+                        @Html.HiddenFor(model => model[i].clusterName)
+                    </td>
+                    <td style="text-align: left; text-transform: uppercase;">
+                        @Html.DisplayFor(model => model[i].jntuh_college.collegeName)
+                        @Html.HiddenFor(model => model[i].collegeId)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase;">
+                        @Html.CheckBoxFor(model => model[i].isActive, new { @class = "forcheckbox" })
+                        @Html.HiddenFor(model => model[i].id)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+     <div id="dialog-edit" style="display: none">
+    </div>   
+    }
+
+}

@@ -1,0 +1,94 @@
+﻿@model UAAAS.Models.FacultyComplaintsClass
+@{
+    ViewBag.Title = "Faculty Complaint View";
+}
+<style>
+    /*.col2, .col4 {
+        width: 10px;
+    }*/
+    b {
+        font-weight: normal;
+    }
+
+    .faculty_table {
+        width: 100%;
+    }
+
+    tbody tr td:nth-child(5).col1 {
+        width: 25%;
+    }
+</style>
+@if (Model != null)
+{
+    <div>
+        <table style="width:100%">
+            <tbody>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Name</span></b>
+                    </td>
+                   
+                    <td class="col2">
+                        <span id="sname">@Model.Facultyname</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Registration Number</span></b>
+                    </td>
+                   
+                    <td class="col2">
+                        <span id="shallticketno">@Model.RegistrationNumber</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Address</span></b>
+                    </td>
+                   
+                    <td class="col2">
+                        @*style="border: 1px solid black;padding: 3px;height: auto;text-align: justify;"*@
+                        <span id="saddress">@Model.FacultyAddress</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>College</span></b>
+                    </td>
+                   
+                    <td class="col2">
+                        <span id="scollege">@Model.Collegename</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Compliant Type</span></b>
+                    </td>
+                   
+                    <td class="col2">
+                        <span id="sctype">@Model.complaintname</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Complaint Date</span></b>
+                    </td>
+                   
+                    <td class="col2">
+                        <span id="scdate">@Model.complaintdate</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1" style="font-weight: bold;width:9%">
+                        <b><span>Complaint Description</span></b>
+                    </td>
+                   
+                    <td class="col2">
+                        @*style="border: 1px solid black;padding: 3px;height: auto;text-align: justify;"*@
+                        <span id="scdesc">@Model.ComplaintDesc</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}

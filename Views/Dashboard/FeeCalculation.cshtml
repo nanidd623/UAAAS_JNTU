@@ -1,0 +1,458 @@
+﻿
+@model List<UAAAS.Controllers.CollegeApprovedList>
+@{
+    ViewBag.Title = "Affiliation Fee";
+    int count = 1;
+    int deptloop = 1;
+
+    int FeeFirstYear = 0;
+    int FeeSecondYear = 0;
+    int FeeThirdYear = 0;
+    int FeeFourthYear = 0;
+
+    int approvedFeeFirstYear = 0;
+    int approvedFeeSecondYear = 0;
+    int approvedFeeThirdYear = 0;
+    int approvedFeeFourthYear = 0;
+
+    int admittedFeeFirstYear = 0;
+    int admittedFeeSecondYear = 0;
+    int admittedFeeThirdYear = 0;
+    int admittedFeeFourthYear = 0;
+    
+    
+    int totalfee = 0;
+    int duesfee = 0;
+    int Width = 0;
+    
+     if(ViewBag.DuesFee!=null)
+     {
+            Width = 342;
+     }
+     else
+     {
+            Width = 340;
+     }
+}
+@if (Model == null || Model.Count==0)
+{
+    <div style="text-align:left;width:@(Width)px;margin:auto;border:1px solid red;padding:5px;font-family:'Times New Roman';font-weight:bold;font-size:1.25em;background-color:lightyellow;line-height:1.50rem;padding-left:15px;border-radius:5px;">
+        <table>
+
+            <tr>
+                <td style="color:blue;">Affiliation Fee Due Up to 2016-17 </td>
+                <td style="color:blue;">&nbsp; &#8377</td>
+                <td> :&nbsp;</td>
+                <td></td>
+
+
+            </tr>
+
+
+            <tr>
+                <td style="color:blue;">Affiliation Fee for the A.Y. 2017-18 </td>
+                <td style="color:blue;">&nbsp; &#8377</td>
+                <td> :&nbsp;</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="color:red;"><b>Grand Total </b></td>
+                <td style="color:red;">&nbsp; &#8377</td>
+                <td> :&nbsp;</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+}
+else
+{
+
+
+<h2>Affiliation Fee
+    if (!string.IsNullOrEmpty(Model[0].CollegeName))
+    {
+        <span> : </span><span style="color:blue">@Model[0].CollegeName</span>
+    }
+   
+
+</h2>
+
+
+
+using (Html.BeginForm())
+{
+    
+    @*@Html.ActionLink("Affiliation Fee", "AffiliationFeeReport", "Dashboard",new{@class="create_button"})*@
+    <br/>
+    <table class="full_table" style="width: 100%; font-size: 0.7rem;">
+    <tr>
+        <th style="text-align: center;" rowspan="3">
+            S.No
+        </th>
+        <th rowspan="3">
+            Degree
+        </th>
+        <th style="text-align: center;" rowspan="3">
+            Dept.
+        </th>
+        <th style="text-align: center;" rowspan="3">
+            Specialization
+        </th>
+        <th style="text-align: center;" rowspan="3">
+            Shift
+        </th>
+        <th style="text-align: center;" colspan="16">
+            <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+            Approved Intake  &nbsp;&nbsp;&nbsp; & &nbsp;&nbsp;&nbsp;
+            <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+             Admitted Intake 
+        </th>
+    </tr>
+    <tr>
+        <th style="text-align: center;" colspan="3">
+
+            @ViewBag.FirstYear
+        </th>
+        <th style="text-align: center;" colspan="4">
+
+            @ViewBag.SecondYear
+        </th>
+        <th style="text-align: center;" colspan="4">
+            @ViewBag.ThirdYear
+        </th>
+        <th style="text-align: center;" colspan="4">
+            @ViewBag.FourthYear
+        </th>
+        <th style="text-align: center;" rowspan="2">
+            <span><b>Total</b></span>
+        </th>
+    </tr>
+    <tr>
+        <th style="text-align: center;">
+            <img src="../../Content/images/approved.png" alt="approved" title="Approved"/>
+        </th>
+        <th style="text-align: center;">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted"/>
+        </th>
+        <th style="text-align: center;">
+            <img src="../../Content/images/Indiancurrency.png" alt="fee" title="fee"/>
+        </th>
+
+
+        <th style="text-align: center;">
+            <img src="../../Content/images/approved.png" alt="approved" title="Approved"/>
+        </th>
+        <th style="text-align: center;">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted"/>
+        </th>
+        <th style="text-align: center;">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="lateral" style="transform: rotate(270deg);" />
+        </th>
+        <th style="text-align: center;">
+            <img src="../../Content/images/Indiancurrency.png" alt="fee" title="fee"/>
+        </th>
+
+        <th style="text-align: center;">
+            <img src="../../Content/images/approved.png" alt="approved" title="Approved"/>
+        </th>
+        <th style="text-align: center;">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted"/>
+        </th>
+        <th style="text-align: center;">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="lateral" style="transform: rotate(270deg);" />
+        </th>
+        <th style="text-align: center;">
+            <img src="../../Content/images/Indiancurrency.png" alt="fee" title="fee"/>
+        </th>
+
+
+        <th style="text-align: center;">
+            <img src="../../Content/images/approved.png" alt="approved" title="Approved"/>
+        </th>
+        <th style="text-align: center;">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted"/>
+        </th>
+        <th style="text-align: center;">
+            <img src="../../Content/images/admitted.png" alt="admitted" title="lateral" style="transform: rotate(270deg);" />
+        </th>
+        <th style="text-align: center;">
+            <img src="../../Content/images/Indiancurrency.png" alt="fee" title="fee"/>
+        </th>
+
+
+
+    </tr>
+
+    @foreach (var data in Model)
+    {
+        int coursetotal = 0;
+        int columnspanfirst = 0;
+        int columnspansecond = 0;
+        int columnspanthird = 0;
+        int columnspanfourth = 0;
+        columnspanfirst = Model.Count(e => e.degreeId == 4 ||e.degreeId==5);
+        columnspansecond = Model.Count(e => e.degreeId == 4 || e.degreeId == 5);
+        columnspanthird = Model.Count(e => e.degreeId == 4 || e.degreeId == 5);
+        columnspanfourth = Model.Count(e => e.degreeId == 4 || e.degreeId == 5);
+        int totalugcount = Model.Count(e => e.degreeId == 4 || e.degreeId == 5);
+
+        int approvedIntake1 = 0;
+        int approvedIntake2 = 0;
+        int approvedIntake3 = 0;
+        int approvedIntake4 = 0;
+        int admittedIntake1 = 0;
+        int admittedIntake2 = 0;
+        int admittedIntake3 = 0;
+        int admittedIntake4 = 0;
+        
+        int currentindex = Model.IndexOf(data);
+       
+        
+        if (Model[currentindex].degreeId == 5)
+        {
+            if (currentindex > 0 && (Model[currentindex].degreeId == 4 || Model[currentindex].degreeId == 5))
+            {
+                deptloop++;
+            } 
+        }
+        else
+        {
+            if (currentindex > 0 && Model[currentindex].Degree != Model[currentindex-1].Degree && Model[currentindex].degreeId == 4)
+            {
+                deptloop = 1;
+            } 
+        }
+       
+
+
+
+
+        <tr>
+            <td style="width: 30px; text-align: center;">
+                @(count++)
+            </td>
+            <td style="width: 60px;">@data.Degree</td>
+            <td style="width: 70px;">@data.Department</td>
+            <td style="width: 20px;">@data.SpecializationName</td>
+            <td style="width: 10px; text-align: center;">@data.ShiftId</td>
+            <td style="width: 30px; text-align: center;">@data.ApprovedIntake1</td>
+            <td style="width: 30px; text-align: center;">@data.AdmittedIntake1</td>
+            @if (data.degreeId == 4 || data.degreeId == 5)
+            {
+                approvedIntake1 += data.ApprovedIntake1;
+                admittedIntake1 += data.AdmittedIntake1;
+                if (deptloop == 1)
+                {
+                    <td style="width: 30px; text-align: center;" rowspan="@columnspanfirst">@data.FirstYearFee</td>
+                    FeeFirstYear += data.FirstYearFee;
+                 
+                }
+                
+
+            }
+            else
+            {
+                if (data.ApprovedIntake1 != 0)
+                {
+                    <td style="width: 30px; text-align: center;">@data.FirstYearFee</td>
+                    FeeFirstYear += data.FirstYearFee;
+                }
+                else
+                {
+                    <td style="width: 30px; text-align: center;">0</td>
+                }
+
+            }
+
+            <td style="width: 30px; text-align: center;">@data.ApprovedIntake2</td>
+            <td style="width: 30px; text-align: center;">@data.AdmittedIntake2</td>
+            <td style="width: 30px; text-align: center;">@data.LeteralentryIntake2</td>
+            @if (data.degreeId == 4 || data.degreeId == 5)
+            {
+                approvedIntake2 += data.ApprovedIntake2;
+                admittedIntake2 += data.AdmittedIntake2;
+                if (deptloop == 1)
+                {
+                    <td style="width: 30px; text-align: center;" rowspan="@columnspansecond">@data.SecondYearFee</td>
+                    FeeSecondYear += data.SecondYearFee;
+                  
+                }
+            }
+            else
+            {
+                if (data.ApprovedIntake2 != 0)
+                {
+                    <td style="width: 30px; text-align: center;">@data.SecondYearFee</td>
+                    FeeSecondYear += data.SecondYearFee;
+                }
+                else
+                {
+                    <td style="width: 30px; text-align: center;">0</td>
+                }
+
+            }
+
+            <td style="width: 30px; text-align: center;">@data.ApprovedIntake3</td>
+            <td style="width: 30px; text-align: center;">@data.AdmittedIntake3</td>
+            <td style="width: 30px; text-align: center;">@data.LeteralentryIntake3</td>
+            @if (data.degreeId == 4 || data.degreeId == 5)
+            {
+                approvedIntake3 += data.ApprovedIntake3;
+                admittedIntake3 += data.AdmittedIntake3;
+                if (deptloop == 1)
+                {
+                    <td style="width: 30px; text-align: center;" rowspan="@columnspanthird">@data.ThirdYearFee</td>
+                    FeeThirdYear += data.ThirdYearFee;
+                   
+                }
+            }
+            else
+            {
+                if (data.ApprovedIntake3 != 0)
+                {
+                    <td style="width: 30px; text-align: center;">@data.ThirdYearFee</td>
+                    FeeThirdYear += data.ThirdYearFee;
+                }
+                else
+                {
+                    <td style="width: 30px; text-align: center;">0</td>
+                }
+
+            }
+
+            <td style="width: 30px; text-align: center;">@data.ApprovedIntake4</td>
+            <td style="width: 30px; text-align: center;">@data.AdmittedIntake4</td>
+            <td style="width: 30px; text-align: center;">@data.LeteralentryIntake4</td>
+            @if (data.degreeId == 4 || data.degreeId == 5)
+            {
+                approvedIntake4 += data.ApprovedIntake4;
+                admittedIntake4 += data.AdmittedIntake4;
+                if (deptloop == 1)
+                {
+                    <td style="width: 30px; text-align: center;" rowspan="@columnspanfourth">@data.FourthYearFee</td>
+                    FeeFourthYear += data.FourthYearFee;
+                  
+                }
+            }
+            else
+            {
+                if (data.ApprovedIntake4 != 0)
+                {
+                    <td style="width: 30px; text-align: center;">@data.FourthYearFee</td>
+                    FeeFourthYear += data.FourthYearFee;
+                }
+                else
+                {
+                    <td style="width: 30px; text-align: center;">0</td>
+                }
+
+            }
+
+
+            @if (currentindex == 0 && (Model[currentindex].degreeId == 4 || Model[currentindex].degreeId == 5))
+            {
+
+                <td style="width: 30px; text-align: center;" rowspan="@totalugcount">@data.SpecializationwiseSalary</td>
+                totalfee += data.SpecializationwiseSalary;
+            }
+
+
+
+
+
+            @if (data.degreeId != 4 && data.degreeId != 5)
+            {
+                <td style="width: 30px; text-align: center;">@data.SpecializationwiseSalary</td>
+                totalfee = totalfee + data.SpecializationwiseSalary;
+            }
+        </tr>
+
+        approvedFeeFirstYear += approvedIntake1;
+        approvedFeeSecondYear += approvedIntake2;
+        approvedFeeThirdYear += approvedIntake3;
+        approvedFeeFourthYear += approvedIntake4;
+
+
+        admittedFeeFirstYear += admittedIntake1;
+        admittedFeeSecondYear += admittedIntake2;
+        admittedFeeThirdYear += admittedIntake3;
+        admittedFeeFourthYear += admittedIntake4;
+        
+        
+        deptloop++;
+    }
+    <tr>
+        <td colspan="5" style="text-align: right"><span style="color: red"><b>Total Affiliation Fee :</b></span></td>
+
+        <td  style="text-align: right"><span style="color: green"><b>@approvedFeeFirstYear</b></span></td>
+        <td  style="text-align: right"><span style="color: blue; "><b>@admittedFeeFirstYear</b></span></td>
+        <td style="text-align: right"><span style="color: red"><b>@FeeFirstYear</b></span></td>
+
+        <td style="text-align: right"><span style="color: green"><b>@approvedFeeSecondYear</b></span></td>
+        <td style="text-align: right"><span style="color: blue"><b>@admittedFeeSecondYear</b></span></td>
+        <td style="text-align: right"><span style="color: blue"></span></td>
+        <td style="text-align: right"><span style="color: red"><b>@FeeSecondYear </b></span></td>
+
+        <td style="text-align: right"><span style="color: green"><b>@approvedFeeThirdYear</b></span></td>
+        <td style="text-align: right"><span style="color: blue"><b>@admittedFeeThirdYear</b></span></td>
+        <td style="text-align: right"><span style="color: blue"></span></td>
+        <td style="text-align: right"><span style="color: red"><b>@FeeThirdYear </b></span></td>
+
+        <td style="text-align: right"><span style="color: green"><b>@approvedFeeFourthYear</b></span></td>
+        <td style="text-align: right"><span style="color: blue"><b>@admittedFeeFourthYear</b></span></td>
+        <td style="text-align: right"><span style="color: blue"></span></td>
+        <td  style="text-align: right"><span style="color: red"><b>@FeeFourthYear </b></span></td>
+
+
+
+        <td style="color: blue; text-align: center; font-size: 18px; background-color: greenyellow"><b>@totalfee </b></td>
+        @{
+
+            var i = @totalfee;
+            TempData["Feedata"] = @totalfee;
+        }
+
+    </tr>
+    </table>
+    <br/>
+   
+    
+   
+        
+       
+   
+    
+    
+    <div  style="text-align:left;width:@(Width)px;margin:auto;border:1px solid red;padding:5px;font-family:'Times New Roman';font-weight:bold;font-size:1.25em;background-color:lightyellow;line-height:1.50rem;padding-left:15px;border-radius:5px;">
+        <table>
+            @if (ViewBag.DuesFee != null)
+            {
+                <tr>
+                    <td style="color:blue;">Affiliation Fee Due Up to 2016-17 </td>
+                    <td style="color:blue;">&nbsp; &#8377</td>
+                    <td> :&nbsp;</td>
+                    <td> @ViewBag.DuesFee</td>
+                    @{
+                        duesfee = Convert.ToInt32(ViewBag.DuesFee);
+                    }
+
+                </tr>
+            }
+            
+            <tr>
+                <td style="color:blue;">Affiliation Fee for the A.Y. 2017-18 </td>
+                <td style="color:blue;">&nbsp; &#8377</td>
+                <td> :&nbsp;</td>
+                <td> @totalfee</td>
+            </tr>
+            <tr>
+                <td style="color:red;"><b>Grand Total </b></td>
+                <td style="color:red;">&nbsp; &#8377</td>
+                <td> :&nbsp;</td>
+                <td> @(duesfee + totalfee)</td>
+            </tr>
+        </table>
+        </div>
+      
+        }
+}

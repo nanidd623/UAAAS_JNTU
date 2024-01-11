@@ -1,0 +1,110 @@
+﻿@model UAAAS.Models.Specialization
+@{
+    ViewBag.Title = "Edit Specialization";
+}
+<h2>Edit Specialization</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Degree").change(function () {
+            var DegreeID = $(this).val();
+            GetDepartments(DegreeID);
+        });
+        if ($("#Degree").val() > 0) {
+            GetDepartments($("#Degree").val());
+        }       
+        function GetDepartments(DegreeID){
+            $.getJSON("/Specialization/GetDepartments",{ id : DegreeID},
+                function(DepartmentsData){
+                    var select = $("#DepartmentName");
+                    select.empty();
+                    select.append($('<option/>',{
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(DepartmentsData,function(index, itemdata){
+                        select.append($('<option/>',{
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.departmentId ? true : false)
+                        }));
+                    });
+                });
+            }
+    });
+</script>
+@using (Html.BeginForm())
+{
+    if(TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    @Html.ValidationSummary(true)    
+    <div class="details_table">
+
+        @Html.HiddenFor(model => model.id)
+        <div class="editor-label">
+            @Html.LabelFor(model => model.degreeId)
+        </div>
+        <div class="editor-field">
+            @Html.HiddenFor(model => model.degreeId)
+            @Html.DropDownListFor(model => model.degreeId,
+            new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "id", "degree"),
+            "-- Select --", new { id = "Degree", @style = "width:180px" })
+            @Html.ValidationMessageFor(model => model.degreeId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.departmentId)
+        </div>
+        <div class="editor-field">
+            @Html.HiddenFor(model => model.departmentId)
+            @Html.DropDownListFor(model => model.departmentId,
+            new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+            "-- Select --", new { id = "DepartmentName", @style = "width:180px" })
+            @Html.ValidationMessageFor(model => model.departmentId)
+        </div>      
+        <div class="editor-label">
+            @Html.LabelFor(model => model.specializationName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.specializationName)
+            @Html.ValidationMessageFor(model => model.specializationName)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.specializationDescription)
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.specializationDescription)
+            @Html.ValidationMessageFor(model => model.specializationDescription)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.isActive)
+        </div>
+        <div class="editor-field">
+            <label>@Html.RadioButtonFor(model => model.isActive, true) Active</label>
+            <label>@Html.RadioButtonFor(model => model.isActive, false) Inactive</label>
+            @Html.ValidationMessageFor(model => model.isActive)
+        </div>
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.createdBy)
+
+        @Html.HiddenFor(model => model.updatedOn)
+        @Html.HiddenFor(model => model.updatedBy)
+        <div class="editor-label last-row">
+            &nbsp;
+        </div>
+        <div class="editor-field last-row">
+            <p>
+                @Html.ActionLink("Back", "Index", null, new { @class = "back_button" })
+                <input type="submit" value="Save" />
+            </p>
+        </div>
+    </div>
+}
+

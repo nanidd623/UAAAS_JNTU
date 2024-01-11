@@ -1,0 +1,175 @@
+﻿@model UAAAS.Controllers.Bascomplaints
+@using UAAAS.Models;
+@{
+    ViewBag.Title = "Complaints";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<style>
+    /*.col2, .col4 {
+        width: 10px;
+    }*/
+    b {
+        font-weight: normal;
+    }
+
+    .faculty_table {
+        width: 100%;
+    }
+
+    tbody tr td:nth-child(5).col1 {
+        width: 25%;
+    }
+</style>
+
+<div id="div_print">
+
+    @using (Html.BeginForm("EditBasComplaint", "CollegeComplaints", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+
+        <div>
+            <table style="width: 100%">
+                    <tr>
+                        <td style="width: 100%">
+                            <table class="faculty_table" id="information">
+
+                                <tr>
+                                    <td class="col1" style="font-weight: bold">
+                                        @Html.Label("College Name")
+                                    </td>
+                                    <td class="col2">
+                                        <span style="text-transform: uppercase; font-weight: bold;">@Html.DisplayFor(model => model.collegeName)&nbsp;(@Html.DisplayFor(model => model.collegeCode))</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+
+                    </tr>
+                </table>
+
+        </div>
+        <br />
+       
+        <table style="width: 100%" class="faculty_table">
+
+
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.collegeid)
+            @Html.HiddenFor(model => model.dcomplaintdate)
+            @Html.HiddenFor(model => model.complaintid)
+            @Html.HiddenFor(model => model.complaintdocview)
+            @Html.HiddenFor(model => model.Createdon)
+            @Html.HiddenFor(model => model.regnum)
+            @Html.HiddenFor(m=>m.complaintdate)
+            <tr>
+                <td class="col1">
+                    COMPLAINT
+                </td>
+                <td class="col2" style="word-wrap:break-word">
+                    @*@if (Model.complaint.Length >= 60)
+                    {
+                        @Model.complaint.Substring(0, 59)
+                        <text> ..........................more </text>
+                    }
+                    else
+                    {
+                        @Model.complaint
+                    }*@
+                    @Html.EditorFor(model => model.complaint)
+                </td>
+            </tr>
+
+            <tr>
+               
+                <td class="col1" >
+                    <b><span>Complaint Date</span></b>
+
+                </td>
+                <td class="col2" >
+
+                    @Html.DisplayFor(model => model.complaintdate)
+                </td>
+             
+
+            </tr>
+            <tr>
+                <td class="col1" style="width: 20%">
+                    <b><span>Replay Status</span></b>
+                </td>
+                <td class="col2" style="width: 20%">
+                    @Html.CheckBoxFor(model => model.replaystatus)
+                </td>
+                
+            </tr>
+            <tr>
+                <td class="col1" style="width: 20%">
+                    <b><span>Replay Status Date</span></b>
+                </td>
+                <td class="col2" style="width: 40%">
+                    @Html.TextBoxFor(model => model.replaydate, new { @class = "calendartwo", @placeholder = "DD/MM/YYYY" })
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col1">
+                    Replay
+                </td>
+                <td class="col2">
+                    @Html.TextAreaFor(m => m.replay)
+                </td>
+
+            </tr>
+        </table>
+
+        <table style="width: 100%" class="faculty_table">
+            <tr>
+                <td colspan="4" style="text-align: right">
+
+                    <input type="submit" value="Save" id="btnSave" name="cmd" class="btnclass" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#department').val($('#department option:first').val());
+        $('#MOdifiedDateofAppointment').val('');
+        $("#othersdiv").hide();
+        //$("#othersgivendiv").hide();
+        $("#othsubcomplaint").hide();
+        //$("#subcomplaints").hide();
+        $('.calendartwo').attr("readonly", "true");
+        $('.calendartwo').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+        });
+    });
+    $('#replaystatus').change(function () {
+
+        if (this.checked) {
+            $("#replaydate").addClass("required");
+        } else {
+            $("#replaydate").removeClass("required");
+        }
+    });
+  
+
+
+
+
+
+</script>
+
+

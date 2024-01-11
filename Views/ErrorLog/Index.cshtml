@@ -1,0 +1,197 @@
+﻿@using UAAAS.Models
+@model IEnumerable<UAAAS.Models.jntuh_error_log>
+@{
+    ViewBag.Title = "Error Log";
+    int sno = 1;
+}
+<style type="text/css">
+    .webgridwidth
+    {
+        width: 10px;
+    }
+</style>
+
+<h2>Error Log</h2>
+
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $(".calendar").css("width", "75px");
+        debugger;
+        $('#btnsubmit').click(function () {
+            debugger;
+            var date1, date2;
+            var fromdate = $('#txtFromDate').val();
+            var todate = $('#txtToDate').val();          
+            date1 = new Date(fromdate);
+            date2 = new Date(todate);
+
+            if (date2 <= date1) {
+               // alert("To date Should be greater than From date");
+
+               // return false;
+            }
+            return true
+        });
+    });
+
+</script>
+
+@using (Html.BeginForm())
+{
+    <table>
+        <tr>
+            <td>
+                <span>From Date</span>
+            </td>
+            <td>
+                @if(@ViewBag.Post!=true)
+                {
+                @Html.TextBox("txtFromDate", DateTime.Now.ToString("dd/MM/yyyy"), new { @class = "calendar" })
+                }
+                else
+                {
+                 @Html.TextBox("txtFromDate", (string)ViewBag.dt1, new { @class = "calendar" })
+                }
+            </td>
+            <td>
+                <span>To Date</span>
+            </td>
+            <td>
+                @if(@ViewBag.Post!=true)
+                {
+                @Html.TextBox("txtToDate",DateTime.Now.ToString("dd/MM/yyyy"), new { @class = "calendar" })
+                }
+                else
+                {
+                     @Html.TextBox("txtToDate",(string)ViewBag.dt2, new { @class = "calendar" })
+                }
+            </td>          
+            <td>
+
+                @Html.DropDownList("ddlcollegeId",
+                new SelectList(ViewBag.colleges as System.Collections.IEnumerable, "id", "name"),
+                "All colleges", new { id = "ddlcollegeId" })
+            </td>  
+              <td  style="text-align:right">
+                <input type="submit" id="btnsubmit" value="Search" id="btnsubmit" />
+            </td>         
+        </tr>        
+    </table>
+   <br />
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No</th>
+                <th style="text-align: left;">Error Date</th>
+                <th style="text-align: left;">Exception</th>
+                <th style="text-align: left;">Controller</th>
+                <th style="text-align: left;">Action</th>
+                <th class="ui-state-default" style="width: 50px; text-align: center;">Detail</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {                
+                <tr>
+                    <td style="text-align: center;">
+                        @(sno++)
+                    </td>
+                     <td style="text-align: left;">                        
+                         @Utilities.MMDDYY2DDMMYY(@item.createdOn.ToString())                 
+                    </td>
+                    <td style="text-align: left;">
+                        @item.exception
+                    </td>
+                    <td style="text-align: left;">
+                        @item.controller
+                    </td>
+                    <td>
+                        @item.action
+                    </td>
+                    <td style="text-align: center;">
+                        @Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "view_button" })
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th style="">
+                    <input type="text" id="i-0" style="width: 50%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="">
+                    <input type="text" id="i-1" style="width: 60%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left">
+                    <input type="text" id="i-3" style="width: 95%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left">
+                    <input type="text" id="i-5" style="width: 85%; text-align: left;" class="search_init">
+                </th>
+                 <th style="">
+                    <input type="text" id="i-6" style="width:50%; text-align: left; display: none" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+}

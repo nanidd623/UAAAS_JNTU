@@ -1,0 +1,75 @@
+﻿@model UAAAS.Models.CollegeFaculty
+@{
+    ViewBag.Title = "Verify Faculty";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+</script>
+@using (Ajax.BeginForm("AppealFacultyAddDepartment", "AppealFormat", new AjaxOptions()))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+
+    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    @Html.HiddenFor(model => model.id, new { @Value = Model.id })
+
+    <fieldset>
+        <legend></legend>
+
+        <div class="editor-label" style="width: 150px;">
+            <span>Registration Number</span>
+        </div>
+        <div class="editor-field" style="width: 430px;">
+            @Html.DisplayFor(model => model.FacultyRegistrationNumber)
+        </div>
+        <div class="specialization">
+            <div class="editor-label" style="width: 150px;">
+                <span>Department</span>
+            </div>
+            <div class="editor-field" style="width: 430px;">
+                @*@Html.DropDownListFor(model => model.SpecializationId,
+                    new SelectList(ViewBag.PGSpecializations as System.Collections.IEnumerable, "id", "spec"),
+                    "-- Select --", new { id = "Specialization", @class = "width", @required = "true" })*@
+                @Html.DropDownListFor(model => model.facultyDepartmentId,
+                    new SelectList(ViewBag.department as System.Collections.IEnumerable, "id", "departmentName"),
+                    "-- Select --", new {id = "department", style = "", @class = "width", @required = "true"})
+
+            </div>
+        </div>
+        <div class="specialization">
+            <div class="editor-label" style="width: 150px;">
+                <span>Specialization</span>
+            </div>
+            <div class="editor-field" style="width: 430px;">
+                @Html.DropDownListFor(model => model.SpecializationId,
+            new SelectList(ViewBag.PGSpecializations as System.Collections.IEnumerable, "id", "spec"),
+            "-- Select --", new { id = "Specialization", @style = "width:335px", @required = "true" })
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.FacultyRegistrationNumber)
+        @Html.HiddenFor(model => model.collegeId)
+        @Html.HiddenFor(model=>model.id)
+        @*@Html.HiddenFor(model => model.facultyRecruitedFor)*@
+        <div style="text-align: center">
+            <p>
+                <input type="submit" value="Submit" id="btnsend" name="cmd" />
+                @*@Html.ActionLink("Cancel", "", "", null, new { @class = "create_button" })*@
+            </p>
+        </div>
+    </fieldset>
+}

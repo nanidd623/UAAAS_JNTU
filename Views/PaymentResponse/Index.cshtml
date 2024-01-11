@@ -1,0 +1,109 @@
+﻿@model UAAAS.Models.Admin.PaymentResponse
+@{
+    ViewBag.Title = "Index";
+}
+<h2>Payment Response</h2>
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+@using (Html.BeginForm("SavePaymentResponse", "PaymentResponse", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    @Html.HiddenFor(model => model.Id)
+    
+   
+    <div class="details_table">
+        <div class="editor-label">
+            College Code
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.CollegeId, new { @class = "required " })
+            @Html.ValidationMessageFor(model => model.CollegeId)
+        </div>
+
+        <div class="editor-label">
+            Customer Id
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.CustomerID, new { @class = "required " })
+            @Html.ValidationMessageFor(model => model.CustomerID)
+        </div>
+        <div class="editor-label">
+            Txn Reference No
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.TxnReferenceNo, new { @class = "required " })
+            @Html.ValidationMessageFor(model => model.TxnReferenceNo)
+        </div>
+        <div class="editor-label">
+            Bank Reference No
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.BankReferenceNo, new { @class = "required " })
+
+            @Html.ValidationMessageFor(model => model.BankReferenceNo)
+        </div>
+
+        <div class="editor-label">
+            Txn Amount
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.TxnAmount, new { @class = "required " })
+            @Html.ValidationMessageFor(model => model.TxnAmount)
+        </div>
+
+        <div class="editor-label">
+            Bank ID
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.BankID, new { @class = "required " })
+            @Html.ValidationMessageFor(model => model.BankID)
+        </div>
+
+        <div class="editor-label">
+            Bank Merchant ID
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.BankMerchantID, new { @class = "required " })
+            @Html.ValidationMessageFor(model => model.BankMerchantID)
+        </div>
+      
+        <div class="editor-label">
+            Txn Date
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.TxnDate, new { @class = "required " })
+            @Html.ValidationMessageFor(model => model.TxnDate)
+        </div>
+
+        <div class="editor-label">
+            Payment Type 
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.PaymentTypeID,
+      new SelectList(ViewBag.objpayment as System.Collections.IEnumerable, "id", "FeeType"),
+            "-- Select --", new { Id = "id" })
+            @Html.ValidationMessageFor(model => model.PaymentTypeID)
+        </div>
+
+    </div>
+
+    <p class="create_link_right">
+        <input type="submit" value="Save" />
+    </p>
+
+}
+

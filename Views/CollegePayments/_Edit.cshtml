@@ -1,0 +1,36 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_paymentresponse>
+
+@{
+    int index = 1;
+}
+
+@using (Ajax.BeginForm("EditPaymentDetails", "CollegePayments", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "CollegeIntakeDialog" }, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <table class="webGrid">
+        <tr>     
+            <th>S.No</th>                
+            <th align="center">Customer Id</th>
+            <th>Tran ReferenceNo</th>
+            <th>Bank ReferenceNo</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th align="center">Error Status</th>
+        </tr>
+       @foreach (var item in ViewBag.allpaymentlist as List<UAAAS.Models.jntuh_paymentresponse>)
+       { 
+          <tr>   
+              <td>@(index++)</td>           
+             
+              <td>@item.CustomerID</td>
+              <td>@item.TxnReferenceNo</td>
+              <td>@item.BankReferenceNo</td>
+              <td>@item.TxnAmount</td>
+              <td>@item.AuthStatus</td>
+              <td>@item.ErrorDescription</td>
+          </tr>
+       }
+    </table>
+    
+    
+}

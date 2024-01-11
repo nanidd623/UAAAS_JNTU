@@ -1,0 +1,58 @@
+﻿@model UAAAS.Models.jntuh_error_log
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>jntuh_error_log</legend>
+
+    <div class="display-label">exception</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.exception)
+    </div>
+
+    <div class="display-label">controller</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.controller)
+    </div>
+
+    <div class="display-label">action</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.action)
+    </div>
+
+    <div class="display-label">StackTrace</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.StackTrace)
+    </div>
+
+    <div class="display-label">createdOn</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.createdOn)
+    </div>
+
+    <div class="display-label">my_aspnet_users</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users.name)
+    </div>
+
+    <div class="display-label">updatedOn</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.updatedOn)
+    </div>
+
+    <div class="display-label">my_aspnet_users1</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.my_aspnet_users1.name)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

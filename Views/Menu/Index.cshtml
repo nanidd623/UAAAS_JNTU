@@ -1,0 +1,123 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_menu>
+@{
+    ViewBag.Title = "Menu";
+}
+
+<h2>Menu</h2>
+
+<p class="create_link_right">
+    @Html.ActionLink("Add Menu Item", "Create", null, new { @class = "create_button" })
+</p>
+
+@{
+    var grid = new WebGrid(Model.Select((element, index) => new { Data = element, Index = index }),
+        canPage: true,
+        rowsPerPage: 10,
+        selectionFieldName: "selectedRow",
+        ajaxUpdateContainerId: "gridContent"
+        );
+    grid.Pager(WebGridPagerModes.NextPrevious);
+}
+<div id="gridContent">
+    @grid.GetHtml(tableStyle: "webGrid",
+                headerStyle: "gridHeader",
+                alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: grid.Columns(
+                grid.Column("ID", "S.No.", format: item => item.Index + 1, style: "row_number", canSort: true),
+                grid.Column("Data.menuName", "Menu Name", null, style: "align_left", canSort: true),
+                grid.Column("Data.menuActionName", "Page Type", null, style: "align_left", canSort: true),
+                grid.Column("Data.menuControllerName", "Navigate URL", null, style: "align_left", canSort: true),
+                grid.Column("Data.menuParentName", "Parent Menu", null, style: "align_left", canSort: true),
+                grid.Column("Data.Roles", "Roles", null, style: "align_left", canSort: true),
+                grid.Column("Data.isActive", "Status", format: @<text>@if (item.Data.isActive == true)
+                                                                      { <img src="@Url.Content("~/Content/images/active.png")" alt="JNTU Hyderabad Logo" />}
+                                                                      else
+                                                                      {<img src="@Url.Content("~/Content/images/inactive.png")" alt="JNTU Hyderabad Logo" />}</text>, style: "status", canSort: true),
+                grid.Column("Delete", "Delete", format: @<text>@Html.ActionLink("Delete", "Delete", new { id = item.Data.id }, new { @class = "delete_button" }) </text>, style: "delete align_center", canSort: false),
+                grid.Column("Edit", "Edit", format: @<text>@Html.ActionLink("Edit", "Edit", new { id = item.Data.id }, new { @class = "edit_button" }) </text>, style: "edit", canSort: false),
+                grid.Column("Detail", "View", format: @<text>@Html.ActionLink("Details", "Details", new { id = item.Data.id }, new { @class = "view_button" }) </text>, style: "view", canSort: false)
+         ))
+</div>
+@*<table>
+    <tr>
+        <th>
+            menuName
+        </th>
+        <th>
+            menuActionName
+        </th>
+        <th>
+            menuControllerName
+        </th>
+        <th>
+            menuParentID
+        </th>
+        <th>
+            Roles
+        </th>
+        <th>
+            menuOrder
+        </th>
+        <th>
+            isActive
+        </th>
+        <th>
+            createdOn
+        </th>
+        <th>
+            my_aspnet_users
+        </th>
+        <th>
+            updatedOn
+        </th>
+        <th>
+            my_aspnet_users1
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.menuName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.menuActionName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.menuControllerName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.menuParentID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Roles)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.menuOrder)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isActive)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.createdOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.my_aspnet_users.name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.updatedOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.my_aspnet_users1.name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>*@

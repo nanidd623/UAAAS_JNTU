@@ -1,0 +1,68 @@
+﻿@model IList<UAAAS.Models.CollegeIncome>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "College Income";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+}
+
+<h2>College Income</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    @*if (ViewBag.NotUpload == true)
+    {
+        <span class="notUpload">You can not upload data Please contact Affiliations & Academic Audit if you want to upload</span>
+    }
+    else
+    {
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }*@
+    
+    <table class="webGrid" style="width: 100%;">
+        <tr style="font-weight: bold;" class="gridHeader">
+            <td style="text-align: center; width: 50px;">S.No</td>
+            <td style="text-align: left; width: 250px;">Source Of Income</td>
+            <td style="text-align: left;">Rupees In Lakhs</td>
+        </tr>
+
+        @for (int i = 0; i < ViewBag.Count; i++)
+        {
+            <tr>
+                <td style="text-align: center;" class="col21">
+                    @(i + 1)
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @Html.LabelFor(m => m[i].incomeType, Model[i].incomeType.ToString())
+                    @Html.HiddenFor(m => m[i].incomeTypeID)
+                    @Html.HiddenFor(m => m[i].collegeId)
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (ViewBag.incomeAmount == true)
+                    {
+                        @Html.TextBoxFor(m => m[i].incomeAmount, new { id = "amount", @class = "allownumericwithdecimal", @style = "width: 100px; text-align: center;", Value = Model[i].incomeAmount == 0 ? "0" : Model[i].incomeAmount.ToString().Replace(".00", "") })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(m => m[i].incomeAmount, new { id = "amount", @class = "allownumericwithdecimal", @style = "width: 100px; text-align: center;", Value = Model[i].incomeAmount == 0 ? string.Empty : Model[i].incomeAmount.ToString().Replace(".00", "") })
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    <p class="right_buttons">
+        <input type="submit" value="Save" />
+    </p>
+}
+}

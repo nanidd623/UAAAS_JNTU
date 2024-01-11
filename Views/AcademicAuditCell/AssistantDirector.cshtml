@@ -1,0 +1,660 @@
+﻿@{
+    ViewBag.Title = "Assistant Director";
+    Layout = "~/Views/Shared/_AcademicAuditCellLayoutPage1.cshtml";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <style>
+        /*body {
+            font-family: Arial;
+            color: black;
+        }*/
+
+        .split {
+            height: 100%;
+            width: 50%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            overflow-x: hidden;
+            padding-top: 30px;
+        }
+
+        .left {
+            left: 0;
+            background-color:;
+        }
+
+        .right {
+            right: 0;
+            background-color:;
+        }
+
+        .centered {
+            position: absolute;
+            top: 50%;
+            left: 60%;
+            transform: translate(-50%, -60%);
+            text-align: center;
+        }
+
+            .centered img {
+                width: 100px;
+                border-radius: 50%;
+            }
+    </style>
+
+    <style>
+        .accordion {
+            background-color: #eee;
+            color: red;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+        }
+
+            .active, .accordion:hover {
+                background-color: #f8e9e9;
+            }
+
+        .panel {
+            padding: 0 18px;
+            display: none;
+            background-color: white;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <h2>Assistant Director</h2>
+    <div>
+        <div style="text-align:center">
+            <img src="~/Content/images/Dr. Prattipati_Prasanna.jpeg" height="160px" width="160px" /><br />
+            <span style="font-size:16px;color:chocolate;font-weight:bold;">Dr. Prattipati Prasanna</span><br />
+            <span style="font-size: 0.90rem;">
+                Ph. D<br />
+                Associate Professor of Mechanical Engineering & Assistant Director of Affiliations & Academic Audit
+            </span>
+        </div>
+        <br />
+        @*<div>
+                &nbsp;  &nbsp;  &nbsp; @Html.ActionLink("Educational Qualifications", "")
+            </div>*@
+        @*<button class="accordion"> Qualifications</button>
+            <div class="panel">
+                <table width="100%">
+                    <tr width="100%">
+                        <td width="10%"></td>
+                        <td width="90%">
+
+                            <h4 style="color:red">Educational Qualifications</h4>
+                            <table>
+                                <tr>
+                                    <td> <b>Ph. D.University</b> </td>
+                                    <td>:</td>
+                                    <td> (JNTU)</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Subject</b>   </td>
+                                    <td>:</td>
+                                    <td>Ph.D in Geology</td>
+                                </tr>
+                                <tr>
+                                    <td><b> Division & Year</b></td>
+                                    <td>:</td>
+                                    <td>  (2010-2017)</td>
+                                </tr>
+                            </table>
+
+                            <br />
+
+                            <table>
+                                <tr>
+                                    <td> <b>M. Sc.University</b>   </td>
+                                    <td>:</td>
+                                    <td>  Andhra University</td>
+                                </tr>
+                                <tr>
+                                    <td> <b>Subject</b>  </td>
+                                    <td>:</td>
+                                    <td> M.Sc in Geology</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Division & Year</b> </td>
+                                    <td>:</td>
+                                    <td>  1st Class With Distinction (2004-2006)</td>
+                                </tr>
+                            </table>
+                            <br />
+
+                            <table>
+                                <tr>
+                                    <td> <b>B.Sc university</b>   </td>
+                                    <td>:</td>
+                                    <td> MR(A) College </td>
+                                </tr>
+                                <tr>
+                                    <td> <b>Subject</b>  </td>
+                                    <td>:</td>
+                                    <td>  B.Sc in GMP</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Division & Year</b> </td>
+                                    <td>:</td>
+                                    <td>  (2001-2004)</td>
+                                </tr>
+                            </table>
+
+                        </td>
+                        <td width="10%" style="display:none;"></td>
+                        <td width="40%" style="display:none;">
+                            <h4 style="color:red">Additional Qualifications</h4>
+
+                            <table>
+                                <tr>
+                                    <td> <b>  PGDELT	University</b> </td>
+                                    <td>:</td>
+                                    <td> Osmania University</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Subject</b>   </td>
+                                    <td>:</td>
+                                    <td>P.G. Diploma in English Language Teaching</td>
+                                </tr>
+                                <tr>
+                                    <td><b> Division & Year</b></td>
+                                    <td>:</td>
+                                    <td>  Second, 2005</td>
+                                </tr>
+                            </table>
+                            <br />
+                            <table>
+                                <tr>
+                                    <td> <b>  PGD CL & IPR     University</b>   </td>
+                                    <td>:</td>
+                                    <td> Hyderabad Central University</td>
+                                </tr>
+                                <tr>
+                                    <td> <b>Subject</b>  </td>
+                                    <td>:</td>
+                                    <td>P.G. Diploma in Cyber Laws & IPR</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Division & Year</b> </td>
+                                    <td>:</td>
+                                    <td>  First with Distinction, 2015</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>*@
+
+        <button class="accordion"> Research</button>
+        <div class="panel">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+
+                        <h4 style="color:red"> Patents</h4>
+                        <table>
+                            <tr>
+                                <td><b> Dr.Prasanna Prattipati, Mechanical Characterization Studies On Loam Sandy Mixed Micro Silica For Structural Applications. , 2022</b> </td>
+                            </tr>
+                        </table>
+
+                        <br />
+
+                        <h4 style="color:red">International Journals</h4>
+                        <table>
+                            <tr>
+                                @*<td>International Journals</td>
+                                    <td><b>:</b></td>*@
+
+                                <td>
+                                    <b>1</b>.<b> Microstructure and Mechanical Properties Of B4C And ZrO2 Reinforced AZ91D Magnesium Matrix Hybrid Composite In Friction StirProcessing (FSP),JOURNAL OF CRITICAL REVIEWS ISSN- 2394-5125 VOL 07, ISSUE 13,2020 2960</b>
+    @*</table>*@
+    <br />
+    <b>2</b>.<b> Sairam Ambati1, Dr. Prasanna Pratthipati, Singaiah Gali Influence of B4C and ZrO2 Particles on Mechanical Properties and Microstructure of AZ91D Magnesium Composite-The International journal of analytical and experimental modal analysis Volume XIII, Issue XII,December/2021 ISSN NO:0886-9367</b>
+    <br />
+    <b>3</b>.<b> Singaiah Gali1, Dr. Prasanna Prattipati2 Study of Microstructure and Mechanical Properties of AZ91D Magnesium Metal Matrix Composite Reinforced With B4C and ZrO2. The International journal of analytical and experimental modal analysis Volume XIII, Issue XII, December/2021ISSN NO:0886-9367</b>
+
+    <br />
+    <b>4</b>.<b> Singaiah Gal, Dr. Prasanna Prattipati. Recent studies on development in fabrication of Mg-metal matrix Hybrid composites - A research review Â© 2021 JETIR December 2021, Volume 8, Issue 12 www.jetir.org (ISSN-2349-5162)</b>
+    <br />
+    <b>5</b>.<b> Saikrishna Methuku, Dr. Prasanna Prattipati,,Singaiah Gali,Wear Test Parameters ptimization for Tribological Characteristics of AZ91D Magnesium Metal Matrix Composite Reinforced with Boron Carbide and Zirconia, International Journal of Scientific Research and Engineering Development-â€“ Volume 5 Issue 1, Jan-Feb 2022</b>
+    <br />
+    <b>6</b>.<b> Prasannaa*, Tallapragada V S S P Sashankb, Bhavirisetti Manikantac, Pruthvi Alurid Optimizing The Process Parameters Of Electrical Discharge Machining On AA7075 - SiC Alloys, ScienceDirect Materials Today: Proceedings 4 (2017) 8517â€“8527</b>
+    <br />
+    <b>7</b>.<b> B. Siva kumara*, P. Prasannab, J. Sushmac, K.P. Srikanthd Stress Analysis And Design Optimization Of A Pressure Vessel Using Ansys Package. ICMPC 2017, Science Direct Materials Today: Proceedings 5 (2018) 4551â€“4562</b>
+    <br />
+    <b>8</b>.<b> P.Prasanna G. Shravan,V.Gopinath, Optimization of Mechanical Properties on Hybrid Composites by Topsis Technique International Journal of Research Available at e-ISSN: 2348-6848 p-ISSN: 2348-795X Volume 05 Issue 06 March 2018</b>
+    <br />
+    <b>9</b>.<b> Singaiah Gali*, Prasanna Prattipati MICROSTRUCTURE, MECHANICAL PERFORMANCE AND WEAR BEHAVIOR OF AZ91D-B4C-ZrO2 HYBRID COMPOSITES,: 2084-6096 ISSN (online): 2299-128X Composites Theory and Practice 22: 4 (2022).</b>
+    <br />
+    <b>9</b>.<b>Swathi Gopika Godhumala1 , Dr. Prasanna Prattipati2 , Singaiah Gali3 FABRICATION AND MECHANICAL CHARACTERISTICS OF MAGNESIUM MATRIX REINFORCED WITH B4C AND ZRO2 COMPOSITES DURING FRICTION STIR PROCESSING. The International journal of analytical and experimental modal analysis Volume XIV, Issue XI, November/2022 ISSN NO: 0886-9367</b>
+    <br />
+    <b>10</b>.<b> Rangubhotla Teja, Dr. Prasanna Prattipati, Singaiah Gali STUDY ON TRIBOLOGICAL POPERTIES OF AZ91D MAGNESIUM COMPOSITE REINFORCED WITH B4C AND ZrO2 . International Research Journal of Engineering and Technology (IRJET) e-ISSN: 2395-0056 Volume: 10 Issue: 05 | May 2023 www.irjet.net p-ISSN: 2395-0072</b>
+    <br />
+    <b>11</b>.<b> Bheem Rao.P, Prasanna.P, â€oeFabrication and Estimation of Mechanical Properties of Aa6061 Matrix Reinforced with Al2O3 and Stainless Steel 316 Powderâ€•, International Journal of Science and Research (IJSR), Volume 9 Issue 1, January 2020,pp.58-64</b>
+    <br />
+    <b>12</b>.<b> Rashmi Maharaja, P.Prasanna, â€oeDamage Detection and Severity Assessment of Composite Rotor Blade Materials using Modal Analysis for SHMâ€•, International Journal for Research in Applied Science & Engineering Technology(IJRASET) (December 2019) Volume 7, Issue X, pp.68-87.</b>
+    <br />
+    <b>13</b>.<b> Girish Kopur, Dr. P Prasanna, â€oe Modal Analysis of Silicon Carbide - Banana Fiber Epoxy Composites using an Experimental Set Upâ€•, International Journal for Research in Applied Science & Engineering Technology (IJRASET)Volume 7,IssueIX,(Nov 2019),pp.750-754.</b>
+    <br />
+    <b>14</b>.<b>Chelagolla Prudhvi, Dr. P. Prasanna, â€oeExperimental Analysis of Fiber Reinforced Composite Beam with Crack by varying Process Parametersâ€•, International Journal for Research in Applied Science & Engineering Technology (IJRASET) Volume 7, Issue IX,(Nov 2019),pp.741-746.</b>
+    <br />
+    <b>15</b>.<b> Anegundi Durga Praneetha; S.Ramesh Kumar Patnaik; Ganji Prashanth; Dr.P.Prasanna, â€oeElectron beam welding-influence of weld bead geometry on mechanical properties of stainless steel ss 304l alloyâ€•, International Journal of Scientific Research and Review(Nov 2019)8(7):pp.308-320.</b>
+    <br />
+    <b>16</b>.<b> Ganji Prashanth, Shaik Sana Samreen, Dr. P Prasanna, â€oeUltra-Grain Refinement and Optimization of Aluminum Material Properties using Equal Channel Angular Pressing (ECAP) in DEFORM Softwareâ€•, International Journal of Scientific Research and Review(Nov 2019)8(7):pp.145-157.</b>
+    <br />
+    <b>17</b>.<b> Dr. P Prasanna, Manja Abhishek, â€oeExperimental Investigation and Analysis of Wear Characteristics of Aluminium A6061 Reinforced with Red Mudâ€•, International Journal for Research in Applied Science & Engineering Technology (IJRASET), Volume 7 Issue XI, Nov 2019,pp.816-819</b>
+    <br />
+    <b>18</b>.<b> P. Divya vani and P. Prasanna, â€oeExperimental Investigation of Mechanical Properties of Banana and Glass Fiber Reinforced Epoxy Based Hybrid Composites with Filler Materialsâ€•, International Journal of Science and Research (IJSR) Volume 7 Issue 6,(June 2018),pp.1759-1764.</b>
+    <br />
+    <b>19</b>.<b> Kummari Mahesh, P.Prasanna, â€oeOptimisation of Drilling Parameters Using Grey Relational Grade on AA7075 Plates Using Coated and Cryogenically Treated Drillsâ€•, International Journal of Science and Research (IJSR) Volume 7 Issue 6, (June 2018):pp.1619-1625.</b>
+    <br />
+    <b>20</b>.<b> K. Akhil Kumar, Dr. P. Prasanna, â€oePerformance Evaluation of Solid Lubricants under MQL in Hard Turning of EN-31 Steel Using Coated Carbide Insertsâ€•, International Journal of Science and Research (IJSR) Volume 7 Issue 6, (June 2018):pp.1626-1632.</b>
+    <br />
+    <b>21</b>.<b> P.Prasanna, V Y Manu Sharma â€oeOptimization of Drilling Process Parameters during the Drilling of Ti-6Al-4V Alloy Using Carbide Drill bitâ€•, International Journal for Research in Applied Science & Engineering Technology (IJRASET) (JAN 2018) 6(1):pp.754-762.</b>
+    <br />
+    <b>22</b>.<b> A.Seshappa, B.Venkatesh, T.Vijaybabu, P.Prasanna,â€oeOptimization Of Significant Parameter On Mechanical Activities Of Almg1sicu Fusion Metal Matrix Composites With Taguchi Included Fuzzy Approachâ€• International Journal of Mechanical Engineering and Technology(IJMET) Volume 8, Issue 12, (December 2017), pp. 1089â€“1095.</b>
+    <br />
+    <b>23</b>.<b> A.Seshappa,P.Prasanna,B.subbaratnam,S.NareshKumar,â€oeInventionWithAutomatic Categorization Of Al-7075-T6 With Fly Ash Combined By Swirl Cast Hot Die Pattern Procedureâ€•, International Journal of Mechanical Engineering and Technology (IJMET) Volume 8, Issue 12,(December 2017), pp. 1057â€“1065.</b>
+    <br />
+    <b>24</b>.<b> N. Dheera Dr. P. Prasanna â€oeEffect On Surface Roughness And Tool Wear During Turning Of AISI 1020 Steel Using Coated Carbide Insertsâ€• IJSRD - International Journal for Scientific Research & Development| Vol. 5, Issue 04, 2017 | ISSN (online): 2321-0613.</b>
+    <br />
+    <b>25</b>.<b> Kavya Aileni,P.Prasanna, â€oeBuckling Analysis of Ring Stiffened Circular Cylinders Using ANSYSâ€•, International Journal for Research in Applied Science & Engineering Technology (IJRASET) (Nov2017) 5(X):pp.1587-1600.</b>
+    <br />
+    <b>26</b>.<b> G Vamsidhar Reddy, P Prasanna, D Mani Kumari, â€oeCondition Monitoring of Low Pressure Steam Turbine Bladesâ€•, International Journal for Research in Applied Science & Engineering Technology (IJRASET) (Nov2017) 5(IX):pp.1587-1600.</b>
+    <br />
+    <b>27</b>.<b> BReethi Mukaharjee,P.Prasanna,Harika,Dhruva Rathod, â€oeEffect of Stacking Sequence on Bending Stifness with respect to 600 Angle Plyâ€•, International journal of applied research,ISSN0973-4562 vol.10 No68(2015).</b>
+    <br />
+    <b>28</b>.<b> P.Prasanna, Ch.Penchalayya, Gopi, Sharnya, â€oeInfluence of Processes parameters and Optinization of FSW on AA6061-T6 Aluminium alloy using PCA analysis based Taguchi Methodologyâ€•, Indo-American Journal of Mechanical Engineering,ISSN 2321-9416,vol 2, Vo.1,March 2014.</b>
+    <br />
+    <b>29</b>.<b>P.Prasanna, Dr.Ch.Penchalayya, Dr.D. Anandhamohana Rao â€oeEffect of Tool Pin Profiles and Heat Treatment Process in the Friction stir welding of AA 6061 Aluminium Alloyâ€• American Journal of Engineering Research(AJER),2013, VOL.02,PP-07-15.</b>
+    <br />
+    <b>30</b>.<b> P.Prasanna, Dr.Ch.Penchalayya, Dr.D. Anandhamohana Rao â€oeInfluence of Process Parameters on Mechanical Properties of Copper Alloys in Friction stir weldingâ€• International journal of Engineering Sciences Research(IJESR),2013, VOL.04.</b>
+    <br />
+    <b>31</b>.<b> P.Prasanna, Dr.Ch.Penchalayya, Dr.D. Anandhamohana Rao â€oeOptimization and Validation of Process Parameters in Friction stir welding on AA 6061 Aluminium Alloy using Grey Relational Analysisâ€• International journal of Engineering Research and Applications(IJERA), 2013,VOL.03,pp 1471-1481.</b>
+    <br />
+    <b>32</b>.<b> B. Anjaneys Prasad, P.Prasanna â€oe Experimental Comparison of the MIG and Friction stir welding processeses for AA 6061 aluminium alloyâ€• International journal mining, metallurgy Engineering( IJMMME) Vol1,Issue2(2013).</b>
+    <br />
+    <b>32</b>.<b> P.Prasanna, B. Subba Rao, G. Krishna Mohana Rao â€oeFinite element modeling for maximum temperature in friction stir welding and its validationâ€• Int J Adv Manuf Technol (2010) 51:925-933.</b>
+    <br />
+    <b>34</b>.<b> P.Prasanna, B. Subba Rao, G. Krishna Mohana Rao â€oeExperimental and Numerical evaluation of Friction stir welds of AA6061-T6 Aluminium Alloyâ€• APRN Journal of Engineering and Applied Sciences ,VOL. 5, N0.6,2010</b>
+    <br />
+    <b>35</b>.<b> Dr. Prasanna Prattipati, Singaiah G , Venugopal C,METALLURGICAL AND MECHANICALCHARACTERIZATION OF AA7075 HYBRID METAL MATRIX COMPOSITE.Mukt Shabd Journal Volume XII, Issue VI, JUNE/2023,ISSN NO : 2347-3150,</b>
+
+
+
+</table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        @*<button class="accordion"> Teaching Experience in JNTU Hyderabad</button>
+
+            <div class="panel">
+                <table width="100%">
+                    <tr width="100%">
+                        <td width="10%"></td>
+                        <td width="90%">
+                            <table>
+                                <tr>
+                                    <td><b>Total Teaching Experience</b></td>
+                                    <td><b>:</b></td>
+                                    <td><b> 15 Years</b></td>
+                                </tr>
+                                <tr><th> Assistant Professor of Civil Engineering</th></tr>
+                                <tr>
+                                    <td>Organization</td>
+                                    <td><b>:</b></td>
+                                    <td>JNTUH College of Engineering, Hyderabad</td>
+                                </tr>
+                                <tr>
+                                    <td>Duration</td>
+                                    <td><b>:</b></td>
+                                    <td> 2006 to till-date</td>
+                                </tr>
+                                @*<tr>
+                                        <td>Scale of Pay</td>
+                                        <td><b>:</b></td>
+                                        <td>37400-67000+AGP 10000</td>
+                                    </tr>*@
+        @*<tr><th> Associate Professor of Physics</th></tr>
+            <tr>
+                <td>Organization</td>
+                <td><b>:</b></td>
+                <td>JNTUH College of Engineering Sultanpur, Pulkal (M),Sangareddy-District, A.P., India</td>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td><b>:</b></td>
+                <td>September 2017 to December 2018</td>
+            </tr>
+            <tr>
+                <td>Scale of Pay</td>
+                <td><b>:</b></td>
+                <td>37400-67000+AGP 9000</td>
+            </tr>
+            <tr><th> Associate Professor of Physics</th></tr>
+            <tr>
+                <td>Organization</td>
+                <td><b>:</b></td>
+                <td>JNTUH College of Engineering Jagtial, Nachupally (Kondagattu),Karimnagar District, A.P., India</td>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td><b>:</b></td>
+                <td>January 2016 to September 2017</td>
+            </tr>
+            <tr>
+                <td>Scale of Pay</td>
+                <td><b>:</b></td>
+                <td>37400-67000+AGP 9000</td>
+            </tr>
+            <tr><th> Associate Professor of Physics</th></tr>
+            <tr>
+
+
+                <td>Organization</td>
+                <td><b>:</b></td>
+                <td>JNTUH College of Engineering Jagtial, Nachupally (Kondagattu),Karimnagar District, A.P., India</td>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td><b>:</b></td>
+                <td>September 2007 to December 2015</td>
+            </tr>
+            <tr>
+                <td>Scale of Pay</td>
+                <td><b>:</b></td>
+                <td>15600-39100+AGP Rs.8000</td>
+            </tr>
+            <tr><th> Associate Professor of Physics</th></tr>
+            <tr>
+                <td>Organization</td>
+                <td><b>:</b></td>
+                <td>JNTU, College of Engineering Kakinada, Kakinada, A.P., India</td>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td><b>:</b></td>
+                <td>July 2007 to September 2007</td>
+            </tr>
+            <tr>
+                <td>Scale of Pay</td>
+                <td><b>:</b></td>
+                <td>15600-39100+AGP Rs.7000</td>
+            </tr>*@
+        @*</table>
+                        </td>
+                    </tr>
+                </table>
+            </div>*@
+        <button class="accordion">  Events Participated/Organized</button>
+
+        <div class="panel">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+                        <h4 style="color:red">Organized</h4>
+                        <table>
+                            <tr>
+                                <td><b>1</b>.<b> Organized a Workshop on 2 weeks workshop organized on Composite and Nano composite materials –metal, ceramic, polymer matrix as New engineering & Structural materials sponcerd by GIAN,MHRD &JNTUHCEH(11th-july to 22nd July 2016)., Hyderabad,</b>
+                                    <br />
+                                    <b>2</b>.<b> Organized a Workshop on One day work shop on Innovative Avenues for Advanced Engineering Design Applications - 2019 (IAAEDA-19) sponcerd by TEQIP-III JNTUHCEH., Hyderabad,</b>
+                                    <br />
+                                    <b>3</b>.<b> Organized a Workshop on TWO days Student Work shop on RC aircraft 2019 JNTUHCEH., Hyderabad,</b>
+                                    <br />
+                                    <b>4</b>.<b> Organized a Workshop on TWO days Student Work shop on Ornithopter 2020 JNTUHCEH., Hyderabad,</b>
+                                    <br />
+                                    <b>5</b>.<b> Organized a Workshop on Student Technical symposium Connassaince 2015,17,19& 2020 ME,JNTUHCEH., Hyderabad,</b>
+
+                                   </td>
+                            </tr>
+                        </table>
+
+                        <h4 style="color:red">Participated</h4>
+                        <table>
+                            <tr>
+                                <td>
+                                    <b>1</b>.<b> Participated in a Conference on International conference &XX National conference on IC engines and combustion, Hyderabad, 06-12-2023 to 09-12-2007</b>
+                                    <br />
+                                    <b>2</b>.<b> Participated in a Workshop on One week work shop on Progrmme on Training need analysis and Imapact Evaluation (23rd-27th March 2009)., Hyderabad,</b>
+                                    <br />
+                                    <b>3</b>.<b> 	Participated in a Workshop on Two day work shop on YOU &ME organized by TEQIP-II under JNTUH. (30-31st October 2013)., Hyderabad,</b>
+                                    <br />
+                                    <b>4</b>.<b> Participated in a Workshop on Two day workshop On Advanced cognitive and other optimization techniques(ACOOT 2016) orgnised by Mechanical Engg Dept JNTUH CEH, Hyd 8-9th Jan 2016., Hyderabad,</b>
+                                    <br />
+                                    <b>5</b>.<b> Participated in a Workshop on Two Day training course On Smart Technologies and Emerging trends organized by SPFU & JNTUHCEH,HYD, (22-26 Feb 2016)., Hyderabad,</b>
+                                    <br />
+                                    <b>6</b>.<b> Participated in a Workshop on Three day work shop on Quality initiative in Technical and Higher educational institutions organized by Engineering Staff College of India (16-18th Dec 2015)., Hyderabad,</b>
+                                    <br />
+                                    <b>7</b>.<b> Participated in a Workshop on One week Work Shop on Aspects of Pneumatics, Hydraulics and Roboticsorgnised by TEQIP-III JNTUHCH. (14-20th Dec 2017)., Hyderabad,</b>
+                                    <br />
+                                    <b>8</b>.<b> Participated in a Workshop on One week Workshop on CFD organized by TEQIP-III JNTUHCH., Hyderabad,</b>
+                                    <br />
+                                    <b>9</b>.<b> Participated in a Workshop on One day work shop on outcome based Education(3rd Feb 2014)., Hyderabad,</b>
+                                    <br />
+                                    <b>10</b>.<b> Participated in a FDP on One week FDP on SCILAB –An Open-Source Substitute for MATLAB organized by JNTUH Sulatanpur.( 25-30th May2020)., Hyderabad,</b>
+                                    <br />
+                                    <b>11</b>.<b> Participated in a FDP on One Week FDP on "Open Source Tools for Research" organized by MHRD & Pnadit Madan Mohan Malaviya National Mission on Teachers and teaching(08th-14th June 2020)., Hyderabad,</b>
+                                    <br />
+                                    <b>12</b>.<b> Participated in a Refresher Course on 3 weeks UGC sponsored Refresher course on Design and application of Robotic system and Advanced mechanisms - JNTUH College of Engineering , Hyderabad (08-31st March-2010)., Hyderabad,</b>
+                                    <br />
+                                    <b>13</b>.<b> Participated in a Refresher Course on 3 weeks UGC sponsored refresher course on Internet of things - JNTUH Hyderabad(09th -30th October 2017)., Hyderabad,</b>
+                                    <br />
+                                    <b>14</b>.<b> Participated in a Training on One Week Short term course on “Soft Computing Techniques – Renewable and Electrical System” organized by UGC-Human Resource Development Centre (HRDC), JNTUH,(01st-06th June 2020)., Hyderabad,</b>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <button  class="accordion">  Adminstrative Positions Held in JNTU Hyderabad </button>
+
+        <div class="panel" >
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+                        <table>
+                            <tr>
+                                <td><b>1</b>.<b> Addl. Controller of Examinations (Academics).</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>2</b>.<b> Boys Hostel Warden (General & Mess) from 2006-2012 and 2018 To 2022.</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>3</b>.<b> Deputy Warden, Kinnera Boys Hostel.</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>4</b>.<b> Work shop in charge for Department 2017 to 2018.</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>5</b>.<b> PG Diploma (Industrial safety) for University Coordinator from 2016-Till date.</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>6</b>.<b> Faculty coordinator for CONAISSNACE (student symposium)- 2015,2018,2020&2023.</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>7</b>.<b> NSS Programme officer from 2014 to 2018.</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>8</b>.<b> M.Tech (AMS) Coordinator 2013-Till Date.</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>9</b>.<b> Department Coordinator for M.Tech (AMS)(full time & Part time) Admissions 2013-Till date.</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>10</b>.<b>  Officer in charge of examinations for college from 2010 to 2012.</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>11</b>.<b>  University TEQIP-III Nodal officer.</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>12</b>.<b> Center of Excellence for CAD(Co ordinator).</b></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <button style="display:none;" class="accordion"> Administrative Experience in JNTU Hyderabad</button>
+
+        <div class="panel" style="display:none;">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+                        <table align="left">
+                            <tr><th colspan="3"> Coordinator, Directorate of Directorate of Affiliations & Academic Audit ,JNTU Hyderabad</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>January, 2020 to till date</td>
+                            </tr>
+
+                            <tr><th colspan="3"> Sports Coordinator, JNTUH CES, Sultanpur</th></tr>
+
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>March 2019 to May 2019</td>
+                            </tr>
+                            <tr><th colspan="3"> Chairman CRC, JNTUH CES, Sultanpur</th></tr>
+
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>October 2017 to January, 2020</td>
+                            </tr>
+                            <tr><th colspan="3"> Chairman CRC, JNTUH CES, Sultanpur</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>October 2017 to January, 2020</td>
+                            </tr>
+                            <tr><th colspan="3"> NSS Programme Officer, JNTUH CES, Sultanpur</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>October 2017 to January, 2020</td>
+                            </tr>
+                            <tr><th colspan="3"> Dy. Warden for Girls’ Hostel, JNTUH CES, Sultanpur</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>October 2017 to September 2018</td>
+                            </tr>
+                            <tr><th colspan="3"> Head, Department of Physics, JNTUH CEJ, Nachupally (Kondagattu), Karimnagar-Dist., TS, India</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>November 2014 to January 2017</td>
+                            </tr>
+                            <tr><th colspan="3"> Coordinator at Additional Controller-I, Exam Branch,  JNTU Hyderabad, Kukatpally, Hyderabad</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>June 2011 to August 2011 (2 Months)</td>
+                            </tr>
+                            <tr><th colspan="3"> Coordinator at Additional Controller-I, Exam Branch,  JNTU Hyderabad, Kukatpally, Hyderabad</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>May 2012 to July 2012 (3 Months)</td>
+                            </tr>
+                            <tr><th colspan="3"> Students’ Advisor in JNTUH CEJ, Karimnagar District, A.P., India</th></tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>September 2009 to January 2010 (1 Year 4 Months)</td>
+                            </tr>
+                            <tr>
+                                <th colspan="3">
+                                     Chairman, Class Review Committee(Officer-in-Charge) for I B. Tech. Courses,
+                                    JNTUH CEJ,  Karimnagar District, A.P.,India
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>Duration</td>
+                                <td><b>:</b></td>
+                                <td>September 2007 to September 2009 (2 Years)</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <button style="display:none;" class="accordion"> Research Projects</button>
+
+        <div class="panel" style="display:none;">
+            <table width="100%">
+                <tr width="100%">
+                    <td width="10%"></td>
+                    <td width="90%">
+                        <table>
+                            <tr>
+                                <td>. B SUNITHA, N SUBBA RAO, “Quality and degree of pollution of groundwater, using PIG from a rural part of Telangana State, India.”, Applied Water Science, ISBN No.https://doi.org/10.1007/s13201-018-0864-x, JAN , 2019</td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td> B SUNITHA, N SUBBA RAO, “Geochemical assessment of fluoride enriched groundwater and health implications from a part of Yavtmal District, India.”, Human and Ecological Risk Assessment: An International Journal, ISBN No.ISSN: 1080-7039 (Print) 1549-7860., October, 2018</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+        <div style="text-align:right;">
+            <br />
+            @Html.ActionLink("Click here to download", "DownloadFile", new { }, new { @class = "create_button" })
+        </div>
+    </div>
+
+</body>
+
+
+
+
+</html>
+
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+</script>

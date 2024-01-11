@@ -1,0 +1,108 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_newsevents>
+@{
+    ViewBag.Title = "News/Events";
+    int num = 1;
+}
+
+<h2>News/Events</h2>
+
+<p class="create_link_right">
+    @Html.ActionLink("Add News/Events", "Create", null, new { @class = "create_button" })
+</p>
+
+@section onReady{
+
+    /* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bPaginate": false,
+		                      "bLengthChange": false,
+		                      "bFilter": true,
+		                      "bSort": false,
+		                      "bInfo": true,
+		                      "bAutoWidth": false,
+		                      "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ],
+                              "sPaginationType": "full_numbers"
+    @*,
+                              "sDom": '<"toolbar">frtip'*@
+    });
+    @*$("div.toolbar").html('');*@
+}
+
+<table id="example" class="display" style="width: 100%;">
+    <thead>
+        <tr class="gridHeader">
+            <th style="width: 50px; text-align: center;">S.No</th>
+            <th style="width: 100px; text-align: center;">Type</th>
+            <th style="width: 100px; text-align: center;">CreatedOn</th>
+            <th>Title</th>
+            <th style="width: 100px; text-align: center;" class="ui-state-default">Start Date
+            </th>
+            <th style="width: 100px; text-align: center;" class="ui-state-default">End Date
+            </th>
+            <th style="width: 50px; text-align: center;" class="ui-state-default">Status
+            </th>
+            <th class="ui-state-default" style="width: 30px; text-align: center;">Edit</th>
+            @*<th class="ui-state-default" style="width: 30px; text-align: center;"></th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="col2">
+                <td style="width: 50px; text-align: center;">
+                    @(num++)
+                </td>
+                <td style="width: 100px; text-align: center;">
+                    @if (item.isNews == true)
+                    {
+                        <label>For all</label>
+                    }
+                    else
+                    {
+                        <label>For colleges</label>
+                    }
+                </td>
+                <td style="width: 100px; text-align: center;">
+                    @Html.DisplayFor(modelItem => item.createdOn)
+                </td>
+                <td style="text-align: justify;">
+                    @if (!string.IsNullOrWhiteSpace(item.navigateURL))
+                    {
+                        <a class="navigationurl" href="@item.navigateURL" target="_blank">@item.title</a>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.title)
+                    }
+                    @if (item.newsOrder == 1 && item.createdOn <= DateTime.Now.AddDays(+10))
+                    {
+                        <img src="../Content/images/latest.gif" alt="latest" />
+                    }
+                </td>
+                <td style="width: 100px; text-align: center;">
+                    @Html.DisplayFor(modelItem => item.startDate)
+                </td>
+                <td style="width: 100px; text-align: center;">
+                    @Html.DisplayFor(modelItem => item.endDate)
+                </td>
+                <td style="width: 50px; text-align: center;">
+                    @if (item.isActive == true)
+                    {
+                        <img src="@Url.Content("~/Content/images/active.png")" alt="JNTU Hyderabad Logo" />
+                    }
+                    else
+                    {
+                        <img src="@Url.Content("~/Content/images/inactive.png")" alt="JNTU Hyderabad Logo" />
+                    }
+                </td>
+                <td style="width: 30px; text-align: center;">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "editDialog edit_button" })
+                </td>
+                @* <td style="width: 30px; text-align: center;">
+                    @Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "viewDialog view_button" })
+                </td>*@
+            </tr>
+        }
+    </tbody>
+</table>

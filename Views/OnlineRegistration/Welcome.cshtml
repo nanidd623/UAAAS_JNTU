@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Welcome to Online Faculty Registration Portal - JNTUH";
+}
+
+<h2>Welcome to Online Faculty Registration Portal</h2>
+<br />
+
+<div class="col1" style="width: 99%; line-height: 28px;">
+    <span style="color: green; font-weight: bold;">The faculty of all affiliated colleges of JNTUH should get registered through the Faculty Registration Portal and obtain a registration number.</span>
+    <br /><br />
+    <span style="color: black;">&nbsp &nbsp &nbsp &nbsp It is mandatory that all the Faculty of who wish to work in any of the Colleges Affiliated to JNTUH should <b>Register</b> with their details at the <b> JNTUH Faculty Registration Portal</b> <a href="http://jntuhaac.in" target="_blank"><span style="color:blue">(www.jntuhaac.in)</span> </a>   and obtain a <b>Registration number</b>  in order to be a part of the College and University in turn. Further, the Faculty seeking Registration number at JNTUH portal may note that they are strictly advised <b>NOT TO REGISTER</b> themselves if they already working in any other University and if found so, they are liable for punitive action including legal action.</span>
+   
+    <br />
+    <span style="color: black;">&nbsp &nbsp &nbsp &nbspThe Registration number obtained shall be used by the Faculty and the Colleges for all future references and correspondence. As you are aware Affiliation process is an annual process at JNTUH University level and hence, in the forthcoming Affiliation Notification of JNTUH, Institutions applying for affiliation to JNTUH are expected to quote this Registration number in the Faculty information column without fail. The basic information of all the Existing Faculty in JNTUH affiliated Colleges such as the Qualification, Experience in Years, Date of Joining, etc is registered through the portal along with the recent photograph of the faculty.</span>
+   
+   
+    <br />
+    <span style="font-size:14px; text-decoration:underline;"><b>INSTRUCTIONS TO FACULTY:</b></span>
+    <br />
+    <span style="color: black;">1.The Faculty of all Affiliated Colleges of JNTUH or New Faculty intending to join an Institute affiliated to JNTUH should get registered through the Faculty Registration Portal and obtain a registration number. </span><br />
+    <span style="color: black;">2.	As a first step Faculty should enter his/her PAN card number, the system will automatically get the First Name, Middle Name & Last Name henceforth.
+The Faculty are instructed to provide the correct / active contact number and correct / active email-id at the Faculty portal as the same e-mail Id or contact number will be used for all future correspondence.</span><br />
+    <span style="color: black;">3.	As per the University Affiliation Procedure and Regulations the Faculty shall upload the certificates of qualification, experience, PAN card document, Aadhaar document, Appointment letter, etc., in the Faculty Registration Portal along with their Joining report and obtain a Registration number which shall be used for further correspondence.</span><br />
+    <span style="color: black;">4.	Scanned copy of the Original Degree certificate is the only valid document against a Degree. Marks Memoranda or Consolidated Marks Memoranda or Course Completion Certificate or Transcripts or any other substitute document/certificate are not acceptable against a Degree certificate and are liable for the cancellation of the Registration identity in the JNTUH Faculty portal too. Further, the photocopies of the Original Degree certificates are not acceptable.</span><br />
+    <span style="color: black;">5.	Further, the blurred images of the scanned Certificates/Photograph are not valid and the following specifications have to be strictly followed during uploading the relevant documents:
+<br />(a)	Recent passport size Color Photograph of the Faculty should be Minimum – 150 x150 pixels, Maximum – 200 x 230 pixels and less than 50 KB size saved in .jpg format.
+        <br />(b)	PAN Card Document  (Minimum 300 x 250 pixels and less than 100 KB size saved in the .jpg format)
+        <br />(c)	Aadhaar Card Document (Minimum 200x200 pixels and less than 100 KB size saved in the .jpg format)
+        <br />(d)	Degree Certificate (Minimum 600x800 pixels and less than 100 KB size saved in the .jpg format)
+        <br />(e)	(For Faculty who are already working) Form-16 for the last three consecutive  years given by the employer should be (Minimum 600 x 800 pixels and less than 100 KB size saved in the .jpg format)
+(f)	Selection Committee Minutes (Minimum 600x800 pixels and less than 100 KB size saved in the .jpg format)
+</span><br />
+    <span style="color: black;">6.	Faculty registering with fraudulent identity proofs such as wrong/invalid/duplicate PAN /AADHAR Proofs are liable for punitive action including legal action. </span><br />
+    <span style="color: black;">7.	If any Faculty member wishes to move from one College to another College, he/she shall as per the agreed terms and conditions with the College at the time of appointment, intimate to the College and submit the relieving letter to join a new college. The change of college in the Faculty Registration Portal shall be reflected accordingly by the Faculty. The responsibility of intimating to the University also rests on the Faculty member. </span><br />
+   
+    
+</div>
+<br/>
+@*<div style="text-align:center">
+    <span><input type="radio" id="rbn1" class="Terms Agree" name="Terms" value="true" />&nbsp;&nbsp;<b>I Agree the Terms & Conditions</b></span> &nbsp;&nbsp;&nbsp;&nbsp;<span><input type="radio" class="Terms DisAgree" id="rbn2" name="Terms" value="false" />&nbsp;&nbsp;<b>I Disagree the Terms & Conditions</b></span>
+</div>
+<br/>*@
+<div style="text-align: right; font-weight: bold;" id="Proceedinglink">
+    @Html.ActionLink("Proceed to Registration", "FacultyNew", "OnlineRegistration", new { @class = "create_button" })
+</div>
+@*<span style="font-family:Carrois Gothic; color:red; font-size:16px;"> Your registration now open for editing your PAN / AADHAAR details and any additional qulifications earned.</span>*@
+
+@*<script type="text/javascript">
+    $(document).ready(function() {
+        $("input[name=Terms]").change(function() {
+            var termvalue = $(this).val();
+            if (termvalue === "true") {
+                $("#Proceedinglink").hide();
+            } else {
+                $("#Proceedinglink").show();
+            }
+        });
+    });
+</script>*@

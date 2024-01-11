@@ -1,0 +1,285 @@
+﻿@model IList<UAAAS.Models.Governingbody>
+
+@using UAAAS.Models;
+@{
+    ViewBag.Title = "Colleges Governingbody";
+    var index = 1;
+    var count = 1;
+    var specialization = "";
+
+
+}
+
+<h2>College Governing Body</h2>
+<br />
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+
+
+        $('#collegeId').change(function () {
+            var collegeId = $(this).val();
+            if ($('#collegeId').val() != '') {
+                window.location = '/CollegeGoverningbody/CollegesGverningbodybyAdmin?collegeid=' + collegeId;
+            }
+            else {
+                window.location = '/CollegeGoverningbody/CollegesGverningbodybyAdmin';
+            }
+        });
+    });
+</script>
+<table class="four_columns">
+    <tr>
+        <td colspan="5">
+            <p class="create_link_right">
+                @Html.ActionLink("Export", "GoverningBodyExport", "CollegeGoverningbody",new {@class="create_button"})
+            </p>
+        </td>
+        
+    </tr>
+    <tr>
+        <td class="col1">
+            <span>College</span>
+        </td>
+        <td class="col2" colspan="4">
+            @Html.DropDownList("collegeId",
+                new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"),
+                "--Select--", new {id = "collegeId"})
+        </td>
+    </tr>
+
+</table>
+<br />
+@using (Html.BeginForm())
+{
+
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+
+    <table width="100%" class="webGrid" style="border: solid 1px red">
+        <tr>
+            <th  style="width: 3%;text-align: center" class="col11">
+                S.No
+            </th>
+            <th style="width: 20%; text-align: center" class="col11">
+                Name of the Governing Body Member
+            </th>
+            <th style="width: 20%; text-align: center" class="col11">
+                Governing Body Member Designation
+            </th>
+            <th style="width: 20%; text-align: center" class="col11">
+                Parent Organization where working
+            </th>
+            <th style="width: 13%; text-align: center" class="col11">
+                Designation of the member where
+                working at parent Organization
+            </th>
+            <th style="width: 7%; text-align: center" class="col11">
+                Date of Appointment (MM/DD/YYYY)
+            </th>
+            <th style="width: 2%; text-align: center" class="col11">
+                Appointment Order / Proceedings
+            </th>
+            <th style="text-align: center; text-align: center" class="col11">
+                Term Status
+            </th>
+        </tr>
+        <tbody>
+            @if (Model != null)
+            {
+               
+                
+                //var didd
+                for (int i = 0; i < Model.Count; i++)
+                {
+                    var bccolor = string.Empty;
+                    var currentdate = DateTime.Now;
+                    DateTime dateofmember = Convert.ToDateTime(Model[i].DateofappointmentasGoverningBodymember);
+                    var differentdays = (currentdate - dateofmember).TotalDays;
+                    int remaingdays = 0;
+                    
+                    //Model[i].GoverningBodyMemberDesignation == "University Nominee"
+                    if (Model[i].DateofappointmentasGoverningBodymember!=null)
+                    {
+                        dateofmember = Convert.ToDateTime(Model[i].DateofappointmentasGoverningBodymember);
+                        differentdays=(currentdate - dateofmember).TotalDays;
+                        remaingdays =Convert.ToInt32(Math.Round(1095 - Math.Round(differentdays)));
+                        if (differentdays > 1095)
+                        {
+                            bccolor = "yellow";
+                        }
+                        else
+                        {
+                            bccolor = string.Empty;
+                        }
+                    }
+
+                    <tr class="col21" style="background-color: @bccolor">
+
+                        <td>
+                            @(index++)
+                        </td>
+                        <td style="padding: 4px;">
+                            @Html.DisplayFor(x => Model[i].NameoftheGoverningBodyMember, new { @class = "required" })
+                        </td>
+                        <td class="col11" style="font-weight: bold">
+                            @Html.DisplayFor(model => Model[i].GoverningBodyMemberDesignation)
+                            @Html.HiddenFor(model => Model[i].MemberDesignationId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(x => Model[i].ParentOrganizationwhereworking, new { @class = "required" })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(x => Model[i].DesignationofthememberwhereworkingatparentOrganization, new { @class = "required" })
+                        </td>
+
+                        <td style="text-align: center">
+
+                            @Html.DisplayFor(x => Model[i].DateofappointmentasGoverningBodymember, new { @class = "calendar required" })
+                        </td>
+
+                        <td style="text-align: center">
+                            @*@Html.DisplayFor(x => Model[i].SupportingDocument, new { type = "file", @class = "Supportingfile required" })*@
+                            @if (Model[i].SupportingDocumentfile != null)
+                            {
+                                <a href="~/Content/Upload/College/GoverningBody/@Model[i].SupportingDocumentfile" target="_blank">
+                                    <span style="color: red;"><b>View</b></span>
+                                </a>
+                            }
+                        </td>
+                        <td style="text-align: center">
+                            @if (Model[i].DateofappointmentasGoverningBodymember != null && Model[i].SupportingDocumentfile!=null)
+                            {
+                                if (differentdays > 1095)
+                                {
+                                    <span style="text-align: center;color: red"><b> Expired</b></span>
+                                }
+                                else
+                                {
+                                    <span style="text-align: center"><b> Will expire in @remaingdays days</b></span>
+                                }
+                                
+                            }
+                            
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <br />
+    <h2>COLLEGE GOVERNING BODY METTING MINUTES</h2>
+    <br />
+    <table width="100%" border="0" class="webGrid">
+        @if (ViewBag.GoverningBodyMeetings != null)
+        {
+            <tr style="height: 20px;">
+                <td colspan="8">
+                    <table width="100%" border="0" class="webGrid">
+                        <tr style="background-color: #C1D4E6;">
+                            <th>S.No</th>
+                            <th>Date</th>
+                            <th>Remarks</th>
+                            <th>Minites Copy</th>
+                            @*<th>Delete</th>*@
+                        </tr>
+                        @foreach (var item in ViewBag.GoverningBodyMeetings)
+                        {
+                            <tr style="background-color: #FCF1D1;">
+                                <td>@(count++)</td>
+                                <td>@item.Dateofmetting</td>
+                                <td>@item.Remarks</td>
+                                <td>
+                                    <a href="~/Content/Upload/College/MinitesCopy/@item.Minutescopyfile" target="_blank">
+                                        <span style="color: red;"><b>View</b></span>
+                                    </a>
+                                </td>
+
+                            </tr>
+                        }
+                    </table>
+                </td>
+            </tr>
+        }
+    </table>
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+    <div id="dialog-check" style="display: none">
+    </div>
+}
+

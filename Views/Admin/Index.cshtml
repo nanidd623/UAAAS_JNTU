@@ -1,0 +1,43 @@
+﻿@model UAAAS.Models.AdminDashbord
+@{
+    ViewBag.Title = "Online Users";
+    var index = 1;
+}
+
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ]
+                           });
+}
+
+<h2>Online Users</h2>
+
+
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th style="width: 50px; text-align: center;">S.No</th>
+            <th style="width: 150px; text-align: left;">Username</th>
+            <th style="width: 180px; text-align: left;">Login Time</th>
+            <th style="width: 50px; text-align: center;">Code</th>
+            <th class="ui-state-default">College Name</th>
+            @*<th class="ui-state-default" style="width: 300px; text-align: left;">Email</th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in ViewBag.OnlineUsers)
+        {
+            <tr>
+                <td style="width: 50px; text-align: center;">@(index++)</td>
+                <td style="width: 150px; text-align: left;">@Html.Encode(user.username)</td>
+                <td style="width: 180px; text-align: left;">@Html.Encode(user.datetime)</td>
+                <td style="width: 50px; text-align: center;">@Html.Encode(user.code)</td>
+                <td>@Html.Encode(user.name)</td>
+                @*<td style="width: 300px; text-align: left;">@Html.Encode(user.email)</td>*@
+            </tr>    
+        }
+    </tbody>
+</table>

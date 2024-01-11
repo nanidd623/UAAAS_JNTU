@@ -1,0 +1,123 @@
+﻿@model UAAAS.Models.GrievanceRedressalCommittee
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Ajax.BeginForm("AddEditRecord", "GrievanceRedressalCommittee", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "CommitteeDialog" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <div class="details_table">
+        @if (ViewBag.IsUpdate == true)
+        {
+            @Html.HiddenFor(model => model.id)
+        }
+        <div class="editor-label" style="width: 200px">
+            @Html.LabelFor(model => model.actualDesignationId)
+        </div>
+        <div class="editor-field" style="width: 290px">
+            @Html.DropDownListFor(model => model.actualDesignationId,
+                new SelectList(ViewBag.actualDesignation, "id", "Designation"),
+                "-- Select --", new {@style="width:280px;", id = "actualDesignationName" })
+            @Html.ValidationMessageFor(model => model.actualDesignationId)
+        </div>
+
+        <div class="editor-label" style="width: 200px">
+            @Html.LabelFor(model => model.memberDesignation)
+        </div>
+        <div class="editor-field" style="width: 290px">
+            @Html.DropDownListFor(model => model.memberDesignation,
+                new SelectList(ViewBag.Designation, "id", "Designation"),
+             "-- Select --", new { @style = "width:280px;", id = "DesignationName" })
+            @Html.ValidationMessageFor(model => model.memberDesignation)
+        </div>
+        <div class="editor-label" style="width: 200px">
+            @Html.LabelFor(model => model.memberName)
+        </div>
+        <div class="editor-field" style="width: 290px">
+            @Html.TextBoxFor(model => model.memberName, new { style = "width: 96%;", @placeholder = "Enter Name", @maxlength = "100" })
+            @Html.ValidationMessageFor(model => model.memberName)
+        </div>
+
+        <div class="editor-label" style="width: 200px">
+            @Html.LabelFor(model => model.Mobile) 
+        </div>
+        <div class="editor-field" style="width: 290px">
+            @Html.TextBoxFor(model => model.Mobile, new { style = "width: 96%;", @placeholder = "Enter 10 digit Mobile Number", @maxlength = "10", @onkeypress = "return isNumeric(event)" })
+            @Html.ValidationMessageFor(model => model.Mobile)
+        </div>
+
+        <div class="editor-label" style="width: 200px">
+            @Html.LabelFor(model => model.Email) 
+        </div>
+        <div class="editor-field" style="width: 290px">
+            @Html.TextBoxFor(model => model.Email, new { style = "width: 96%;", @placeholder = "Enter your Email ID", @title = "Enter your Email ID", @maxlength = "50" })
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+        @Html.HiddenFor(model => model.createdOn)
+        @Html.HiddenFor(model => model.createdBy)
+        <div style="text-align: center">
+            <p>
+                @if (ViewBag.IsUpdate == true)
+                {
+                    <input type="submit" value="Update" id="btnUpdate" name="cmd" />
+                }
+                else
+                {
+                    <input type="submit" value="Save" id="btnSave" name="cmd" />
+                }
+            </p>
+        </div>
+    </div>
+    @*<table class="downloads_table" style="width: 100%;">
+            <tr>
+                <td class="editor-label1" style="width: 100%;">
+                    @Html.LabelFor(model => model.memberDesignation)
+                </td>
+            </tr>
+            <tr>
+                <td class="editor-field1" style="width: 100%;">
+
+                    @Html.DropDownListFor(model => model.memberDesignation,
+                    new SelectList(ViewBag.Designation, "id", "Designation"),
+                    "-- Select --", new { id = "DesignationName" })
+                    @Html.ValidationMessageFor(model => model.memberDesignation)
+                </td>
+            </tr>
+            <tr>
+                <td class="editor-label1" style="width: 100%;">
+                    @Html.LabelFor(model => model.memberName)
+                </td>
+            </tr>
+            <tr>
+                <td class="editor-field1" style="width: 100%;">
+                    @Html.TextBoxFor(model => model.memberName)
+                    @Html.ValidationMessageFor(model => model.memberName)
+                </td>
+            </tr>
+
+        </table>
+        <p>
+            @if (ViewBag.IsUpdate == true)
+            {
+                <input type="submit" value="Update" id="btnUpdate" name="cmd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+            }
+            else
+            {
+                <input type="submit" value="Save" id="btnSave" name="cmd" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+            }
+            <input type="button" value="Cancel" id="btnCancel" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+        </p>*@
+}

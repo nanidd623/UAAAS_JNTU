@@ -1,0 +1,175 @@
+﻿@model UAAAS.Models.RequestsListBasedonRegNumbers
+@{
+    ViewBag.Title = "AllRequestsListForAdmin";
+    int count = 1;
+}
+
+<h2>All Requests</h2>
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 50,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null,null,null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $("#RequestFiledId").change(function () {
+            debugger;
+            var id = $(this).val();
+            if(id != null && id != 0 && id != "")
+                window.location.href = "/FacultyRequests/AllRequestsListForAdmin?FieldId=" + id;
+            else
+                window.location.href = "/FacultyRequests/AllRequestsListForAdmin";
+        });
+
+        
+    });
+</script>
+@if (Model.FacultyList.Count != 0)
+{
+    <div>
+        <div class="editor-label" style="text-align:right;">
+            <span>Request Fields Wise</span>
+           
+        </div>
+        <div class="editor-field" style="width:82%;">
+            @Html.DropDownListFor(model=>model.FieldId, new SelectList(ViewBag.EditRequests as System.Collections.IEnumerable, "Id", "Field"), "---Select All---", new { @id = "RequestFiledId", @style = "text-align:center;" })
+        </div>
+    </div>
+    <br/><br/><br />
+    <table id="example" class="display" style="width: 100%;">
+        <thead>
+            <tr>
+                <th style="width: 30px; text-align: center;">
+                    S.No
+                </th>
+                <th style="width:130px; text-align: center;">
+                    Registration Number
+                </th>
+                <th style="text-align: center;width: 250px;">
+                    Name
+                </th>
+                <th style="text-align: center;width: 30px;">
+                    Gender
+                </th>
+                <th style="text-align: center;width: 400px;">
+                    College
+                </th>
+                <th style="text-align: center;width: 40px;">
+                    RequestsCount
+                </th>
+                <th style="text-align: center;width: 40px;">
+                   Education RequestsCount
+                </th>
+                <th style="text-align: center;width: 30px;">
+                    View
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.FacultyList)
+            {
+                <tr>
+                    <td style="text-align: center;">@(count++)</td>
+                    <td style="text-align: center;">
+                        @item.RegistrationNumber
+                    </td>
+                    <td style="text-align: center;">
+                        @item.Name
+                    </td>
+                    <td style="text-align: center;">
+                        @item.Gender
+                    </td>
+                    <td style="text-align: center;">
+                        @item.CollegeName
+                    </td>
+                    <td style="text-align: center;">
+                        @item.RequestsCount
+                    </td>
+                    <td style="text-align: center;">
+                        @item.EduRequestsCount
+                    </td>
+                    <td style="text-align: center;">
+                        @Html.ActionLink("View", "FacultyRequestsForAdmin", "FacultyRequests", new { fid = UAAAS.Models.Utilities.EncryptString(item.FacultyId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]) }, new { @class = "view_button" ,@target="_blank"})
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <input type="text" id="i-0" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th width="120px">
+                    <input type="text" id="i-1" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-4" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-5" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-6" style="width: 90%; text-align: left;" class="">
+                </th>
+                <th>
+                    <input type="text" id="i-6" style="width: 90%; text-align: left;" class="">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+}

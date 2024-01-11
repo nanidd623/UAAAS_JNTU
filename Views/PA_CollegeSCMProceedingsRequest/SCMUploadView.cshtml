@@ -1,0 +1,185 @@
+﻿@{
+    ViewBag.Title = "SCM Upload View";
+}
+@using UAAAS.Models
+<h2>SCM Upload View</h2>
+@using (Html.BeginForm())
+{
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+
+    <table class="four_columns" style="border-collapse: separate; border-spacing: 2px;">
+        <tr>
+            <td class="col1">
+                <span>College</span>
+            </td>
+            <td class="col2" colspan="4">
+                @Html.DropDownList("collegeId",
+                    new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"),
+                    "--Select--", new {id = "collegeId"})
+
+
+            </td>
+        </tr>
+       
+
+
+    </table>
+    
+    
+    
+    if(@ViewBag.MenuData != null)
+     {
+         <table width="100%" style="background: #b22222;color:white">
+        <tr>
+            <td width="10%"><b>Department : <span>@ViewBag.MenuData.specializationDescription</span></b></td>
+            <td width="15%"><b>Branch / Specialization : <span>@ViewBag.MenuData.specializationName</span></b></td>
+            <td width="10%"><b>SCM Date : <span>@Request.Params["SCMdate"]</span></b></td>
+        </tr>
+    </table>
+     }
+    
+    
+    <table width="100%">
+    <tr>
+        <td width="20%">
+            @if (ViewBag.departments != null)
+            {
+                <table id="deptmenu">
+                    <tr>
+                        <th class="col1">Branch/Specialization</th>
+                    </tr>
+                    @foreach (var item in ViewBag.departments)
+                    {
+                        <tr>
+                            <td class="col2">
+                             
+                                <b><a href="@Url.Action("SCMUploadView", "PA_CollegeSCMProceedingsRequest", new { collegeId = Request.Params["collegeId"], departmentId = @item.SpecializationId })">@item.SpecializationName</a></b>
+
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </td>
+        <td width="15%">
+            @if (ViewBag.SCMDates != null)
+            {
+                if (ViewBag.SCMDates.Count != 0)
+                {
+                    <table>
+                        <tr>
+                            <th class="col1"><b>SCM Dates</b></th>
+                        </tr>
+                        @foreach (var item1 in ViewBag.SCMDates)
+                        {
+                            <tr>
+                                <td class="col2">
+
+                                    <b> <a href="@Url.Action("SCMUploadView", "PA_CollegeSCMProceedingsRequest", new { collegeId = Request.Params["collegeId"], departmentId = Request.Params["departmentId"], SCMdate = @item1.SCMDATEview, SCMdateId = @item1.SCMDateId })">
+                                        @item1.SCMDATEview
+                                    </a></b>
+
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+            }
+        </td>
+        <td width="65%">
+            @if (ViewBag.SCMData != null)
+            {
+                if (ViewBag.SCMData.Count != 0)
+                {
+                    <table>
+                        <tr >
+                            <th colspan="3" class="col1">SCM Documents</th>
+                            
+                        </tr>
+                        @foreach (var item2 in ViewBag.SCMData)
+                        {
+                            <tr>
+                                @if (!string.IsNullOrEmpty(item2.ProfDocument))
+                                {
+                                    <td class="col2">
+                                        <b><a href="../Content/Upload/SCMUploads/@item2.ProfDocument" target="_blank">Professors</a></b>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="col2"></td>
+                                }
+                                @if (!string.IsNullOrEmpty(item2.AssocDocument))
+                                {
+                                    <td class="col2">
+                                        <b><a href="../Content/Upload/SCMUploads/@item2.AssocDocument" target="_blank">Associate Professors</a></b>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="col2"></td>
+                                }
+                                @if (!string.IsNullOrEmpty(item2.AssistDocument))
+                                {
+                                    <td class="col2">
+                                        <b><a href="../Content/Upload/SCMUploads/@item2.AssistDocument" target="_blank">Assistant Professors</a></b>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="col2"></td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                }
+            }
+        </td>
+</tr>
+
+</table>
+}
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        
+    });
+
+    $("#collegeId").change(function() {
+        var collegeId = $(this).val();
+        if (collegeId !== "") {
+            window.location = '/PA_CollegeSCMProceedingsRequest/SCMUploadView?collegeId=' + collegeId;
+        } else {
+            window.location = '/PA_CollegeSCMProceedingsRequest/SCMUploadView';
+        }
+    });
+
+
+    $("#DepartmentId").change(function () {
+        var collegeId = $("#collegeId").val();
+        var departmentId = $(this).val();
+        if (collegeId !== "" && departmentId!=="") {
+            window.location = '/PA_CollegeSCMProceedingsRequest/SCMUploadView?collegeId=' + collegeId + '&departmentId=' + departmentId;
+        } else {
+            window.location = '/PA_CollegeSCMProceedingsRequest/SCMUploadView';
+        }
+    });
+</script>

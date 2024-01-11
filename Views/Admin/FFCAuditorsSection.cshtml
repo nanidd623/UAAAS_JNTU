@@ -1,0 +1,100 @@
+﻿@model IList<UAAAS.Models.jntuh_ffc_auditor>
+@{
+    ViewBag.Title = "Auditors Availability";   
+}
+<h2>Auditors Availability</h2>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#group').change(function () {
+            var groupName = $(this).val();
+            if ($('#group').val() != '') {               
+                window.location = '/FFCAuditorsSection/FFCAuditorsSection?group=' + groupName;
+            }
+            else {
+                window.location = '/FFCAuditorsSection/FFCAuditorsSection';
+            }
+        });
+        $('.checkall').click(function () {
+            $('.forcheckbox').attr('checked', this.checked);
+        });
+    });
+</script>
+@section onReady{
+
+/* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bJQueryUI": true,
+                              "iDisplayLength": 5000,
+                              "bStateSave": false,
+     "sDom": '<"top"lfip>rt<"bottom"ip<"clear">'
+});
+}
+@if (@TempData["Success"] != null)
+{
+    <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+}
+@if (@TempData["Error"] != null)
+{
+    <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+}
+@using (Html.BeginForm())
+{
+    <table class="four_columns" style="width: 40%; margin-left: auto; margin-right: auto">
+
+        <tr>
+            <td class="col1">Aditor Group
+            </td>
+            <td class="col2" colspan="3">
+                @Html.DropDownList("group",
+            new SelectList(ViewBag.FFCAuditorsGroup as System.Collections.IEnumerable, "Text", "Value"),
+            "-- Select --", new { id = "group" })
+                <div id="divCollegeCount" style="color: red; display: inline; width: 200px;"></div>
+
+            </td>
+        </tr>
+    </table>
+
+   
+    if (@ViewBag.AuditoList == true)
+    {
+    <div style="text-align: right">
+        <input type="submit" value="Save" />
+    </div>
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 40px; text-align: center;">S.No
+                </th>
+                <th style="text-align: left;">Auditor Name
+                </th>
+                <th style="text-align: left;">University
+                </th>
+                <th style="text-align: center;">
+                   <span>Status</span> <input type="checkbox" id="chkselectall" name="Status" class="checkall" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count(); i++)
+            {           
+                <tr>
+                    <td style="text-align: center;">
+                        @(i + 1)
+                    </td>
+                    <td style="text-align: left; text-transform: uppercase;">
+                        @Html.DisplayFor(model => model[i].auditorName)
+                    </td>
+                    <td style="text-align: left; text-transform: uppercase;">
+                        @Html.DisplayFor(model => model[i].auditorPlace)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase;">
+                        @Html.CheckBoxFor(model => model[i].isActive,new{@class="forcheckbox"})
+                        @Html.HiddenFor(model => model[i].id)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+
+}

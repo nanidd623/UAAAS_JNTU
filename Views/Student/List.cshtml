@@ -1,0 +1,189 @@
+﻿@model List<UAAAS.Models.Jntuh_college_student_list>
+@{
+    ViewBag.Title = "List";
+
+}
+
+<h2>List</h2>
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+
+        $('#DeptID').change(function () {
+            debugger
+            var DeptID = $(this).val();
+
+
+            if ($('#DeptID').val() != '') {
+
+                window.location = '/Student/List?id=' + DeptID;
+            }
+            else {
+                window.location = '/Student/List';
+            }
+        });
+
+
+    });
+
+
+</script>
+<script type="text/javascript">
+
+    jQuery(document).ready(function () {
+
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 25,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+    })
+</script>
+
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success" style="background-color: gold; border: 1px solid #f49820;">
+        <p style="text-align: center;font-weight: bold"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+    </div>
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error" style="background-color: red; border: 1px solid #f49820;">
+        <p style="text-align: center;font-weight: bold;color:white;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+    </div>
+}
+
+
+@using (Html.BeginForm())
+{
+    <table class="four_columns">
+        <tr>
+            <td class="col1">
+                <span>Department</span>
+            </td>
+            <td class="col2" colspan="4">
+                @Html.DropDownList(UAAAS.Models.Utilities.EncryptString("DeptID", System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), new SelectList(ViewBag.Departments as System.Collections.IEnumerable, "DeptID", "departmentName"), "-selet-", new { id ="DeptID" })
+
+
+            </td>
+        </tr>
+    </table>
+    <br />
+
+
+    <table id="example" class="display" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="width: 150px; text-align: center;">
+                    S.No
+                </th>
+                <th style="width: 150px; text-align: center;">
+                    Name
+                </th>
+                <th style="width: 150px; text-align: center;">
+                    HallTicketNumber
+                </th>
+                <th style="width: 150px; text-align: center;">
+                    Operations
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                int i = 0;
+                foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td style="text-align: center;">
+                            @( i = i + 1)
+                        </td>
+                        <td style="text-align: center; text-transform: uppercase;">
+                            @item.studentname
+                        </td>
+                        <td style="text-align: center; text-transform: uppercase;">
+                            @item.HallticketNum
+                        </td>
+                        @if (item.pid == 0 || item.pid == null)
+                        {
+                            <td style="text-align: center; text-transform: uppercase;">
+                                @Html.ActionLink("AddProjectDetails", "ProjectDetailsCreate", new { sid = item.sid })
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="text-align: center; text-transform: uppercase;">
+                                @Html.Label("Updated")
+                            </td>
+                        }
+
+
+                    </tr>
+
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">
+                        <p style="color:red">Select Department for student informasion</p>
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}

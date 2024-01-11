@@ -1,0 +1,1076 @@
+﻿@using UAAAS.Models
+@model IList<UAAAS.Controllers.College.AppealFormatController.CollegeFacultyWithIntakeReport>
+@{
+    ViewBag.Title = "Appeal College Details";
+    var index = 1;
+    var sno = 1;
+    var labsno = 1;
+    var num = 1;
+    var doc = 1;
+    var edit = 1;
+    var physicallabsindex = 1;
+    uaaasDBContext db = new uaaasDBContext();
+}
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("#example tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("#example tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": false, "bSearchable": false }, null, null, null, null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+
+        var oTable1 = $('#example1').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example1').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("#example1 tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("#example1 tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null,null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+
+
+        $('#example').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+        $('#example1').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+           
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable1.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $('#collegeId').change(function () {
+            var collegeId = $(this).val();
+            if ($('#collegeId').val() != '') {
+                window.location = '/AppealFormat/CollegeAppealDetails?collegeid=' + collegeId;
+            }
+            else {
+                window.location = '/AppealFormat/CollegeAppealDetails';
+            }
+        });
+
+        $.ajaxSetup({ cache: false });
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Department',
+            autoOpen: false,
+            resizable: false,
+            height: 200,
+            width: 640,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'Deactivate Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 500,
+                width: 500,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Faculty'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        //BAS Flag View
+        $(".BAS").live('click', function (e) {
+            debugger;
+            var collegeId = $("#collegeId").val();
+            var value = $(this).attr('id')
+            if (value != null && value != "") {
+                $("#dialog-BAS").dialog({
+                    title: "Faculty BAS Details",
+                    autoOpen: false,
+                    resizable: false,
+                    height: "auto",
+                    width: 480,
+                    model: true,
+                    draggable: true,
+                    show: { effect: 'drop', direction: "up" },
+                    open: function (event, ui) {
+                        $(this).load("/FacultyVerificationDENew/GetFacultyBASDetailsView?RegistarationNumber=" + value);
+                    },
+                    close: function (event, ui) {
+                        location.reload();
+                       
+                    }
+
+                });
+                $("#dialog-BAS").dialog('open');
+                return false;
+            }
+
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit Department'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+
+        //editlabDialogforLabsView
+        $(".editlabDialogforLabsView").live("click", function (e) {
+            debugger;
+            e.preventDefault();
+            var url;
+
+            var id = $(this).attr('id');
+            var eqipid = $(this).attr('eqpid');
+            var eqipno = $(this).attr('eqpno');
+            var collegeId = $(this).attr('collegeid');
+            //$('table .webGrid').find('tbody').find('tr').find('td .col2').find('.editlabDialogforLabsView').click(function () {
+            //   // var url1 = $(this).find(".editlabDialog").attr("id");
+            //    url = "/FacultyVerification/AddEditRecord?id=" + url1 + "&eqpid=" + $(this).find(".editDialog").attr("eqpid");
+            //});
+            var url1 = $(this).attr('id');
+            url = "/AppealFormat/ViewLabDetails?eqpid=" + eqipid + "&id=" + id + "&eqpno=" + eqipno + "&collegeId=" + collegeId;///FacultyVerification/AddEditRecord?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+            $("#lab-dialog-view").dialog({
+                title: 'View Lab Details',
+                resizable: false,
+                height: 750,
+                width: 750,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                   location.reload();
+                   
+
+
+                }
+            });
+            //$myDialog.dialog('open');
+            //return false;
+        });
+    });
+</script>
+
+
+<table class="four_columns">
+    <tr>
+        <td class="col1">
+            <span>College</span>
+        </td>
+        <td class="col2" colspan="4">
+            @Html.DropDownList("collegeId",
+                                  new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "collegeId", "collegeName"),
+                                  "--Select--", new { id = "collegeId" })
+        </td>
+    </tr>
+
+</table>
+
+<br />
+@using (Html.BeginForm())
+{
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    //For principal
+    <h2>Appeal Principal Details (STEP-1)</h2>
+    <table style="width: 100%; border: 1px; border-color: red" class="LabsAppeal">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;" class="col1">
+                    S.No
+                </th>
+                <th style="width: 140px; text-align: center;" class="col1">
+                    Registration ID
+                </th>
+                <th style="text-align: left;" class="col1">
+                    Full Name
+                </th>
+                <th style="text-align: left;" class="col1">
+                    College Name
+                </th>
+                <th style="width: 80px; text-align: center;" class="col1">
+                    Compliance/Reverification
+                </th>
+                <th style="width: 80px; text-align: center;" class="col1">
+                    Notification Report Document
+                </th>
+                <th style="width: 80px; text-align: center;" class="col1">
+                    Appointment Order Document
+                </th>
+                <th style="width: 80px; text-align: center;" class="col1">
+                    Joining Order Document
+                </th>
+                <th style="width: 80px; text-align: center;" class="col1">
+                    Selection Commite Minutes Document
+                </th>
+                <th style="width: 80px; text-align: center;" class="col1">
+                    Reverification Supporting Document
+                </th>
+                <th class="col1">View</th>
+                <th style="width: 80px; text-align: center;" class="col1">
+                    Old Deactivation Reasons
+                </th>
+                <th style="width: 80px; text-align: center;" class="col1">
+                    BAS
+                </th>
+                @*<th style="width: 80px; text-align: center;">
+                        New Deactivation Reasons
+                    </th>*@
+            </tr>
+        </thead>
+        <tbody>
+
+            @{
+    var firstOrDefault = Model.FirstOrDefault();
+            }
+            @if (firstOrDefault != null)
+            {
+                var collegeFaculty = firstOrDefault.CollegeFaculties.FirstOrDefault();
+                if (collegeFaculty != null)
+                {
+                    foreach (var item in collegeFaculty.CollegeFacultiesliList.ToList())
+                    {
+                        string color = string.Empty;
+                        if (item.ViewPhdUndertakingDocument != null)
+                        {
+                            color = "green";
+                        }
+                        if (item.ViewNotificationDocument != null)
+                        {
+                            color = "red";
+                        }
+                        <tr>
+                            <td style="text-align: center; vertical-align: middle; background-color:@color; border-bottom: 1px solid #fff;" class="col2">
+                                @(sno++)
+                            </td>
+                            <td style="text-align: left; text-transform: uppercase; vertical-align: middle;" class="col2">
+                                @Html.DisplayFor(modelItem => item.FacultyRegistrationNumber)
+                            </td>
+
+                            <td style="vertical-align: middle; text-transform: uppercase; text-align: left;" class="col2">
+                                @Html.DisplayFor(modelItem => item.facultyFirstName)
+                                @Html.DisplayFor(modelItem => item.facultySurname)
+                                @Html.DisplayFor(modelItem => item.facultyLastName)
+                            </td>
+                            <td style="text-align: left; vertical-align: middle;" class="col2">
+                                @Html.DisplayFor(modelItem => item.CollegeName)
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;width: 50px;color:@color" class="col2">
+                                @if (Model != null && item.ViewNotificationDocument != null)
+                                {
+                                    <span>Compliance</span>
+                                }
+                                else
+                                {
+                                    if (Model != null && item.ViewPhdUndertakingDocument != null)
+                                    {
+                                        <span>Reverification</span>
+                                    }
+                                }
+                            </td>
+                            <td style="text-align: center; vertical-align: middle; width: 50px" class="col2">
+                                @if (Model != null && item.ViewNotificationDocument != null)
+                                {
+                                    <a href="@item.ViewNotificationDocument.Replace("~", "")" target="_blank"><span style="color: red;font-weight: bold">View</span></a>
+                                }
+                            </td>
+                            <td style="text-align: center; vertical-align: middle; width: 50px" class="col2">
+                                @if (Model != null && item.ViewAppointmentOrderDocument != null)
+                                {
+                                    <a href="@item.ViewAppointmentOrderDocument.Replace("~", "")" target="_blank"><span style="color: red;font-weight: bold">View</span></a>
+                                }
+                            </td>
+                            <td style="text-align: center; vertical-align: middle; width: 50px" class="col2">
+                                @if (Model != null && item.ViewJoiningReportDocument != null)
+                                {
+                                    <a href="@item.ViewJoiningReportDocument.Replace("~", "")" target="_blank"><span style="color: red;font-weight: bold">View</span></a>
+                                }
+                            </td>
+                            <td style="text-align: center; vertical-align: middle; width: 50px" class="col2">
+                                @if (Model != null && item.ViewSelectionCommitteeDocument != null)
+                                {
+                                    <a href="@item.ViewSelectionCommitteeDocument.Replace("~", "")" target="_blank"><span style="color: red;font-weight: bold">View</span></a>
+                                }
+                            </td>
+                            <td style="text-align: center; vertical-align: middle; width: 50px" class="col2">
+                                @if (Model != null && item.ViewPhdUndertakingDocument != null)
+                                {
+                                    <a href="@item.ViewPhdUndertakingDocument.Replace("~", "")" target="_blank"><span style="color: red;font-weight: bold">View</span></a>
+                                }
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;width: 50px" class="col2">
+                                @Html.ActionLink("View", "ViewFacultyDetails", "NewOnlineRegistration", new { fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = item.collegeId }, new { @class = "view_button", target = "_blank" })
+                            </td>
+                            <td style="text-align: left; vertical-align: middle; width: 50px" class="col2">
+                                @item.Reason
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;" class="col2">
+                                @if (item.BasstatusOld == "Yes")
+                                {
+                                    @Html.ActionLink("Yes", "GetFacultyBASDetailsView", "FacultyVerificationDENew", new { id = item.FacultyRegistrationNumber, @class = "BAS", @style = "color:red;" })
+                                    //<span class="BAS" id="@item.RegistrationNumber" Value="@item.RegistrationNumber" style="color:red;">Yes</span>
+
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Cleared", "GetFacultyBASDetailsView", "FacultyVerificationDENew", new { id = item.FacultyRegistrationNumber, @class = "BAS", @style = "color:green;" })
+                                    // <span class="BAS" id="@item.RegistrationNumber" value="@item.RegistrationNumber" style="color:green;">Cleared</span>
+                                }
+                            </td>
+                            @*<td style="text-align: left; vertical-align: middle;width: 50px">
+                                    @item.NewReason
+                                </td>*@
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+       
+    </table>
+
+            //For Faculty
+            <br />
+            <h2>Appeal Faculty Details (STEP-2)</h2>
+            <table id="example" class="display">
+                <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">
+                            S.No
+                        </th>
+                        <th style="width: 150px; text-align: center;">
+                            Registration ID
+                        </th>
+                        <th style="text-align: left;">
+                            Full Name
+                        </th>
+                        @*<th style="text-align: left;">
+                            Identified For
+                        </th>*@
+                        <th style="text-align: left;">
+                            Department
+                        </th>
+                        <th style="width: 50px; text-align: center;">
+                            Compliance/<br/>Reverification
+                        </th>
+                       
+                        <th style="width: 80px; text-align: center;">
+                            Selection Commite Minutes Document
+                        </th>
+                        <th style="width: 80px; text-align: center;">
+                           Compaliance Faculty / Reverification Supporting Document
+                        </th>
+                       
+                        <th>
+                            View
+                        </th>
+                        <th style="width: 80px; text-align: center;">
+                            Old Deactivation Reasons
+                        </th>
+                        <th>
+                            BAS
+                        </th>
+                        <th style="width: 80px; text-align: center;">
+                            Aadhaar Number
+                        </th>
+                        <th style="width: 80px; text-align: center;">
+                            Aadhaar Document
+                        </th>
+                        @*<th style="width: 80px; text-align: center;">
+                            Joining Order Document
+                        </th>*@
+                        @*<th>
+                            New Deactivation Reasons
+                        </th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.FirstOrDefault().CollegeFaculties.ToList())
+                    {
+                        if (item.collegeId != 0)
+                        {
+                           
+                            int j = 1;                                                                                 
+                           string color = string.Empty;
+                            if (item.ViewAppealReverificationSupportDoc != null)
+                            {
+                                color = "green";
+                            }
+                            if (item.ViewNotificationDocument != null)
+                            {
+                                color = "red";
+                            }
+                            var department = string.Empty;
+                            if (item.IdentifiedFor == "PG")
+                            {
+                                department = item.DegreeName + "-" + item.SpecializationName;
+
+                            }
+                            else
+                            {
+                                department = item.DegreeName + "-" + item.department;
+                            }
+                            var fdegreeid = db.jntuh_registered_faculty_education.Count(e => e.facultyId == item.id&&e.educationId!=8) > 0 ? db.jntuh_registered_faculty_education.Where(e => e.facultyId == item.id&&e.educationId!=8).Select(e => e.educationId).Max() : 0;
+                            <tr>
+                                <td style="text-align: center; vertical-align: middle; background-color: @color; border-bottom: 1px solid #fff;">
+                                    @(index++)
+                                </td>
+                                <td style="text-align: left; text-transform: uppercase; vertical-align: middle;">
+                                    @Html.DisplayFor(modelItem => item.FacultyRegistrationNumber)
+                                </td>
+                                @if (fdegreeid == 6)
+                                {
+                                     <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                                    @Html.DisplayFor(modelItem => item.facultyFirstName)
+                                    @Html.DisplayFor(modelItem => item.facultySurname)
+                                    @Html.DisplayFor(modelItem => item.facultyLastName)<span style="color: red;font-weight:bold">(Ph.D)</span>
+                                </td>
+                                }
+                                else
+                                {
+                                     <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                                    @Html.DisplayFor(modelItem => item.facultyFirstName)
+                                    @Html.DisplayFor(modelItem => item.facultySurname)
+                                    @Html.DisplayFor(modelItem => item.facultyLastName)
+                                </td>
+                                }
+                                @*<td style="text-align: left; vertical-align: middle;">
+                                    @Html.DisplayFor(modelItem => item.IdentifiedFor)
+                                </td>*@
+                                <td style="text-align: left; vertical-align: middle;">
+                                    @*@Html.DisplayFor(modelItem => item.department)*@
+                                    @department
+                                </td>
+                                <td style="text-align: center; vertical-align: middle; width: 50px; color: @color">
+                                    @if (Model != null && item.ViewNotificationDocument != null)
+                                    {
+                                        <span>Compliance</span>
+                                    }
+                                    else if (Model != null && item.ViewAppealReverificationSupportDoc != null)
+                                    {
+                                        <span>Reverification</span>
+                                    }
+                                </td>
+                               
+                                <td style="text-align: center; vertical-align: middle; width: 50px">
+                                    @if (Model != null && item.ViewSelectionCommitteeDocument != null)
+                                    {
+                                        <a href="@item.ViewSelectionCommitteeDocument.Replace("~", "")" target="_blank"><span style="color: red;font-weight: bold">View</span></a>
+                                    }
+                                    else if (Model != null && item.Collegescmdocument != null)
+                                    {
+                                         <a href="http://10.10.10.5:75/Content/Upload/SCMUploads/@item.Collegescmdocument.Replace("~", "")" target="_blank">
+                                           <span style="color: red;font-weight: bold">View</span>@*<img src="@Url.Content("../../Content/images/pdf.png")" alt="" height="18">*@
+                                           </a>
+                                        @*<a href="@item.ViewSelectionCommitteeDocument.Replace("~", "")" target="_blank">View</a>*@
+                                    }
+                                </td>
+                                <td style="text-align: center; vertical-align: middle; width: 50px">
+                                    @if (Model != null && item.ViewAppealReverificationScreenShot != null)
+                                    {
+                                        <a href="@item.ViewAppealReverificationScreenShot.Replace("~", "")" target="_blank"><span style="color: red;font-weight: bold">View</span></a>
+                                    }
+                                    else if (Model != null && item.ViewAppealReverificationSupportDoc != null)
+                                    {
+                                        <a href="@item.ViewAppealReverificationSupportDoc.Replace("~", "")" target="_blank"><span style="color: red;font-weight: bold">View</span></a>
+                                    }
+                                </td>
+                                @*<td style="text-align: center; vertical-align: middle; width: 50px">
+                                    @if (Model != null && item.ViewAppealReverificationSupportDoc != null)
+                                    {
+                                        <a href="@item.ViewAppealReverificationSupportDoc.Replace("~", "")" target="_blank">View</a>
+                                    }
+                                </td>*@
+                                <td style="text-align: center; vertical-align: middle; width: 50px">
+                                    @Html.ActionLink("View", "ViewFacultyDetails", "NewOnlineRegistration", new { fid = UAAAS.Models.Utilities.EncryptString(item.id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), collegeid = Request.Params["collegeid"] }, new { @class = "view_button", target = "_blank" })
+                                </td>
+                                <td style="text-align: left; vertical-align: middle;color: red">
+                                    @*@Html.DisplayFor(modelItem => item.Reason)*@
+                                    @if (!String.IsNullOrEmpty(@item.Reason))
+                                    {
+                                        string[] values = item.Reason.Split(',');
+                                        for (int i = 0; i < values.Length; i++)
+                                        {
+                                            values[i] = values[i].Trim();
+                                        }
+                                    foreach (var s in values)
+                                    {
+                                        if (j == values.Count())
+                                        {
+                                            <span> @s</span>
+
+                                        }
+                                        else
+                                        {
+                                            <span>@s</span>
+                                            <span>,</span>
+                                            <br/>
+                                        }
+                                        j++;
+                                    }                                      
+                                    }
+                                  
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;">
+                                    @if (item.BasstatusOld == "Yes")
+                                    {
+                                        @Html.ActionLink("Yes", "GetFacultyBASDetailsView", "FacultyVerificationDENew", new { id = item.FacultyRegistrationNumber, @class = "BAS", @style = "color:red;" })
+                                        //<span class="BAS" id="@item.RegistrationNumber" Value="@item.RegistrationNumber" style="color:red;">Yes</span>
+
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Cleared", "GetFacultyBASDetailsView", "FacultyVerificationDENew", new { id = item.FacultyRegistrationNumber, @class = "BAS", @style = "color:green;" })
+                                        // <span class="BAS" id="@item.RegistrationNumber" value="@item.RegistrationNumber" style="color:green;">Cleared</span>
+                                    }
+                                </td>
+                                <td style="text-align: center; vertical-align: middle; width: 50px">
+                                    @if (item.facultyAadhaarNumber != null)
+                                    {
+                                        @item.facultyAadhaarNumber
+                                    }                          
+                                </td>
+                                <td style="text-align: center; vertical-align: middle; width: 50px">
+                                    @if (Model != null && item.facultyAadharDocument != null)
+                                    {
+                                        <a href="@item.facultyAadharDocument.Replace("~", "")" target="_blank"><span style="color: red;font-weight: bold">View</span></a>
+                                    }
+                                </td>
+
+                                @*<td style="text-align: center; vertical-align: middle; width: 50px">
+                                    @if (Model != null && item.ViewNotificationDocument != null)
+                                    {
+                                        <a href="@item.ViewNotificationDocument.Replace("~", "")" target="_blank">View</a>
+                                    }
+                                </td>
+                                <td style="text-align: center; vertical-align: middle; width: 50px">
+                                    @if (Model != null && item.ViewAppointmentOrderDocument != null)
+                                    {
+                                        <a href="@item.ViewAppointmentOrderDocument.Replace("~", "")" target="_blank">View</a>
+                                    }
+                                </td>
+                                <td style="text-align: center; vertical-align: middle; width: 50px">
+                                    @if (Model != null && item.ViewJoiningReportDocument != null)
+                                    {
+                                        <a href="@item.ViewJoiningReportDocument.Replace("~", "")" target="_blank">View</a>
+                                    }
+                                </td>*@
+                                @*<td style="text-align: left; vertical-align: middle;width: 50px">
+                                    <span> @item.NewReason</span>
+                                </td>*@
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>
+                            <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+                        </th>
+
+                        <th>
+                            <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-5" style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                        @*<th class=" ui-state-default">
+                                <input type="text" id="i-6" style="width: 90%; text-align: center;" class="search_init">
+                            </th>
+                            <th class=" ui-state-default">
+                                <input type="text" id="i-7" style="width: 90%; text-align: left;" class="search_init">
+                            </th>*@
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-7" style="width: 90%; text-align: left; display: none;" class="search_init1">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-8" style="width: 90%; text-align: left; display: none;" class="search_init1">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-9" style="width: 90%; text-align: left; display: none;" class="search_init1">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-10" style="width: 90%; text-align: left; display: none;" class="search_init1">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-11" style="width: 90%; text-align: left; display: none;" class="search_init1">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-13" style="width: 90%; text-align: left; display: none;" class="search_init1">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-13" style="width: 90%; text-align: left; display: none;" class="search_init1">
+                        </th>
+                        @*<th class=" ui-state-default">
+                            <input type="text" id="i-13" style="width: 10%; text-align: left; display: none;" class="search_init1">
+                        </th>*@
+                        @*<th class=" ui-state-default">
+                            <input type="text" id="i-13" style="width: 10%; text-align: left; display: none;" class="search_init1">
+                        </th>
+                        <th class=" ui-state-default">
+                            <input type="text" id="i-13" style="width: 10%; text-align: left; display: none;" class="search_init1">
+                        </th>*@
+                        @*<th class=" ui-state-default">
+                            <input type="text" id="i-14" style="width: 10%; text-align: left; display: none;" class="search_init1">
+                        </th>*@
+                    </tr>
+                </tfoot>
+            </table>
+
+            //For Labs
+            <br />
+            <h2>Appeal Lab Details (STEP-3)</h2>
+            <table style="width: 100%; border: 1px; border-color: red" class="LabsAppeal">
+                <tr>
+                    <th class="col3" colspan="5" style="text-align: center">LIST OF EQUIPMENTS</th>
+                </tr>
+                <tr>
+                    <th class="col1" style="text-align: center;">S.No </th>
+                    <th class="col1" style="text-align: left; vertical-align: middle; width: 100px">Lab Name</th>
+                    <th class="col1" style="text-align: left; vertical-align: middle;">Equipment Name</th>
+                    <th class="col1" style="text-align: left; vertical-align: middle;">View</th>
+
+                </tr>
+
+
+                @for (int i = 0; i < Model.FirstOrDefault().LabsListDefs1.Count; i++)
+                {
+                    <tr>
+                        <td class="col2" style="width: 30px; text-align: center;">
+                            @(labsno++)
+                        </td>
+                        <td class="col2" style="text-align: left; vertical-align: top;">@Model[0].LabsListDefs1[i].LabName</td>
+                        <td class="col2" style="text-align: left; vertical-align: top;">@Model[0].LabsListDefs1[i].EquipmentName</td>
+                        <td class="col2" style="text-align: left; vertical-align: middle;">
+                            @if (Model[0].LabsListDefs1[i].id != 0)
+                            {
+                                @Html.ActionLink("View", "", "", new { @id = @Model[0].LabsListDefs1[i].id, eqpid = "undefined", eqpno = 1, collegeId = ViewBag.collegeId, @class = "editlabDialogforLabsView" }) // new { @class = "editlabDialogforLabsView" }
+                            }
+                        </td>
+
+
+                    </tr>
+                }
+
+
+
+            </table>
+    <br/>
+    
+            //For Appeal Intake
+            <br />
+            <h2>Appeal Intake Details (STEP-4)</h2>
+
+            <table style="width: 100%; border: 1px; border-color: red" class="full_table">
+                @*<tr>
+                        <th class="col1" colspan="25" style="text-align: center; font-weight: bold;">EXISTING & PROPOSED INTAKE</th>
+                    </tr>*@
+                <tr>
+                    <th class="col1" style="text-align: center;" rowspan="3">S.No</th>
+                    <th class="col1" style="text-align: center;" rowspan="3">Degree</th>
+                    <th class="col1" style="text-align: center;" rowspan="3">Department</th>
+                    <th class="col1" style="text-align: center;" rowspan="3">Specialization</th>
+                    @*<th class="col1" style="text-align: center;" rowspan="3">Shift</th>*@
+                    <th class="col1" style="text-align: center;width: 100px" colspan="10">Approved & Actual Admitted Intake as per Academic Year</th>
+                    @*<th style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">Approved Intake for the A.Y.
+                            <br />
+                            2015-16 (as per AICTE)
+                        </th>*@
+                    <th class="col1" style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">
+                        Proposed Intake for the A.Y.<br />
+                        2019-20 (as submitted to AICTE)
+                    </th>
+                    <th class="col1" style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">Course Status</th>
+                    <th class="col1" style="text-align: center;" colspan="2">NBA Accreditation Period (if exists)</th>
+                    <th class="col1" colspan="2" style="text-align: center;" rowspan="3">Approval Letter</th>
+                </tr>
+                <tr>
+                    <th class="col1" style="text-align: center;" colspan="2">@ViewBag.FifthYear</th>
+                    <th class="col1" style="text-align: center;" colspan="2">@ViewBag.FourthYear</th>
+                    <th class="col1" style="text-align: center;" colspan="2">@ViewBag.ThirdYear</th>
+                    <th class="col1" style="text-align: center;" colspan="2">@ViewBag.SecondYear</th>
+                    <th class="col1" style="text-align: center;" colspan="2">@ViewBag.FirstYear</th>
+                    <th class="col1" style="text-align: center;" colspan="2">(DD/MM/YYYY)</th>
+                </tr>
+                <tr style="">
+                    <th class="col1" style="text-align: center;">
+                        <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+                    </th>
+                    <th class="col1" style="text-align: center;">
+                        <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+                    </th>
+                    <th class="col1" style="text-align: center;">
+                        <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+                    </th>
+                    <th class="col1" style="text-align: center;">
+                        <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+                    </th>
+                    <th class="col1" style="text-align: center;">
+                        <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+                    </th>
+                    <th class="col1" style="text-align: center;">
+                        <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+                    </th>
+                    <th class="col1" style="text-align: center;">
+                        <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+                    </th>
+                    <th class="col1" style="text-align: center;">
+                        <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+                    </th>
+                    <th class="col1" style="text-align: center;">
+                        <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+                    </th>
+                    <th class="col1" style="text-align: center;">
+                        <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+                    </th>
+                    <th class="col1" style="text-align: center;">
+                        From
+                    </th>
+                    <th class="col1" style="text-align: center;">
+                        To
+                    </th>
+                </tr>
+
+                @foreach (var item in Model.FirstOrDefault().CollegeIntakeExistings)
+                {
+                    var appeaproposedintake = db.jntuh_appeal_college_intake_existing.Where(p => p.collegeId == item.collegeId&&p.academicYearId==10 && p.specializationId == item.specializationId && p.shiftId == item.shiftId).Select(s=>s).FirstOrDefault();
+                    var intakecolor = string.Empty;
+                    if (appeaproposedintake!=null)
+                    {
+                        if (appeaproposedintake.proposedIntake == item.ProposedIntake)
+                        {
+
+                        }
+                        else
+                        {
+                            intakecolor = "red";
+                        }
+                    }
+                    <tr>
+                        <td class="col2" style="width: 30px; text-align: center; background-color: @intakecolor">
+                            @(num++)
+                        </td>
+                        <td class="col2" style="width: 60px; text-align: center;">@item.Degree</td>
+                        <td class="col2" style="width: 50px; text-align: center;">@item.Department</td>
+                        <td class="col2" style="width: 50px; text-align: center;">@item.Specialization</td>
+                        @*<td class="col2" style="width: 30px; text-align: center;">@item.Shift</td>*@
+                        <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake5</td>
+                        <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake5</td>
+                        <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake4</td>
+                        <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake4</td>
+                        <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake3</td>
+                        <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake3</td>
+                        <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake2</td>
+                        <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake2</td>
+                        <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake1</td>
+                        <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake1</td>
+                        @*<td style="width: 30px; text-align: center; background-color: lightgreen; font-weight: bold;">
+                                @if (item.ApprovedIntake == 0)
+                                { }
+                                else
+                                {
+                                    @item.ApprovedIntake
+                                }
+                            </td>*@
+                        <td class="col2" style="width: 30px; text-align: center; background-color: lightgreen; font-weight: bold;">
+
+                            @if (appeaproposedintake != null)
+                            {
+                                if (appeaproposedintake.proposedIntake == item.ProposedIntake)
+                                {
+                                     @item.ProposedIntake
+                                }
+                                else
+                                {
+                                    @appeaproposedintake.proposedIntake
+                                }
+                            }
+                            else
+                            {
+                                 if (item.ProposedIntake == 0)
+                                 {
+                                      @item.ProposedIntake
+                                 }
+                                 else
+                                 {
+                                     @item.ProposedIntake
+                                 }
+                            }
+                           
+                          
+                            
+                        </td>
+                        <td class="col2" style="width: 65px; text-align: center; background-color: lightgreen; font-weight: bold;">@item.courseStatus</td>
+                        <td class="col2" style="width: 65px; text-align: center;">
+                            @if (item.nbaFrom != null)
+                            {
+                                @item.nbaFromDate.ToString().Split(' ')[0]
+                            }
+                        </td>
+
+                        <td class="col2" style="width: 65px; text-align: center;">
+                            @if (item.nbaTo != null)
+                            {
+                                @item.nbaToDate.ToString().Split(' ')[0]
+                            }
+                        </td>
+
+                        @*<td class="col2" style="width: 20px; text-align: center;">
+                                @Html.ActionLink("Edit", "AppealAddEditCollegeIntake", "FacultyVerification", new { id = item.id, collegeId = item.collegeId }, new { @class = "editintakeDialog edit_button" })
+                            </td>*@
+                        @*<td class="col2" style="width: 20px; text-align: center;">
+                                @Html.ActionLink("Delete", "AppealDeleteCollegeIntake", new {id = item.id}, new {@class = "confirmIntakeDialog delete_button"})
+                            </td>*@
+                        <td style="text-align: center; vertical-align: middle;">
+                            @if (appeaproposedintake != null)
+                            {
+                             if (!string.IsNullOrEmpty(appeaproposedintake.IntakeApprovalLetter))
+                            {
+                                <span><a href="../Content/Upload/OnlineAppealDocuments/Intake/AppealAICTEApprovalReports/@item.AICTEApprovalLettr" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+
+                            }
+                            }
+                            @*@if (!string.IsNullOrEmpty(item.AICTEApprovalLettr))
+                            {
+                                <span><a href="../Content/Upload/OnlineAppealDocuments/Intake/AppealAICTEApprovalReports/@item.AICTEApprovalLettr" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+
+                            }*@
+                        </td>
+
+                        <td hidden="hidden">@item.createdBy</td>
+                        <td hidden="hidden">@item.createdOn</td>
+                    </tr>
+                }
+            </table>
+
+            //For Appeal Intake supportingDocs
+            @*<br />
+            <h2>Appeal Intake Supporting Documents (STEP-5)</h2>
+            <table style="width: 100%; border: 1px; border-color: red" class="full_table">
+                <tr>
+                    <th class="col1" style="text-align: center;">S.No</th>
+                    <th class="col1" style="text-align: center;">Degree</th>
+                    <th class="col1" style="text-align: center;">Department</th>
+                    <th class="col1" style="text-align: center;">Specialization</th>
+                    <th class="col1" style="text-align: center;">SCM</th>
+                    <th class="col1" style="text-align: center;">Form16</th>
+                </tr>
+                @foreach (var item in Model.FirstOrDefault().CollegeIntakeSupportingDocuments)
+                {
+                    <tr>
+                        <td class="col2" style="width: 30px; text-align: center;">@(doc++)</td>
+                        <td class="col2" style="width: 60px; text-align: center;">@item.Degree</td>
+                        <td class="col2" style="width: 50px; text-align: center;">@item.Department</td>
+                        <td class="col2" style="width: 50px; text-align: center;">@item.Specialization</td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @if (!string.IsNullOrEmpty(item.ViewSCMApprovalLetter))
+                            {
+                                <span><a href="../Content/Upload/OnlineAppealDocuments/Intake/IntakeSCMApprovalReports/@item.ViewSCMApprovalLetter" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+
+                            }
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            @if (!string.IsNullOrEmpty(item.ViewForm16ApprovalLetter))
+                            {
+                                <span><a href="../Content/Upload/OnlineAppealDocuments/Intake/IntakeForm16ApprovalReports/@item.ViewForm16ApprovalLetter" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </table>*@
+
+            //For Appeal remarks
+            <br />
+            <h2>Appeal Remarks & Other Supporting Documents (STEP-5)</h2>
+
+            <table style="width: 100%; border: 1px; border-color: red" class="full_table" >
+                <tr>
+                    <th class="col1" style="text-align: center;">S.No</th>
+                    <th class="col1" style="text-align: center; width: 100%;">Remarks</th>
+                    <th class="col1" style="text-align: center; ">Declaration Path</th>
+                    <th class="col1" style="text-align: center; ">Appeal Supporting Documents</th>
+
+                </tr>
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td class="col2" style="width: 10px; text-align: center;">@(edit++)</td>
+                        <td class="col2" style=" text-align: center;">@item.Remarks</td>
+
+                        <td class="col2" style="text-align: center; vertical-align: middle;">
+                            @if (!string.IsNullOrEmpty(item.DeclarationPath))
+                            {
+                                <span><a href="~/Content/Upload/OnlineAppealDocuments/Appealsubmission/AppealsubmissionDocuments/@item.DeclarationPath.Replace("~", "")" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+
+                            }
+                        </td>
+                        <td class="col2" style="text-align: center; vertical-align: middle;">
+                            @if (!string.IsNullOrEmpty(item.FurtherAppealSupportingDoc))
+                            {
+                                
+                                <span><a href="~/Content/Upload/OnlineAppealDocuments/Appealsubmission/OthersupportingDocument/@item.FurtherAppealSupportingDoc.Replace("~", "")" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>  
+    
+            <div id="dialog-edit" style="display: none">
+            </div>
+            <div id="dialog-view" style="display: none">
+            </div>
+    <div id="lab-dialog-view" style="display: none">
+    </div>
+      <div id="dialog-BAS" style="display: none">
+    </div>
+}
+
+
+
+

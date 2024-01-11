@@ -1,0 +1,90 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_newsevents>
+@{
+    ViewBag.Title = "JNTUH - NEWS / CIRCULARS / NOTICES";
+    int num = 1;
+}
+
+<h2>NEWS / CIRCULARS / NOTICES</h2>
+
+@section onReady{
+
+    /* Initialize table and make first column non-sortable*/
+   $('#example').dataTable({  "bPaginate": false,
+		                      "bLengthChange": false,
+		                      "bFilter": true,
+		                      "bSort": false,
+		                      "bInfo": true,
+		                      "bAutoWidth": false,
+		                      "bJQueryUI": true,
+                              "iDisplayLength": 50,
+                              "aoColumns": [ { "bSortable": true, "bSearchable": true }, null ],
+                              "sPaginationType": "full_numbers"
+    @*,
+                              "sDom": '<"toolbar">frtip'*@
+    });
+    @*$("div.toolbar").html('');*@
+}
+<br />
+<table id="example" class="display" style="width: 100%;">
+    <thead>
+        <tr class="gridHeader">
+            <th style="width: 50px; text-align: center;">S.No
+            </th>
+            <th>Title
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="col2">
+                <td style="width: 50px; text-align: center;">
+                    @(num++)
+                </td>
+                <td style="text-align: justify;">
+                    @if (!string.IsNullOrWhiteSpace(item.navigateURL))
+                    {
+                        <a class="navigationurl" href="@item.navigateURL" target="_blank">@item.title</a>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.title)
+                    }
+                    @if (item.newsOrder == 1)
+                    {
+                        <img src="../Content/images/latest.gif" alt="latest" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*<div class="news">
+    <h2 class="news_header">News / Circulars / Notices</h2>
+    @foreach (var item in Model)
+    {  
+        <ul class="newstitle">
+            @if (!string.IsNullOrWhiteSpace(item.navigateURL))
+            {
+                <li style="text-align: justify;">
+                    <a class="navigationurl" href="@item.navigateURL" target="_blank">@item.title</a>
+                    @if (item.newsOrder == 1)
+                    {
+                        <img src="../Content/images/latest.gif" alt="latest" />
+                    }
+                </li>
+            }
+            else
+            {
+                <li>
+                    @item.title
+                    @if (item.newsOrder == 1)
+                    {
+                        <img src="../Content/images/latest.gif" alt="latest" />
+                    }
+                </li>
+            }
+        </ul>
+    }
+</div>*@

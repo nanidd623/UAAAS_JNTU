@@ -1,0 +1,135 @@
+﻿@model UAAAS.Models.ChairPerson
+@{
+    ViewBag.Title = "Chairperson / Correspondent / Secretary of the Society";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+}
+<h2>Chairperson / Correspondent / Secretary of the Society</h2>
+@using (Html.BeginForm())
+{
+    if (ViewBag.NoRecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+    }
+    else
+    {
+    <div class="details_table">
+        @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+        @Html.HiddenFor(model => model.addressTye, new { Value = "SECRETARY" })
+        <table class="four_columns">
+            <tr>
+                <td class="col11" width="180px">
+                    @Html.LabelFor(model => model.firstName)
+                </td>
+                <td class="col21 focus" width="180px">
+                    @Html.DisplayFor(model => model.firstName)
+                </td>
+                <td class="col31" width="180px">
+                    @Html.LabelFor(model => model.lastName)
+                </td>
+                <td class="col41">
+                    @Html.DisplayFor(model => model.lastName)
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.surname)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(model => model.surname)
+                </td>
+                <td class="col31">
+                    @Html.LabelFor(model => model.designationId)
+                </td>
+                <td class="col41">
+                    @ViewBag.designationName
+                    @Html.HiddenFor(model => model.designationId)
+                    <div id="desgOther">
+                        @Html.DisplayFor(model => model.otherDesignation)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.address)
+                </td>
+                <td class="col21" colspan="3">
+                    @Html.DisplayFor(model => model.address)
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.townOrCity)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(model => model.townOrCity)
+                </td>
+                <td class="col31">
+                    @Html.LabelFor(model => model.mandal)
+                </td>
+                <td class="col41">
+                    @Html.DisplayFor(model => model.mandal)
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.stateId)
+                </td>
+                <td class="col21">
+                    @ViewBag.StateName
+                    @Html.HiddenFor(model => model.stateId)
+                </td>
+                <td class="col31">
+                    @Html.LabelFor(model => model.districtId)
+                </td>
+                <td class="col41">
+                    @ViewBag.DistrictName
+                    @Html.HiddenFor(model => model.districtId)
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.pincode)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(model => model.pincode)
+                </td>
+                <td class="col31">
+                    @Html.LabelFor(model => model.fax)
+                </td>
+                <td class="col41">
+                    @Html.DisplayFor(model => model.fax)
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.landline)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(model => model.landline)
+                </td>
+                <td class="col31">
+                    @Html.LabelFor(model => model.mobile)
+                </td>
+                <td class="col41">
+                    @Html.DisplayFor(model => model.mobile)
+                </td>
+            </tr>
+            <tr>
+                <td class="col11">
+                    @Html.LabelFor(model => model.email)
+                </td>
+                <td class="col21">
+                    @Html.DisplayFor(model => model.email)
+                </td>
+                <td class="col31"></td>
+                <td class="col41"></td>
+            </tr>
+        </table>
+        @Html.Hidden("IsRatified", (string)ViewBag.OtherDesignation, new { id = "OtherDesignation" })
+    </div>
+    }
+}
+
+

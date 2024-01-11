@@ -1,0 +1,87 @@
+﻿@model UAAAS.Models.AffiliationPendingFee
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#AcademicYearId").change(function () {
+            debugger;
+            var id = $(this).val();
+            var collegeid = $("#CollegeId").val();
+            if (id != null && id != "") {
+                $.ajax({
+                    type: "Get",
+                    url: "/CollegesFee/GetPreviousYearFee?collegeId=" + collegeid + "&&AcademicYearId=" + id,
+                    success: function (data) {
+                        if (data != null) {
+                            debugger;
+                            $("#AffiliationFee").val(data.data.currentyearDues);
+                            $("#PreviousFee").val(data.data.PreviousyearDues);
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+            else {
+                window.location.href = "/CollegesFee/CollegesAll";
+            }
+        });
+
+    });
+</script>
+
+@using (Ajax.BeginForm("EditCollegssPendingFee", "CollegesFee", new AjaxOptions(), new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model => model.CollegeId)
+    if (String.IsNullOrEmpty(Model.Message))
+    {
+        <div>
+            <div style="display:inline-flex;">
+                <div class="editor-label" style="width: 200px;">
+                    <span>College</span>
+                </div>
+                <div class="editor-field" style="width: 300px;">
+                    @Html.DisplayFor(model => model.college, new { })
+                </div>
+            </div>
+            <div style="display:inline-flex;">
+                <div class="editor-label" style="width: 200px;">
+                    <span>Academic Year</span>
+                </div>
+                <div class="editor-field" style="width: 300px;">
+                    @Html.DropDownListFor(model => model.AcademicYearId, new SelectList(ViewBag.Years as System.Collections.IEnumerable, "id", "Year"), "---Select---", new { @style = "width:250px;" })
+                </div>
+            </div>
+            <div style="display:inline-flex;">
+                <div class="editor-label" style="width: 200px;">
+                    <span>Present Year Affiliation Fee</span>
+                </div>
+                <div class="editor-field" style="width: 300px;">
+                    @Html.TextBoxFor(model => model.AffiliationFee, new { })
+                </div>
+            </div>
+            <div style="display:inline-flex;">
+                <div class="editor-label" style="width: 200px;">
+                    <span>Previous Year Fee</span>
+                </div>
+                <div class="editor-field" style="width: 300px;">
+                    @Html.TextBoxFor(model => model.PreviousFee, new { })
+                </div>
+            </div>
+            <div style="float:right;">
+                <input type="submit" value="Update" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div style="display:inline-flex;">
+            <div class="editor-label" style="width: 200px;">
+                <span>Error Message</span>
+            </div>
+            <div class="editor-field" style="width: 300px;">
+                @Html.DisplayFor(model => model.Message, new { })
+            </div>
+        </div>
+    }
+}

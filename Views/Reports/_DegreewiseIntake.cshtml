@@ -1,0 +1,26 @@
+﻿@{
+    int sno = 1;
+}
+<table border="1" style="width: 100%">      
+    <tr>
+        <th style="text-align: center;background-color:yellow;vertical-align:top;">SNo</th>
+        <th style="text-align: left;background-color:yellow;vertical-align:top;">Degree</th>
+        <th style="text-align: left;background-color:yellow;vertical-align:top;">Proposed Courses</th>
+        <th style="text-align: right;background-color:yellow;vertical-align:top;">Proposed</th>
+        <th style="text-align: right;background-color:yellow;vertical-align:top;">Approved</th>
+        <th style="text-align: right;background-color:yellow;vertical-align:top;">Admited</th>
+        
+    </tr>
+    @foreach (var item in ViewBag.degreewiseTotalIntake)
+    {
+        <tr>
+            <th style="text-align: center;vertical-align:top;">@(sno++)</th>
+            <td style="vertical-align:top;">@item.degree</td>
+            <td style="text-align: right;vertical-align:top;">@item.ProposedCourses</td>
+            <td style="text-align: right;vertical-align:top;">@item.proposedIntake</td>
+            <td style="text-align: right;vertical-align:top;">@item.approvedIntake</td>
+            <td style="text-align: right;vertical-align:top;">@item.admittedIntake</td>
+        </tr>
+    }
+
+</table>

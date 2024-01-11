@@ -1,0 +1,163 @@
+﻿@model IEnumerable<UAAAS.Models.AdminDashbord>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "SchedulingReport";
+    int sno = 1;
+}
+<h2>Scheduling Report</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+
+    $(document).ready(function () {
+        $('#collegestatusId').removeClass('input-validation-error');
+        $('#districtId').removeClass('input-validation-error');
+        $('#collegeTypeId').removeClass('input-validation-error');
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 1000,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+        //$.getJSON("/CollegeIntakeProposed/GetDepartments",{ id : DegreeID},     
+    });
+
+</script>
+
+@using (Html.BeginForm())
+{  
+    <table>
+        <tr>
+            <td>
+                @Html.ActionLink("Export", "SchedulingReport", "AdminDashbord", new {cmd = "Export" }, new { @class = "create_button" })
+
+            </td>
+            <td>
+                @Html.ActionLink("Back", "Admin", "Dashboard", null, new { @class = "create_button" })
+            </td>
+        </tr>
+    </table>    
+       
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 20px; text-align: center;">S.No</th>
+                <th style="text-align: center;">College Code</th>
+                <th style="text-align: left; width: 250px">College Name</th>
+                <th style="text-align: center;">Order Date</th>
+                <th style="text-align: center;">Inspection Date</th>
+                <th class=" ui-state-default" style="text-align: center">Alternate Inspection Date</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in ViewBag.SchedulingList)
+            { 
+                <tr>
+                    <td style="text-align: center; width: 30px;">
+                        @(sno++)
+                    </td>
+                    <td style="text-align: center;">
+                        @item.collegeCode
+                    </td>
+                    <td style="text-align: left;">
+                        @item.collegeName
+                    </td>
+                    <td style="text-align: center;">
+                       @if (item.orderDate != null)
+                       {
+                          @Utilities.MMDDYY2DDMMYY(@item.orderDate.ToString())
+                       }
+                    </td>
+                    <td style="text-align: center;">                      
+                       @if (item.inspectiondate != null)
+                       {
+                          @Utilities.MMDDYY2DDMMYY(@item.inspectiondate.ToString())
+                       }
+                    </td>
+                    <td style="text-align: center;">
+                       @if(item.alternateInspectionDate!=null)
+                       {
+                          @Utilities.MMDDYY2DDMMYY(@item.alternateInspectionDate.ToString())
+                       }
+                      
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th style="">
+                    <input type="text" id="i-0" style="width: 30%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="">
+                    <input type="text" id="i-1" style="width: 80%; text-align: left;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left">
+                    <input type="text" id="i-3" style="width: 90%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="">
+                    <input type="text" id="i-4" style="width: 85%; text-align: left;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="">
+                    <input type="text" id="i-5" style="width: 85%; text-align: left;" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>    
+
+}
+
+
+
+

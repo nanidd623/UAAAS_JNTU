@@ -1,0 +1,15 @@
+﻿@model UAAAS.Models.CollegFacultyVerification
+@{
+    ViewBag.Title = "Faculty Approval";
+}
+
+<h2>Faculty Approval</h2>
+<br />
+@using (Html.BeginForm())
+{
+    <div style="text-align: center;">
+        <span style="color: green; font-weight: bold;">ARE YOU SURE, THE FACULTY IS VALID AFTER VERIFICATION OF FACULTY INFORMATION AND REQUIRED CERTIFICATES?</span>
+        <br />
+        <input type="submit" value="Save" />
+    </div>
+}

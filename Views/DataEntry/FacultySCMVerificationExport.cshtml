@@ -1,0 +1,177 @@
+﻿@model IEnumerable<UAAAS.Models.FacultyRegistration>
+
+@{
+    var index = 1;
+    string fid = string.Empty;
+    DateTime date = new DateTime(2018, 02, 19, 00, 00, 00);
+    int?[] Group1_Specializationids = new int?[] { 115, 119, 172, 120 };
+    int?[] Group2_Specializationids = new int?[] { 116, 167, 123, 170, 117, 124 };
+    int?[] Group3_Specializationids = new int?[] { 18, 19, 114, 169, 122 };
+    int?[] Group4_Specializationids = new int?[] { 172, 117, 121 };
+}
+
+@using (Html.BeginForm())
+{
+    <table border="1" id="example" class="display" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No</th>
+                <th style="width: 50px; text-align: center;">CC</th>
+                <th style="width: 50px; text-align: center;">CCname</th>
+                <th style="width: 140px; text-align: center;">Registration ID</th>
+                <th style="text-align: center;width:315px">Full Name</th>
+                <th style="width: 120px; text-align: center;">Degree</th>
+                <th style="width: 120px; text-align: center;">Department</th>
+                <th style="width: 120px; text-align: center;">Specialization</th>
+                <th style="width: 120px; text-align: center;">PG Specialization</th>
+                <th style="width: 120px; text-align: center;">Identified For</th>
+                <th>Faculty Flags</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                //string color = string.Empty;
+                int Phd = 0;
+                if (@item.jntuh_registered_faculty_education.Count() != 0)
+                {
+                    if (@item.jntuh_registered_faculty_education.Where(e => e.jntuh_education_category.id == 6).Select(e => e.id).FirstOrDefault() != 0)
+                    {
+                        Phd = 1;
+                    }
+
+                }
+
+                //if (item.Absent == true || item.VerificationStatus == true || item.InvalidDegree == true || item.OriginalCertificatesnotshownFlag == true || item.XeroxcopyofcertificatesFlag == true || item.NOTQualifiedAsPerAICTE == true || item.NoSCM17Flag == true || item.PANNumber == null || item.InCompleteCeritificates == true || item.BlacklistFaculty == true || item.NOrelevantUgFlag == true || item.NOrelevantPgFlag == true || item.NOrelevantPhdFlag == true || item.InvalidPANNo == true || item.Type == "Adjunct" || item.InvalidAadhaar == "Yes" || item.Basstatus == "Yes" || item.OriginalsVerifiedPHD == true || item.OriginalsVerifiedUG == true || item.BlacklistFaculty == true || item.DegreeId < 4 || item.NoClass == true || item.FakePhd == true || item.GenuinenessnotSubmitted == true || item.NoPgSpecialization == true)
+                //{
+                //    color = "red";
+                //}
+                //else
+                //{
+                //    color = string.Empty;
+                //}
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">
+                        @(index++)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.CollegeCode)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.CollegeName)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                    </td>
+                    <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                        @if (item.Principal != "")
+                        {
+                            if (@Phd == 1)
+                            {
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.MiddleName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                                if (item.NotconsiderPhd == true)
+                                {
+                                    <span style="color: blue; font-weight: bold">(Ph.D)</span>
+                                }
+                                else
+                                {
+                                    <span style="color: Red; font-weight: bold">(Ph.D)</span>
+                                }
+
+                                <span style="color: red; font-weight: bold;">(Principal)</span>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.MiddleName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.LastName) <span style="color: red; font-weight: bold;">(Principal)</span>
+                            }
+
+                        }
+                        else
+                        {
+                            if (@Phd == 1)
+                            {
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.MiddleName)
+                                <span>&nbsp;&nbsp;</span>
+                                if (item.NotconsiderPhd == true)
+                                {
+                                    <span style="color: blue; font-weight: bold">(Ph.D)</span>
+                                }
+                                else
+                                {
+                                    <span style="color: Red; font-weight: bold">(Ph.D)</span>
+                                }
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.MiddleName)
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            }
+                        }
+
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.DegreeName)
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.department)
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        <span>
+                            @if (item.IdentfiedFor == "PG" || item.IdentfiedFor == "UG&PG")
+                            {
+                                @Html.DisplayFor(modelItem => item.SpecializationIdentfiedFor)
+                            }
+
+                        </span>
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+
+                        @if (Group1_Specializationids.Contains(item.PGSpecialization))
+                        {
+                            @Html.DisplayFor(modelItem => item.PGSpecializationName)
+                            <span style="color: red; font-weight: bold">(G1)</span>
+                        }
+                        else if (Group2_Specializationids.Contains(item.PGSpecialization))
+                        {
+                            @Html.DisplayFor(modelItem => item.PGSpecializationName)
+                            <span style="color: red; font-weight: bold">(G2)</span>
+                        }
+                        else if (Group3_Specializationids.Contains(item.PGSpecialization))
+                        {
+                            @Html.DisplayFor(modelItem => item.PGSpecializationName)
+                            <span style="color: red; font-weight: bold">(G3)</span>
+                        }
+                        else if (Group4_Specializationids.Contains(item.PGSpecialization))
+                        {
+                            @Html.DisplayFor(modelItem => item.PGSpecializationName)
+                            <span style="color: red; font-weight: bold">(G4)</span>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.PGSpecializationName)
+                        }
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.IdentfiedFor)
+                    </td>
+                    <td style="text-align: left; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.DeactivationReason)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

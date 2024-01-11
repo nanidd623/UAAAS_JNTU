@@ -1,0 +1,43 @@
+﻿@model IList<UAAAS.Models.AdminLand>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Administrative Area";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+}
+<h2>Administrative Area</h2>
+@using (Html.BeginForm())
+{
+    if (ViewBag.NoRecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+    }
+    else
+    {    
+    <table class="downloads_table" style="width: 100%;">
+        <tr style="font-weight: bold;">
+            <th style="text-align: left;" class="col11">Type</th>
+            <th style="text-align: center; width: 200px;" class="col11">Program</th>
+            <th style="text-align: center; width: 150px; display: none;" class="col11">Required Rooms</th>
+            <th style="text-align: center; width: 120px;" class="col11">Available Rooms</th>
+            <th style="text-align: center; width: 120px; display: none;" class="col11">Required Area</th>
+            <th style="text-align: center; width: 120px;" class="col11">Available Area</th>
+        </tr>
+        @for (int i = 0; i < ViewBag.Count; i++)
+        {
+            <tr>
+                <td style="text-align: left;" class="col21">
+                    @Html.LabelFor(m => m[i].requirementType, Model[i].requirementType == null ? string.Empty : Model[i].requirementType.ToString())
+                    @Html.HiddenFor(m => m[i].id)
+                </td>
+                <td style="text-align: center;" class="col21">@Html.LabelFor(m => m[i].programId, Model[i].jntuh_program_type == null ? string.Empty : Model[i].jntuh_program_type.programType.ToString())</td>
+                <td style="text-align: center; display: none;" class="col21">@Html.LabelFor(m => m[i].requiredRooms, Model[i].requiredRooms == null ? Model[i].requiredRoomsCalculation == null ? "-" : Model[i].requiredRoomsCalculation : Model[i].requiredRooms.ToString().Replace(".00", ""))</td>
+                <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].availableRooms, new { id = "aRooms", @class = "allownumericwithdecimal", @style = "width: 60px; text-align: center;", Value = Model[i].availableRooms.ToString().Replace(".00", "") })</td>
+                <td style="text-align: center; display: none;" class="col21">@Html.LabelFor(m => m[i].requiredArea, Model[i].requiredArea == null ? Model[i].requiredAreaCalculation == null ? "-" : Model[i].requiredAreaCalculation : Model[i].requiredArea.ToString().Replace(".00", ""))</td>
+                <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].availableArea, new { id = "aArea", @class = "allownumericwithdecimal", @style = "width: 60px; text-align: center;", Value = Model[i].availableArea.ToString().Replace(".00", "") })</td>
+            </tr>
+        }
+    </table>  
+    }
+}

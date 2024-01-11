@@ -1,0 +1,1225 @@
+﻿@using System.Collections.Concurrent
+
+@model UAAAS.Controllers.College.PrincipalAppliedDetails
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    ViewBag.Title = "SCM Proceeding Principal";
+    int sno = 1;
+    string requestDate = string.Empty;
+    string color = string.Empty;
+
+}
+<h2>Details of the candidates applied for the post of principal in affiliated colleges</h2>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $(".togglecls").attr('style', 'display: none');
+
+        $("#LectRatDateDiv").attr('style', 'display: none');
+        $("#AssRatDateDiv").attr('style', 'display: none');
+        $("#ProfRatDateDiv").attr('style', 'display: none');
+        $("#PrincipalRatDateDiv").attr('style', 'display: none');
+
+
+        $(".odproofdeg").change(function () {
+            var docfile = $(this).attr('id');
+            var rdid = $(this).attr('id');
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                //alert("You can upload only  PDF files");
+                var docfiletxtpath = rdid + "txt";
+                $("#" + docfiletxtpath).text("You can upload only  PDF files");
+                $("#" + docfiletxtpath).css("color", "red");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, docfile);
+                size = size / 1048576;
+                if (size > 1) {
+                    var docfiletxtpath = rdid + "txt";
+                    $("#" + docfiletxtpath).text("Document should not exceed 1 MB in Size");
+                    $("#" + docfiletxtpath).css("color", "red");
+                    $(this).val('');
+                } else {
+                    var docfiletxtpath = rdid + "txt";
+                    $("#" + docfiletxtpath).text("");
+                }
+            }
+        });
+
+        $(".expsupportdoc").change(function () {
+            var docfile = $(this).attr('id');
+            var rdid = $(this).attr('id');
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                //alert("You can upload only  PDF files");
+                var docfiletxtpath = rdid + "txt";
+                $("#" + docfiletxtpath).text("You can upload only  PDF files");
+                $("#" + docfiletxtpath).css("color", "red");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, docfile);
+                size = size / 1048576;
+                if (size > 2) {
+                    var docfiletxtpath = rdid + "txt";
+                    $("#" + docfiletxtpath).text("Document should not exceed 2 MB in Size");
+                    $("#" + docfiletxtpath).css("color", "red");
+                    $(this).val('');
+                } else {
+                    var docfiletxtpath = rdid + "txt";
+                    $("#" + docfiletxtpath).text("");
+                }
+            }
+        });
+
+        $(".publdoc").change(function () {
+            var docfile = $(this).attr('id');
+            var rdid = $(this).attr('id');
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                //alert("You can upload only  PDF files");
+                var docfiletxtpath = rdid + "txt";
+                $("#" + docfiletxtpath).text("You can upload only  PDF files");
+                $("#" + docfiletxtpath).css("color", "red");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, docfile);
+                size = size / 1048576;
+                if (size > 1) {
+                    var docfiletxtpath = rdid + "txt";
+                    $("#" + docfiletxtpath).text("Document should not exceed 1 MB in Size");
+                    $("#" + docfiletxtpath).css("color", "red");
+                    $(this).val('');
+                } else {
+                    var docfiletxtpath = rdid + "txt";
+                    $("#" + docfiletxtpath).text("");
+                }
+            }
+        });
+
+        $(".phdsguideddoc").change(function () {
+            var docfile = $(this).attr('id');
+            var rdid = $(this).attr('id');
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                //alert("You can upload only  PDF files");
+                var docfiletxtpath = rdid + "txt";
+                $("#" + docfiletxtpath).text("You can upload only  PDF files");
+                $("#" + docfiletxtpath).css("color", "red");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, docfile);
+                size = size / 1048576;
+                if (size > 1) {
+                    var docfiletxtpath = rdid + "txt";
+                    $("#" + docfiletxtpath).text("Document should not exceed 1 MB in Size");
+                    $("#" + docfiletxtpath).css("color", "red");
+                    $(this).val('');
+                } else {
+                    var docfiletxtpath = rdid + "txt";
+                    $("#" + docfiletxtpath).text("");
+                }
+            }
+        });
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+        //get file size
+        function GetFileSize(fileid, title) {
+
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size;//size in kb
+                    //fileSize = $(".Supportingfile")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        $(".iscollegetype").click(function () {
+            var actitityID = $(this).attr('id').split('_')[1];
+            $(".togglecls").attr('style', 'display: block');
+            $(".togglecls").attr('style', 'border:2px solid #000000');
+            //alert(actitityID);
+            if (actitityID == 0) {
+                $(".pharmacytogglediv").attr('style', 'display: none');
+            }
+            else {
+                $(".pharmacytogglediv").attr('style', 'display: block');
+            }
+            //alert($(this).val());
+        });
+
+        $('#btnSubmit').click(function () {
+            //alert("submit");
+            var LectYears = ($('#LectYears').val() == "" || $('#LectYears').val() == null || $('#LectYears').val() == undefined) ? 0 : parseFloat($('#LectYears').val());
+            var AssProfYears = ($('#AssProfYears').val() == "" || $('#AssProfYears').val() == null || $('#AssProfYears').val() == undefined) ? 0 : parseFloat($('#AssProfYears').val());
+            var ProfYears = ($('#ProfYears').val() == "" || $('#ProfYears').val() == null || $('#ProfYears').val() == undefined) ? 0 : parseFloat($('#ProfYears').val());
+            var PrincipalYears = ($('#PrincipalYears').val() == "" || $('#PrincipalYears').val() == null || $('#PrincipalYears').val() == undefined) ? 0 : parseFloat($('#PrincipalYears').val());
+            var ResearchYears = ($('#ResearchYears').val() == "" || $('#ResearchYears').val() == null || $('#ResearchYears').val() == undefined) ? 0 : parseFloat($('#ResearchYears').val());
+            var IndustryYears = ($('#IndustryYears').val() == "" || $('#IndustryYears').val() == null || $('#IndustryYears').val() == undefined) ? 0 : parseFloat($('#IndustryYears').val());
+            var Supervisors = ($('#Supervisors').val() == "" || $('#Supervisors').val() == null || $('#Supervisors').val() == undefined) ? 0 : parseFloat($('#Supervisors').val());
+            var CoSupervisors = ($('#CoSupervisors').val() == "" || $('#CoSupervisors').val() == null || $('#CoSupervisors').val() == undefined) ? 0 : parseFloat($('#CoSupervisors').val());
+            if (LectYears == 0) {
+                $('#LectSuppDoc').removeClass('required');
+                $('#LectSuppDoc').css('background-color', '#FCF1D1');
+            }
+            else {
+                var files = $("#LectSuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#LectSuppDoc').addClass('required');
+                    $('#LectSuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#LectSuppDoc').removeClass('required');
+                    $('#LectSuppDoc').css('background-color', '#FCF1D1');
+                }
+            }
+
+            if (AssProfYears == 0) {
+                $('#AssProfSuppDoc').removeClass('required');
+                $('#AssProfSuppDoc').css('background-color', '#FCF1D1');
+            }
+            else {
+                var files = $("#AssProfSuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#AssProfSuppDoc').addClass('required');
+                    $('#AssProfSuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#AssProfSuppDoc').removeClass('required');
+                    $('#AssProfSuppDoc').css('background-color', '#FCF1D1');
+                }
+            }
+
+            if (ProfYears == 0) {
+                $('#ProfSuppDoc').removeClass('required');
+                $('#ProfSuppDoc').css('background-color', '#FCF1D1');
+            }
+            else {
+                var files = $("#ProfSuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#ProfSuppDoc').addClass('required');
+                    $('#ProfSuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#ProfSuppDoc').removeClass('required');
+                    $('#ProfSuppDoc').css('background-color', '#FCF1D1');
+                }
+            }
+
+            if (PrincipalYears == 0) {
+                $('#PrincipalSuppDoc').removeClass('required');
+                $('#PrincipalSuppDoc').css('background-color', '#FCF1D1');
+            }
+            else {
+                var files = $("#PrincipalSuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#PrincipalSuppDoc').addClass('required');
+                    $('#PrincipalSuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#PrincipalSuppDoc').removeClass('required');
+                    $('#PrincipalSuppDoc').css('background-color', '#FCF1D1');
+                }
+            }
+
+            if (ResearchYears == 0) {
+                $('#ResearchSuppDoc').removeClass('required');
+                $('#ResearchSuppDoc').css('background-color', '#FCF1D1');
+            }
+            else {
+                var files = $("#ResearchSuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#ResearchSuppDoc').addClass('required');
+                    $('#ResearchSuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#ResearchSuppDoc').removeClass('required');
+                    $('#ResearchSuppDoc').css('background-color', '#FCF1D1');
+                }
+            }
+
+            if (IndustryYears == 0) {
+                $('#IndustrySuppDoc').removeClass('required');
+                $('#IndustrySuppDoc').css('background-color', '#FCF1D1');
+            }
+            else {
+                var files = $("#IndustrySuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#IndustrySuppDoc').addClass('required');
+                    $('#IndustrySuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#IndustrySuppDoc').removeClass('required');
+                    $('#IndustrySuppDoc').css('background-color', '#FCF1D1');
+                }
+            }
+
+            if (Supervisors == 0) {
+                $('#SupervisorsSuppDoc').removeClass('required');
+                $('#SupervisorsSuppDoc').css('background-color', '#FCF1D1');
+                $('#SupervisorsGuidedUniversity').removeClass('required');
+                $('#SupervisorsGuidedUniversity').css('background-color', 'White');
+            }
+            else {
+                var files = $("#SupervisorsSuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#SupervisorsSuppDoc').addClass('required');
+                    $('#SupervisorsSuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#SupervisorsSuppDoc').removeClass('required');
+                    $('#SupervisorsSuppDoc').css('background-color', '#FCF1D1');
+                }
+                if ($('#SupervisorsGuidedUniversity').val() == "" || $('#SupervisorsGuidedUniversity').val() == null || $('#SupervisorsGuidedUniversity').val() == undefined) {
+                    $('#SupervisorsGuidedUniversity').addClass('required');
+                    $('#SupervisorsGuidedUniversity').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#SupervisorsGuidedUniversity').removeClass('required');
+                    $('#SupervisorsGuidedUniversity').css('background-color', 'White');
+                }
+            }
+
+            if (CoSupervisors == 0) {
+                $('#CoSupervisorsSuppDoc').removeClass('required');
+                $('#CoSupervisorsSuppDoc').css('background-color', '#FCF1D1');
+                $('#CoSupervisorsGuidedUniversity').removeClass('required');
+                $('#CoSupervisorsGuidedUniversity').css('background-color', 'White');
+            }
+            else {
+                var files = $("#CoSupervisorsSuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#CoSupervisorsSuppDoc').addClass('required');
+                    $('#CoSupervisorsSuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#CoSupervisorsSuppDoc').removeClass('required');
+                    $('#CoSupervisorsSuppDoc').css('background-color', '#FCF1D1');
+                }
+                if ($('#CoSupervisorsGuidedUniversity').val() == "" || $('#CoSupervisorsGuidedUniversity').val() == null || $('#CoSupervisorsGuidedUniversity').val() == undefined) {
+                    $('#CoSupervisorsGuidedUniversity').addClass('required');
+                    $('#CoSupervisorsGuidedUniversity').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#CoSupervisorsGuidedUniversity').removeClass('required');
+                    $('#CoSupervisorsGuidedUniversity').css('background-color', 'White');
+                }
+            }
+
+            var LectActivityStatus = $('input[name=LectRatactivitystatus]:checked').val();
+
+            if (LectActivityStatus == "False") {
+                $('#LectRatYears').removeClass('required');
+                //$('#LectRatYears').css('background-color', '#FCF1D1');
+                $('#LectRatSuppDoc').removeClass('required');
+                $('#LectRatSuppDoc').css('background-color', '#FCF1D1');
+            }
+            else {
+                $('#LectRatYears').addClass('required');
+                var files = $("#LectRatSuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#LectRatSuppDoc').addClass('required');
+                    $('#LectRatSuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#LectRatSuppDoc').removeClass('required');
+                    $('#LectRatSuppDoc').css('background-color', '#FCF1D1');
+                }
+            }
+
+            var AssActivityStatus = $('input[name=AssRatactivitystatus]:checked').val();
+            if (AssActivityStatus == "False") {
+                $('#AssRatYears').removeClass('required');
+                $('#AssRatProfSuppDoc').removeClass('required');
+                $('#AssRatProfSuppDoc').css('background-color', '#FCF1D1');
+            }
+            else {
+                $('#AssRatYears').addClass('required');
+                var files = $("#AssRatProfSuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#AssRatProfSuppDoc').addClass('required');
+                    $('#AssRatProfSuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#AssRatProfSuppDoc').removeClass('required');
+                    $('#AssRatProfSuppDoc').css('background-color', '#FCF1D1');
+                }
+            }
+
+            var ProfActivityStatus = $('input[name=ProfRatactivitystatus]:checked').val();
+            if (ProfActivityStatus == "False") {
+                $('#ProfRatYears').removeClass('required');
+                $('#ProfRatSuppDoc').removeClass('required');
+                $('#ProfRatSuppDoc').css('background-color', '#FCF1D1');
+            }
+            else {
+                $('#ProfRatYears').addClass('required');
+                var files = $("#ProfRatSuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#ProfRatSuppDoc').addClass('required');
+                    $('#ProfRatSuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#ProfRatSuppDoc').removeClass('required');
+                    $('#ProfRatSuppDoc').css('background-color', '#FCF1D1');
+                }
+            }
+
+
+            var PrincipalActivityStatus = $('input[name=PrincipalRatactivitystatus]:checked').val();
+            if (PrincipalActivityStatus == "False") {
+                $('#PrincipalRatYears').removeClass('required');
+                $('#PrincipalRatSuppDoc').removeClass('required');
+                $('#PrincipalRatSuppDoc').css('background-color', '#FCF1D1');
+            }
+            else {
+                $('#PrincipalRatYears').addClass('required');
+                var files = $("#PrincipalRatSuppDoc").get(0).files;
+                if (files.length == 0) {
+                    $('#PrincipalRatSuppDoc').addClass('required');
+                    $('#PrincipalRatSuppDoc').css('background-color', '#fc6a6c');
+                }
+                else {
+                    $('#PrincipalRatSuppDoc').removeClass('required');
+                    $('#PrincipalRatSuppDoc').css('background-color', '#FCF1D1');
+                }
+            }
+        });
+
+        $(".LectRatactivitystatusyes").click(function () {
+            //alert("LectYes");
+            $("#LectRatDateDiv").attr('style', 'display: block');
+            $('#LectRatYears').removeAttr("disabled")
+            $('#LectRatSuppDoc').removeAttr("disabled")
+        });
+
+        $(".LectRatactivitystatusno").click(function () {
+            //alert("Lectno");
+            $('#LectRatDateDiv').attr('style', 'display: none');
+            $('#LectRatYears').prop('disabled', true);
+            $('#LectRatYears').removeClass('required');
+            $('#LectRatSuppDoc').prop('disabled', true);
+            $('#LectRatSuppDoc').removeClass('required');
+        });
+
+        $(".AssRatactivitystatusyes").click(function () {
+            //alert("AssYes");
+            $("#AssRatDateDiv").attr('style', 'display: block');
+            $('#AssRatYears').removeAttr("disabled")
+            $('#AssRatProfSuppDoc').removeAttr("disabled")
+        });
+
+        $(".AssRatactivitystatusno").click(function () {
+            //alert("Assno");
+            $('#AssRatDateDiv').attr('style', 'display: none');
+            $('#AssRatYears').prop('disabled', true);
+            $('#AssRatYears').removeClass('required');
+            $('#AssRatProfSuppDoc').prop('disabled', true);
+            $('#AssRatProfSuppDoc').removeClass('required');
+        });
+
+
+        $(".ProfRatactivitystatusyes").click(function () {
+            //alert("ProfYes");
+            $("#ProfRatDateDiv").attr('style', 'display: block');
+            $('#ProfRatYears').removeAttr("disabled")
+            $('#ProfRatSuppDoc').removeAttr("disabled")
+        });
+
+        $(".ProfRatactivitystatusno").click(function () {
+            //alert("Profno");
+            $('#ProfRatDateDiv').attr('style', 'display: none');
+            $('#ProfRatYears').prop('disabled', true);
+            $('#ProfRatYears').removeClass('required');
+            $('#ProfRatSuppDoc').prop('disabled', true);
+            $('#ProfRatSuppDoc').removeClass('required');
+        });
+
+        $(".PrincipalRatactivitystatusyes").click(function () {
+            //alert("PrincipalYes");
+            $("#PrincipalRatDateDiv").attr('style', 'display: block');
+            $('#PrincipalRatYears').removeAttr("disabled")
+            $('#PrincipalRatSuppDoc').removeAttr("disabled")
+        });
+
+        $(".PrincipalRatactivitystatusno").click(function () {
+            //alert("Principalno");
+            $('#PrincipalRatDateDiv').attr('style', 'display: none');
+            $('#PrincipalRatYears').prop('disabled', true);
+            $('#PrincipalRatYears').removeClass('required');
+            $('#PrincipalRatSuppDoc').prop('disabled', true);
+            $('#PrincipalRatSuppDoc').removeClass('required');
+        });
+    });
+
+    $(function () {
+        $('#LectRatYears').on('change', function () {
+            var LectRatYears = ($('#LectRatYears').val() == "" || $('#LectRatYears').val() == null || $('#LectRatYears').val() == undefined) ? 0 : parseFloat($('#LectRatYears').val());
+            var AssRatYears = ($('#AssRatYears').val() == "" || $('#AssRatYears').val() == null || $('#AssRatYears').val() == undefined) ? 0 : parseFloat($('#AssRatYears').val());
+            var ProfRatYears = ($('#ProfRatYears').val() == "" || $('#ProfRatYears').val() == null || $('#ProfRatYears').val() == undefined) ? 0 : parseFloat($('#ProfRatYears').val());
+            var PrincipalRatYears = ($('#PrincipalRatYears').val() == "" || $('#PrincipalRatYears').val() == null || $('#PrincipalRatYears').val() == undefined) ? 0 : parseFloat($('#PrincipalRatYears').val());
+            var totRatExpr = LectRatYears + AssRatYears + ProfRatYears;
+            if (LectRatYears == 0) {
+                $('#LectRatSuppDoc').removeClass('required');
+            }
+            else {
+                $('#LectRatSuppDoc').addClass('required');
+            }
+            $('#totRatExpr').val(totRatExpr);
+            $('#TotalRatExperience').val(totRatExpr);
+        });
+
+        $('#AssRatYears').on('change', function () {
+            var LectRatYears = ($('#LectRatYears').val() == "" || $('#LectRatYears').val() == null || $('#LectRatYears').val() == undefined) ? 0 : parseFloat($('#LectRatYears').val());
+            var AssRatYears = ($('#AssRatYears').val() == "" || $('#AssRatYears').val() == null || $('#AssRatYears').val() == undefined) ? 0 : parseFloat($('#AssRatYears').val());
+            var ProfRatYears = ($('#ProfRatYears').val() == "" || $('#ProfRatYears').val() == null || $('#ProfRatYears').val() == undefined) ? 0 : parseFloat($('#ProfRatYears').val());
+            var PrincipalRatYears = ($('#PrincipalRatYears').val() == "" || $('#PrincipalRatYears').val() == null || $('#PrincipalRatYears').val() == undefined) ? 0 : parseFloat($('#PrincipalRatYears').val());
+            var totRatExpr = LectRatYears + AssRatYears + ProfRatYears;
+            if (AssRatYears == 0) {
+                $('#AssRatProfSuppDoc').removeClass('required');
+            }
+            else {
+                $('#AssRatProfSuppDoc').addClass('required');
+            }
+            $('#totRatExpr').val(totRatExpr);
+            $('#TotalRatExperience').val(totRatExpr);
+        });
+
+        $('#ProfRatYears').on('change', function () {
+            var LectRatYears = ($('#LectRatYears').val() == "" || $('#LectRatYears').val() == null || $('#LectRatYears').val() == undefined) ? 0 : parseFloat($('#LectRatYears').val());
+            var AssRatYears = ($('#AssRatYears').val() == "" || $('#AssRatYears').val() == null || $('#AssRatYears').val() == undefined) ? 0 : parseFloat($('#AssRatYears').val());
+            var ProfRatYears = ($('#ProfRatYears').val() == "" || $('#ProfRatYears').val() == null || $('#ProfRatYears').val() == undefined) ? 0 : parseFloat($('#ProfRatYears').val());
+            var PrincipalRatYears = ($('#PrincipalRatYears').val() == "" || $('#PrincipalRatYears').val() == null || $('#PrincipalRatYears').val() == undefined) ? 0 : parseFloat($('#PrincipalRatYears').val());
+            var totRatExpr = LectRatYears + AssRatYears + ProfRatYears;
+            if (ProfRatYears == 0) {
+                $('#ProfRatSuppDoc').removeClass('required');
+            }
+            else {
+                $('#ProfRatSuppDoc').addClass('required');
+            }
+            $('#totRatExpr').val(totRatExpr);
+            $('#TotalRatExperience').val(totRatExpr);
+        });
+
+        //$('#PrincipalRatYears').on('change', function () {
+        //    var LectRatYears = ($('#LectRatYears').val() == "" || $('#LectRatYears').val() == null || $('#LectRatYears').val() == undefined) ? 0 : parseFloat($('#LectRatYears').val());
+        //    var AssRatYears = ($('#AssRatYears').val() == "" || $('#AssRatYears').val() == null || $('#AssRatYears').val() == undefined) ? 0 : parseFloat($('#AssRatYears').val());
+        //    var ProfRatYears = ($('#ProfRatYears').val() == "" || $('#ProfRatYears').val() == null || $('#ProfRatYears').val() == undefined) ? 0 : parseFloat($('#ProfRatYears').val());
+        //    var PrincipalRatYears = ($('#PrincipalRatYears').val() == "" || $('#PrincipalRatYears').val() == null || $('#PrincipalRatYears').val() == undefined) ? 0 : parseFloat($('#PrincipalRatYears').val());
+        //    var totRatExpr = LectRatYears + AssRatYears + ProfRatYears + PrincipalRatYears;
+        //    if (PrincipalRatYears == 0) {
+        //        $('#PrincipalRatSuppDoc').removeClass('required');
+        //    }
+        //    else {
+        //        $('#PrincipalRatSuppDoc').addClass('required');
+        //    }
+        //    $('#totRatExpr').val(totRatExpr);
+        //    $('#TotalRatExperience').val(totRatExpr);
+        //});
+    });
+
+    $(function () {
+        $('#LectYears').on('change', function () {
+            var LectYears = ($('#LectYears').val() == "" || $('#LectYears').val() == null || $('#LectYears').val() == undefined) ? 0 : parseFloat($('#LectYears').val());
+            var AssProfYears = ($('#AssProfYears').val() == "" || $('#AssProfYears').val() == null || $('#AssProfYears').val() == undefined) ? 0 : parseFloat($('#AssProfYears').val());
+            var ProfYears = ($('#ProfYears').val() == "" || $('#ProfYears').val() == null || $('#ProfYears').val() == undefined) ? 0 : parseFloat($('#ProfYears').val());
+            var PrincipalYears = ($('#PrincipalYears').val() == "" || $('#PrincipalYears').val() == null || $('#PrincipalYears').val() == undefined) ? 0 : parseFloat($('#PrincipalYears').val());
+            var ResearchYears = ($('#ResearchYears').val() == "" || $('#ResearchYears').val() == null || $('#ResearchYears').val() == undefined) ? 0 : parseFloat($('#ResearchYears').val());
+            var IndustryYears = ($('#IndustryYears').val() == "" || $('#IndustryYears').val() == null || $('#IndustryYears').val() == undefined) ? 0 : parseFloat($('#IndustryYears').val());
+            var totalExp = LectYears + AssProfYears + ProfYears + ResearchYears + IndustryYears;
+            if (LectYears == 0) {
+                $('#LectSuppDoc').removeClass('required');
+            }
+            else {
+                $('#LectSuppDoc').addClass('required');
+            }
+            $('#totExpr').val(totalExp);
+            $('#TotalExperience').val(totalExp);
+        });
+        $('#AssProfYears').on('change', function () {
+            var LectYears = ($('#LectYears').val() == "" || $('#LectYears').val() == null || $('#LectYears').val() == undefined) ? 0 : parseFloat($('#LectYears').val());
+            var AssProfYears = ($('#AssProfYears').val() == "" || $('#AssProfYears').val() == null || $('#AssProfYears').val() == undefined) ? 0 : parseFloat($('#AssProfYears').val());
+            var ProfYears = ($('#ProfYears').val() == "" || $('#ProfYears').val() == null || $('#ProfYears').val() == undefined) ? 0 : parseFloat($('#ProfYears').val());
+            var PrincipalYears = ($('#PrincipalYears').val() == "" || $('#PrincipalYears').val() == null || $('#PrincipalYears').val() == undefined) ? 0 : parseFloat($('#PrincipalYears').val());
+            var ResearchYears = ($('#ResearchYears').val() == "" || $('#ResearchYears').val() == null || $('#ResearchYears').val() == undefined) ? 0 : parseFloat($('#ResearchYears').val());
+            var IndustryYears = ($('#IndustryYears').val() == "" || $('#IndustryYears').val() == null || $('#IndustryYears').val() == undefined) ? 0 : parseFloat($('#IndustryYears').val());
+            var totalExp = LectYears + AssProfYears + ProfYears + ResearchYears + IndustryYears;
+            if (AssProfYears == 0) {
+                $('#AssProfSuppDoc').removeClass('required');
+            }
+            else {
+                $('#AssProfSuppDoc').addClass('required');
+            }
+            $('#totExpr').val(totalExp);
+            $('#TotalExperience').val(totalExp);
+        });
+        $('#ProfYears').on('change', function () {
+            var LectYears = ($('#LectYears').val() == "" || $('#LectYears').val() == null || $('#LectYears').val() == undefined) ? 0 : parseFloat($('#LectYears').val());
+            var AssProfYears = ($('#AssProfYears').val() == "" || $('#AssProfYears').val() == null || $('#AssProfYears').val() == undefined) ? 0 : parseFloat($('#AssProfYears').val());
+            var ProfYears = ($('#ProfYears').val() == "" || $('#ProfYears').val() == null || $('#ProfYears').val() == undefined) ? 0 : parseFloat($('#ProfYears').val());
+            var PrincipalYears = ($('#PrincipalYears').val() == "" || $('#PrincipalYears').val() == null || $('#PrincipalYears').val() == undefined) ? 0 : parseFloat($('#PrincipalYears').val());
+            var ResearchYears = ($('#ResearchYears').val() == "" || $('#ResearchYears').val() == null || $('#ResearchYears').val() == undefined) ? 0 : parseFloat($('#ResearchYears').val());
+            var IndustryYears = ($('#IndustryYears').val() == "" || $('#IndustryYears').val() == null || $('#IndustryYears').val() == undefined) ? 0 : parseFloat($('#IndustryYears').val());
+            var totalExp = LectYears + AssProfYears + ProfYears + ResearchYears + IndustryYears;
+            if (ProfYears == 0) {
+                $('#ProfSuppDoc').removeClass('required');
+            }
+            else {
+                $('#ProfSuppDoc').addClass('required');
+            }
+            $('#totExpr').val(totalExp);
+            $('#TotalExperience').val(totalExp);
+        });
+        //$('#PrincipalYears').on('change', function () {
+        //    var LectYears = ($('#LectYears').val() == "" || $('#LectYears').val() == null || $('#LectYears').val() == undefined) ? 0 : parseFloat($('#LectYears').val());
+        //    var AssProfYears = ($('#AssProfYears').val() == "" || $('#AssProfYears').val() == null || $('#AssProfYears').val() == undefined) ? 0 : parseFloat($('#AssProfYears').val());
+        //    var ProfYears = ($('#ProfYears').val() == "" || $('#ProfYears').val() == null || $('#ProfYears').val() == undefined) ? 0 : parseFloat($('#ProfYears').val());
+        //    var PrincipalYears = ($('#PrincipalYears').val() == "" || $('#PrincipalYears').val() == null || $('#PrincipalYears').val() == undefined) ? 0 : parseFloat($('#PrincipalYears').val());
+        //    var ResearchYears = ($('#ResearchYears').val() == "" || $('#ResearchYears').val() == null || $('#ResearchYears').val() == undefined) ? 0 : parseFloat($('#ResearchYears').val());
+        //    var IndustryYears = ($('#IndustryYears').val() == "" || $('#IndustryYears').val() == null || $('#IndustryYears').val() == undefined) ? 0 : parseFloat($('#IndustryYears').val());
+        //    var totalExp = LectYears + AssProfYears + ProfYears + PrincipalYears + ResearchYears + IndustryYears;
+        //    if (PrincipalYears == 0) {
+        //        $('#PrincipalSuppDoc').removeClass('required');
+        //    }
+        //    else {
+        //        $('#PrincipalSuppDoc').addClass('required');
+        //    }
+        //    $('#totExpr').val(totalExp);
+        //    $('#TotalExperience').val(totalExp);
+        //});
+        $('#ResearchYears').on('change', function () {
+            var LectYears = ($('#LectYears').val() == "" || $('#LectYears').val() == null || $('#LectYears').val() == undefined) ? 0 : parseFloat($('#LectYears').val());
+            var AssProfYears = ($('#AssProfYears').val() == "" || $('#AssProfYears').val() == null || $('#AssProfYears').val() == undefined) ? 0 : parseFloat($('#AssProfYears').val());
+            var ProfYears = ($('#ProfYears').val() == "" || $('#ProfYears').val() == null || $('#ProfYears').val() == undefined) ? 0 : parseFloat($('#ProfYears').val());
+            var PrincipalYears = ($('#PrincipalYears').val() == "" || $('#PrincipalYears').val() == null || $('#PrincipalYears').val() == undefined) ? 0 : parseFloat($('#PrincipalYears').val());
+            var ResearchYears = ($('#ResearchYears').val() == "" || $('#ResearchYears').val() == null || $('#ResearchYears').val() == undefined) ? 0 : parseFloat($('#ResearchYears').val());
+            var IndustryYears = ($('#IndustryYears').val() == "" || $('#IndustryYears').val() == null || $('#IndustryYears').val() == undefined) ? 0 : parseFloat($('#IndustryYears').val());
+            var totalExp = LectYears + AssProfYears + ProfYears + ResearchYears + IndustryYears;
+            if (ResearchYears == 0) {
+                $('#ResearchSuppDoc').removeClass('required');
+            }
+            else {
+                $('#ResearchSuppDoc').addClass('required');
+            }
+            $('#totExpr').val(totalExp);
+            $('#TotalExperience').val(totalExp);
+        });
+        $('#IndustryYears').on('change', function () {
+            var LectYears = ($('#LectYears').val() == "" || $('#LectYears').val() == null || $('#LectYears').val() == undefined) ? 0 : parseFloat($('#LectYears').val());
+            var AssProfYears = ($('#AssProfYears').val() == "" || $('#AssProfYears').val() == null || $('#AssProfYears').val() == undefined) ? 0 : parseFloat($('#AssProfYears').val());
+            var ProfYears = ($('#ProfYears').val() == "" || $('#ProfYears').val() == null || $('#ProfYears').val() == undefined) ? 0 : parseFloat($('#ProfYears').val());
+            var PrincipalYears = ($('#PrincipalYears').val() == "" || $('#PrincipalYears').val() == null || $('#PrincipalYears').val() == undefined) ? 0 : parseFloat($('#PrincipalYears').val());
+            var ResearchYears = ($('#ResearchYears').val() == "" || $('#ResearchYears').val() == null || $('#ResearchYears').val() == undefined) ? 0 : parseFloat($('#ResearchYears').val());
+            var IndustryYears = ($('#IndustryYears').val() == "" || $('#IndustryYears').val() == null || $('#IndustryYears').val() == undefined) ? 0 : parseFloat($('#IndustryYears').val());
+            var totalExp = LectYears + AssProfYears + ProfYears + ResearchYears + IndustryYears;
+            if (IndustryYears == 0) {
+                $('#IndustrySuppDoc').removeClass('required');
+            }
+            else {
+                $('#IndustrySuppDoc').addClass('required');
+            }
+            $('#totExpr').val(totalExp);
+            $('#TotalExperience').val(totalExp);
+        });
+
+        $('#InterJornals').on('change', function () {
+            var InterJornals = ($('#InterJornals').val() == "" || $('#InterJornals').val() == null || $('#InterJornals').val() == undefined) ? 0 : parseFloat($('#InterJornals').val());
+            var InterConfs = ($('#InterConfs').val() == "" || $('#InterConfs').val() == null || $('#InterConfs').val() == undefined) ? 0 : parseFloat($('#InterConfs').val());
+            var NationalJournals = ($('#NationalJournals').val() == "" || $('#NationalJournals').val() == null || $('#NationalJournals').val() == undefined) ? 0 : parseFloat($('#NationalJournals').val());
+            var NationalConfs = ($('#NationalConfs').val() == "" || $('#NationalConfs').val() == null || $('#NationalConfs').val() == undefined) ? 0 : parseFloat($('#NationalConfs').val());
+            var totalPublications = InterJornals + InterConfs + NationalJournals + NationalConfs;
+            $('#totPublications').val(totalPublications);
+            $('#TotalPublications').val(totalPublications);
+        });
+        $('#InterConfs').on('change', function () {
+            var InterJornals = ($('#InterJornals').val() == "" || $('#InterJornals').val() == null || $('#InterJornals').val() == undefined) ? 0 : parseFloat($('#InterJornals').val());
+            var InterConfs = ($('#InterConfs').val() == "" || $('#InterConfs').val() == null || $('#InterConfs').val() == undefined) ? 0 : parseFloat($('#InterConfs').val());
+            var NationalJournals = ($('#NationalJournals').val() == "" || $('#NationalJournals').val() == null || $('#NationalJournals').val() == undefined) ? 0 : parseFloat($('#NationalJournals').val());
+            var NationalConfs = ($('#NationalConfs').val() == "" || $('#NationalConfs').val() == null || $('#NationalConfs').val() == undefined) ? 0 : parseFloat($('#NationalConfs').val());
+            var totalPublications = InterJornals + InterConfs + NationalJournals + NationalConfs;
+            $('#totPublications').val(totalPublications);
+            $('#TotalPublications').val(totalPublications);
+        });
+        $('#NationalJournals').on('change', function () {
+            var InterJornals = ($('#InterJornals').val() == "" || $('#InterJornals').val() == null || $('#InterJornals').val() == undefined) ? 0 : parseFloat($('#InterJornals').val());
+            var InterConfs = ($('#InterConfs').val() == "" || $('#InterConfs').val() == null || $('#InterConfs').val() == undefined) ? 0 : parseFloat($('#InterConfs').val());
+            var NationalJournals = ($('#NationalJournals').val() == "" || $('#NationalJournals').val() == null || $('#NationalJournals').val() == undefined) ? 0 : parseFloat($('#NationalJournals').val());
+            var NationalConfs = ($('#NationalConfs').val() == "" || $('#NationalConfs').val() == null || $('#NationalConfs').val() == undefined) ? 0 : parseFloat($('#NationalConfs').val());
+            var totalPublications = InterJornals + InterConfs + NationalJournals + NationalConfs;
+            $('#totPublications').val(totalPublications);
+            $('#TotalPublications').val(totalPublications);
+        });
+        $('#NationalConfs').on('change', function () {
+            var InterJornals = ($('#InterJornals').val() == "" || $('#InterJornals').val() == null || $('#InterJornals').val() == undefined) ? 0 : parseFloat($('#InterJornals').val());
+            var InterConfs = ($('#InterConfs').val() == "" || $('#InterConfs').val() == null || $('#InterConfs').val() == undefined) ? 0 : parseFloat($('#InterConfs').val());
+            var NationalJournals = ($('#NationalJournals').val() == "" || $('#NationalJournals').val() == null || $('#NationalJournals').val() == undefined) ? 0 : parseFloat($('#NationalJournals').val());
+            var NationalConfs = ($('#NationalConfs').val() == "" || $('#NationalConfs').val() == null || $('#NationalConfs').val() == undefined) ? 0 : parseFloat($('#NationalConfs').val());
+            var totalPublications = InterJornals + InterConfs + NationalJournals + NationalConfs;
+            $('#totPublications').val(totalPublications);
+            $('#TotalPublications').val(totalPublications);
+        });
+
+        $('#Supervisors').on('change', function () {
+            var Supervisors = ($('#Supervisors').val() == "" || $('#Supervisors').val() == null || $('#Supervisors').val() == undefined) ? 0 : parseFloat($('#Supervisors').val());
+            var CoSupervisors = ($('#CoSupervisors').val() == "" || $('#CoSupervisors').val() == null || $('#CoSupervisors').val() == undefined) ? 0 : parseFloat($('#CoSupervisors').val());
+            var totalPhDsGuided = Supervisors + CoSupervisors;
+            if (Supervisors == 0) {
+                $('#SupervisorsSuppDoc').removeClass('required');
+                $('#SupervisorsGuidedUniversity').removeClass('required');
+            }
+            else {
+                $('#SupervisorsSuppDoc').addClass('required');
+                $('#SupervisorsGuidedUniversity').addClass('required');
+            }
+            $('#totalPhDs').val(totalPhDsGuided);
+            $('#TotalPhDsGuided').val(totalPhDsGuided);
+        });
+        $('#CoSupervisors').on('change', function () {
+            var Supervisors = ($('#Supervisors').val() == "" || $('#Supervisors').val() == null || $('#Supervisors').val() == undefined) ? 0 : parseFloat($('#Supervisors').val());
+            var CoSupervisors = ($('#CoSupervisors').val() == "" || $('#CoSupervisors').val() == null || $('#CoSupervisors').val() == undefined) ? 0 : parseFloat($('#CoSupervisors').val());
+            var totalPhDsGuided = Supervisors + CoSupervisors;
+            if (CoSupervisors == 0) {
+                $('#CoSupervisorsSuppDoc').removeClass('required');
+                $('#CoSupervisorsGuidedUniversity').removeClass('required');
+            }
+            else {
+                $('#CoSupervisorsSuppDoc').addClass('required');
+                $('#CoSupervisorsGuidedUniversity').addClass('required');
+            }
+            $('#totalPhDs').val(totalPhDsGuided);
+            $('#TotalPhDsGuided').val(totalPhDsGuided);
+        });
+    });
+</script>
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<br />
+<body>
+    @using (Html.BeginForm("CollegePrincipalDetailsAffColl", "CollegeSCMProceedingsRequest", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.RegistrationNumber)
+        @Html.HiddenFor(model => model.FacultyName)
+        @Html.HiddenFor(model => model.WorkingCollege)
+        <div>
+            <table class="faculty_table" style="border:2px solid #000000">
+                <tr>
+                    <td class="col1" style="width:25.5%;font-weight:bold;border-right:1px solid #000000;">Applied post of principal for which type of college</td>
+                    <td class="col1" colspan="3" style="width:50%">
+                        <label>@Html.RadioButtonFor(model => model.CollegeType, 1, new { @id = "isactivitystatusyes_" + 1, @class = "iscollegetype" }) Engineering &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <label>@Html.RadioButtonFor(model => model.CollegeType, 0, new { @id = "isactivitystatusyes_" + 0, @class = "iscollegetype" }) Pharmacy </label>
+                        @Html.ValidationMessageFor(model => model.CollegeType)
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br />
+        <div class="togglecls" style="border:2px solid #000000">
+            @if (Model.RegistrationNumber != null)
+            {
+                <table class="faculty_table">
+                    <tr>
+                        <td class="row" style="width:20.5%;font-weight:bold;border-right:1px solid #000000;">FacultyName</td>
+                        <td class="col2" colspan="3" style="width:56%;font-weight:normal">@Model.FacultyName</td>
+                    </tr>
+                    <tr>
+                        <td class="row" style="width:20.5%;font-weight:bold;border-right:1px solid #000000;">Registration Number</td>
+                        <td class="col2" colspan="3" style="width:50%;font-weight:normal">@Model.RegistrationNumber</td>
+                    </tr>
+                    <tr>
+                        <td class="row" style="width:20.5%;font-weight:bold;border-right:1px solid #000000;">College where working</td>
+                        <td class="col2" colspan="3" style="width:50%;font-weight:normal">@Model.WorkingCollege</td>
+                    </tr>
+                </table>
+            }
+
+            <div class="enggtogglediv">
+                <table class="faculty_table education" id="tblQualification" style="border: solid 1px #000000;">
+                    <thead>
+                        <tr>
+                            <td class="row" style="text-align: left; width: 180px;border: solid 1px #000000;font-weight:bold;">Educational Qualifications</td>
+                            <td class="row" style="text-align: left; width: 120px;border: solid 1px #000000;font-weight:bold;">Degree</td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Division</td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Year of Passing</td>
+                            <td class="row" style="text-align: left; width: 125px;border: solid 1px #000000;font-weight:bold;">OD Proof</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">UG</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.UgDegree, new { style = "width: 85%; text-align: center;", @class = "txtUgDegree required", @placeholder = "UG Degree", @maxlength = "10" })
+                                @Html.ValidationMessageFor(model => model.UgDegree)
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.UgDivision, new { style = "width: 85%; text-align: center;", @class = "txtDivision required", @placeholder = "Division" })
+                                @Html.ValidationMessageFor(model => model.UgDivision)
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.UgPassingYear, new { style = "width: 85%; text-align: center;", @class = "txtYear required", @placeholder = "Year of passing" })
+                                @Html.ValidationMessageFor(model => model.UgPassingYear)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.UgODProof, new { type = "file", @style = "width: 180px;", @class = "odproofdeg required" })
+                                <span id="UgODProoftxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">PG</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PgDegree, new { style = "width: 85%; text-align: center;", @class = "txtPgDegree required", @placeholder = "PG Degree", @maxlength = "10" })
+                                @Html.ValidationMessageFor(model => model.PgDegree)
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PgDivision, new { style = "width: 85%; text-align: center;", @class = "txtDivision required", @placeholder = "Division" })
+                                @Html.ValidationMessageFor(model => model.PgDivision)
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PgPassingYear, new { style = "width: 85%; text-align: center;", @class = "txtYear required", @placeholder = "Year of passing" })
+                                @Html.ValidationMessageFor(model => model.PgPassingYear)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PgODProof, new { type = "file", @style = "width: 180px;", @class = "odproofdeg required" })
+                                <span id="PgODProoftxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Ph.D.</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PhDArea, new { style = "width: 85%; text-align: center;", @class = "txtPhdArea required", @placeholder = "Ph.D Area", @maxlength = "14" })
+                                @Html.ValidationMessageFor(model => model.PhDArea)
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PhdDivision, new { style = "width: 85%; text-align: center;", @class = "txtDivision required", @placeholder = "Division" })
+                                @Html.ValidationMessageFor(model => model.PhdDivision)
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PhdPassingYear, new { style = "width: 85%; text-align: center;", @class = "txtYear required", @placeholder = "Year of passing" })
+                                @Html.ValidationMessageFor(model => model.PhdPassingYear)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PhDODProof, new { type = "file", @style = "width: 180px;", @class = "odproofdeg required" })
+                                <span id="PhDODProoftxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="faculty_table education" id="tblExperience" style="border: solid 1px #000000;">
+                    <thead>
+                        <tr>
+                            <td class="row" style="text-align: left; width: 100px;border: solid 1px #000000;font-weight:bold;">Experience in Teaching/Research/Industry</td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Number of Years</td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Total Experience</td>
+                            <td class="row" style="text-align: left; width: 125px;border: solid 1px #000000;font-weight:bold;">Supporting Documents <p style="color:blue;">(Appointment order,Joining order,Selection Committee Minutes & Relieving order should be in single document pdf only)</p></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Lecturer / Asst.Professor</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.LectYears, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Years" })
+                                @Html.ValidationMessageFor(model => model.LectYears)
+                            </td>
+                            <td class="col2" rowspan="6" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.TotalExperience, new { @id = "totExpr", @disabled = true, @style = "font-weight:bold;text-align:center;" })
+                                @Html.HiddenFor(model => model.TotalExperience)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.LectSuppDoc, new { type = "file", @style = "width: 180px;", @class = "expsupportdoc required" })
+                                <span id="LectSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Associate Professor</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.AssProfYears, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Years" })
+                                @Html.ValidationMessageFor(model => model.AssProfYears)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.AssProfSuppDoc, new { type = "file", @style = "width: 180px;", @class = "expsupportdoc required" })
+                                <span id="AssProfSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Professor</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.ProfYears, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Years" })
+                                @Html.ValidationMessageFor(model => model.ProfYears)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.ProfSuppDoc, new { type = "file", @style = "width: 180px;", @class = "expsupportdoc required" })
+                                <span id="ProfSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Research</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.ResearchYears, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Years" })
+                                @Html.ValidationMessageFor(model => model.ResearchYears)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.ResearchSuppDoc, new { type = "file", @style = "width: 180px;", @class = "expsupportdoc required" })
+                                <span id="ResearchSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Industry</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.IndustryYears, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Years" })
+                                @Html.ValidationMessageFor(model => model.IndustryYears)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.IndustrySuppDoc, new { type = "file", @style = "width: 180px;", @class = "expsupportdoc required" })
+                                <span id="IndustrySuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Principal</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PrincipalYears, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Years" })
+                                @Html.ValidationMessageFor(model => model.PrincipalYears)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PrincipalSuppDoc, new { type = "file", @style = "width: 180px;", @class = "expsupportdoc required" })
+                                <span id="PrincipalSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="faculty_table education" id="tblRatified" style="border: solid 1px #000000;">
+                    <thead>
+                        <tr>
+                            <td class="row" style="text-align: left; width: 160px;border: solid 1px #000000;font-weight:bold;">Ratified / Selected as</td>
+                            <td class="row" style="text-align: left; width: 125px;border: solid 1px #000000;font-weight:bold;"></td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Date of Ratification/Selected</td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Number of Years</td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Total Ratified / Selected Service</td>
+                            <td class="row" style="text-align: left; width: 100px;border: solid 1px #000000;font-weight:bold;">Supporting Documents <p style="color:blue;">(Appointment order,Joining order,Selection Committee Minutes & Relieving order should be in single document pdf only)</p></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">
+                                Assistant Professor
+                            </td>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">
+                                <div class="Identified" style="text-align:center;">
+                                    <label>@Html.RadioButtonFor(model => model.LectRatactivitystatus, true, new { @id = "LectRatactivitystatusyes", @class = "LectRatactivitystatusyes" }) <strong>Yes </strong></label>
+                                    <label>@Html.RadioButtonFor(model => model.LectRatactivitystatus, false, new { @id = "LectRatactivitystatusno", @class = "LectRatactivitystatusno" }) <strong>No </strong></label>
+                                    @Html.ValidationMessageFor(model => model.LectRatactivitystatus)
+                                </div>
+                            </td>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">
+                                <div id="LectRatDateDiv">
+                                    @Html.TextBoxFor(model => model.LectRatDate, new { style = "width:100px;", @class = "calendar" })
+                                </div>
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.LectRatYears, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Years", @disabled = "true" })
+                                @Html.ValidationMessageFor(model => model.LectRatYears)
+                            </td>
+                            <td class="col2" rowspan="6" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.TotalRatExperience, new { @id = "totRatExpr", @disabled = true, @style = "font-weight:bold;text-align:center;" })
+                                @Html.HiddenFor(model => model.TotalRatExperience)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.LectRatSuppDoc, new { type = "file", @style = "width: 180px;", @class = "odproofdeg required", @disabled = "true" })
+                                <span id="LectRatSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Associate Professor</td>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">
+                                <div class="Identified" style="text-align:center;">
+                                    <label>@Html.RadioButtonFor(model => model.AssRatactivitystatus, true, new { @id = "AssRatactivitystatusyes", @class = "AssRatactivitystatusyes" }) <strong>Yes </strong></label>
+                                    <label>@Html.RadioButtonFor(model => model.AssRatactivitystatus, false, new { @id = "AssRatactivitystatusno", @class = "AssRatactivitystatusno" }) <strong>No </strong></label>
+                                    @Html.ValidationMessageFor(model => model.AssRatactivitystatus)
+                                </div>
+                            </td>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">
+                                <div id="AssRatDateDiv">
+                                    @Html.TextBoxFor(model => model.AssRatDate, new { style = "width:100px", @class = "calendar" })
+                                </div>
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.AssRatYears, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Years", @disabled = "true" })
+                                @Html.ValidationMessageFor(model => model.AssRatYears)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.AssRatProfSuppDoc, new { type = "file", @style = "width: 180px;", @class = "odproofdeg required", @disabled = "true" })
+                                <span id="AssRatProfSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Professor</td>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">
+                                <div class="Identified" style="text-align:center;">
+                                    <label>@Html.RadioButtonFor(model => model.ProfRatactivitystatus, true, new { @id = "ProfRatactivitystatusyes", @class = "ProfRatactivitystatusyes" }) <strong>Yes </strong></label>
+                                    <label>@Html.RadioButtonFor(model => model.ProfRatactivitystatus, false, new { @id = "ProfRatactivitystatusno", @class = "ProfRatactivitystatusno" }) <strong>No </strong></label>
+                                    @Html.ValidationMessageFor(model => model.ProfRatactivitystatus)
+                                </div>
+                            </td>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">
+                                <div id="ProfRatDateDiv">
+                                    @Html.TextBoxFor(model => model.ProfRatDate, new { style = "width:100px", @class = "calendar" })
+                                </div>
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.ProfRatYears, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Years", @disabled = "true" })
+                                @Html.ValidationMessageFor(model => model.ProfRatYears)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.ProfRatSuppDoc, new { type = "file", @style = "width: 180px;", @class = "odproofdeg required", @disabled = "true" })
+                                <span id="ProfRatSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Principal</td>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">
+                                <div class="Identified" style="text-align:center;">
+                                    <label>@Html.RadioButtonFor(model => model.PrincipalRatactivitystatus, true, new { @id = "PrincipalRatactivitystatusyes", @class = "PrincipalRatactivitystatusyes" }) <strong>Yes </strong></label>
+                                    <label>@Html.RadioButtonFor(model => model.PrincipalRatactivitystatus, false, new { @id = "PrincipalRatactivitystatusno", @class = "PrincipalRatactivitystatusno" }) <strong>No </strong></label>
+                                    @Html.ValidationMessageFor(model => model.PrincipalRatactivitystatus)
+                                </div>
+                            </td>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">
+                                <div id="PrincipalRatDateDiv">
+                                    @Html.TextBoxFor(model => model.PrincipalRatDate, new { style = "width:100px", @class = "calendar" })
+                                </div>
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PrincipalRatYears, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Years", @disabled = "true" })
+                                @Html.ValidationMessageFor(model => model.PrincipalRatYears)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.PrincipalRatSuppDoc, new { type = "file", @style = "width: 180px;", @class = "odproofdeg required", @disabled = "true" })
+                                <span id="PrincipalRatSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pharmacytogglediv">
+                <table class="faculty_table education" id="tblPublication" style="border: solid 1px #000000;">
+                    <thead>
+                        <tr>
+                            <td class="row" style="text-align: left; width: 180px;border: solid 1px #000000;font-weight:bold;">Number of Publications</td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Number</td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Total Publications</td>
+                            <td class="row" style="text-align: left; width: 125px;border: solid 1px #000000;font-weight:bold;">Supporting Documents <p style="color:blue;">(1st page of Publications)</p></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">International Journals</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.InterJornals, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Journals" })
+                                @Html.ValidationMessageFor(model => model.InterJornals)
+                            </td>
+                            <td class="col2" rowspan="6" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.TotalPublications, new { @id = "totPublications", @disabled = true, @style = "font-weight:bold;text-align:center;" })
+                                @Html.HiddenFor(model => model.TotalPublications)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.InterJornalsSuppDoc, new { type = "file", @style = "width: 180px;", @class = "publdoc" })
+                                <span id="InterJornalsSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">International Conferences</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.InterConfs, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Conferences" })
+                                @Html.ValidationMessageFor(model => model.InterConfs)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.InterConfsSuppDoc, new { type = "file", @style = "width: 180px;", @class = "publdoc" })
+                                <span id="InterConfsSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">National Journals</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.NationalJournals, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Journals" })
+                                @Html.ValidationMessageFor(model => model.NationalJournals)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.NationalJournalsSuppDoc, new { type = "file", @style = "width: 180px;", @class = "publdoc" })
+                                <span id="NationalJournalsSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">National Conferences</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.NationalConfs, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Conferences" })
+                                @Html.ValidationMessageFor(model => model.NationalConfs)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.NationalConfsSuppDoc, new { type = "file", @style = "width: 180px;", @class = "publdoc" })
+                                <span id="NationalConfsSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="faculty_table education" id="tblPhdGuided" style="border: solid 1px #000000;">
+                    <thead>
+                        <tr>
+                            <td class="row" style="text-align: left; width: 125px;border: solid 1px #000000;font-weight:bold;">Number of Ph.Ds guided</td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Number</td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Guided University</td>
+                            <td class="row" style="text-align: center; width: 125px;border: solid 1px #000000;font-weight:bold;">Total </td>
+                            <td class="row" style="text-align: left; width: 125px;border: solid 1px #000000;font-weight:bold;">Supporting Documents <p style="color:blue;">(Admission Letter,Notification Order for Viva-Voice exam & 1st page of Thesis copy should be in single document pdf only)</p></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Supervisor</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.Supervisors, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Ph.Ds guided" })
+                                @Html.ValidationMessageFor(model => model.Supervisors)
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.SupervisorsGuidedUniversity, new { style = "width: 85%; text-align: center;", @placeholder = "Guided University", @maxlength = "150" })
+                                @*@Html.ValidationMessageFor(model => model.SupervisorsGuidedUniversity)*@
+                            </td>
+                            <td class="col2" rowspan="6" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.TotalPhDsGuided, new { @id = "totalPhDs", @disabled = true, @style = "font-weight:bold;text-align:center;" })
+                                @Html.HiddenFor(model => model.TotalPhDsGuided)
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.SupervisorsSuppDoc, new { type = "file", @style = "width: 180px;", @class = "phdsguideddoc required" })
+                                <span id="SupervisorsSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col2" style="text-align: left; width: 100px;border: solid 1px #000000;">Co-Supervisor</td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.CoSupervisors, new { style = "width: 85%; text-align: center;", @class = "required", @placeholder = "Number of Ph.Ds guided" })
+                                @Html.ValidationMessageFor(model => model.CoSupervisors)
+                            </td>
+                            <td class="col2" style="text-align: center; width: 100px;border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.CoSupervisorsGuidedUniversity, new { style = "width: 85%; text-align: center;", @placeholder = "Guided University", @maxlength = "150" })
+                                @*@Html.ValidationMessageFor(model => model.CoSupervisorsGuidedUniversity)*@
+                            </td>
+                            <td class="col2" style="border: solid 1px #000000;">
+                                @Html.TextBoxFor(model => model.CoSupervisorsSuppDoc, new { type = "file", @style = "width: 180px;", @class = "phdsguideddoc required" })
+                                <span id="CoSupervisorsSuppDoctxt" style="color:red;"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="float:right;">
+                @Html.ActionLink("Cancel", "CollegeScmProceedingsPrincipalRequest", "CollegeSCMProceedingsRequest", new { @class = "create_button" })
+                <input type="submit" value="Submit" id="btnSubmit" name="cmd" style="height:22px;" />
+            </div>
+        </div>
+    }
+</body>

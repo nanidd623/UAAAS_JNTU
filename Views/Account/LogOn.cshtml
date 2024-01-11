@@ -1,0 +1,196 @@
+﻿@model UAAAS.Models.LogOnModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+
+<style>
+      .DashboardEmails { 
+        background-color: white;
+        color: black;
+        border: solid 1px #e6e6e6;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    } 
+    /*.Links a:link,a:visited{
+         color:#F2552C;
+    }*/
+    #Login:hover{
+        background:#F2552C;
+    }
+</style>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+    @using (Html.BeginForm())
+    {
+        <div class="login_box">
+            @if (TempData["Error"] != null)
+            {
+                <div class="error">
+                    <p><strong></strong> @TempData["Error"].ToString()</p>
+                </div>
+            }
+            @if (TempData["Success"] != null)
+            {
+                <div class="success">
+                    <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+                </div>
+            }
+            @if (ViewBag.Multiple == true)
+            {
+                <div class="error" style="text-align: left;">
+                    @*<span><strong>Multiple logins with same username is not allowed.</strong></span>*@
+                    <span>
+                        Your last session was terminated incorrectly or is currently active . Please try logging in again after some time.
+                        <br />
+                        <br />
+                        <div style="color: blue;">
+                            <strong>For successful login : </strong>
+                            <br />
+                            <ul style="margin-left: 18px;">
+                                <li>Do not try "<b>Login</b>" in multiple browsers / systems at a time.</li>
+                                <li>Always close your browser after "<b>Logout</b>" only.</li>
+                            </ul>
+                        </div>
+                    </span>
+                </div>
+            }
+            @if (ViewBag.Inactive == true)
+            {
+                <div class="error" style="text-align: left;">
+                    <span>Your Login is In Active</span>
+                </div>
+            }
+
+            @if (ViewBag.NotLogin == true)
+            {
+                <div class="error" style="text-align: left;">
+                    <span>
+                        Invalid Username/password or Invalid Application Mirror Server
+                        @*User (All Engg. Colleges/Integrated Colleges with Specific College Code starting with Numbers or between A to P)
+
+                            Eg: 08,..5A,..9P,...AG,..PT. or Faculty Portal EDIT ONLY)*@
+                    </span>
+                </div>
+            }
+        </div>
+        <table width="100%" style="height:430px;">
+            <tr>
+                <td style="text-align:-webkit-right;">
+                    <div id="LoginPage" style="border:solid 1px #e6e6e6;border-top:5px solid #F2552C;box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);width:54%;text-align:center;">
+                        <br />
+                        <div>
+                            <p style="font-size:27px;"><b>Log In</b></p>
+                        </div>
+                        <br />
+                        <div style="text-align:center;width:122%;margin-left:76px;">
+                            <div class="editor-label" style="height: 20%">
+                                @Html.LabelFor(m => m.UserName)
+                            </div>
+                            <div class="editor-field focus" style="width: 37%; height: 20%">
+                                <div style="width: 175px; float: left;">
+                                    @Html.TextBoxFor(m => m.UserName, new {@style = "width:220px;"})
+                                    @Html.ValidationMessageFor(m => m.UserName)
+                                    @*<div style="width: 75%">
+                                        @Html.ValidationMessageFor(m => m.UserName)
+                                    </div>*@
+                                </div>
+                            </div>
+                            <br/><br/><br/>
+                            <div class="editor-label" style="height: 20%">
+                                @Html.LabelFor(m => m.Password)
+                            </div>
+                            <div class="editor-field" style="width:37%;height: 20%">
+                                <div style="width: 175px; float: left;">
+                                    @Html.PasswordFor(m => m.Password, new { @style = "width:220px;" })
+                                    @Html.ValidationMessageFor(m => m.Password)
+                                </div>
+                                @*<div style="width: 75%">
+                                    @Html.ValidationMessageFor(m => m.Password)
+                                </div>*@
+                            </div>
+                        </div>
+                        <br /><br /><br/>
+                        <div class="" style="text-align:center;">
+                            <input type="submit" id="Login" value="Login" style="border-radius:8px;" />
+                        </div>
+                        <div class="Links" style="display:inline;padding:10px;">
+                            @Html.ActionLink("College Forgot Password", "ResetCollegePassword", "Account", null, new { @class = "link", @style = "" }) |
+
+                            @Html.ActionLink("Faculty Forgot Password", "ResetPassword", "Account", null, new { @class="link", @style = "" })  |
+
+                            @Html.ActionLink("Forgot UserName", "FacultyForgotEmail", "Account", null, new {@class="link", @style = "" }) | <br />
+
+                            @Html.ActionLink("Change UserName", "ChangeUserName", "Account", null, new {@class="link", @style = "" })
+
+                        </div>
+
+                    </div>
+                </td> 
+                <td style="text-align:-webkit-center;">
+                    <div>
+                        <img src="~/Content/images/help_desk.png" width="100px" height="100px"/>
+                    </div>
+
+                    <div class="DashboardEmails" style="border:solid 1px #e6e6e6;box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);width:75%;">                      
+                        <div class="" style="background-color:#1F7DDA;color:white;">
+                            <b>Help desk</b>
+                        </div>
+                        <table style="border-collapse:collapse;">
+                            <tr>
+                                <td>
+                                    <img src="~/Content/images/EmailNewLogo.png" width="25px" height="25px" />
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;<b>supportaac@jntuh.ac.in</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="~/Content/images/MobileLogo.png" width="25px" height="25px" />
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;<b>8008421860</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="~/Content/images/LandLine.png" width="25px" height="25px" />
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;<b>040 - 23150010</b>
+                                </td>
+                            </tr>
+                        </table>      
+                        
+                         @*<table style="border-collapse:collapse;">
+                            <tr>
+                                <td class="col1">
+                                    <label for="Email_Support">Email Support</label>
+                                </td>
+                                <td class="col2">
+                                    <b>supportaac@jntuh.ac.in</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col1">
+                                    <label for="Mobile">Mobile</label>
+                                </td>
+                                <td class ="col2">
+                                    <b>8008421860</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col1">
+                                    <label for="Land">Land</label>
+                                </td>
+                                <td class="col2">
+                                    <b>040 - 23150010</b>
+                                </td>
+                            </tr>
+                        </table>*@                       
+                    </div>
+                </td>
+            </tr>          
+        </table>
+    }

@@ -1,0 +1,835 @@
+﻿@model UAAAS.Controllers.College_Dachboard
+@using UAAAS.Models
+@{
+    // Layout = null;
+    ViewBag.Title = "CollegeDashboard";
+    //string BackGroundColor = "#004fbb";
+    // string BackGroundColor = "#444";
+    uaaasDBContext db = new uaaasDBContext();
+
+    string BackGroundColor = "#024b74";
+    string Color = "black";
+    string LatestNews = "";
+    string LatestUrl = "";
+    int indexid = 0;
+    int Count = 1;
+    foreach (var item in ViewBag.Events)
+    {
+        if (indexid == 0)
+        {
+            LatestNews = item.newstitle;
+            LatestUrl = item.url;
+        }
+        indexid++;
+    }
+    List<string> imagepaths = new List<string>();
+    foreach (var item in Model.CollegePhotos)
+    {
+        var path = item.Split('/')[4];
+        imagepaths.Add(path);
+    }
+    var Dept_Data = Model.DeptWise_FacultyCount;
+    string Serverurl = TempData["ServerUrl"].ToString();
+    string HostUrl = Serverurl.Split(':')[1];
+    string PortUrl = Serverurl.Split(':')[2];
+    // string Url = HostUrl + ":" + PortUrl;
+    string Url = HostUrl;
+    Serverurl = HostUrl;
+    string website = Model.College_Website;
+    int collegeid = @Model.collegeId;
+    var CollegeRandomCodes = db.jntuh_college_416randomcodes.Where(R => R.CollegeId == collegeid).ToList();
+    var specializations = db.jntuh_college_intake_existing.Where(i => i.academicYearId == 11 && i.collegeId == collegeid && i.proposedIntake != 0).Select(s => s.specializationId).ToArray();
+    var departments = db.jntuh_specialization.Where(s => specializations.Contains(s.id)).Select(s => s.departmentId).ToArray();
+    var degreeids = db.jntuh_department.Where(r => departments.Contains(r.id)).Select(d => d.degreeId).ToArray();
+}
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success" style="background-color: gold; border: 1px solid #f49820;">
+        <p style="text-align: center;font-weight: bold"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+    </div><br /><br />
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error" style="background-color: red; border: 1px solid #f49820;">
+        <p style="text-align: center;font-weight: bold;color:white;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+    </div><br /><br />
+}
+
+<div style="color:white;font-weight:bold;background-color:tomato;text-align:center;height:23px;font-size:18px;">
+    <span style="vertical-align:middle;">@Model.CollegeName<span> (CODE : @Model.CollegeCode) </span></span>
+</div>
+<br />
+<div style="float: right; width: 400px; text-align: right; color: red; font-style: italic; font-weight: bold;">
+
+    @if (CollegeRandomCodes != null)
+    {
+        <img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><a href="~/Content/Upload/2019-20-Pdf/@CollegeRandomCodes.Select(R=>R.Collegecode).FirstOrDefault()-@CollegeRandomCodes.Select(R => R.Randomcode + ".pdf").FirstOrDefault()" target="_blank"><span>Download FFC Report-2019</span><img src="../../Content/images/pdf.png" /></a>
+    }
+
+</div>
+
+<div>
+    <table width="100%" style="border:1px solid purple;">
+        <tr>
+            <td width="8%" style="text-align: center; vertical-align: middle; background-color: #cc278a;">
+                <span style="color:white;text-align:left;"><b>Flash News </b></span>
+            </td>
+            <td width="92%">
+                <marquee style="color:forestgreen;" onmouseover="this.stop();" onmouseout="this.start();">
+                    <a href="@LatestUrl" target="_blank" id="NewNews" style="font-weight:bold;color:@Color">@LatestNews</a>
+                </marquee>
+            </td>
+        </tr>
+    </table>
+</div>
+<br />
+
+<html>
+<head>
+    <title></title>
+    <style>
+        .line {
+            border-width: 0px;
+            border-top: 2px solid palegreen;
+        }
+
+        .canvasjs-chart-credit {
+            display: none;
+        }
+
+        .flip-clock-wrapper {
+            margin: 0em;
+            width: 97%;
+        }
+
+        .body_content {
+            text-align: initial;
+        }
+
+        svg path {
+            cursor: pointer;
+        }
+    </style>
+
+    <script type="text/javascript" src="~/Scripts/AccountsDashboard.js"></script>
+    <script type="text/javascript" src="~/Scripts/DonutChart.js"></script>
+    <script src="~/Scripts/morris-chart.js"></script>
+    <script src="~/Scripts/Morris-raphael.js"></script>
+
+    <link href="~/Scripts/Counter/flipclock.css" rel="stylesheet" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="~/Scripts/Counter/flipclock.min.js"></script>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/jquery-ui.js" type="text/javascript"></script>
+    <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/themes/start/jquery-ui.css"
+          rel="stylesheet" type="text/css" />
+
+    @*<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" rel="stylesheet" />*@
+
+    <script type="text/javascript">
+        var DataSeries = "";
+        window.onload = function () {
+            //Morrirs Chart Script data
+
+            var DeptData = @Html.Raw(Json.Encode(Model.DeptWise_FacultyCount));
+
+            var dataArray = [];
+
+            $.each(DeptData, function (index, table) {
+                if (table.Department == null)
+                    table.Department = "No Department";
+                dataArray.push({label:table.Department,value : table.FacultyCount,id : table.Deptid,dname:table.Deptname});
+            });
+
+            var browsersChart = Morris.Donut({
+
+                element: 'donut-example',
+                title: "Department Wise Faculty",
+                backgroundColor: "white",
+                data: dataArray,
+                // click: onClick,
+                resize: true,
+                formatter: function (value, data) {
+                    return value;
+                }
+            });
+
+            browsersChart.options.data.forEach(function (label, i) {
+
+                var legendItem = $('<span></span>').text(label['label']+ " ( " + label['value'] + " )").prepend('<br><span>&nbsp;</span>');
+                legendItem.find('span')
+
+                // .css('backgroundColor', browsersChart.options.colors[i])
+                // .css('width', '20px')
+                // .css('display', 'inline-block')
+                //.css('margin', '5px');
+                // $('#legend').append(legendItem)
+            });
+
+            browsersChart.on('click', function (i, row) {
+                debugger;
+                var Deptid= row.dname;
+                //var url =   "@Serverurl/Dashboard/GetDepartmentFaculty?DeptID="+Deptid;
+                var url =   "@Serverurl/Dashboard/GetDepartmentFaculty?DeptNAME="+Deptid;
+                window.open(url, 'DepartMents Faculty');
+            });
+        }
+
+
+        //$('img[src="~/Content/images/hand_point.gif"]').css({
+        //    'transform': 'rotate(45deg)'
+        //});
+
+        $(function () {
+
+            // $('#example').DataTable();
+            $("#autopopup").dialog({
+                title: "University Diary Information for the Year 2020",
+                height: 500,
+                width: 900,
+                buttons: {
+                    Update : function(){
+                        window.open("/Dashboard/UpdateCollegeDiary");
+                        $(this).dialog('close');
+                    },
+                    NoChange : function(){
+                        window.open("/Dashboard/UpdateCollegeDiary?command=NoChange");
+                        $(this).dialog('close');
+                    },
+                    Close: function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+
+            var ee = @Html.Raw(Json.Encode(@imagepaths));
+            var i = 0;
+
+            $('#dvImage').prepend('<img id="theImg" src="http:@Url/Content/Upload/CollegePhotos/'+ee[i]+'" style="width:100%;height:260px;"/>')
+            setInterval(function () {
+                i++;
+                if (i == ee.length) {
+                    i = 0;
+                }
+                $("#dvImage").fadeOut("slow", function () {
+                    $('#dvImage').empty();
+                    $('#dvImage').prepend('<img id="theImg" src="http:@Url/Content/Upload/CollegePhotos/'+ee[i]+'" style="width:100%;height:260px;"/>')
+                    $(this).fadeIn("slow");
+                });
+            }, 7000);
+        });
+
+
+        function initializeFaculty() {
+            var json = @Html.Raw(Json.Encode(@Model.DeptWise_FacultyCount));
+            Faculty_DrawChart(json);
+        };
+
+
+        function Faculty_DrawChart(json) {
+
+            var dataArray = [['Department', 'FacultyCount']];
+
+            $.each(json, function (index, table) {
+                dataArray.push([table.Department, table.FacultyCount]);
+            });
+            var data = google.visualization.arrayToDataTable(dataArray);
+            var options = {
+
+                // height: 216,
+                backgroundColor: "white",
+                title: 'Department Wise Faculty',
+                sliceVisibilityThreshold: 0,
+                // colors: ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6']
+                colors: ["#148df1","#2796f2","#399ff3","#4ca8f4","#5eb1f6","#71baf7","#83c3f8","#96ccf9","#a8d5fa","#BBDEFB", "#90CAF9", "#64B5F6", "#42A5F5", "#2196F3", "#1E88E5", "#1976D2"]
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+            chart.draw(data, options);
+            return false;
+        };
+
+        google.load("visualization", "1", { packages: ["corechart"] });
+        google.setOnLoadCallback(initializeFaculty);
+
+
+        function initialize_Student() {
+            var json = @Html.Raw(Json.Encode(@Model.YearWise_Student_Count));
+            Student_DrawChart(json);
+        };
+
+        function Student_DrawChart(json) {
+
+            var dataArray = [['Year', 'Approved_Count']];
+
+            $.each(json, function (index, table) {
+                dataArray.push([table.Year, table.Approved_Count]);
+            });
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+
+
+            var options = {
+                legend: { position: 'none'},
+                title : "YearWise Student Count",
+                titlePosition :"center",
+                backgroundColor: "whitesmoke",
+                sliceVisibilityThreshold: 0,
+                // colors: ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
+                colors: ["#148df1","#5eb1f6","#a8d5fa","#BBDEFB", "#90CAF9", "#64B5F6", "#42A5F5", "#2196F3", "#1E88E5", "#1976D2"],
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('StudentPiechart'));
+
+            chart.draw(data, options);
+
+            return false;
+        };
+
+        google.load("visualization", "1", { packages: ["corechart"] });
+        google.setOnLoadCallback(initialize_Student);
+
+    </script>
+
+    @*<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>*@
+
+
+</head>
+<body>
+
+    <div style="height: 505px; padding: 2px; border-radius: 3px; background-color: white;">
+        <table width="100%" style="vertical-align: middle;">
+            <tr>
+                <td width="20%">
+                    <div style="height: 520px; border-radius: 3px;">
+                        <div style="height: 210px; border-radius: 3px;">
+                            @*<div id="piechart" style="height:210px;text-align:center;width:100%;">
+                                </div>*@
+
+                            @*<div id="chartContainer" style="height: 210px; width: 100%;">
+                                </div>*@
+                            <div style="height: 210px; width: 290px; text-align: center; background-color: white;">
+                                <div style="color: white; font-weight: bold; background-color: #1E98A7;">
+                                    <span class="sub">Department Wise Faculty</span>
+                                </div>
+
+                                @*<b style="color:white;font-weight:bold;background-color:#004fbb;">Department Wise Faculty</b>*@
+                                <div id="donut-example" style="height: 191px; width: 300px; background-color: white;">
+
+                                </div>
+                                <div id="legend" class="donut-legend"></div>
+                            </div>
+                        </div>
+                        <div style="height: 420px; border-radius: 3px; text-align: center;">
+                            <div style="text-align: center; height: auto;">
+                                <div style="background-color: white; border: none;">
+                                    <div style="color: white; font-weight: bold; background-color: #F2552C;">
+                                        <span>College Emails & Phone</span>
+                                    </div>
+
+                                    <div style="padding: 5px;">
+                                        <table>
+                                            <tr>
+                                                <td><img src="../Content/images/email.png" /></td>
+                                                <td> :</td>
+                                                <td><b style="color: @Color">@Model.CollegeEmail</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: left;"><img style="height: 21px;" src="~/Content/images/mobile.png" /></td>
+                                                <td> :</td>
+                                                <td style="text-align: left;">
+                                                    <b style="color: @Color">@Model.CollegePhoneNo</b>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div style="color: white; font-weight: bold; background-color: #1F7DDA;">
+                                        <span>Society Emails & Phone</span>
+                                    </div>
+
+                                    <div style="padding: 5px;">
+                                        <table>
+                                            <tr>
+                                                <td><img src="../Content/images/email.png" /></td>
+                                                <td> :</td>
+                                                <td><b style="color: @Color">@Model.SocietyEmail</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: left;"><img style="height: 21px;" src="~/Content/images/mobile.png" /></td>
+                                                <td> :</td>
+                                                <td style="text-align: left;">
+                                                    <b style="color: @Color">@Model.SocietyPhoneNo</b>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div style="color: white; font-weight: bold; background-color: #407F46;">
+                                        <span>Secretary Emails & Phone</span>
+                                    </div>
+
+
+                                    <div style="padding: 5px;">
+                                        <table>
+                                            <tr>
+                                                <td><img src="../Content/images/email.png" /></td>
+                                                <td> :</td>
+                                                <td><b style="color: @Color">@Model.SecretaryEmail</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: left;"><img style="height: 21px;" src="~/Content/images/mobile.png" /></td>
+                                                <td> :</td>
+                                                <td style="text-align: left;">
+                                                    <b style="color: @Color">@Model.SecretaryPhoneNo</b>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>&nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </td>
+
+
+                <td width="59%" style="vertical-align: middle;">
+                    <div style="height: 520px; border-radius: 3px;">
+
+                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="height: 260px; width: 100%;">
+                            <div id="dvImage" style="height: 260px; width: 100%;"></div>
+                        </div>
+                        <div style="height: 210px; background-color: white; padding: 21px 10px 10px 10px;">
+                            <br />
+                            @*<b class="newsheader" style="background-color:#004fbb;color:white;text-align:initial;">NEWS / CIRCULARS / NOTICES :</b>*@
+                            <div style="background-color: green; color: white; text-align: initial; font-weight: bold;">
+                                <span>&nbsp;&nbsp;&nbsp;&nbsp;NEWS  /  CIRCULARS  /  NOTICES :</span>
+                            </div>
+                            <marquee direction="up" scrolldelay="300" style="height: 130px;" onmouseover=" this.stop(); " onmouseout=" this.start(); ">
+
+                                <ul class="newstitle">
+                                    @foreach (var item in ViewBag.Events)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(item.url))
+                                        {
+                                            <li style="color: @Color">
+                                                @if (@item.createdDate != null)
+                                                {
+                                                    <a class="navigationurl" href="@item.url" target="_blank" style="color: @Color; font-weight: bold;">@item.createdDate.ToString("dd-MMM-yyy") : @item.newstitle</a>
+                                                    if (item.createdDate >= DateTime.Now.AddDays(-10))
+                                                    {
+                                                        <img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" />
+                                                    }
+                                                }
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li style="color: @Color">
+                                                @item.createdDate.ToString("dd-MMM-yyy") : @item.newstitle
+                                                @if (item.createdDate >= DateTime.Now.AddDays(-10))
+                                                {
+                                                    <img src="../Content/images/latest.gif" alt="latest" />
+                                                }
+
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </marquee>
+                            <br /><br />
+                            <a style="float: right; color: white; background-color: @BackGroundColor; border-radius: 4px; height: 21px; width: 91px; padding: 2px; border-color: #337ab7; text-align: center; font-weight: bold;" href="/Dashboard/Top100News" target="_blank">
+                                Read More
+                            </a>
+                        </div>
+                    </div>
+                </td>
+                <td width="21%">
+                    <div style="height: 520px; border-radius: 3px;">
+                        <div style="height: 300px">
+                            <div style="color: white; font-weight: bold; background-color: #71468A; text-align: center;">
+                                <span class="sub">Links</span>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div>
+                                @foreach (var item in ViewBag.Openliks)
+                                {
+                                    <img src="~/Content/images/bullet_orange.gif" class="hand" style="width: 6px;"> <span style="font-family: 'inherit'; font-size: 14px; font-weight: bold;">@Html.ActionLink((string)@item.Text, (string)@item.action, (string)@item.controller)</span> <img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><br />
+                                }
+                              
+
+                                @*<img src="~/Content/images/bullet_orange.gif" class="hand" style="width: 6px;">&nbsp;<span style="font-family: 'inherit'; font-size: 14px; font-weight: bold;">@Html.ActionLink("Faculty Leave Application", "Teaching", "Faculty")</span>&nbsp;<img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><br/>*@
+                                    @*<img src="~/Content/images/bullet_orange.gif" class="hand" style="width: 6px;">&nbsp;<span style="font-family: 'inherit'; font-size: 14px; font-weight: bold;">@Html.ActionLink("PG Students(A.Y 2018-19) Registration", "CollegeCources", "CollegeStudentRegistration")</span>&nbsp;<img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><br /><br />*@
+
+
+                                    @*@if (degreeids.Contains(10))
+                                        {
+
+                                            <img src="~/Content/images/bullet_orange.gif" class="hand" style="width: 6px;"><span>&nbsp;</span><span style="font-family: 'inherit'; font-size: 14px; font-weight: bold;">
+                                                <a href="/Dashboard/CollegeHospitalmembers?collegeId=@Utilities.EncryptString(Model.collegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"])">
+                                                    Request to Install BAS Device at Hospital for Pharm-D/Pharm-D(PB) Course(s)
+                                                </a>
+                                            </span><span>&nbsp;</span><img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><br />
+                                        }
+                                        else if (degreeids.Contains(9))
+                                        {
+                                             <img src="~/Content/images/bullet_orange.gif" class="hand" style="width: 6px;"><span>&nbsp;</span><span style="font-family: 'inherit'; font-size: 14px; font-weight: bold;">
+                                                <a href="/Dashboard/CollegeHospitalmembers?collegeId=@Utilities.EncryptString(Model.collegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"])">
+                                                    Request to Install BAS Device at Hospital for Pharm-D/Pharm-D(PB) Course(s)
+                                                </a>
+                                            </span><span>&nbsp;</span><img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><br />
+                                        }*@
+
+                                    @*<img src="~/Content/images/bullet_orange.gif" class="hand" style="width: 6px;">&nbsp;<span style="font-family: 'inherit'; font-size: 14px; font-weight: bold;">@Html.ActionLink("SCM Nominees", "CollegeScmProceedingsRequestNomineeAssignedview", "CollegeSCMProceedingsRequest")</span>&nbsp;<img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><br />*@
+                                    @*@if (degreeids.Contains(4))
+                                    {
+                                        <img src="~/Content/images/bullet_orange.gif" class="hand" style="width: 6px;"><span>&nbsp;</span><span style="font-family: 'inherit'; font-size: 14px; font-weight: bold;">
+                                            <a href="/Dashboard/CollegeFacultyData?collegeId=@Utilities.EncryptString(Model.collegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"])">
+                                                College Faculty Details
+                                            </a>
+                                        </span><span>&nbsp;</span><img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><br />
+                                    }*@
+
+
+
+                                    <img src="~/Content/images/bullet_orange.gif" class="hand" style="width: 6px;"><span>&nbsp;</span><span style="font-family: 'inherit'; font-size: 14px; font-weight: bold;">
+                                        <a href="/CollegeNOC/Index">
+                                            College NOC Request
+                                        </a>
+                                    </span><span>&nbsp;</span><img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle"/><br/>
+                                @*@if (collegeid == 375)
+                                {*@
+                                    <img src="~/Content/images/bullet_orange.gif" class="hand" style="width: 6px;"><span>&nbsp;</span><span style="font-family: 'inherit'; font-size: 14px; font-weight: bold;">
+                                        <a href="/CollegeGoverningbody/Index">
+                                            College Governing Body
+                                        </a>
+                                    </span><span>&nbsp;</span><img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><br />
+                                    <img src="~/Content/images/bullet_orange.gif" class="hand" style="width: 6px;"><span>&nbsp;</span><span style="font-family: 'inherit'; font-size: 14px; font-weight: bold;">
+                                        <a href="/CollegeGoverningmeeting/Index">
+                                            College Governing Meetings
+                                        </a>
+                                    </span><span>&nbsp;</span><img src="../Content/images/latest.gif" alt="latest" style="vertical-align: middle" /><br />
+
+                                @*}*@
+                                </div>
+                            </div>
+
+                            <div style="color: white; font-weight: bold; background-color: #BF8D2C; text-align: center;">
+                                <span class="sub">BAS Reports</span>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div>
+                                <marquee direction="up" scrolldelay="300" style="height: 120px;" onmouseover=" this.stop(); " onmouseout=" this.start(); ">
+                                    @foreach (var basreports in ViewBag.collegebasreports)
+                                    {
+                                        <ul>
+                                            <li>
+                                                <img src="~/Content/images/hand-point.png" class="hand" style="width: 19px;">
+                                                <a href="@basreports.path" style="font-weight: bold; vertical-align: super; color: @Color" target="_blank">@basreports.title</a>&nbsp;
+                                                @if (basreports.createdDate >= DateTime.Now.AddDays(-10))
+                                                {
+                                                    <img src="../Content/images/latest.gif" alt="latest" style="vertical-align: super" />
+                                                }
+                                            </li>
+                                        </ul>
+                                    }
+                                </marquee>
+
+                            </div>
+                        </div>
+
+
+                        @*<div style="height:500px;border-radius:3px;">
+                                <table width="100%">
+                                    <tr>
+                                        <td width="13%">
+                                            <div style="height:490px;border-radius:3px;text-align:center;">
+
+                                                <div style="height:490px;width:280px;background-color:white;overflow:scroll;">
+                                                    <table border="1" id="example" class="table table-striped table-bordered" style="width:100%;">
+                                                        <thead style="background-color:#004fbb;color:white;">
+                                                            <tr>
+                                                                <th width="11%" style="text-align:center;">S.No</th>
+                                                                <th width="60%" style="text-align:center;">Course</th>
+                                                                <th width="29%" style="text-align:center;">Approved Intake</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var item in Model.YearWise_Student_Count)
+                                                            {
+                                                                if (Count % 2 == 0)
+                                                                {
+                                                                    <tr style="background-color:#ddd;">
+                                                                        <td style="text-align:center;">@(Count++)</td>
+                                                                        <td style="text-align:left;">@item.CourseName</td>
+                                                                        <td style="text-align:center;">@item.ApprovedIntake</td>
+                                                                    </tr>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <tr>
+                                                                        <td style="text-align:center;">@(Count++)</td>
+                                                                        <td style="text-align:left;">@item.CourseName</td>
+                                                                        <td style="text-align:center;">@item.ApprovedIntake</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>*@
+                    </td>
+                </tr>
+            </table>
+            <br />
+        </div>
+        @if (ViewBag.UpdateStatus == false)
+        {
+            if (TempData["UpdateStatus"] != "Updated")
+            {
+                <div id="autopopup" style="font-size:12px;">
+                    <div id="ClassDetails">
+                        @Html.HiddenFor(model => model.collegeId)
+                        <span>
+                            <b><u>College</u> : @Model.CollegeName (@Model.CollegeCode) </b><br /><br />
+                            <b><u>Address</u> : @Model.Address</b>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><br /><br />
+                        <table width="100%">
+                            <thead style="background-color:brown;color:white;font-weight:bold;">
+                                <tr>
+                                    <td style="text-align:center;">Designation</td>
+                                    <td style="text-align:center;">Name</td>
+                                    <td colspan="2" style="text-align:center;">Contact Details (Mobile/ Land line)</td>
+                                    <td style="text-align:center;">EmailID</td>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td>
+                                    <div class="editor-label" style="width: 100px;">
+                                        <span>Society</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 250px;">
+                                        @Html.DisplayFor(model => model.SocietyName, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 100px;">
+                                        @Html.DisplayFor(model => model.SocietyMobile, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 100px;">
+                                        @Html.DisplayFor(model => model.SocietyPhoneNo, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 250px;">
+                                        @Html.DisplayFor(model => model.SocietyEmail, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="editor-label" style="width: 100px;">
+                                        <span>Chairman /Secretary</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 250px;">
+                                        @Html.DisplayFor(model => model.Chairman, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 100px;">
+                                        @Html.DisplayFor(model => model.SecretaryMobile, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 100px;">
+                                        @Html.DisplayFor(model => model.SecretaryPhoneNo, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 250px;">
+                                        @Html.DisplayFor(model => model.SecretaryEmail, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="editor-label" style="width: 100px;">
+                                        <span>College</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 250px;">
+                                        @Html.DisplayFor(model => model.CollegeName, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 100px;">
+                                        @Html.DisplayFor(model => model.CollegeMobile, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 100px;">
+                                        @Html.DisplayFor(model => model.CollegePhoneNo, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="width: 250px;">
+                                        @Html.DisplayFor(model => model.CollegeEmail, new { @class = "txtbox" })
+                                    </div>
+                                </td>
+                            </tr>
+                            @if (Model.Director != null)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="editor-label" style="width: 100px;">
+                                            <span>Director</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="editor-field" style="width: 250px;">
+                                            @Html.DisplayFor(model => model.Director, new { @class = "txtbox" })
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="editor-field" style="width: 100px;">
+                                            @Html.DisplayFor(model => model.DirectorMobile, new { @class = "txtbox" })
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="editor-field" style="width: 100px;">
+                                            @Html.DisplayFor(model => model.DirectorPhoneNo, new { @class = "txtbox" })
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="editor-field" style="width: 250px;">
+                                            @Html.DisplayFor(model => model.DirectorEmail, new { @class = "txtbox" })
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+
+
+                            @*<tr>
+                                    <td>
+                                        <div class="editor-label" style="width: 100px;height:56px;">
+                                            <span>Principal</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="editor-field" style="width: 250px;height:56px;">
+                                            @Html.DisplayFor(model => model.Principal, new { @class = "txtbox" })
+                                            <br /><span>(@Html.DisplayFor(model => model.PrincipalRegNo))</span>
+                                        </div>
+                                    </td>
+                                    <td colspan="2">
+                                        <div class="editor-field" style="width: 215px;text-align:center;height:56px;">
+                                            @Html.DisplayFor(model => model.PrincipalMobile, new { @class = "txtbox" })
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="editor-field" style="width: 250px;height:56px;">
+                                            @Html.DisplayFor(model => model.PrincipalEmail, new { @class = "txtbox" })
+                                        </div>
+                                    </td>
+                                </tr>*@
+                        </table>
+                    </div>
+                </div>
+            }
+
+        }
+
+        @*<div id="autopopup" style="display:none;">
+                <div id="ClassDetails">
+                    <span>
+                        College : @Model.CollegeName (@Model.CollegeCode)
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span><br /><br /><br />
+                    <table width="100%" cellspacing="10px;">
+                        <tr>
+                            <td width="33%">
+                                <span><b><u>College</u></b></span><br /><br />
+                                <span><b><u>Email</u></b> :@Model.CollegeEmail</span><br /><br />
+                                <span><b><u>Land Line</u></b> :@Model.CollegePhoneNo</span><br /><br />
+                                <span><b><u>Mandal</u></b> :@Model.CollegeMandal</span><br /><br />
+                            </td>
+                            <td width="33%">
+                                <span><b><u>Society</u></b></span><br /><br />
+                                <span><b><u>Email</u></b> :@Model.SocietyEmail</span><br /><br />
+                                <span><b><u>Land Line</u></b> :@Model.SocietyPhoneNo</span><br /><br />
+                                <span><b><u>Email</u></b> :@Model.SocietyMandal</span><br /><br />
+                            </td>
+                            <td width="34%">
+                                <span><b><u>Secretary</u></b></span><br /><br />
+                                <span><b><u>Email</u></b> :@Model.SecretaryEmail</span><br /><br />
+                                <span><b><u>Land Line</u></b> :@Model.SecretaryPhoneNo</span><br /><br />
+                                <span><b><u>Mandal</u></b> :@Model.SecretaryMandal</span><br /><br />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>*@
+
+
+            @*<div style="height:auto;background-color:#E8EFF3;">
+                    <table width="100%">
+                        <tr>
+                            <td width="87%" class="rounded_corners_box" style="text-align:center;background-color:#E8EFF3;border:none;">
+                                <div style="text-align:center;height:297px;">
+                                    <div class=" clock" style="text-align:center;height:105px;background-color:#E8EFF3;width:92%;padding-left:38px;">
+
+                                        </div>
+
+                                    <hr />
+                                </div>
+
+
+                                <script type="text/javascript">
+                                    var clock;
+
+                                    $(document).ready(function () {
+
+                                        // Grab the current date
+                                        var currentDate = new Date();
+
+                                        // Set some date in the past. In this case, it's always been since Jan 1
+                                        // var pastDate  = new Date(currentDate.getFullYear(), 0, 1);
+                                        var pastDate = new Date("2018-07-27 17:00:00");
+                                        // Calculate the difference in seconds between the future and current date
+                                        var diff = (pastDate.getTime() / 1000) - (currentDate.getTime() / 1000);
+
+                                        if (diff < 0) {
+                                            diff = 0;
+                                        }
+
+                                        // Instantiate a coutdown FlipClock
+                                        clock = $('.clock').FlipClock(diff, {
+                                            clockFace: 'DailyCounter',
+                                            countdown: true,
+                                            css: true
+                                        });
+                                    });
+                                </script>
+
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>*@
+        </body>
+    </html>

@@ -1,0 +1,186 @@
+﻿@model UAAAS.Models.CollegePlacement
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    } 
+    ViewBag.Title = "College Placement Details";
+}
+
+<h2>College Placement Details</h2>
+
+
+<table class="webGrid">
+    @*@if (ViewBag.IsUpdate == true)
+        {
+            @Html.HiddenFor(model => model.id)
+        }*@
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.degreeID)
+        </td>
+
+        <td class="col2">
+            @Html.HiddenFor(model => model.degreeID)
+            @Html.DisplayFor(model => model.degree)
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.departmentID)
+        </td>
+        <td class="col2">
+            @Html.DisplayFor(model => model.department)
+            @Html.HiddenFor(model => model.departmentID)
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            @Html.LabelFor(model => model.specializationId)
+        </td>
+
+        <td class="col2">
+            @Html.DisplayFor(model => model.specialization)
+            @Html.HiddenFor(model => model.specializationId)
+        </td>
+
+    </tr>
+</table>
+<br />
+
+<div style="margin-top:15px;">
+    <h2>Placement Details</h2><br />
+    <table class="webGrid">
+        <thead class="col1">
+            <tr>
+                <th>Total Students</th>
+                <th>Appeared</th>
+                <th>Passed</th>
+                <th>Distinction</th>
+                <th>First Class</th>
+                <th>Detained for Attendance</th>
+                <th>Detained for Credits</th>
+                <th>Placed</th>
+                <th>Above 10 Lakhs</th>
+                <th>5 to 10 Lakhs</th>
+                <th>3 to 5 Lakhs</th>
+                <th>Below 3 Lakhs</th>
+                <th>Higher Education</th>
+                <th>Public Sector</th>
+                <th>Entrepr- eneurs</th>
+                <th>Placement Percentage</th>
+            </tr>
+        </thead>
+        <tbody class="col2">
+            <tr>
+                <td>Academic Year @ViewBag.FirstYear</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAppeared1, new { @Value = Model.totalStudentsAppeared1 == 0 ? "" : @Model.totalStudentsAppeared1.ToString(), @style = "width:50px", @id = "totalStudentsAppeared1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPassed1, new { @Value = Model.totalStudentsPassed1 == 0 ? "" : @Model.totalStudentsPassed1.ToString(), @style = "width:50px", @id = "totalStudentsPassed1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDistinction1, new { @Value = Model.totalStudentsDistinction1 == 0 ? "" : @Model.totalStudentsDistinction1.ToString(), @style = "width:50px", @id = "totalStudentsDistinction1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsFirstClass1, new { @Value = Model.totalStudentsFirstClass1 == 0 ? "" : @Model.totalStudentsFirstClass1.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetained1, new { @Value = Model.totalStudentsDetained1 == 0 ? "" : @Model.totalStudentsDetained1.ToString(), @style = "width:50px", @id = "totalStudentsDetained1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetCred1, new { @Value = Model.totalStudentsDetCred1 == 0 ? "" : @Model.totalStudentsDetCred1.ToString(), @style = "width:50px", @id = "totalStudentsDetCred1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlaced1, new { @Value = Model.totalStudentsPlaced1 == 0 ? "" : @Model.totalStudentsPlaced1.ToString(), @style = "width:50px", @id = "totalStudentsPlaced1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAbove10L1, new { @Value = Model.totalStudentsAbove10L1 == 0 ? "" : @Model.totalStudentsAbove10L1.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents5to10L1, new { @Value = Model.totalStudents5to10L1 == 0 ? "" : @Model.totalStudents5to10L1.ToString(), @style = "width:50px", @id = "totalStudents5to10L1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents3to5L1, new { @Value = Model.totalStudents3to5L1 == 0 ? "" : @Model.totalStudents3to5L1.ToString(), @style = "width:50px", @id = "totalStudents3to5L1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsBelow3L1, new { @Value = Model.totalStudentsBelow3L1 == 0 ? "" : @Model.totalStudentsBelow3L1.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsHighEdu1, new { @Value = Model.totalStudentsHighEdu1 == 0 ? "" : @Model.totalStudentsHighEdu1.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPubSec1, new { @Value = Model.totalStudentsPubSec1 == 0 ? "" : @Model.totalStudentsPubSec1.ToString(), @style = "width:50px", @id = "totalStudentsPubSec1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsEnt1, new { @Value = Model.totalStudentsEnt1 == 0 ? "" : @Model.totalStudentsEnt1.ToString(), @style = "width:50px", @id = "totalStudentsEnt1", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlacePer1, new { @Value = Model.totalStudentsPlacePer1 == 0 ? "" : @Model.totalStudentsPlacePer1.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer1", onchange = "ValidatePlacedStudents()" })</td>
+            </tr>
+            <tr>
+                <td>Academic Year @ViewBag.SecondYear</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAppeared2, new { @Value = Model.totalStudentsAppeared2 == 0 ? "" : @Model.totalStudentsAppeared2.ToString(), @style = "width:50px", @id = "totalStudentsAppeared2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPassed2, new { @Value = Model.totalStudentsPassed2 == 0 ? "" : @Model.totalStudentsPassed2.ToString(), @style = "width:50px", @id = "totalStudentsPassed2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDistinction2, new { @Value = Model.totalStudentsDistinction2 == 0 ? "" : @Model.totalStudentsDistinction2.ToString(), @style = "width:50px", @id = "totalStudentsDistinction2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsFirstClass2, new { @Value = Model.totalStudentsFirstClass2 == 0 ? "" : @Model.totalStudentsFirstClass2.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetained2, new { @Value = Model.totalStudentsDetained2 == 0 ? "" : @Model.totalStudentsDetained2.ToString(), @style = "width:50px", @id = "totalStudentsDetained2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetCred2, new { @Value = Model.totalStudentsDetCred2 == 0 ? "" : @Model.totalStudentsDetCred2.ToString(), @style = "width:50px", @id = "totalStudentsDetCred2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlaced2, new { @Value = Model.totalStudentsPlaced2 == 0 ? "" : @Model.totalStudentsPlaced2.ToString(), @style = "width:50px", @id = "totalStudentsPlaced2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAbove10L2, new { @Value = Model.totalStudentsAbove10L2 == 0 ? "" : @Model.totalStudentsAbove10L2.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents5to10L2, new { @Value = Model.totalStudents5to10L2 == 0 ? "" : @Model.totalStudents5to10L2.ToString(), @style = "width:50px", @id = "totalStudents5to10L2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents3to5L2, new { @Value = Model.totalStudents3to5L2 == 0 ? "" : @Model.totalStudents3to5L2.ToString(), @style = "width:50px", @id = "totalStudents3to5L2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsBelow3L2, new { @Value = Model.totalStudentsBelow3L2 == 0 ? "" : @Model.totalStudentsBelow3L2.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsHighEdu2, new { @Value = Model.totalStudentsHighEdu2 == 0 ? "" : @Model.totalStudentsHighEdu2.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPubSec2, new { @Value = Model.totalStudentsPubSec2 == 0 ? "" : @Model.totalStudentsPubSec2.ToString(), @style = "width:50px", @id = "totalStudentsPubSec2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsEnt2, new { @Value = Model.totalStudentsEnt2 == 0 ? "" : @Model.totalStudentsEnt2.ToString(), @style = "width:50px", @id = "totalStudentsEnt2", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlacePer2, new { @Value = Model.totalStudentsPlacePer2 == 0 ? "" : @Model.totalStudentsPlacePer2.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer2", onchange = "ValidatePlacedStudents()" })</td>
+            </tr>
+            <tr>
+                <td>Academic Year @ViewBag.ThirdYear</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAppeared3, new { @Value = Model.totalStudentsAppeared3 == 0 ? "" : @Model.totalStudentsAppeared3.ToString(), @style = "width:50px", @id = "totalStudentsAppeared3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPassed3, new { @Value = Model.totalStudentsPassed3 == 0 ? "" : @Model.totalStudentsPassed3.ToString(), @style = "width:50px", @id = "totalStudentsPassed3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDistinction3, new { @Value = Model.totalStudentsDistinction3 == 0 ? "" : @Model.totalStudentsDistinction3.ToString(), @style = "width:50px", @id = "totalStudentsDistinction3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsFirstClass3, new { @Value = Model.totalStudentsFirstClass3 == 0 ? "" : @Model.totalStudentsFirstClass3.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetained3, new { @Value = Model.totalStudentsDetained3 == 0 ? "" : @Model.totalStudentsDetained3.ToString(), @style = "width:50px", @id = "totalStudentsDetained3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetCred3, new { @Value = Model.totalStudentsDetCred3 == 0 ? "" : @Model.totalStudentsDetCred3.ToString(), @style = "width:50px", @id = "totalStudentsDetCred3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlaced3, new { @Value = Model.totalStudentsPlaced3 == 0 ? "" : @Model.totalStudentsPlaced3.ToString(), @style = "width:50px", @id = "totalStudentsPlaced3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAbove10L3, new { @Value = Model.totalStudentsAbove10L3 == 0 ? "" : @Model.totalStudentsAbove10L3.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents5to10L3, new { @Value = Model.totalStudents5to10L3 == 0 ? "" : @Model.totalStudents5to10L3.ToString(), @style = "width:50px", @id = "totalStudents5to10L3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents3to5L3, new { @Value = Model.totalStudents3to5L3 == 0 ? "" : @Model.totalStudents3to5L3.ToString(), @style = "width:50px", @id = "totalStudents3to5L3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsBelow3L3, new { @Value = Model.totalStudentsBelow3L3 == 0 ? "" : @Model.totalStudentsBelow3L3.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsHighEdu3, new { @Value = Model.totalStudentsHighEdu3 == 0 ? "" : @Model.totalStudentsHighEdu3.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPubSec3, new { @Value = Model.totalStudentsPubSec3 == 0 ? "" : @Model.totalStudentsPubSec3.ToString(), @style = "width:50px", @id = "totalStudentsPubSec3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsEnt3, new { @Value = Model.totalStudentsEnt3 == 0 ? "" : @Model.totalStudentsEnt3.ToString(), @style = "width:50px", @id = "totalStudentsEnt3", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlacePer3, new { @Value = Model.totalStudentsPlacePer3 == 0 ? "" : @Model.totalStudentsPlacePer3.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer3", onchange = "ValidatePlacedStudents()" })</td>
+            </tr>
+            <tr>
+                <td>Academic Year @ViewBag.FourthYear</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAppeared4, new { @Value = Model.totalStudentsAppeared4 == 0 ? "" : @Model.totalStudentsAppeared4.ToString(), @style = "width:50px", @id = "totalStudentsAppeared4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPassed4, new { @Value = Model.totalStudentsPassed4 == 0 ? "" : @Model.totalStudentsPassed4.ToString(), @style = "width:50px", @id = "totalStudentsPassed4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDistinction4, new { @Value = Model.totalStudentsDistinction4 == 0 ? "" : @Model.totalStudentsDistinction4.ToString(), @style = "width:50px", @id = "totalStudentsDistinction4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsFirstClass4, new { @Value = Model.totalStudentsFirstClass4 == 0 ? "" : @Model.totalStudentsFirstClass4.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetained4, new { @Value = Model.totalStudentsDetained4 == 0 ? "" : @Model.totalStudentsDetained4.ToString(), @style = "width:50px", @id = "totalStudentsDetained4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetCred4, new { @Value = Model.totalStudentsDetCred4 == 0 ? "" : @Model.totalStudentsDetCred4.ToString(), @style = "width:50px", @id = "totalStudentsDetCred4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlaced4, new { @Value = Model.totalStudentsPlaced4 == 0 ? "" : @Model.totalStudentsPlaced4.ToString(), @style = "width:50px", @id = "totalStudentsPlaced4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAbove10L4, new { @Value = Model.totalStudentsAbove10L4 == 0 ? "" : @Model.totalStudentsAbove10L4.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents5to10L4, new { @Value = Model.totalStudents5to10L4 == 0 ? "" : @Model.totalStudents5to10L4.ToString(), @style = "width:50px", @id = "totalStudents5to10L4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents3to5L4, new { @Value = Model.totalStudents3to5L4 == 0 ? "" : @Model.totalStudents3to5L4.ToString(), @style = "width:50px", @id = "totalStudents3to5L4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsBelow3L4, new { @Value = Model.totalStudentsBelow3L4 == 0 ? "" : @Model.totalStudentsBelow3L4.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsHighEdu4, new { @Value = Model.totalStudentsHighEdu4 == 0 ? "" : @Model.totalStudentsHighEdu4.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPubSec4, new { @Value = Model.totalStudentsPubSec4 == 0 ? "" : @Model.totalStudentsPubSec4.ToString(), @style = "width:50px", @id = "totalStudentsPubSec4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsEnt4, new { @Value = Model.totalStudentsEnt4 == 0 ? "" : @Model.totalStudentsEnt4.ToString(), @style = "width:50px", @id = "totalStudentsEnt4", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlacePer4, new { @Value = Model.totalStudentsPlacePer4 == 0 ? "" : @Model.totalStudentsPlacePer4.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer4", onchange = "ValidatePlacedStudents()" })</td>
+            </tr>
+            <tr>
+                <td>Academic Year @ViewBag.FifthYear</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAppeared5, new { @Value = Model.totalStudentsAppeared5 == 0 ? "" : @Model.totalStudentsAppeared5.ToString(), @style = "width:50px", @id = "totalStudentsAppeared5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPassed5, new { @Value = Model.totalStudentsPassed5 == 0 ? "" : @Model.totalStudentsPassed5.ToString(), @style = "width:50px", @id = "totalStudentsPassed5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDistinction5, new { @Value = Model.totalStudentsDistinction5 == 0 ? "" : @Model.totalStudentsDistinction5.ToString(), @style = "width:50px", @id = "totalStudentsDistinction5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsFirstClass5, new { @Value = Model.totalStudentsFirstClass5 == 0 ? "" : @Model.totalStudentsFirstClass5.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetained5, new { @Value = Model.totalStudentsDetained5 == 0 ? "" : @Model.totalStudentsDetained5.ToString(), @style = "width:50px", @id = "totalStudentsDetained5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetCred5, new { @Value = Model.totalStudentsDetCred5 == 0 ? "" : @Model.totalStudentsDetCred5.ToString(), @style = "width:50px", @id = "totalStudentsDetCred5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlaced5, new { @Value = Model.totalStudentsPlaced5 == 0 ? "" : @Model.totalStudentsPlaced5.ToString(), @style = "width:50px", @id = "totalStudentsPlaced5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAbove10L5, new { @Value = Model.totalStudentsAbove10L5 == 0 ? "" : @Model.totalStudentsAbove10L5.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents5to10L5, new { @Value = Model.totalStudents5to10L5 == 0 ? "" : @Model.totalStudents5to10L5.ToString(), @style = "width:50px", @id = "totalStudents5to10L5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents3to5L5, new { @Value = Model.totalStudents3to5L5 == 0 ? "" : @Model.totalStudents3to5L5.ToString(), @style = "width:50px", @id = "totalStudents3to5L5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsBelow3L5, new { @Value = Model.totalStudentsBelow3L5 == 0 ? "" : @Model.totalStudentsBelow3L5.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsHighEdu5, new { @Value = Model.totalStudentsHighEdu5 == 0 ? "" : @Model.totalStudentsHighEdu5.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPubSec5, new { @Value = Model.totalStudentsPubSec5 == 0 ? "" : @Model.totalStudentsPubSec5.ToString(), @style = "width:50px", @id = "totalStudentsPubSec5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsEnt5, new { @Value = Model.totalStudentsEnt5 == 0 ? "" : @Model.totalStudentsEnt5.ToString(), @style = "width:50px", @id = "totalStudentsEnt5", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlacePer5, new { @Value = Model.totalStudentsPlacePer5 == 0 ? "" : @Model.totalStudentsPlacePer5.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer5", onchange = "ValidatePlacedStudents()" })</td>
+            </tr>
+            <tr>
+                <td>Academic Year @ViewBag.SixthYear</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAppeared6, new { @Value = Model.totalStudentsAppeared6 == 0 ? "" : @Model.totalStudentsAppeared6.ToString(), @style = "width:50px", @id = "totalStudentsAppeared6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPassed6, new { @Value = Model.totalStudentsPassed6 == 0 ? "" : @Model.totalStudentsPassed6.ToString(), @style = "width:50px", @id = "totalStudentsPassed6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDistinction6, new { @Value = Model.totalStudentsDistinction6 == 0 ? "" : @Model.totalStudentsDistinction6.ToString(), @style = "width:50px", @id = "totalStudentsDistinction6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsFirstClass6, new { @Value = Model.totalStudentsFirstClass6 == 0 ? "" : @Model.totalStudentsFirstClass6.ToString(), @style = "width:50px", @id = "totalStudentsFirstClass6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetained6, new { @Value = Model.totalStudentsDetained6 == 0 ? "" : @Model.totalStudentsDetained6.ToString(), @style = "width:50px", @id = "totalStudentsDetained6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsDetCred6, new { @Value = Model.totalStudentsDetCred6 == 0 ? "" : @Model.totalStudentsDetCred6.ToString(), @style = "width:50px", @id = "totalStudentsDetCred6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlaced6, new { @Value = Model.totalStudentsPlaced6 == 0 ? "" : @Model.totalStudentsPlaced6.ToString(), @style = "width:50px", @id = "totalStudentsPlaced6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsAbove10L6, new { @Value = Model.totalStudentsAbove10L6 == 0 ? "" : @Model.totalStudentsAbove10L6.ToString(), @style = "width:50px", @id = "totalStudentsAbove10L6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents5to10L6, new { @Value = Model.totalStudents5to10L6 == 0 ? "" : @Model.totalStudents5to10L6.ToString(), @style = "width:50px", @id = "totalStudents5to10L6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudents3to5L6, new { @Value = Model.totalStudents3to5L6 == 0 ? "" : @Model.totalStudents3to5L6.ToString(), @style = "width:50px", @id = "totalStudents3to5L6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsBelow3L6, new { @Value = Model.totalStudentsBelow3L6 == 0 ? "" : @Model.totalStudentsBelow3L6.ToString(), @style = "width:50px", @id = "totalStudentsBelow3L6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsHighEdu6, new { @Value = Model.totalStudentsHighEdu6 == 0 ? "" : @Model.totalStudentsHighEdu6.ToString(), @style = "width:50px", @id = "totalStudentsHighEdu6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPubSec6, new { @Value = Model.totalStudentsPubSec6 == 0 ? "" : @Model.totalStudentsPubSec6.ToString(), @style = "width:50px", @id = "totalStudentsPubSec6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsEnt6, new { @Value = Model.totalStudentsEnt6 == 0 ? "" : @Model.totalStudentsEnt6.ToString(), @style = "width:50px", @id = "totalStudentsEnt6", onchange = "ValidatePlacedStudents()" })</td>
+                <td>@Html.DisplayFor(model => model.totalStudentsPlacePer6, new { @Value = Model.totalStudentsPlacePer6 == 0 ? "" : @Model.totalStudentsPlacePer6.ToString(), @style = "width:50px", @id = "totalStudentsPlacePer6", onchange = "ValidatePlacedStudents()" })</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

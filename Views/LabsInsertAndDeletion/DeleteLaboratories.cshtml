@@ -1,0 +1,451 @@
+﻿@model Tuple<UAAAS.Models.LabsList, List<UAAAS.Models.LabsList>>
+@using System.Linq
+
+@{
+    ViewBag.Title = "DeleteLaboratories";
+    int sno = 1;
+}
+
+<h2>Delete Laboratories</h2>
+<script src="~/Scripts/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script src="~/Scripts/jquery.validate.min.js" type="text/javascript"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
+
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        var $tblChkBox = $("#checkBoxes input:checkbox");
+        $("#ckbCheckAll").on("click", function () {
+            $($tblChkBox).prop('checked', $(this).prop('checked'));
+        });
+
+        $("#CollegeTypeId").change(function () {
+            debugger;
+            var selectedValue = $(this).val();
+
+            if (selectedValue != null && selectedValue != "") {
+                $.ajax({
+                    type: "GET",
+                    contentType: "application/json",
+                    url: "/LabsDeletion/GetColleges?TypeId=" + selectedValue,
+                    dataType: "Json",
+                    success: function (data) {
+                        $("#CollegeId").find('option').remove();
+                        var item = "<option value=''>---Select---</option>";
+
+                        $.each(data.Data, function (i, state) {
+                            item += "<option value='" + state.collegeId + "'>" + state.collegeName + "</option>";
+                        });
+                        $("#CollegeId").html(item);
+                    },
+                    error: function ajaxError(response) {
+                        alert(response.status + ' ' + response.statusText);
+                    }
+                });
+
+                if (selectedValue == "1")
+                    $("#CollegeId").addClass('required');
+                else {
+                    $("#CollegeId").removeClass('required');
+                }
+            }
+        });
+
+        $("#Item1_Degree").change(function () {
+            debugger;
+            var selectedValue = $(this).val();
+
+            if (selectedValue != null && selectedValue != "") {
+                $.ajax({
+                    type: "GET",
+                    contentType: "application/json",
+                    url: "/LabsDeletion/GetDepartments?degreeId=" + selectedValue,
+                    dataType: "Json",
+                    success: function (data) {
+                        $("#Item1_Department").find('option').remove();
+                        var item = "<option value=''>---Select---</option>";
+
+                        $.each(data.Data, function (i, state) {
+                            item += "<option value='" + state.DeptId + "'>" + state.DeptName + "</option>";
+                        });
+                        $("#Item1_Department").html(item);
+                    },
+                    error: function ajaxError(response) {
+                        alert(response.status + ' ' + response.statusText);
+                    }
+                });
+            }
+        });
+
+        $("#Item1_Department").change(function () {
+            debugger;
+            var selectedValue = $(this).val();
+            if (selectedValue != null && selectedValue != "") {
+                $.ajax({
+                    type: "GET",
+                    contentType: "application/json",
+                    url: "/LabsDeletion/GetSpecializations?departmentid=" + selectedValue,
+
+                    dataType: "Json",
+                    success: function (data) {
+                        $("#Item1_Specialization").find('option').remove();
+                        var item = "<option value=''>---Select---</option>";
+
+                        $.each(data.Data, function (i, state) {
+                            item += "<option value='" + state.speId + "'>" + state.speName + "</option>";
+                        });
+                        $("#Item1_Specialization").html(item);
+                    },
+                    error: function ajaxError(response) {
+                        alert(response.status + ' ' + response.statusText);
+                    }
+                });
+            }
+        });
+
+    });
+
+    function depatmentsddl() {
+
+        var selectedValue = $("#Item1_Department").val();
+        alert(selectedValue);
+
+        if (selectedValue != null && selectedValue != "") {
+
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "/Account/GetDepartments?degreeId=" + selectedValue,
+
+                dataType: "Json",
+                success: function (data) {
+
+                    $("#Item1_Department").find('option').remove();
+                    var item = "<option value=''>---Select---</option>";
+
+                    $.each(data.Data, function (i, state) {
+
+                        item += "<option value='" + state.DeptId + "'>" + state.DeptName + "</option>";
+
+                    });
+                    $("#Item1_Department").html(item);
+
+                },
+                error: function ajaxError(response) {
+                    alert(response.status + ' ' + response.statusText);
+                }
+            });
+        }
+    }
+</script>
+
+<style>
+    .col1 {
+        width: 94%;
+    }
+
+    .col2 {
+        width: 94%;
+        height: 19px;
+    }
+
+    .col3 {
+        width: 8%;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    if (TempData["Error"] != null)
+    {
+        <div class="text-danger">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="text-success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <br />
+    <div class="container">
+
+        <table width="100%">
+            <tr>
+                <td class="col3">
+                    <span>College Type</span>
+                </td>
+                <td class="col4">
+                    @Html.DropDownListFor(m => m.Item1.CollegeTypeId, new SelectList(new List<SelectListItem> {
+                        new SelectListItem { Value = "1" , Text = "Autonomous" },
+                        new SelectListItem { Value = "2" , Text = "Non-Autonomous" }},
+                "Value", "Text"), "---Select---", new { @id = "CollegeTypeId", @style = "width:200px;" })
+                    @Html.ValidationMessageFor(m => m.Item1.CollegeTypeId)
+                </td>
+            </tr>
+            <tr style="">
+                <td class="col3">
+                    <span>College</span>
+                </td>
+                <td class="col4">
+                    @Html.DropDownListFor(m => m.Item1.CollegeId, new List<SelectListItem> { }, "---Select---", new { @id = "CollegeId", @style = "width:500px;" })
+                    @Html.ValidationMessageFor(m => m.Item1.CollegeId)
+                </td>
+            </tr>
+        </table>
+        <br />
+        <table width="100%">
+            <tr>
+                <td>
+                    <div class="col1">
+                        @Html.Label("Year")
+                    </div>
+                </td>
+                <td>
+                    <div class="col2">
+                        @Html.DropDownListFor(m => m.Item1.Year, new SelectList(new List<SelectListItem> {
+                    new SelectListItem { Value = "1" , Text = "1" },
+                    new SelectListItem { Value = "2" , Text = "2" },
+                    new SelectListItem { Value = "3" , Text = "3" },
+                    new SelectListItem { Value = "4" , Text = "4" },
+                    new SelectListItem { Value = "5" , Text = "5" }}, "Value", "Text"), "---Select---")
+                        @Html.ValidationMessageFor(m => m.Item1.Year)
+                    </div>
+                </td>
+                <td>
+                    <div class="col1">
+                        @Html.Label("Semester")
+                    </div>
+                </td>
+                <td>
+                    <div class="col2">
+                        @Html.DropDownListFor(m => m.Item1.Semester, new SelectList(new List<SelectListItem> {
+                    new SelectListItem { Value = "1" , Text = "1" },
+                    new SelectListItem { Value = "2" , Text = "2" },
+                    new SelectListItem { Value = "3" , Text = "3" }}, "Value", "Text"), "---Select---")
+                        @Html.ValidationMessageFor(m => m.Item1.Semester)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="col1">
+                        @Html.Label("Degree")
+                    </div>
+                </td>
+                <td>
+                    <div class="col2">
+                        @Html.DropDownListFor(m => m.Item1.Degree, new SelectList(ViewBag.degree as System.Collections.IEnumerable, "id", "degree"), "---Select---")
+                        @Html.ValidationMessageFor(m => m.Item1.Degree)
+                    </div>
+                </td>
+                <td>
+                    <div class="col1">
+                        @Html.Label("Department")
+                    </div>
+                </td>
+                <td>
+                    <div class="col2">
+                        @Html.DropDownListFor(m => m.Item1.Department, new List<SelectListItem> { }, "---Select---", new { style = "width: 200px" })
+                        @Html.ValidationMessageFor(m => m.Item1.Department)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="col1">
+                        @Html.Label("Specialization")
+                    </div>
+                </td>
+                <td>
+                    <div class="col2">
+                        @Html.DropDownListFor(m => m.Item1.Specialization, new List<SelectListItem> { }, "---Select---", new { style = "width: 200px" })
+                        @Html.ValidationMessageFor(m => m.Item1.Specialization)
+                    </div>
+                </td>
+                <td>
+                    <div class="col1">
+                        @Html.Label("Enter Labcode")
+                    </div>
+                </td>
+                <td>
+                    <div class="col2">
+                        @Html.TextBoxFor(m => m.Item1.Labcode)
+                        @Html.ValidationMessageFor(m => m.Item1.Labcode)
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <div style="float:right;">
+            <div class="text-center">
+                <input type="submit" value="Submit" />
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+}
+<br />
+<br />
+
+@if (ViewBag.list != null)
+{
+    using (Html.BeginForm("DeleteBySem", "LabsDeletion"))
+    {
+        <div class="text-right">
+            @*<input type="checkbox" id="ckbCheckAll" />
+            <label for="ckbCheckAll">Select All</label>*@
+        </div>
+        <div id="checkBoxes">
+            <table id="example" class="display">
+                <thead>
+                    <tr>
+                        <th>
+                            S No
+                        </th>
+                        <th>
+                            year
+                        </th>
+                        <th>
+                            Semester
+                        </th>
+                        <th>
+                            Labcode
+                        </th>
+                        <th>
+                            LabName
+                        </th>
+                        <th>
+                            EquipmentName
+                        </th>
+                        <th>
+                            checked
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Item2.Count(); i++)
+                    {
+                        @Html.HiddenFor(m => m.Item2[i].Id)
+                        <tr>
+                            <td>
+                                @(sno++)
+                            </td>
+                            <td style="text-align: center;">
+                                @Html.DisplayFor(m => m.Item2[i].Year)
+                                @Html.HiddenFor(m => m.Item2[i].Year)
+                            </td>
+                            <td style="text-align:center;">
+                                @Html.HiddenFor(m => m.Item2[i].Semester)
+                                @Html.DisplayFor(m => m.Item2[i].Semester)
+                            </td>
+                            <td>
+                                @Html.HiddenFor(m => m.Item2[i].Labcode)
+                                @Html.DisplayFor(m => m.Item2[i].Labcode)
+                            </td>
+                            <td>
+                                @Html.HiddenFor(m => m.Item2[i].LabName)
+                                @Html.DisplayFor(m => m.Item2[i].LabName)
+                            </td>
+                            <td>
+                                @Html.HiddenFor(m => m.Item2[i].EquipmentName)
+                                @Html.DisplayFor(m => m.Item2[i].EquipmentName)
+                            </td>
+                            <td style="text-align:center;">
+                                <div class="checkbox">
+                                    @Html.CheckBoxFor(m => m.Item2[i].IsChecked, new { id = "IsChecked", @class = "forcheckbox" })
+                                    @Html.HiddenFor(m => m.Item2[i].Id, new { Value = Model.Item2[i].Id })
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>
+                            <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-3" style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-5" style="width: 90%; text-align: center" class="search_init">
+                        </th>
+                        <th>
+                            <input type="checkbox" id="ckbCheckAll"  style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <input type="submit" value="Delete Labs" />
+    }
+}

@@ -1,0 +1,568 @@
+﻿@model Tuple<UAAAS.Models.PrincipalDirector, UAAAS.Models.CollgeDirector>
+@{
+    ViewBag.Title = "Principal (or) Director Details";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+<div>
+    @if (TempData["SUCCESS"] != null)
+    {
+        <div class="success" style="background-color: gold; border: 1px solid #f49820;height:12px;text-align:center;">
+            <p style="text-align:center;font-weight: bold;margin-top:-3px;"><strong>Success:</strong> @TempData["SUCCESS"].ToString()</p>
+        </div>
+    }
+    else if (TempData["ERROR"] != null)
+    {
+        <div class="error" style="background-color: red; border: 1px solid #f49820;height:12px;text-align:center;">
+            <p style="text-align: center;font-weight: bold;color:white;margin-top:-3px;"><strong>Error:</strong> @TempData["ERROR"].ToString()</p>
+        </div>
+    }
+</div>
+
+@if (ViewBag.IsEditable == true)
+{
+    <h2>Principal (or) Director</h2>
+    if (Model.Item1.RegistrationNumber != null)
+    {
+        <p class="create_link_right">
+            <a href="/PrincipalDirector/PrincipalEdit?fid=@Model.Item1.PrincipalId" class="create_button EditDialog">Edit</a>
+            @*<a href="/PA_PrincipalDirector/Index" target="_blank" class="create_button">View Succession List Of Principals</a>*@
+            @*<a href="/DirectRecruitmentPrincipalDirector/Index" target="_blank" class="create_button">Furnish Principal Details</a>*@
+            @*@Html.ActionLink("Edit", "PrincipalEdit", "PrincipalDirector", new {@fid=@Model.Item1.id, @class = "create_button EditDialog" /* id=Model.PrimaryKey */ })*@
+            @*@Html.ActionLink("Edit", "Edit", "PrincipalDirector", new {@class = "create_button" /* id=Model.PrimaryKey */})*@
+        </p>
+    }
+    else
+    {
+        <p class="create_link_right">
+            <a href="/PrincipalDirector/AddPrincipal" class="create_button AddDialog">Add</a>
+            @*<a href="/PA_PrincipalDirector/Index" target="_blank" class="create_button">View Succession List Of Principals</a>*@
+            @*<a href="/DirectRecruitmentPrincipalDirector/Index" target="_blank" class="create_button">Furnish Principal Details</a>*@
+            @*@Html.ActionLink("Edit", "PrincipalEdit", "PrincipalDirector", new {@fid=@Model.Item1.id, @class = "create_button EditDialog" /* id=Model.PrimaryKey */ })*@
+            @*@Html.ActionLink("Edit", "Edit", "PrincipalDirector", new {@class = "create_button" /* id=Model.PrimaryKey */})*@
+        </p>
+    }
+}
+else
+{
+    @*<p class="create_link_right">
+            <a href="/PA_PrincipalDirector/Index" target="_blank" class="create_button">View Succession List Of Principals</a>
+        </p>*@
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+<div id="div_print">
+    @if (ViewBag.IsEditable == false)
+    {
+        <h2>Principal (or) Director</h2>
+    }
+    @using (Html.BeginForm())
+    {
+        @Html.HiddenFor(model => model.Item1.type, new { Value = "PRINCIPAL" })
+        if (Model.Item1.RegistrationNumber != null)
+        {
+            <table class="four_columns">
+                <tr>
+                    <td class="col11" colspan="4">
+                        <b>Principal Details</b>
+                        @if (ViewBag.IsEditable == true)
+                        {
+                            <p class="create_link_right" style="float:right;margin:0px 0px 5px 0px;">
+                                @Html.ActionLink("Delete Principal", "Delete", "PrincipalDirector", new { fid = @Model.Item1.PrincipalId }, new { @class = "confirmDialog create_button" })
+                            </p>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11" width="180px">
+                        @Html.LabelFor(model => model.Item1.RegistrationNumber)
+                    </td>
+                    <td class="col21" colspan="3">
+                        @Html.DisplayFor(model => model.Item1.RegistrationNumber)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11" width="180px">
+                        @Html.LabelFor(model => model.Item1.firstName)
+                    </td>
+                    <td class="col21 focus" width="180px">
+                        @Html.DisplayFor(model => model.Item1.firstName)
+                    </td>
+                    <td class="col31" width="180px">
+                        @Html.LabelFor(model => model.Item1.lastName)
+                    </td>
+                    <td class="col41">
+                        @Html.DisplayFor(model => model.Item1.lastName)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.Item1.surname)
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item1.surname)
+                    </td>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.Item1.SCM)
+                        @*@Html.LabelFor(model => model.Item1.qualificationId)*@
+                    </td>
+                    @*<td class="col31">
+                        @Html.DisplayFor(model => model.Item1.SCM)
+                        @if (Model.Item1.qualificationId == 1)
+                            {
+                                <label>Doctorate</label>
+                            }
+                            else
+                            {
+                                <label>Non-Doctorate</label>
+                            }
+                                        </td>*@
+                    <td class="col41">
+                        @if (@Model.Item1.SCM != null)
+                        {
+                            <a href="~/Content/Upload/SCMUploads/@Model.Item1.SCM.Replace("~", "")" target="_blank">
+                                <img src="@Url.Content("../../Content/images/pdf.png")" alt="SCM" height="18">
+                            </a>
+                        }
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">@Html.LabelFor(model => model.Item1.departmentId)</td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item1.departmentName)
+                        @Html.HiddenFor(model => model.Item1.departmentId)
+                    <td class="col31">@Html.LabelFor(model => model.Item1.dateOfAppointment)</td>
+                    <td class="col41">@Html.DisplayFor(model => model.Item1.dateOfAppointment, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                </tr>
+                <tr>
+                    <td class="col11">@Html.LabelFor(model => model.Item1.dateOfBirth)</td>
+                    <td class="col21">@Html.DisplayFor(model => model.Item1.dateOfBirth, new { @class = "calendar1", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                    <td class="col31">@Html.LabelFor(model => model.Item1.fax)</td>
+                    <td class="col41">@Html.DisplayFor(model => model.Item1.fax)
+                </tr>
+                <tr>
+                    <td class="col11">@Html.LabelFor(model => model.Item1.landline)</td>
+                    <td class="col21">@Html.DisplayFor(model => model.Item1.landline)
+                    <td class="col31">@Html.LabelFor(model => model.Item1.mobile)</td>
+                    <td class="col41">@Html.DisplayFor(model => model.Item1.mobile)
+                </tr>
+                <tr>
+                    <td class="col11">@Html.LabelFor(model => model.Item1.email)</td>
+                    <td class="col21">@Html.DisplayFor(model => model.Item1.email)
+                    <td class="col31">@Html.LabelFor(model => model.Item1.PrincipalPhotoDocument) </td>
+                    <td class="col41">
+
+                        @if (@Model.Item1.PrincipalPhoto != null)
+                        {
+                            <a href="~/Content/Upload/Faculty/PHOTOS/@Model.Item1.PrincipalPhoto.Replace("~", "")" target="_blank">
+                                <img src="~/Content/Upload/Faculty/PHOTOS/@Model.Item1.PrincipalPhoto.Replace("~", "")" style="height: 60px;" />
+                            </a>
+
+                        }
+                    </td>
+                </tr>
+                @Html.HiddenFor(model => model.Item1.createdOn, new { Value = DateTime.Now })
+                @Html.HiddenFor(model => model.Item1.createdBy, new { Value = Convert.ToInt32(Membership.GetUser(HttpContext.Current.User.Identity.Name).ProviderUserKey) })
+            </table>
+        }
+        else
+        {
+            <table class="four_columns">
+                <tr>
+                    <td class="col11" colspan="4">
+                        <b>Principal Details</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col21" style="text-align: center;" width="180px">No Data Found</td>
+                </tr>
+            </table>
+        }
+        <br />
+
+        @Html.HiddenFor(model => model.Item2.collegeId, new { Value = 7 })
+        @Html.HiddenFor(model => model.Item2.type, new { Value = "DIRECTOR" })
+
+        if (Model.Item2.firstName == null)
+        {
+            @*<h2>Principal (or) Director</h2>*@
+            <p class="create_link_right">
+                @*<a href="/PrincipalDirector/PrincipalEdit?fid=@Model.Item1.PrincipalId" class="create_button EditDialog">Edit</a>*@
+
+                @Html.ActionLink("Add", "Edit", "PrincipalDirector", new { @class = "create_button" /* id=Model.PrimaryKey */})
+            </p>
+        }
+        else
+        {
+            <p class="create_link_right">
+                @*<a href="/PrincipalDirector/PrincipalEdit?fid=@Model.Item1.PrincipalId" class="create_button EditDialog">Edit</a>*@
+
+                @Html.ActionLink("Edit", "Edit", "PrincipalDirector", new { @class = "create_button" /* id=Model.PrimaryKey */})
+            </p>
+        }
+
+        if (Model.Item2.firstName != null)
+        {
+            <table class="four_columns">
+                <tr>
+                    <td class="col11" colspan="4">
+                        <b>Director Details</b>
+                        @if (ViewBag.IsEditable == true)
+                        {
+                            <p class="create_link_right" style="float:right;margin:0px 0px 5px 0px;">
+                                @Html.ActionLink("Delete Director", "DeleteDirector", "PrincipalDirector", new { @class = "confirmDirDialog create_button" })
+                            </p>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.Item2.firstName)
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item2.firstName, new { @class = "firstName" })
+                    </td>
+                    <td class="col31">
+                        @Html.LabelFor(model => model.Item2.lastName)
+                    </td>
+                    <td class="col41">
+                        @Html.DisplayFor(model => model.Item2.lastName)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.Item2.surname)
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item2.surname, new { @class = "surName" })
+
+                    </td>
+                    <td class="col31">
+                        @Html.LabelFor(model => model.Item2.qualificationId)
+                    </td>
+                    <td class="col41">
+                        @if (Model.Item2.qualificationId == 1)
+                        {
+                            <label>Doctorate</label>
+                        }
+                        else
+                        {
+                            <label>Non-Doctorate</label>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">@Html.LabelFor(model => model.Item2.phdId)</td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item2.phd)
+                        @Html.HiddenFor(model => model.Item2.phdId)
+                    </td>
+                    <td class="col31">@Html.LabelFor(model => model.Item2.phdFromUniversity)</td>
+                    <td class="col41">@Html.DisplayFor(model => model.Item2.phdFromUniversity)
+
+                </tr>
+                <tr>
+                    <td class="col11">@Html.LabelFor(model => model.Item2.phdYear)</td>
+                    <td class="col21">@Html.DisplayFor(model => model.Item2.phdYear, new { Value = Model.Item2.phdYear == 0 ? string.Empty : Model.Item2.phdYear.ToString() })
+                    <td class="col31">@Html.LabelFor(model => model.Item2.departmentId)</td>
+                    <td class="col41">
+                        @Html.DisplayFor(model => model.Item2.department)
+                        @Html.HiddenFor(model => model.Item2.departmentId)
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.Item2.dateOfAppointment)
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item2.dateOfAppointment, new { @class = "dateOfappointment", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                    </td>
+                    <td class="col31">
+                        @Html.LabelFor(model => model.Item2.dateOfBirth)
+                    </td>
+                    <td class="col41">
+                        @Html.DisplayFor(model => model.Item2.dateOfBirth, new { @class = "dateOfBirth", style = "width: 80px", @onblur = "IsValidDate(this,event.keyCode,0,0,1)", @onkeydown = "return IsValidFormat(this,event.keyCode)" }) <span>(DD/MM/YYYY)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.Item2.fax)
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item2.fax, new { @class = "fax" })
+
+                    </td>
+                    <td class="col31">
+                        @Html.LabelFor(model => model.Item2.landline)
+                    </td>
+                    <td class="col41">
+                        @Html.DisplayFor(model => model.Item2.landline, new { @class = "landLine" })
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">
+                        @Html.LabelFor(model => model.Item2.mobile)
+                    </td>
+                    <td class="col21">
+                        @Html.DisplayFor(model => model.Item2.mobile, new { @class = "mobile" })
+
+                    </td>
+                    <td class="col31">
+                        @Html.LabelFor(model => model.Item2.email)
+                    </td>
+                    <td class="col41">
+                        @Html.DisplayFor(model => model.Item2.email, new { @class = "email" })
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col11">@Html.LabelFor(model => model.Item2.DirectorPhotoDocument) </td>
+                    <td class="col21">
+                        @if (@Model.Item2.DirectorPhoto != null)
+                        {
+                            <a href="../Content/Upload/PrincipalDirectorPhotos/@Model.Item2.DirectorPhoto" target="_blank">
+                                <img src="../Content/Upload/PrincipalDirectorPhotos/@Model.Item2.DirectorPhoto.Replace("~", "")" style="height: 60px;" />
+                            </a>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.HiddenFor(model => model.Item2.phdYear, new { Value = 1234 })
+                        @Html.HiddenFor(model => model.Item2.createdOn, new { Value = DateTime.Now })
+                        @Html.HiddenFor(model => model.Item2.createdBy, new { Value = Convert.ToInt32(Membership.GetUser(HttpContext.Current.User.Identity.Name).ProviderUserKey) })
+                    </td>
+                </tr>
+            </table>
+        }
+        else
+        {
+            <table class="four_columns">
+                <tr>
+                    <td class="col11" colspan="4">
+                        <b>Director Details</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col21" style="text-align: center;" width="180px">No Data Found</td>
+                </tr>
+            </table>
+        }
+
+    }
+</div>
+<script type="text/javascript">
+    var val = @Model.Item2.qualificationId
+
+    $(document).ready(function () {
+
+        $('.submit').click(function (e) {
+            if ($('#department').val() == '') {
+                alert("Please select department")
+                return false;
+            }
+            else {
+                return true;
+            }
+            checkDateDifference($('#Item1_dateOfAppointment').val(), $('#Item1_dateOfResignation').val(), "Principal Date of Appointment should not be grater than (or) equal to Date Of Resignation");
+            checkDateDifference($('#Item2_dateOfAppointment').val(), $('#Item2_dateOfResignation').val(), "Director Date of Appointment should not be grater than (or) equal to Date Of Resignation");
+
+
+        });
+        //Edit
+        $(".EditDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+
+            $("#dialog-edit").dialog({
+                title: 'Edit Principal',
+                autoOpen: false,
+                resizable: false,
+                height: 520,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/PrincipalDirector/View";
+                }
+
+            });
+
+            $("#dialog-edit").dialog('open');
+            return false;
+        });
+
+        //Edit
+        $(".AddDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+
+            $("#dialog-add").dialog({
+                title: 'Add Principal',
+                autoOpen: false,
+                resizable: false,
+                height: 520,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/PrincipalDirector/View";
+                }
+
+            });
+
+            $("#dialog-add").dialog('open');
+            return false;
+        });
+
+        // Delete Confirmation
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+
+            $("#dialog-confirm").dialog({
+                title: 'Delete Principal',
+                autoOpen: false,
+                resizable: false,
+                height: 520,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/PrincipalDirector/View";
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+    });
+
+    //Direction Delete Confirmation
+    $(".confirmDirDialog").live("click", function (e) {
+
+        var url = $(this).attr('href');
+
+        $("#dialog-confirmDir").dialog({
+            title: "Delete Director",
+            autoOpen: false,
+            resizable: false,
+            height: 170,
+            width: 350,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            buttons: {
+                "Yes": function () {
+                    $(this).dialog("close");
+                    window.location = url;
+                },
+                "No": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $("#dialog-confirmDir").dialog('open');
+        return false;
+    });
+
+    function checkDateDifference(startDate, endDate, alertString) {
+
+        if ((startDate != null && startDate != '') && (endDate != null && endDate != '')) {
+            startDate = $.datepicker.parseDate('dd/mm/yy', startDate);
+            endDate = $.datepicker.parseDate('dd/mm/yy', endDate);
+            var difference = (endDate - startDate) / (86400000);
+            if (difference < 0) {
+                alert(alertString);
+                dateFlag = 0;
+                return false;
+            }
+            else {
+                dateFlag = 1;
+                return true;
+            }
+        }
+        else {
+            dateFlag = 1;
+            return true;
+        }
+
+    }
+
+    function ValidateDirector() {
+
+        var isValid = true;
+        var firstName = $(".firstName").val();
+        var surName = $(".surName").val();
+        var dateOfappointment = $(".dateOfappointment").val();
+        var dateOfBirth = $(".dateOfBirth").val();
+        var fax = $(".fax").val();
+        var landLine = $(".landLine").val();
+        var mobile = $(".mobile").val();
+        var email = $(".email").val();
+        var qualificationtrue = $(".qualificationtrue").is(':checked');
+        var qualificationfalse = $(".qualificationfalse").is(':checked');
+        if (firstName != '') {
+            if (surName != '' && dateOfappointment != '' && dateOfBirth != '' && fax != '' && landLine != '' && mobile != '' && email != '' && (qualificationtrue != false || qualificationfalse != false)) {
+                isValid = true;
+            }
+            else {
+                alert("please enter director details");
+                isValid = false;
+            }
+        }
+
+        return isValid;
+    }
+
+    function printdiv(printpage) {
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        return false;
+    }
+</script>
+
+<div id="dialog-confirm" style="display: none">
+
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+<div id="dialog-add" style="display: none">
+</div>
+<div id="dialog-confirmDir" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>
+
+

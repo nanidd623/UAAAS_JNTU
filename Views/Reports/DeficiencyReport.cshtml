@@ -1,0 +1,378 @@
+﻿@model UAAAS.Models.UGWithDeficiency
+@{
+    if (ViewBag.WithDeficiency == true)
+    {
+        ViewBag.Title = "Colleges With Deficiencies";
+    }
+
+    if (ViewBag.WithOutDeficiency == true)
+    {
+        ViewBag.Title = "Colleges Without Deficiencies";
+    }
+
+    if (ViewBag.PermanentColleges == true)
+    {
+        ViewBag.Title = "Permanent Colleges Deficiencies";
+    }
+
+    if (ViewBag.AllColleges == true)
+    {
+        ViewBag.Title = "All Colleges Deficiencies";
+    }
+}
+
+<br />
+
+@using (Html.BeginForm())
+{
+    int count = 0;
+    <table style="width: 100%;">
+        <tr>
+            <td>@if (ViewBag.WithDeficiency == true)
+                {
+                <h2>Colleges With Deficiencies</h2>
+                }
+                @if (ViewBag.WithOutDeficiency == true)
+                {
+                    <h2>Colleges Without Deficiencies</h2>
+                }
+                @if (ViewBag.PermanentColleges == true)
+                {
+                    <h2>Permanent Colleges Deficiencies</h2>
+                }
+                @if (ViewBag.AllColleges == true)
+                {
+                    <h2>All Colleges Deficiencies</h2>
+                }
+            </td>
+            <td style="text-align: right;">
+                @Html.DropDownListFor(model => model.CollegeId,
+            new SelectList(Model.WithDeficiencyColleges, "Id", "Name"),
+            "-- Select --", new { id = "CollegeName" })
+                <input type="submit" value="Search" name="cmd" style="width: 80px; padding: 4px 15px" />
+                <input type="submit" value="Export" name="cmd" style="width: 80px; padding: 4px 15px" />
+            </td>
+        </tr>
+        @if (ViewBag.Count != 0)
+        { 
+            <tr>
+                <td>
+                    <label style="color: #0C8EC0">@ViewBag.Count record(s) found</label>
+                </td>
+            </tr>
+        }
+    </table>
+        for (var i = 0; i < Model.WithDeficiencyColleges.Count(); i++)
+        {
+    @Html.HiddenFor(m => m.WithDeficiencyColleges[i].Id);
+    @Html.HiddenFor(m => m.WithDeficiencyColleges[i].Name);
+        }
+    <br />    
+        if (ViewBag.Count != 0)
+        {                    
+    <div style="width: 100%; overflow: auto; overflow-y: scroll; height: 580px;">
+        <table class="tbl_report" style="width: 2500px; border: solid 1px #ccc; border-collapse: collapse;">
+            <tr class="DataTables_sort_wrapper" style="border: solid 1px #ccc;">
+                <td colspan="16" style="text-align: right; font-size: 11px;">
+                    <u><b>Computers Norms</b></u>: B.Tech-1:4, B.Pharmacy-1:6, M.Tech-1:2, M.Pharmacy-1:6, MBA-1:2, MCA-1:2, MAM-1:2, MTM-1:2, Pharm.D-1:6, Pharm.D PB-1:6 &nbsp;&nbsp;&nbsp;
+                    <u><b>Principal</b></u>: A = Quallified Principal, B = Not Qualified Principal &nbsp;&nbsp;&nbsp;
+                    <u><b>Faculty Norms</b></u>: B.Tech-1:15, B.Pharmacy-1:15, M.Tech-1:12, M.Pharmacy-1:12, MBA-1:15, MCA-1:15, MAM-1:12, MTM-1:12, Pharm.D-1:12, Pharm.D PB-1:12 &nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr class="DataTables_sort_wrapper" style="border: solid 1px #ccc;">
+                <th style="text-align: center; width: 60px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">S.No
+                </th>
+                <th rowspan="2" style="text-align: center; width: 300px; font-weight: bold; padding: 3px 5px;" class="ui-state-default">College Name
+                </th>
+                <th style="text-align: center; width: 120px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">College Code And Year
+                </th>
+                <th style="text-align: center; width: 960px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Specializations
+                    <table style="border-collapse: collapse; width: 100%">
+                        <tr>
+                            <td style="border: none; text-align: left">&nbsp;</td>
+                            <td style="border: none; width: 80px; text-align: right;">&nbsp;</td>
+                            <td style="border-left: solid 0px #ccc; width: 80px; text-align: right;">&nbsp;</td>
+                        </tr>
+                    </table>
+                </th>
+                <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Labs (shortage)
+                </th>
+                <th style="text-align: center; width: 250px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Computers (shortage)
+                </th>
+                <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Principal
+                </th>
+                <th style="text-align: center; width: 250px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Faculty (shortage)
+                </th>
+                <th style="text-align: center; padding: 3px 5px; font-weight: bold" colspan="2" class="ui-state-default">Ratified
+                </th>
+                <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Library (shortage)
+                </th>
+                <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Overall Points
+                </th>
+                <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">NBA
+                </th>
+                <th style="text-align: center; width: 100px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">NAAC
+                </th>
+                <th style="text-align: center; width: 350px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Deficiencies / Remarks (*)
+                </th>
+                <th style="text-align: center; width: 60px; padding: 3px 5px; font-weight: bold" rowspan="2" class="ui-state-default">Grade
+                </th>
+            </tr>
+            <tr style="border: solid 1px #ccc;">
+                <th style="text-align: center; width: 90px; padding: 3px 5px; font-weight: bold" class="ui-state-default">Number	
+                </th>
+                <th style="text-align: center; width: 60px; padding: 3px 5px; font-weight: bold" class="ui-state-default">%
+                </th>
+            </tr>
+            @if (ViewBag.CollegeSpecializations != null)
+            {
+                foreach (var item in ViewBag.CollegeSpecializations)
+                {
+                
+                <tr style="border: solid 1px #ccc;">
+                    <td style="text-align: center; width: 60px; border: solid 1px #ccc; padding: 3px 5px;">
+                        @(count = count + 1)
+                    </td>
+                    <td style="text-align: left; width: 300px; border: solid 1px #ccc; padding: 3px 5px;">
+                        <label>@item.CollegeName</label>
+                        <br />
+                        <label>@item.CollegeAddress</label>
+                        <br />
+                        @if (item.IsPermanentCollege == "Permanent College")
+                        {
+@*<label>[<b>@item.IsPermanentCollege</b>]</label>*@
+                        }
+                    </td>
+                    <td style="text-align: center; width: 120px; border: solid 1px #ccc; padding: 3px 5px;">
+                        <table style="border-collapse: collapse; text-align: left; width: 100%">
+                            <tr>
+                                <td style="border: none; text-align: center">
+                                    <label style="text-transform: uppercase">@item.CollegeCode</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; text-align: center">
+                                    <label style="text-transform: uppercase">@item.Establishyear</label>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 960px; border: solid 1px #ccc; padding: 3px 5px;">
+                        @if (item.CollegeSpecializations != null)
+                        {
+                            foreach (var specialization in item.CollegeSpecializations)
+                            {
+                                if (specialization.Intake != null && specialization.Intake != string.Empty &&
+                                     specialization.Specialization != null && specialization.Specialization != string.Empty)
+                                {
+                            <table style="border-collapse: collapse; width: 100%">
+                                <tr>
+                                    <td style="border: none; text-align: left">
+                                        @if (specialization.Intake.Contains("#") == true)
+                                        {                                        
+                                            <label style="font-weight: bold">@specialization.Specialization</label> 
+                                        }
+                                        else
+                                        {
+                                            <label>@specialization.Specialization</label>  
+                                        }
+                                    </td>
+                                    <td style="border: none; width: 80px; text-align: right;">
+                                        @if (specialization.Intake.Contains("$") == true)
+                                        {
+                                            string[] specializations = specialization.Intake.Split('$');
+                                            <label>@specializations[0]</label>                      
+                                        }
+                                        else if (specialization.Intake.Contains("*") == true)
+                                        {
+                                            string[] specializations = specialization.Intake.Split('*');
+@*<label style="">@specializations[0]</label>*@    
+                                            
+                                            //if [existing intake > proposed intake] then show [existing intake - decrease in proposed intake]
+                                            if (specialization.ExistingIntake > Convert.ToInt32(specializations[0]))
+                                            {
+                                                if (Convert.ToInt32(specializations[0]) == 0)
+                                                {
+                                            @specialization.ExistingIntake.ToString()<label style='font-weight: bold'>(0)</label>
+                                                }
+                                                else
+                                                {
+                                            <label>@specialization.ExistingIntake.ToString() - </label> <label style='font-weight: bold'>  @(specialization.ExistingIntake - Convert.ToInt32(specializations[0])) </label> 
+                                                }
+                                            }
+
+                                            //if [existing intake < proposed intake] then show [existing intake + increase in proposed intake]
+                                            if (specialization.ExistingIntake < Convert.ToInt32(specializations[0]))
+                                            {
+                                                
+                                            <label>@specialization.ExistingIntake.ToString() + </label> <label style='font-weight: bold'>  @(Convert.ToInt32(specializations[0]) - specialization.ExistingIntake) </label> 
+                                                
+                                            }
+                                        }
+
+                                        else if (specialization.Intake.Contains("#") == true)
+                                        {
+                                            string[] specializations = specialization.Intake.Split('#');
+                                            <label style="font-weight: bold">@specializations[0]</label>    
+                                        }
+                                        else
+                                        {
+                                            <label>@specialization.Intake</label>          
+                                        }
+                                    </td>
+                                    <td style="border-left: solid 0px #ccc; width: 80px; text-align: right;">
+                                        @specialization.AY13admittedIntake
+                                    </td>
+                                </tr>
+                            </table>
+                                }
+                            }
+                        }
+                    </td>
+                    <td style="text-align: center; width: 100px; border: solid 1px #ccc; padding: 3px 5px;">
+                        <label>@item.LabsShortage</label>
+                    </td>
+                    <td style="text-align: left; width: 250px; border: solid 1px #ccc; padding: 3px 5px;">
+                        @if (item.ComputersShortage != null)
+                        {
+                            foreach (var ComptersShortage in item.ComputersShortage)
+                            {
+                            <table style="border-collapse: collapse; text-align: left; width: 100%">
+                                <tr>
+                                    <td style="border: none; text-align: left">
+                                        @ComptersShortage
+                                    </td>
+                                </tr>
+                            </table>
+                            }
+                        }
+                    </td>
+                    <td style="text-align: center; width: 100px; border: solid 1px #ccc; padding: 3px 5px;">
+                        <label>@item.PrincipalGrade</label>
+                    </td>
+                    <td style="text-align: left; width: 250px; border: solid 1px #ccc; padding: 3px 5px;">
+                        @if (item.FacultyShortage != null)
+                        {
+                            foreach (var FacultyShortage in item.FacultyShortage)
+                            {
+                            <table style="border-collapse: collapse; text-align: left; width: 100%">
+                                <tr>
+                                    <td style="border: none; text-align: left">
+                                        @FacultyShortage
+                                    </td>
+                                </tr>
+                            </table>
+                            }
+                        }
+                    </td>
+                    <td style="text-align: center; width: 90px; border: solid 1px #ccc; padding: 3px 5px;">
+                        <label>@item.Number</label>
+                    </td>
+                    <td style="text-align: center; width: 60px; border: solid 1px #ccc; padding: 3px 5px;">
+                        <label>@item.Percentage</label>
+                    </td>
+                    <td style="text-align: center; width: 100px; border: solid 1px #ccc; padding: 3px 5px;">
+                        <label>@item.LibraryShortage</label>
+                    </td>
+                    <td style="text-align: center; width: 60px; border: solid 1px #ccc; padding: 3px 5px;">
+                        <label>@item.OverallPoints</label>/100</td>
+                    <td style="text-align: center; width: 60px; border: solid 1px #ccc; padding: 3px 5px;">
+                        <label>@item.NBAStatus</label></td>
+                    <td style="text-align: center; width: 60px; border: solid 1px #ccc; padding: 3px 5px;">
+                        <label>@item.NAACStatus</label></td>
+                    <td style="text-align: left; width: 350px; border: solid 1px #ccc; padding: 3px 5px;">
+                        @if (item.UGObservations != null)
+                        {
+                            int i = 1;
+                            foreach (var UGObservations in item.UGObservations)
+                            {
+                            <table style="border-collapse: collapse;">
+                                <tr>
+                                    <td style="border: none; text-align: left">
+                                        <label>@(i++)</label>. @UGObservations<label></label>
+                                    </td>
+                                </tr>
+                            </table>
+                            }
+                        }
+                    </td>
+                    <td style="text-align: center; width: 60px; border: solid 1px #ccc; padding: 3px 5px;">@item.Grade</td>
+                </tr>   
+               
+                }
+
+            }
+        </table>
+    </div>   
+        }
+        else
+        {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+        }
+}
+<style type="text/css">
+    .dataTables_wrapper {
+        overflow: auto;
+        overflow-y: scroll;
+        height: 500px;
+    }
+</style>
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        $('#dvData').hide();
+        $('#CollegeName').removeClass('input-validation-error');
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#UgWithDeficiency').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 20,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#UgWithDeficiency').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null, null, null],
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>

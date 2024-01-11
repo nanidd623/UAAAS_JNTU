@@ -1,0 +1,451 @@
+﻿@model UAAAS.Controllers.OnlineRegistration.FacultyClass
+@{
+    ViewBag.Title = "Index";
+    string Color = "black";
+    string BackGroundColor = "#024b74";
+    string fid = ViewBag.facultyid;
+    string ExperienceText = string.Empty;
+    string SubjectsText = string.Empty;
+    string EducationText = string.Empty;
+    string experienceBorder = string.Empty;
+    string experienceBorderRadius = string.Empty;
+    string experiencePadding = string.Empty;
+    string subjectBorder = string.Empty;
+    string subjectBorderRadius = string.Empty;
+    string subjectPadding = string.Empty;
+    string educationBorder = string.Empty;
+    string educationBorderRadius = string.Empty;
+    string educationPadding = string.Empty;
+    string LastUpdatedOn = string.Empty;
+    string CollegeDisplay = string.Empty;
+    string LatestNews = "";
+    string LatestUrl = "";
+    string PhdUploadText = string.Empty;
+    string PhdUploadBorder = string.Empty;
+    int indexid = 0;
+    int index = 0;
+    int indexNew = 0;
+    foreach (var item in ViewBag.Events)
+    {
+        if (indexid == 0)
+        {
+            LatestNews = item.newstitle;
+            LatestUrl = item.url;
+        }
+        indexid++;
+    }
+
+    //Experience
+    if (Model.Experienceid != null && Model.Experienceid != "0")
+    {
+        experienceBorder = "5px solid green";
+        ExperienceText = "Updated on " + Model.Experiencedate.Split(' ')[0];
+    }
+    else
+    {
+        experienceBorder = "5px solid red";
+        ExperienceText = "To be Updated!";
+    }
+    //subjects
+    if (Model.subjectsid != null && Model.subjectsid != "0")
+    {
+        subjectBorder = "5px solid green";
+        SubjectsText = "Updated on " + Model.subjectsdate.Split(' ')[0];
+    }
+    else
+    {
+        subjectBorder = "5px solid red";
+        SubjectsText = "To be Updated!";
+    }
+    //Education
+    if (Model.Educationid != null && Model.Educationid != "0")
+    {
+        educationBorder = "5px solid green";
+        EducationText = "Updated on " + Model.Educationdate.Split(' ')[0];
+    }
+    else
+    {
+        educationBorder = "5px solid red";
+        EducationText = "To be Updated!";
+    }
+    //PhDUploading
+    if (Model.PhdUploadid != null && Model.PhdUploadid != "0")
+    {
+        PhdUploadBorder = "5px solid green";
+        PhdUploadText = "Updated on " + Model.PhdUploaddate.Split(' ')[0];
+    }
+    else
+    {
+        PhdUploadBorder = "5px solid red";
+        PhdUploadText = "To be Updated!";
+    }
+
+
+    if (Model.LastUpdatedOn != null || Model.LastUpdatedOn != "0")
+    {
+        LastUpdatedOn = Model.LastUpdatedOn.Split(' ')[0];
+    }
+
+}
+
+<style>
+    .LabelText{
+        border: 1px solid #F2552C;
+        border-radius: 4px;
+        background-color: #F2552C;
+        font-weight: bold;
+        color:white;
+        height:auto;
+        cursor:pointer;
+        font-size:12px;
+        width:108px;
+    }
+    a{
+        cursor:pointer;
+    }
+
+    .FacultyProfile
+    {
+      border:5px solid green;
+    }
+
+    .FacultyProfile,.FacultyExperience,.FacultySubject,.FacultyEducation,.FacultyPhDUpload,.FacultyDocumentsUpload{
+            border-bottom-right-radius:10px;
+            border-top-left-radius :10px;
+            padding:3px;
+            width:35px;
+            height:35px;
+     }
+
+    .FacultyExperience{
+            border:@experienceBorder;
+     }
+
+    .FacultySubject{
+            border:@subjectBorder;
+     }
+
+    .FacultyEducation{
+            border:@educationBorder;
+     }
+    .FacultyPhDUpload{
+            border:@PhdUploadBorder;
+     }
+    .FacultyDocumentsUpload{
+           border:5px solid green;
+    }
+    .hyper
+        {
+            font-weight:bold;
+            position: relative;
+            animation-name:colorchange1;
+           -webkit-animation: colorchange1 5s infinite; /* Safari 4.0 - 8.0 */
+            animation: colorchange1 15s infinite alternate;
+        }
+
+     @@-webkit-keyframes colorchange1 {
+      0% {
+        color: blue;
+      }
+      10% {
+        color:red;
+      }
+      20% {
+         color:green;
+      }
+      30% {
+         color:orange;
+      }
+      40% {
+        color:pink ;
+      }
+      50% {
+         color:black;
+      }
+      60% {
+        color: gray;
+      }
+      70% {
+         color:tomoto;
+      }
+      80% {
+        color: brown;
+      }
+      90% {
+        color: #2980b9;
+      }
+      100% {
+        color: pink;
+      }
+    }
+</style>
+<div>
+    <table width="100%" style="border:1px solid purple;">
+        <tr>
+            <td width="8%" style="text-align: center; vertical-align: middle; background-color: #cc278a;">
+                <span style="color:white;text-align:left;"><b>Flash News </b></span>
+            </td>
+            <td width="92%" style="text-align: center; vertical-align: middle; background-color:lightyellow;">
+                <marquee style="color: forestgreen;" onmouseover=" this.stop(); " onmouseout=" this.start(); ">
+                    <a href="@LatestUrl" target="_blank" id="NewNews" style="font-weight:bold; color: forestgreen;">@LatestNews</a>
+                </marquee>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div style="text-align:-webkit-center">
+    <table width="100%" cellspacing="10px;">
+        <tr>
+            <td width="30%" style="vertical-align:top;padding-top:20px;">
+                <div>
+                    <table width="90%">
+                        <tr>
+                            <td style="background-color:rgb(49,69,89);color:white;font-weight:bold;padding:3px;">Registration Number</td>
+                            <td>:</td>
+                            <td style="background-color:whitesmoke;">@Model.RegistrationNumber</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color:rgb(49,69,89);color:white;font-weight:bold;padding:3px;">Name</td>
+                            <td>:</td>
+                            <td style="background-color:whitesmoke;">@Model.Name</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color:rgb(49,69,89);color:white;font-weight:bold;padding:3px;">College</td>
+                            <td>:</td>
+                            <td style="background-color:whitesmoke;">
+                                @if (Model.Collegeid == null || Model.Collegeid == 0)
+                                {
+                                <span>Not Associated</span>
+                                }
+                                else
+                                {
+                                @Model.collegeName
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br />
+                <table width="90%" style="text-align: center;border-collapse:collapse;">
+                    <tr>
+                        <td colspan="4">
+                            <div style="background-color: #BF8D2C; color: white; text-align: initial; font-weight: bold;border-bottom-right-radius:10px;border-top-left-radius:10px;">
+                                <span>&nbsp;&nbsp;&nbsp;&nbsp;Bio-metric attendance Report</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="background-color:rgb(49,69,89);color:white;font-weight:bold;">
+                        <th>Month</th>
+                        <th>Working days</th>
+                        <th>Holidays</th>
+                        <th>Presentdays</th>
+                    </tr>
+
+                    @if (ViewBag.MonthlyAttendance != null)
+                    {
+                        foreach (var item in ViewBag.MonthlyAttendance)
+                        {
+                            if (Model.Collegeid == item.CollegeId)
+                            {
+                                <tr style="background-color:whitesmoke;">
+                                    <td>@item.Month</td>
+                                    <td>@item.WorkingDays</td>
+                                    <td>@item.HolidaysDays</td>
+                                    <td>@item.PresentDays</td>
+                                </tr>
+                                indexNew++;
+                            }
+                            else
+                            {
+                                if (index == 0)
+                                {
+                                    index = 1;
+                                }
+                            }
+                        }
+
+                        if (index == 1 && indexNew == 0)
+                        {
+                            <tr style="background-color:whitesmoke;">
+                                <td colspan="4">NILL</td>
+                            </tr>
+                        }
+                        else if (index == 0 && indexNew == 0)
+                        {
+                            <tr style="background-color:whitesmoke;">
+                                <td colspan="4">NILL</td>
+                            </tr>
+                        }
+
+                    }
+                    else
+                    {
+                        <tr style="background-color:whitesmoke;">
+                            <td colspan="4">NILL</td>
+                        </tr>
+                    }
+                </table>
+            </td>
+            @if (Model.BlackListFlag == "No" && Model.VerifivationFlag == "No")
+            {
+                <td width="40%" style="text-align:-webkit-center;vertical-align:top;padding-top:20px;">
+                    <div style="background-color: #71468A; color: white; text-align: initial; font-weight: bold;border-bottom-right-radius:10px;border-top-left-radius:10px;">
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;Last Updated on :@LastUpdatedOn </span>
+                    </div>
+                    <table style="text-align:center;" cellspacing="35px">
+                        <tr>
+                            <td style="text-align: -webkit-center;">
+                                <a href="/NewOnlineRegistration/ViewFacultyDetails?fid=@fid" target="_blank">
+                                    <img class="FacultyProfile" src="~/Content/images/FacultyProfile3.png" />
+                                    <div class="LabelText">
+                                        <span>Profile</span>
+                                    </div>
+                                </a>
+                            </td>
+                            @*<td style="text-align: -webkit-center;">
+                                <a href="/NewOnlineRegistration/IndexRegistration?id=@fid" target="_blank">
+                                    <img class="FacultyExperience" src="~/Content/images/FacultyExperience1.png" />
+                                    <div class="LabelText">
+                                        <span>Experience</span>
+                                    </div>
+                                </a>
+                            </td>*@
+                            <td style="text-align: -webkit-center;">
+                                <a href="/NewOnlineRegistration/FacultySubjectsTaught?id=@fid" target="_blank">
+                                    <img class="FacultySubject" src="~/Content/images/SubjectsTaught.png" />
+                                    <div class="LabelText">
+                                        <span>Subjects Taught</span>
+                                    </div>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            @*<td style="text-align: -webkit-center;">
+                                <a href="/NewOnlineRegistration/FacultyEducationDetails?id=@fid" target="_blank">
+                                    <img class="FacultyEducation" src="~/Content/images/FacultyEducation.png" />
+                                    <div class="LabelText">
+                                        <span>Education Details</span>
+                                    </div>
+                                </a>
+                            </td>*@
+                            @*<td style="text-align: -webkit-center;">
+                                <a href="/FacultyRequests/Faculty_suppDocs?fid=@fid" target="_blank">
+                                    <img class="FacultyDocumentsUpload" src="~/Content/images/FacultyDocumentsUploading.png" />
+                                    <div class="LabelText">
+                                        <span>Supporting Documents</span>
+                                    </div>
+                                </a>
+                            </td>*@
+                            @if (TempData["PhDUploadCheck"] == "true")
+                            {
+                                @*<td style="text-align: -webkit-center;">
+                                    <a href="/NewOnlineRegistration/UploadPhd?fid=@fid" target="_blank">
+                                        <img class="FacultyPhDUpload" src="~/Content/images/SubjectsTaught.png" />
+                                        <div class="LabelText">
+                                            <span>Phd Upload</span>
+                                        </div>
+                                    </a>
+                                </td>*@
+                            }
+                             <td style="text-align: -webkit-center;">
+                                <a href="/FacultyComplaints/FacultyComplaintScreen?fid=@fid" target="_blank">
+                                    <img class="FacultyProfile" src="~/Content/images/Phddetails.png" />
+                                    <div class="LabelText">
+                                        <span>Griveance</span>
+                                    </div>
+                                </a>
+                            </td>
+                            <td style="text-align: -webkit-center;">
+                                <a href="/NewOnlineRegistration/FacultyphdDetails?fid=@fid" target="_blank">
+                                    <img class="FacultyProfile" src="~/Content/images/FacultyEducation.png" />
+                                    <div class="LabelText">
+                                        <span>PHD Details</span>
+                                    </div>
+                                </a>
+                            </td>
+                            @*<td style="text-align: -webkit-center;">
+                                <a href="/NewOnlineRegistration/FacultyDeclaration?fid=@fid" target="_blank">
+                                    <img class="FacultyProfile" src="~/Content/images/FacultyEducation.png" />
+                                    <div class="LabelText">
+                                        <span>Faculty Declaration</span>
+                                    </div>
+                                </a>
+                            </td>*@
+                            @*<td>
+                                <a href="/FacultyRequests/RequestsList?fid=@fid" target="_blank">
+                                    <div class="LabelText">
+                                        <span>Edit Request</span>
+                                    </div>
+                                </a>
+                            </td>*@
+                            
+                           
+                        </tr>
+                        @*<tr>
+                            <td style="text-align: -webkit-center;">
+                                <a href="/NewOnlineRegistration/UploadPhd?fid=@fid" target="_blank">
+                                    <img class="FacultyPhDUpload" src="~/Content/images/SubjectsTaught.png" />
+                                    <div class="LabelText">
+                                        <span>Phd Upload</span>
+                                    </div>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/FacultyRequests/FacultyMobilityRequest?fid=@fid" target="_blank">
+                                    <div class="LabelText">
+                                        <span>Mobility Request</span>
+                                    </div>
+                                </a>
+                            </td>
+                          
+                        </tr>*@
+                       
+                    </table>
+                </td>
+            }
+            <td width="30%" style="text-align:-webkit-center;vertical-align:top;padding-top:1px;">
+                <div style="height:340px;background-color:white; padding: 0px 10px 10px 10px;">
+                    <br />
+                    <div style="background-color: green; color: white; text-align: initial; font-weight: bold;border-bottom-right-radius:10px;border-top-left-radius:10px;">
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;NEWS  /  CIRCULARS  /  NOTICES :</span>
+                    </div>
+                    <marquee direction="up" scrolldelay="300" style="height:270px;" onmouseover="this.stop();" onmouseout="this.start();">
+                        <ul class="newstitle" style="padding-left:10px;">
+                            @foreach (var item in ViewBag.Events)
+                            {
+                                if (!string.IsNullOrWhiteSpace(item.url))
+                                {
+                                    <li style="color:@Color">
+                                        @if (@item.createdDate != null)
+                                        {
+                                            <a class="navigationurl" href="@item.url" target="_blank" style="color:@Color;font-weight:bold;">@item.createdDate.ToString("dd-MMM-yyy") : @item.newstitle</a>
+                                            if (item.createdDate >= DateTime.Now.AddDays(-10))
+                                            {
+                                                <img src="~/Content/images/latest.gif" alt="latest" />
+                                                @*<img src="../Content/images/latest.gif" alt="latest" />*@
+                                            }
+                                        }
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li style="color:@Color;">
+                                        @item.createdDate.ToString("dd-MMM-yyy") : @item.newstitle
+                                        @if (item.createdDate >= DateTime.Now.AddDays(-10))
+                                        {
+                                            <img src="~/Content/images/latest.gif" alt="latest" />
+                                            @*<img src="../Content/images/latest.gif" alt="latest" />*@
+                                        }
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </marquee>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <br />
+
+</div>

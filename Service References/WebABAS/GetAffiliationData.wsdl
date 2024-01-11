@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="Faculty">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FacultyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RegistrationNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AadhaarNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CollegeID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DepartmentID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Designation" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Address" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Gender" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Dob" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="MobileNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Pincode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FacultyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FacultyResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Principal">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PrincipalName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RegistrationNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AadhaarNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CollegeID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PrincipalType" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PrincipalResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PrincipalResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteFaculty">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RegistrationNo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteFacultyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeleteFacultyResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeletePrincipal">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RegistrationNo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeletePrincipalResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeletePrincipalResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="FacultySoapIn">
+    <wsdl:part name="parameters" element="tns:Faculty" />
+  </wsdl:message>
+  <wsdl:message name="FacultySoapOut">
+    <wsdl:part name="parameters" element="tns:FacultyResponse" />
+  </wsdl:message>
+  <wsdl:message name="PrincipalSoapIn">
+    <wsdl:part name="parameters" element="tns:Principal" />
+  </wsdl:message>
+  <wsdl:message name="PrincipalSoapOut">
+    <wsdl:part name="parameters" element="tns:PrincipalResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteFacultySoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteFaculty" />
+  </wsdl:message>
+  <wsdl:message name="DeleteFacultySoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteFacultyResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeletePrincipalSoapIn">
+    <wsdl:part name="parameters" element="tns:DeletePrincipal" />
+  </wsdl:message>
+  <wsdl:message name="DeletePrincipalSoapOut">
+    <wsdl:part name="parameters" element="tns:DeletePrincipalResponse" />
+  </wsdl:message>
+  <wsdl:message name="FacultyHttpGetIn">
+    <wsdl:part name="FacultyName" type="s:string" />
+    <wsdl:part name="RegistrationNo" type="s:string" />
+    <wsdl:part name="AadhaarNo" type="s:string" />
+    <wsdl:part name="CollegeID" type="s:string" />
+    <wsdl:part name="DepartmentID" type="s:string" />
+    <wsdl:part name="Designation" type="s:string" />
+    <wsdl:part name="Address" type="s:string" />
+    <wsdl:part name="City" type="s:string" />
+    <wsdl:part name="State" type="s:string" />
+    <wsdl:part name="Gender" type="s:string" />
+    <wsdl:part name="Dob" type="s:string" />
+    <wsdl:part name="MobileNo" type="s:string" />
+    <wsdl:part name="Email" type="s:string" />
+    <wsdl:part name="Pincode" type="s:string" />
+    <wsdl:part name="Type" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="FacultyHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="PrincipalHttpGetIn">
+    <wsdl:part name="PrincipalName" type="s:string" />
+    <wsdl:part name="RegistrationNo" type="s:string" />
+    <wsdl:part name="AadhaarNo" type="s:string" />
+    <wsdl:part name="CollegeID" type="s:string" />
+    <wsdl:part name="PrincipalType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PrincipalHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="DeleteFacultyHttpGetIn">
+    <wsdl:part name="RegistrationNo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeleteFacultyHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="DeletePrincipalHttpGetIn">
+    <wsdl:part name="RegistrationNo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeletePrincipalHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="FacultyHttpPostIn">
+    <wsdl:part name="FacultyName" type="s:string" />
+    <wsdl:part name="RegistrationNo" type="s:string" />
+    <wsdl:part name="AadhaarNo" type="s:string" />
+    <wsdl:part name="CollegeID" type="s:string" />
+    <wsdl:part name="DepartmentID" type="s:string" />
+    <wsdl:part name="Designation" type="s:string" />
+    <wsdl:part name="Address" type="s:string" />
+    <wsdl:part name="City" type="s:string" />
+    <wsdl:part name="State" type="s:string" />
+    <wsdl:part name="Gender" type="s:string" />
+    <wsdl:part name="Dob" type="s:string" />
+    <wsdl:part name="MobileNo" type="s:string" />
+    <wsdl:part name="Email" type="s:string" />
+    <wsdl:part name="Pincode" type="s:string" />
+    <wsdl:part name="Type" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="FacultyHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="PrincipalHttpPostIn">
+    <wsdl:part name="PrincipalName" type="s:string" />
+    <wsdl:part name="RegistrationNo" type="s:string" />
+    <wsdl:part name="AadhaarNo" type="s:string" />
+    <wsdl:part name="CollegeID" type="s:string" />
+    <wsdl:part name="PrincipalType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PrincipalHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="DeleteFacultyHttpPostIn">
+    <wsdl:part name="RegistrationNo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeleteFacultyHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="DeletePrincipalHttpPostIn">
+    <wsdl:part name="RegistrationNo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeletePrincipalHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="GetAffiliationDataSoap">
+    <wsdl:operation name="Faculty">
+      <wsdl:input message="tns:FacultySoapIn" />
+      <wsdl:output message="tns:FacultySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Principal">
+      <wsdl:input message="tns:PrincipalSoapIn" />
+      <wsdl:output message="tns:PrincipalSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteFaculty">
+      <wsdl:input message="tns:DeleteFacultySoapIn" />
+      <wsdl:output message="tns:DeleteFacultySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeletePrincipal">
+      <wsdl:input message="tns:DeletePrincipalSoapIn" />
+      <wsdl:output message="tns:DeletePrincipalSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="GetAffiliationDataHttpGet">
+    <wsdl:operation name="Faculty">
+      <wsdl:input message="tns:FacultyHttpGetIn" />
+      <wsdl:output message="tns:FacultyHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Principal">
+      <wsdl:input message="tns:PrincipalHttpGetIn" />
+      <wsdl:output message="tns:PrincipalHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteFaculty">
+      <wsdl:input message="tns:DeleteFacultyHttpGetIn" />
+      <wsdl:output message="tns:DeleteFacultyHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeletePrincipal">
+      <wsdl:input message="tns:DeletePrincipalHttpGetIn" />
+      <wsdl:output message="tns:DeletePrincipalHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="GetAffiliationDataHttpPost">
+    <wsdl:operation name="Faculty">
+      <wsdl:input message="tns:FacultyHttpPostIn" />
+      <wsdl:output message="tns:FacultyHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Principal">
+      <wsdl:input message="tns:PrincipalHttpPostIn" />
+      <wsdl:output message="tns:PrincipalHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteFaculty">
+      <wsdl:input message="tns:DeleteFacultyHttpPostIn" />
+      <wsdl:output message="tns:DeleteFacultyHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeletePrincipal">
+      <wsdl:input message="tns:DeletePrincipalHttpPostIn" />
+      <wsdl:output message="tns:DeletePrincipalHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GetAffiliationDataSoap" type="tns:GetAffiliationDataSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Faculty">
+      <soap:operation soapAction="http://tempuri.org/Faculty" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Principal">
+      <soap:operation soapAction="http://tempuri.org/Principal" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteFaculty">
+      <soap:operation soapAction="http://tempuri.org/DeleteFaculty" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeletePrincipal">
+      <soap:operation soapAction="http://tempuri.org/DeletePrincipal" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="GetAffiliationDataSoap12" type="tns:GetAffiliationDataSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Faculty">
+      <soap12:operation soapAction="http://tempuri.org/Faculty" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Principal">
+      <soap12:operation soapAction="http://tempuri.org/Principal" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteFaculty">
+      <soap12:operation soapAction="http://tempuri.org/DeleteFaculty" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeletePrincipal">
+      <soap12:operation soapAction="http://tempuri.org/DeletePrincipal" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="GetAffiliationDataHttpGet" type="tns:GetAffiliationDataHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="Faculty">
+      <http:operation location="/Faculty" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Principal">
+      <http:operation location="/Principal" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteFaculty">
+      <http:operation location="/DeleteFaculty" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeletePrincipal">
+      <http:operation location="/DeletePrincipal" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="GetAffiliationDataHttpPost" type="tns:GetAffiliationDataHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="Faculty">
+      <http:operation location="/Faculty" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Principal">
+      <http:operation location="/Principal" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteFaculty">
+      <http:operation location="/DeleteFaculty" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeletePrincipal">
+      <http:operation location="/DeletePrincipal" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GetAffiliationData">
+    <wsdl:port name="GetAffiliationDataSoap" binding="tns:GetAffiliationDataSoap">
+      <soap:address location="http://120.138.8.102/abas/GetAffiliationData.asmx" />
+    </wsdl:port>
+    <wsdl:port name="GetAffiliationDataSoap12" binding="tns:GetAffiliationDataSoap12">
+      <soap12:address location="http://120.138.8.102/abas/GetAffiliationData.asmx" />
+    </wsdl:port>
+    <wsdl:port name="GetAffiliationDataHttpGet" binding="tns:GetAffiliationDataHttpGet">
+      <http:address location="http://120.138.8.102/abas/GetAffiliationData.asmx" />
+    </wsdl:port>
+    <wsdl:port name="GetAffiliationDataHttpPost" binding="tns:GetAffiliationDataHttpPost">
+      <http:address location="http://120.138.8.102/abas/GetAffiliationData.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

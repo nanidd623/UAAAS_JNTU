@@ -1,0 +1,76 @@
+﻿@model IEnumerable<UAAAS.Models.jntuh_menu>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>menuName
+        </th>
+        <th>menuActionName
+        </th>
+        <th>menuControllerName
+        </th>
+        <th>menuParentID
+        </th>
+        <th>Roles
+        </th>
+        <th>menuOrder
+        </th>
+        <th>isActive
+        </th>
+        <th>createdOn
+        </th>
+        <th>createdBy
+        </th>
+        <th>updatedOn
+        </th>
+        <th>updatedBy
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.menuName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.menuActionName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.menuControllerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.menuParentID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Roles)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.menuOrder)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.isActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.createdOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.createdBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.updatedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.updatedBy)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.id })
+            </td>
+        </tr>
+    }
+
+</table>

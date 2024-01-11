@@ -1,0 +1,173 @@
+﻿@model IEnumerable<UAAAS.Models.CollegePlacement>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Students Placement Details";
+    int num = 1;
+}
+
+@*<p class="create_link_right">
+    <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class = "create_button">
+</p>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".view_hide").show();
+        var mainUrl = window.location;
+        var url;
+
+        $.ajaxSetup({ cache: false });
+
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit College Students Placement',
+            autoOpen: false,
+            resizable: false,
+            height: 400,
+            width: 700,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View College Students Placement',
+                autoOpen: false,
+                resizable: false,
+                height: 500,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });       
+    });
+
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;        
+    }
+</script>
+
+<div id="div_print">
+    <h2>College Student placement Details</h2>
+    <table class="four_columns" style="width: 100%; font-size: 0.7rem;">
+        <tr>
+            <th style="text-align: center;" rowspan="3" class="col11">S.No
+            </th>
+            <th style="text-align: center;" rowspan="3" class="col11">Degree
+            </th>
+            <th style="text-align: center;" rowspan="3" class="col11">Department
+            </th>
+            <th style="text-align: center;" rowspan="3" class="col11">Specialization
+            </th>
+            <th style="text-align: center;" colspan="3" class="col11">@ViewBag.ThirdYear
+            </th>
+            <th style="text-align: center;" colspan="3" class="col11">@ViewBag.SecondYear
+            </th>
+            <th style="text-align: center;" colspan="3" class="col11">@ViewBag.FirstYear
+            </th>
+            <th colspan="3" style="text-align: center;" rowspan="3" class="col11 view_hide"></th>
+        </tr>
+        <tr>
+        </tr>
+        <tr style="">
+            <th style="text-align: center;" class="col11">Total Students Appeared
+            </th>
+            <th style="text-align: center;" class="col11">Total Students Passed
+            </th>
+            <th style="text-align: center;" class="col11">Total Students Placed
+            </th>
+            <th style="text-align: center;" class="col11">Total Students Appeared
+            </th>
+            <th style="text-align: center;" class="col11">Total Students Passed
+            </th>
+            <th style="text-align: center;" class="col11">Total Students Placed
+            </th>
+            <th style="text-align: center;" class="col11">Total Students Appeared
+            </th>
+            <th style="text-align: center;" class="col11">Total Students Passed
+            </th>
+            <th style="text-align: center;" class="col11">Total Students Placed
+            </th>
+        </tr>
+
+        @foreach (var item in ViewBag.StudentsPlacement as List<UAAAS.Models.CollegePlacement>)
+        {
+            <tr>
+                <td style="width: 30px; text-align: center;" class="col21" >
+                    @(num++)
+                </td>
+                <td style="width: 60px;" class="col21">@item.degree</td>
+                <td style="width: 50px;" class="col21">@item.department</td>
+                <td class="col21">@item.specialization</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.totalStudentsAppeared3</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.totalStudentsPassed3</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.totalStudentsPlaced3</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.totalStudentsAppeared2</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.totalStudentsPassed2</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.totalStudentsPlaced2</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.totalStudentsAppeared1</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.totalStudentsPassed1</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.totalStudentsPlaced1</td>
+                <td style="width: 20px; text-align: center;" class="col21 view_hide">
+                    @Html.ActionLink("Details", "Details", "CollegePlacement", new { sid = item.specializationId }, new { @class = "view_button", @target = "_blank" })
+                </td>
+            </tr>
+        }
+
+    </table>
+    @if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }
+    <div id="dialog-view" style="display: none">
+    </div>
+</div>

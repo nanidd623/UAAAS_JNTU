@@ -1,0 +1,68 @@
+﻿@model IList<UAAAS.Models.LibraryDetails>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "College Library Details";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+}
+<h2>College Library Details</h2>
+@using (Html.BeginForm())
+{
+    if (ViewBag.Norecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+    }
+    else
+    {    
+    <table class="four_columns" style="width: 100%;">
+                <tr style="font-weight: bold;">
+                    <td style="text-align: left;" class="col11">Degree</td>
+                    <td style="text-align: center;" class="col11">Number of Titles till the A.Y.2021-22</td>
+                    <td style="text-align: center;" class="col11">Number of Titles added in the A.Y.2022-23</td>
+                    <td style="text-align: center;" class="col11">Number of Volumes till the A.Y.2021-22</td>
+                    <td style="text-align: center;" class="col11">Number of Volumes added in the A.Y.2022-23</td>
+                    <td style="text-align: center;" class="col11">Number of National Print Journals till the A.Y.2021-22</td>
+                    <td style="text-align: center;" class="col11">Number of National Print Journals added in the A.Y.2022-23</td>
+                    <td style="text-align: center;" class="col11">Number of International Print Journals till the A.Y.2021-22</td>
+                    <td style="text-align: center;" class="col11">Number of International Print Journals added in the A.Y.2022-23</td>
+                    <td style="text-align: center;" class="col11">Number of e-Journals till the A.Y.2021-22</td>
+                    <td style="text-align: center;" class="col11">Number of e-Journals added in the A.Y.2022-23</td>
+                    <td style="text-align: center;" class="col11">Valid Subscription Number of e-Journals</td>
+                </tr>
+
+                @for (int i = 0; i < ViewBag.Count; i++)
+                {
+                    <tr>
+                        <td style="text-align: left;" class="col21">
+                            @Html.LabelFor(m => m[i].degree, Model[i].degree == null ? string.Empty : Model[i].degree.ToString())
+                            @Html.HiddenFor(m => m[i].degreeId)
+                        </td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].totalTitles, Model[i].totalTitles == null ? string.Empty : Model[i].totalTitles.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].newTitles, Model[i].newTitles == null ? string.Empty : Model[i].newTitles.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].totalVolumes, Model[i].totalVolumes == null ? string.Empty : Model[i].totalVolumes.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].newVolumes, Model[i].newVolumes == null ? string.Empty : Model[i].newVolumes.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].totalNationalJournals, Model[i].totalNationalJournals == null ? string.Empty : Model[i].totalNationalJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].newNationalJournals, Model[i].newNationalJournals == null ? string.Empty : Model[i].newNationalJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].totalInternationalJournals, Model[i].totalInternationalJournals == null ? string.Empty : Model[i].totalInternationalJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].newInternationalJournals, Model[i].newInternationalJournals == null ? string.Empty : Model[i].newInternationalJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].totalEJournals, Model[i].totalEJournals == null ? string.Empty : Model[i].totalEJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">@Html.DisplayFor(m => m[i].newEJournals, Model[i].newEJournals == null ? string.Empty : Model[i].newEJournals.ToString())</td>
+                        <td style="text-align: center;" class="col21">
+                            @if (Model[i].degree.ToString() == "B.Tech" || Model[i].degree.ToString() == "B.Pharmacy")
+                            {
+                                @Html.HiddenFor(m => m[i].EJournalsSubscriptionNumber, new { @Value = DBNull.Value })
+                            }
+                            else
+                            {
+                                <span>@Model[i].EJournalsSubscriptionNumber</span>
+                                @*
+                                    @Html.TextBoxFor(m => m[i].EJournalsSubscriptionNumber, Model[i].EJournalsSubscriptionNumber == null ? string.Empty : Model[i].EJournalsSubscriptionNumber.ToString())
+                                *@
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+    }
+}

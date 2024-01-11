@@ -1,0 +1,626 @@
+﻿@model UAAAS.Models.CollegeAICTECompliance
+
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "UPLOAD AICTE / PCI APPROVAL RELATED DETAILS FOR A.Y 2020-21.";
+    var aicterecords = (List<UAAAS.Controllers.College.CollegeAicteComp>)ViewBag.collegeAictelst;
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $.ajaxSetup({ cache: false });
+
+        $('.subtUpload').click(function() {
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+        });
+
+        $('.subtUpload1').click(function() {
+            var filename1 = $('.fileUploadcheck1').val();
+            var path1 = $('.viewFileData').attr("href");
+            if ((filename1 == '' || filename1 == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+        });
+
+        $('.subtUpload2').click(function() {
+            var filename2 = $('.fileUploadcheck2').val();
+            var path2 = $('.viewFileData').attr("href");
+            if ((filename2 == '' || filename2 == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+        });
+
+        GetSpecialization(@Model.DepartmentID);
+        $('.calendar').attr("readonly", "true");
+        $('.calendar').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            showOn: "button",
+            buttonImage: "@Url.Content("~/Content/themes/base/images/calendar.gif")",
+            buttonImageOnly: true
+            //showButtonPanel: true
+        });
+        //$(".calendar, .year").css("width", "75px");
+
+        if ($("#Degree").val() > 0) {
+            GetDepartments($("#Degree").val());
+        }
+
+        $("#Degree").change(function() {
+            var DegreeID = $(this).val();
+            GetDepartments(DegreeID);
+        });
+
+        if ($("#Department").val() > 0) {
+            GetSpecialization($("#Department").val());
+        }
+        $("#Department").change(function() {
+            var DepartmentID = $(this).val();
+            GetSpecialization(DepartmentID);
+        });
+
+        function GetDepartments(DegreeID) {
+            $.getJSON("/CollegeIntakeProposed/GetDepartments", { id: DegreeID },
+                function(DepartmentsData) {
+                    var select = $("#Department");
+                    select.empty();
+                    select.append($('<option/>', {
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(DepartmentsData, function(index, itemdata) {
+                        select.append($('<option/>', {
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == @Model.DepartmentID ? true : false)
+                        }));
+                    });
+                });
+        }
+
+        function GetSpecialization(DepartmantID) {
+            $.getJSON("/CollegeIntakeProposed/GetSpecialization", { id: DepartmantID },
+                function(Specializationdata) {
+                    var select = $("#Specialization");
+                    select.empty();
+                    select.append($('<option/>', {
+                        value: '',
+                        text: '-- Select --'
+                    }));
+                    $.each(Specializationdata, function(index, itemdata) {
+                        select.append($('<option/>', {
+                            value: itemdata.Value,
+                            text: itemdata.Text,
+                            selected: (itemdata.Value == '@Model.specializationId' ? true : false)
+                        }));
+                    });
+                });
+        }
+
+        if ($('#AICTEApprovalLettr').val() != '') {
+            //alert('a');
+            $('#api0').removeAttr('disabled');
+        } else if ($('#AICTEApprovalLettr').val() == '') {
+            $('#api0').attr('disabled', 'disabled');
+        }
+
+        $('.btnclass').click(function() {
+            if ($('#AICTEApprovalLettr').val() != '') {
+                //alert('a');
+                $('#api0').addClass('required');
+
+                $('#prop0').removeClass('required');
+            } else if ($('#AICTEApprovalLettr').val() == '') {
+                //alert('p');
+                $('#prop0').addClass('required');
+                $('#api0').removeClass('required');
+            }
+        });
+
+        $(function() {
+            //enable_cb();
+            //$("#DeclarationStatus").click(enable_cb);
+        });
+
+        function enable_cb() {
+            if (this.checked) {
+                //alert(this.checked);
+                $("#btnsend").attr('style', 'display: block');
+                $("#btnsend").attr('style', 'float: right');
+            } else {
+                $("#btnsend").attr('style', 'display: none');
+            }
+        }
+
+        $(function() {
+            $(".fileUploadcheck").change(function() {
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+                if (flag == false) {
+                    $(".fileUploadcheckspn").text("You can upload only  PDF files");
+                    $(".fileUploadcheckspn").css("color", "red");
+                    //alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetpdfFileSizefilepciker(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".fileUploadcheckspn").text("Document should not exceed 1 MB in Size");
+                        $(".fileUploadcheckspn").css("color", "red");
+                        //alert("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+                        $(".fileUploadcheck > span").text("");
+                    }
+                }
+            });
+        });
+
+        function GetpdfFileSizefilepciker(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#filepicker")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        $(function() {
+            $(".fileUploadcheck1").change(function() {
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+                if (flag == false) {
+                    $(".fileUploadcheckspn1").text("You can upload only  PDF files");
+                    $(".fileUploadcheckspn1").css("color", "red");
+                    //alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetpdfFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".fileUploadcheckspn1").text("Document should not exceed 1 MB in Size");
+                        $(".fileUploadcheckspn1").css("color", "red");
+                        //alert("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+                        $(".fileUploadcheck1 > span").text("");
+                    }
+                }
+            });
+        });
+
+        function GetpdfFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#filepicker1")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        $(function() {
+            $(".fileUploadcheck2").change(function() {
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+                        case 'pdf':
+                        case 'PDF':
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+                if (flag == false) {
+                    $(".fileUploadcheckspn2").text("You can upload only PDF files");
+                    $(".fileUploadcheckspn2").css("color", "red");
+                    //alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                } else {
+                    var size = GetpdfFileSizefilepicker2(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".fileUploadcheckspn2").text("Document should not exceed 1 MB in Size");
+                        $(".fileUploadcheckspn2").css("color", "red");
+                        //alert("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    } else {
+                        $(".fileUploadcheck2 > span").text("");
+                    }
+                }
+            });
+        });
+
+        function GetpdfFileSizefilepicker2(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#filepicker2")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+        $(".confirmDialog").live("click", function (e) {
+            debugger;
+            var rec = @aicterecords.Count(i => i.academicYear == "2019-20");
+            if (rec > 0) {
+                var id = $(this).attr('id');
+                //alert(id);
+                $("#dialog-confirm").dialog({
+                    title: "Submission",
+                    autoOpen: false,
+                    resizable: false,
+                    height: 170,
+                    width: 950,
+                    show: { effect: 'drop', direction: "up" },
+                    modal: true,
+                    draggable: true,
+                    buttons: {
+                        "Yes": function () {
+                            var data = "collegeId=" + parseInt(id);
+                            $.ajax({
+                                type: "POST",
+                                url: "/CollegeAICTECompliance/SubmitAICTE",
+                                contentType: "application/x-www-form-urlencoded",
+                                data: data,
+                                success: function (d) {
+                                    if (d != null) {
+                                        window.location = "/CollegeAICTECompliance/IntakeAdjustments";
+                                    }
+                                }
+                            });
+                            $(this).dialog("close");
+                            window.location = "/CollegeAICTECompliance/Index";
+                        },
+                        "No": function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $("#dialog-confirm").dialog('open');
+                return false;
+            }
+
+
+        });
+    });
+
+</script>
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+    @*@if (ViewBag.AICTE2019Records != null)
+        {
+            <div class="error">
+                <p><strong>Error:</strong> @ViewBag.AICTE2019Records.ToString()</p>
+            </div>
+        }*@
+
+    <h2>Upload AICTE / PCI Approval related details for A.Y. 2019-20 & A.Y. 2020-21.</h2><br />
+    @using (Html.BeginForm("AddEditRecord", "CollegeAICTECompliance", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.collegeId, new { @Value = Model.collegeId })
+        <table class="faculty_table" style="text-align: center; width: 100%">
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.degreeID)
+                </td>
+                <td class="col2">
+                    @Html.HiddenFor(model => model.degreeID)
+                    @Html.DropDownListFor(model => model.degreeID,
+                    new SelectList(ViewBag.Degree as System.Collections.IEnumerable, "Id", "degree"),
+                    "-- Select --", new { id = "Degree", @class = "width" })
+                    @Html.ValidationMessageFor(model => model.degreeID)
+                </td>
+                <td class="col3">
+                    @Html.LabelFor(model => model.DepartmentID)
+                </td>
+                <td class="col4">
+                    @Html.DropDownListFor(model => model.DepartmentID,
+                    new SelectList(Enumerable.Empty<SelectListItem>(), "id", "departmentName"),
+                    "-- Select --", new { id = "Department", @class = "width" })
+                    @Html.ValidationMessageFor(model => model.DepartmentID)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.specializationId)
+                </td>
+                <td class="col2">
+                    @Html.DropDownListFor(model => model.specializationId,
+                    new SelectList(Enumerable.Empty<SelectListItem>(), "id", "specializationName"),
+                    "-- Select --", new { id = "Specialization", @class = "width" })
+                    @Html.ValidationMessageFor(model => model.specializationId)
+                </td>
+                <td class="col1">
+                    @Html.LabelFor(model => model.academicYearId)
+                </td>
+                <td class="col2">
+                    @Html.DropDownListFor(model => model.academicYearId,
+                    new SelectList(ViewBag.academicYears as System.Collections.IEnumerable, "Value", "Text"),
+                    "-- Select --", new { id = "Degree", @class = "width" })
+                    @Html.ValidationMessageFor(model => model.academicYearId)
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">
+                    @Html.LabelFor(model => model.aictecollegeId)
+                </td>
+                <td class="col2">
+                    @Html.TextBoxFor(model => model.aictecollegeId)
+                    @Html.ValidationMessageFor(model => model.aictecollegeId)
+                </td>
+                <td class="col1">
+                    @Html.LabelFor(model => model.aicteIntake)
+                </td>
+                <td class="col2">
+                    @Html.TextBoxFor(model => model.aicteIntake, new { @maxlength = "3", onkeypress = "return isNumberKey(event)" })
+                    @Html.ValidationMessageFor(model => model.aicteIntake)
+                </td>
+            </tr>
+        </table>
+
+        <div style="text-align: right">
+            <p>
+                <input type="submit" value="Add" id="btnAdd" name="cmd" class="btnclass" />
+            </p>
+        </div>
+    }
+    <hr />
+    @if (ViewBag.collegeAictelst.Count > 0)
+    {
+        <div style="margin-top:15px;">
+            <h2>View Uploaded details</h2><br />
+            <table class="webGrid">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Degree</th>
+                        <th>Department</th>
+                        <th>Specialization</th>
+                        <th>Academic Year</th>
+                        <th>AICTE Intake</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var pay in ((List<UAAAS.Controllers.College.CollegeAicteComp>)ViewBag.collegeAictelst).Select((value, i) => new { i = i + 1, value }))
+                    {
+                        <tr>
+                            <td>@pay.i </td>
+                            <td>@pay.value.degree</td>
+                            <td>@pay.value.Department</td>
+                            <td>@pay.value.specialization</td>
+                            <td>@pay.value.academicYear</td>
+                            <td>@pay.value.aicteIntake</td>
+                            <td style="text-align: left; font-weight: normal;">
+                                @*<a href="/CollegeAICTECompliance/DeletecollegeAicte?id=@pay.value.id" class="create_button" style="color: white;">
+                                        <span>Delete</span>
+                                    </a>*@
+                                @Html.ActionLink("Delete", "DeletecollegeAicte", new { id = @pay.value.id }, new { @class = "create_button", @style = "color:white;" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    <br />
+
+    <br />
+    @if (ViewBag.collegeAictelst.Count > 0)
+    {
+        using (Html.BeginForm("FileUpload", "CollegeAICTECompliance", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <table class="webGrid" style="width: 100%;">
+                <tr>
+                    <td colspan="4" class="col1">
+                        <span style="font-weight: bold;">Approved Intake (as per AICTE/PCI)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;" class="col1">
+                        <span style="font-weight: bold;">Upload Latest EOA Letter for the A.Y. @ViewBag.AcademicYear :</span>
+                    </td>
+                    <td class="col2">
+                        <input type="file" name="fileUploader" id="filepicker" class="file fileUploadcheck" />
+                        <span class="fileUploadcheckspn" style="color: red;"></span>
+                        <input type="submit" value="Upload" name="fileUploader" class="subtUpload" />
+                        @if (ViewBag.lastcollegeEnclosures != null)
+                        {
+                            if (!string.IsNullOrEmpty(ViewBag.lastcollegeEnclosures.path))
+                            {
+                                <span><a href="../Content/Upload/AICTEComplainaceEOA/@ViewBag.lastcollegeEnclosures.path" class="viewFileData" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+                            }
+                        }
+
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;" class="col1">
+                        <span style="font-weight: bold;">Upload Latest EOA Letter for the A.Y. @ViewBag.NextYear :</span>
+                    </td>
+                    <td class="col2">
+                        <input type="file" name="fileUploader1" id="filepicker1" class="file fileUploadcheck1" />
+                        <span class="fileUploadcheckspn1" style="color: red;"></span>
+                        <input type="submit" value="Upload" name="fileUploader1" class="subtUpload1" />
+                        @if (ViewBag.presentcollegeEnclosures != null)
+                        {
+                            if (!string.IsNullOrEmpty(ViewBag.presentcollegeEnclosures.path))
+                            {
+                                <span><a href="../Content/Upload/AICTEComplainaceEOA/@ViewBag.presentcollegeEnclosures.path" class="viewFileData" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+                            }
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;" class="col1">
+                        <span style="font-weight: bold;">Upload Latest PCI Approval Letter :</span>
+                    </td>
+                    <td class="col2">
+                        <input type="file" name="fileUploader2" id="filepicker2" class="file fileUploadcheck2" />
+                        <span class="fileUploadcheckspn2" style="color: red;"></span>
+                        <input type="submit" value="Upload" name="fileUploader2" class="subtUpload2" />
+                        @if (ViewBag.pcicollegeEnclosures != null)
+                        {
+                            if (!string.IsNullOrEmpty(ViewBag.pcicollegeEnclosures.path))
+                            {
+                                <span><a href="../Content/Upload/PCIComplainaceEOA/@ViewBag.pcicollegeEnclosures.path" class="viewFileData" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+                            }
+                        }
+                    </td>
+                </tr>
+
+                @*@if (ViewBag.PCIStat == true)
+                    {
+
+                    }*@
+            </table>
+        }
+    }
+    <html>
+    <body>
+        <div>
+            @if (ViewBag.collegeAictelst.Count > 0)
+            {
+                <br />
+                <table style="display: none;">
+                    <hr />
+                    <tr style="text-align: center">
+                        <h3 style="text-align: center; font-size: 20px;">
+                            @*<b>DECLARATION</b>*@
+                        </h3>
+                        <br />
+                    </tr>
+                    @*@Html.CheckBoxFor(model => model.DeclarationStatus, false)*@
+                    @Html.HiddenFor(model => model.collegeId)
+                    <span style="font-size: 14px; display: none;">
+                        I, Principal of the college, hereby declare that the information furnished by me are true and correct to the best of my knowledge. If any of the information is found to be false / incomplete / misleading and / or that have failed to disclose all the information and / or suppressed any information and / or misrepresent the information, I am liable to be prosecuted by the University.
+                    </span>
+                </table>
+                <span class="aicterecspan" style="color: red;"></span>
+                <div style="text-align: right">
+                    <a href="/CollegeAICTECompliance/SubmitAICTE?collegeId=@Model.collegeId" id="@Model.collegeId" class="confirmDialog create_button">
+                        <span>Submit & Proceed</span>
+                    </a>
+                </div>
+            }
+        </div>
+    </body>
+</html>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+    <p style="color: red;">Kindly ensure that all the details are filled with respect to AICTE/PCI approved courses for the A.Y. 2019-20 & A.Y. 2020-21 and upload the EOA letters.Only then you can proceed to the next screen (course adjustments).Further you cannot come back to this screen again.<br /> &nbsp;&nbsp;&nbsp;&nbsp; Are you sure want to submit the data & proceed ?</p>
+    </p>
+</div>

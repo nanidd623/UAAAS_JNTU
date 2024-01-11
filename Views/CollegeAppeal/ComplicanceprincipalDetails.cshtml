@@ -1,0 +1,374 @@
+﻿@model IList<UAAAS.Models.jntuh_appeal_principal_registered>
+
+@{
+    ViewBag.Title = "CollegeFaculty Added Details";
+    int index = 1;
+    //Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+
+<h2>Appealed Faculty Details</h2>
+<br />
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        $(".editdefDialog").live("click", function (e) {
+            e.preventDefault();
+            debugger;
+
+            //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];registrationnumber
+            //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+            //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+            //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+            var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+            var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+            var degree = $('input[type=checkbox]:checked').attr('degree');
+            var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+            var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+            var registrationnumber = $('input[type=checkbox]:checked').attr('registrationnumber');
+            url = "/FacultyVerification/PrincipalAppealReverification?collegeId=" + collegeId + "&deficencycount=" + 0 + "&degree=" + 0 + "&departmentid=" + 0 + "&specializationid=" + 0 + "&registrationnumber=" + registrationnumber;
+            $("#dialog-edit").dialog({
+                title: 'Principal Existing - Reverify',
+                resizable: false,
+                height: 250,
+                width: 850,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    $(this).dialog("close");
+                }
+            });
+            $myDialog.dialog('open');
+            return false;
+        });
+
+
+        $('#collegeId').change(function () {
+            // alert();
+            var collegeId = $(this).val();
+            //alert(collegeId)
+
+            if ($('#collegeId').val() != '') {
+                window.location = '/FacultyVerification/Index?collegeid=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerification/Index';
+            }
+        });
+
+        $.ajaxSetup({ cache: false });
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Department',
+            autoOpen: false,
+            resizable: false,
+            height: 200,
+            width: 640,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'Deactivate Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 500,
+                width: 500,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Faculty'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('#example').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit Department'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        $(".CheckDialog").live("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-check").dialog({
+                title: 'View Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 490,
+                width: 750,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                close: function (event, ui) {
+                    // $(this).load(url);
+                    // window.location.reload();
+                    $(this).dialog('close');
+
+                }
+            });
+
+            $("#dialog-check").dialog('open');
+            return false;
+        });
+
+
+
+    });
+</script>
+
+
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+
+@using (Html.BeginForm())
+{
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">
+                    S.No
+                </th>
+                <th style=" text-align: center;">
+                    Registration ID
+                </th>
+
+                <th style="text-align: left;">
+                    Verification Status
+                </th>
+                <th style="text-align: left;">Notofication Report</th>
+                <th style="text-align: left;">Appointment Order</th>
+                <th style="text-align: left;">Joining Order</th>
+                <th style="text-align: left;">Selection Commitee Minutes</th>
+                <th style="text-align: left;">Phd Undertaking Doc.</th>
+                <th style="text-align: left;">Physical Presence on Inspection</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;  border-bottom: 1px solid #fff;">
+                        @(index++)
+                    </td>
+                    <td style="text-align: center; text-transform: uppercase; vertical-align: middle;">
+                        @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                    </td>
+
+                    <td style="vertical-align: middle; text-transform: uppercase; text-align: left; color: red">
+                        <b>Added</b>
+
+                    </td>
+                    <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                        @if (item.NOtificationReport != null)
+                        {
+                            <a href="../@item.NOtificationReport.Replace("~", "")" target="_blank">
+                                <span style="font-weight: bold; color: red">View</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <span>--</span>
+                        }
+
+                    </td>
+                    <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                        @if (item.AppointMentOrder != null)
+                        {
+                            <a href="../@item.AppointMentOrder.Replace("~", "")" target="_blank">
+                                <span style="font-weight: bold; color: red">View</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <span>--</span>
+                        }
+                    </td>
+                    <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                        @if (item.JoiningOrder != null)
+                        {
+
+                            <a href="../@item.JoiningOrder.Replace("~", "")" target="_blank">
+                                <span style="font-weight: bold; color: red">View</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <span>--</span>
+                        }
+                    </td>
+                    <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+                        @if (item.SelectionCommiteMinutes != null)
+                        {
+                            <a href="../@item.SelectionCommiteMinutes.Replace("~", "")" target="_blank">
+                                <span style="font-weight: bold; color: red">View</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <span>--</span>
+                        }
+                    </td>
+                    <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+
+                        @if (item.PHDUndertakingDocument != null)
+                        {
+
+                            <a href="../@item.PHDUndertakingDocument.Replace("~", "")" target="_blank">
+                                <span style="font-weight: bold; color: red">View</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <span>--</span>
+                        }
+                    </td>
+                    <td style="vertical-align: middle; text-transform: uppercase; text-align: left;">
+
+                        @if (item.PhysicalPresenceonInspection != null)
+                        {
+
+                            <a href="../@item.PhysicalPresenceonInspection.Replace("~", "")" target="_blank">
+                                <span style="font-weight: bold; color: red">View</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <span>--</span>
+                        }
+                    </td>
+                 
+                </tr>
+            }
+        </tbody>
+       
+    </table>
+}

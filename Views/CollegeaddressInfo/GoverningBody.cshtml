@@ -1,0 +1,90 @@
+﻿@model IList<UAAAS.Models.jntuh_college_governingbodyclass>
+@using UAAAS.Models
+
+@{
+    ViewBag.Title = "GoverningBody";
+    int num = 0;
+    int i;
+}
+
+<h2>GoverningBody</h2>
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+@using (Html.BeginForm("GoverningBody", "CollegeaddressInfo", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table class="four_columns">
+        <tr class="col11">
+            <th>
+                S.no
+            </th>
+            <th>
+                Name of the Governing Body Member
+            </th>
+            <th>
+                Governing Body Member Designation
+            </th>
+            <th>
+                Parent Organization where working
+            </th>
+            <th>
+                Designation of the member where
+                working at parent Organization
+            </th>
+            <th>
+                dateofappointment
+            </th>
+            <th>
+                supportingdocument
+            </th>
+        </tr>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr class="col21">
+                        <td>
+                            @(num = num + 1)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => item.NameoftheGoverningBodyMember, new { Name = item.id + "_nameofthemember", id = item.id + "_nameofthemember" })
+                        </td>
+                        <td>
+                            @item.GoverningBodyMemberDesignation
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => item.ParentOrganizationwhereworking, new { Name = item.id + "_organizationworking", id = item.id + "_organizationworking" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => item.DesignationofthememberwhereworkingatparentOrganization, new { Name = item.id + "_organizationdesignation", id = item.id + "_organizationdesignation" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => item.DateofappointmentasGoverningBodymember, new { Name = item.id + "_dateofappointment", id = item.id + "_dateofappointment", @class = "calendar" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => item.SupportingDocument, new { type = "file", Name = item.id + "_supportingdocument", id = item.id + "_supportingdocument" })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <p class="create_link_right">
+        <input type="submit" value="Save" />
+
+    </p>
+}

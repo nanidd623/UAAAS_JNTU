@@ -1,0 +1,17 @@
+﻿@using (Ajax.BeginForm("FourYearsAffiliationFeeDues", "CollegesFee", new AjaxOptions(), new { enctype = "multipart/form-data" }))
+{
+    <div>
+        <div style="display:inline-flex;">
+            <div class="editor-label" style="width: 200px;">
+                <span>Academic Year</span>
+            </div>
+            <div class="editor-field" style="width: 300px;">
+                @Html.DropDownListFor(model => model.AcademicyearId, new SelectList(ViewBag.Years as System.Collections.IEnumerable, "id", "Year"), "---Select---", new { @style = "width:250px;" })
+            </div>
+        </div>
+        <div style="float:right;">
+            <input type="submit" value="Update" />
+        </div>
+    </div>
+
+}

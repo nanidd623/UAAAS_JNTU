@@ -1,0 +1,267 @@
+﻿@model UAAAS.Models.UGAllDeficiency
+@{
+    ViewBag.Title = "UG All Deficiency";
+}
+<h2>UG All Deficiency</h2>
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        $('#DistrictId').removeClass('input-validation-error');
+        $('#CollegeTypeId').removeClass('input-validation-error');
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#UgWithDeficiency').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 20,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#UgWithDeficiency').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null, null, null, null, null, null, null,null],
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+    });
+</script>
+<br />
+@using (Html.BeginForm())
+{
+    int count = 0; 
+    <div class="details_table">
+        <div class="editor-label" style="width: 10%">
+            <label style="font-size: 15px;">College Name</label>
+        </div>
+        <div class="editor-field focus" style="width: 35%">
+            @Html.DropDownListFor(model => model.CollegeId,
+            new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "ID", "CollegeName"),
+            "-- ALL Colleges --", new { id = "CollegeName", style = "width:100%" })
+            @Html.ValidationMessageFor(model => model.CollegeId)
+        </div>
+        <input type="submit" value="Search" style="width: 70px;" />
+        <input type="submit" value="Export To Excel" name="cmd" style="width: 120px;" />   
+    </div>
+    <br />
+    <table id="UgWithDeficiency" class="display" >
+        <thead>
+            <tr class="DataTables_sort_wrapper">
+                <th style="text-align: center;" rowspan="2">S.No
+                </th>
+                <th style="text-align: center;" rowspan="2">College Code
+                </th>
+                <th rowspan="2" style="text-align: center;">College Name
+                </th>
+                <th style="text-align: center;" rowspan="2">Specializations
+                </th>
+                <th style="text-align: center;" rowspan="2">Labs 
+                </th>
+                <th style="text-align: center;" rowspan="2">Computers
+                </th>
+                <th style="text-align: center;" rowspan="2">Intake
+                </th>
+                <th style="text-align: center;" rowspan="2">Faculty 
+                </th>
+                <th style="text-align: center;" colspan="2" class="ui-state-default">Ratified
+                </th>
+                <th style="text-align: center;" rowspan="2">Library 
+                </th>
+                <th style="text-align: center;" rowspan="2">Boys Hostel
+                </th>
+                <th style="text-align: center;" rowspan="2">Girls Hostel
+                </th>
+                <th style="text-align: center;" rowspan="2">Placement & Training Cell
+                </th>
+            </tr>
+            <tr class="DataTables_sort_wrapper">
+                <th style="text-align: center;">Number	
+                </th>
+                <th style="text-align: center;">%
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.CollegeSpecializations)
+            {
+                <tr>
+                    <td style="text-align: center;">
+                        @(count = count + 1)
+                    </td>
+                    <td style="text-align: center;">
+                        <label style="text-transform: uppercase">@item.CollegeCode</label>
+                    </td>
+                    <td style="text-align: left;">
+                        <label>@item.CollegeName</label>
+                        <br />
+                        <label>@item.CollegeAddress</label>
+                    </td>
+                    <td style="">
+                        @if (item.CollegeSpecializations != null)
+                        {
+                            foreach (var specialization in item.CollegeSpecializations)
+                            {
+                                if (specialization.Intake != null && specialization.Intake != string.Empty &&
+                                     specialization.Specialization != null && specialization.Specialization != string.Empty)
+                                {
+                            <table style="border-collapse: collapse; width: 420px">
+                                <tr>
+                                    <td style="border: none; text-align: left">
+                                        @if (specialization.Intake.Contains("#") == true)
+                                        {                                        
+                                            <label style="font-weight: bold">@specialization.Specialization</label> 
+                                        }
+                                        else
+                                        {
+                                            <label>@specialization.Specialization</label>  
+                                        }
+                                    </td>
+                                    <td style="border: none; text-align: right">
+                                        @if (specialization.Intake.Contains("$") == true)
+                                        {
+                                            string[] specializations = specialization.Intake.Split('$');
+                                            <label>@specializations[0]</label>                      
+                                        }
+                                        else if (specialization.Intake.Contains("*") == true)
+                                        {
+                                            string[] specializations = specialization.Intake.Split('*');
+                                            <label style="font-weight: bold">@specializations[0]</label>      
+                                        }
+                                        else if (specialization.Intake.Contains("#") == true)
+                                        {
+                                            string[] specializations = specialization.Intake.Split('#');
+                                            <label style="font-weight: bold">@specializations[0]</label>    
+                                        }
+                                        else
+                                        {
+                                            <label>@specialization.Intake</label>          
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                                }
+                            }
+                        }
+                    </td>
+                    <td style="text-align: center;">
+                        @item.Labs
+                    </td>
+                    <td style="text-align: center;">
+                        @item.Computers
+                    </td>
+                    <td style="text-align: center;">
+                        @item.Strength
+                    </td>
+                    <td style="text-align: center;">
+                        @item.Faculty
+                    </td>
+                    <td style="text-align: center;">
+                        @item.FacultyNumber
+                    </td>
+                    <td style="text-align: center;">
+                        @item.FacultyPercentage
+                    </td>
+                    <td style="text-align: center;">
+                        @item.Library
+                    </td>
+                    <td style="text-align: center;">
+                        @item.BoysHostel
+                    </td>
+                    <td style="text-align: center;">
+                        @item.GirlsHostel
+                    </td>
+                    <td style="text-align: center;">
+                        @item.PlacementAndTraining
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr style="background-color: gainsboro">
+                <th style="width: 10px;">
+                    <input type="text" id="i-0" style="text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="width: 10px;">
+                    <input type="text" id="i-1" style="text-align: left; width: 50px;" class="search_init">
+                </th>
+                <th style="width: 500px;">
+                    <input type="text" id="i-2" style="text-align: left; width: 220px" class="search_init">
+                </th>
+                <th style="width: 550px;">
+                    <input type="text" id="i-3" style="text-align: left;display: none; width: 225px" class="search_init">
+                </th>
+                <th style="width: 170px;">
+                    <input type="text" id="i-4" style="text-align: left; display: none;width: 225px" class="search_init">
+                </th>
+                <th style="width: 170px;">
+                    <input type="text" id="i-5" style="text-align: left;display: none; width: 75px" class="search_init">
+                </th>
+                <th style="width: 150px;">
+                    <input type="text" id="i-6" style="text-align: left;display: none; width: 200px" class="search_init">
+                </th>
+                <th style="width: 150px;">
+                    <input type="text" id="i-7" style="text-align: left;display: none; width: 200px" class="search_init">
+                </th>
+                <th style="width: 150px;">
+                    <input type="text" id="i-8" style="text-align: left; display: none;width: 200px" class="search_init">
+                </th>
+                <th style="width: 150px;">
+                    <input type="text" id="i-9" style="text-align: left;display: none; width: 200px" class="search_init">
+                </th>
+                <th style="width: 150px;">
+                    <input type="text" id="i-10" style="text-align: left; display: none;width: 200px" class="search_init">
+                </th>
+                <th style="width: 150px;">
+                    <input type="text" id="i-11" style="text-align: left; display: none;width: 200px" class="search_init">
+                </th>
+                <th style="width: 150px;">
+                    <input type="text" id="i-12" style="text-align: left;display: none; width: 200px" class="search_init">
+                </th>
+                <th style="width: 150px;">
+                    <input type="text" id="i-13" style="text-align: left;display: none; width: 200px" class="search_init">
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+            if (ViewBag.Count == 0)
+            {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+            }
+}

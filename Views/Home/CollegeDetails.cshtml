@@ -1,0 +1,234 @@
+﻿@model IEnumerable<UAAAS.Models.FacultyRegistration>
+@{
+    ViewBag.Title = "CollegeDetails";
+    int index = 1;
+}
+<script type="text/javascript">
+        $(document).ready(function () {
+           var oTable = $('#example').dataTable({
+                "bJQueryUI": true,
+                "iDisplayLength": 500,
+                "bStateSave": false,
+                "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+                //"sPaginationType": "full_numbers",
+                "oLanguage": {
+                    "sSearch": "Search all columns:",
+                    "oPaginate": {
+                        "sFirst": "",
+                        "sLast": "",
+                        "sNext": "",
+                        "sPrevious": ""
+                    }
+                },
+                "fnInitComplete": function () {
+                    var oSettings = $('#example').dataTable().fnSettings();
+                    for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                        if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                            $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                            $("tfoot input")[i].className = "";
+                        }
+                    }
+                },
+                "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null],
+                //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+            });
+            /*
+             * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+             * the footer
+             */
+            $("tfoot input").each(function (i) {
+                asInitVals[i] = this.value;
+            });
+            $("tfoot input").focus(function () {
+                if (this.className == "search_init") {
+                    this.className = "";
+                    this.value = "";
+                }
+            });
+            $("tfoot input").blur(function (i) {
+                if (this.value == "") {
+                    this.className = "search_init";
+                    this.value = asInitVals[$("tfoot input").index(this)];
+                }
+            });
+
+            $("tfoot input").keyup(function () {
+                /* Filter on the column (the index) of this element */
+                oTable.fnFilter(this.value, $("tfoot input").index(this));
+            });
+        });
+</script>
+
+<style type="text/css">
+    .DashboardEmails {
+        margin-right: 15px;
+        background-color: white;
+        color: black;
+        border: solid 1px #e6e6e6;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .DivHeaders {
+        text-align: center;
+        /*background-color: #1F7DDA;*/
+        color: white;
+    }
+
+    .DivLinks {
+        /*text-align: center;*/
+        color: black;
+        line-height: 23.2px;
+        padding:10px;
+    }
+
+    .DivLinks p {
+        height:24px;
+    }
+    .DivLinks .Para b {
+        vertical-align:super;
+    }
+
+    .DivLinks .College_details {
+        text-align:center; }
+
+    .DivLinks .College_details b{
+        text-transform:capitalize; }
+
+    .images{
+        width:19px;
+        height:19px;
+    }
+</style>
+
+<div style="display:-webkit-box;padding-left:220px;">
+    <div class="DashboardEmails" style="width:39%;">
+        <div class="DivHeaders" style="background-color:#71468A;">
+            <b>College Information</b>
+        </div>
+        <div class="DivLinks">   
+            <div class="College_details">
+                <b style="font-size:15px;color:#de1c85;">@ViewBag.collegename&nbsp;(@ViewBag.collegecode)</b>
+            </div>
+            <div class="College_details">
+                <b>@ViewBag.Address @ViewBag.mandal</b>
+            </div> 
+            <div class="College_details">
+                <b>@ViewBag.district - @ViewBag.pincode</b>
+            </div>           
+            <p class="Para">
+                <img class="images" src="~/Content/images/EmailNewLogo.png" />
+                <b>@ViewBag.Email</b><br />
+            </p>
+            <p class="Para">
+                <img class="images" src="~/Content/images/LandLine.png" />
+                <b>@ViewBag.LandLine</b><br />
+            </p>
+            <p class="Para">
+                <img class="images" src="~/Content/images/EmailNewLogo.png" />
+                <b>@ViewBag.website</b>
+            </p>
+        </div>
+    </div>
+    <div class="DashboardEmails" style="width:35%;">
+        <div class="DivHeaders" style="background-color:#BF8D2C;">
+            <b>Principal Information</b>
+        </div>
+        <div class="DivLinks" style="display:flex;text-align:center;">
+            <div style="float:left;">
+                <a href="/Content/Upload/Faculty/Photos/@ViewBag.principalphoto.Replace(" ~", "" )" target="_blank">
+                    <img src="/Content/Upload/Faculty/Photos/@ViewBag.principalphoto.Replace(" ~", "" )" style="width:150px;height:150px;" id="PhotoPreview" />
+                </a>
+            </div>
+            <div style="float:right;padding:10px;">
+                <b style="vertical-align:top;">
+                    @ViewBag.principalname<br/>
+
+                    @ViewBag.principalDesignation<br/>
+
+                    @ViewBag.principalDepartment<br/>
+
+                    @ViewBag.principalEmail
+                </b>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="DivHeaders" style="background-color:#407F46;font-weight:bold;">
+    Faculty Information
+</div>
+<table id="example" class="display">
+    <thead>
+       
+        <tr>
+            <th style="width: 50px; text-align: center;">S.No</th>
+            <th style="width: 140px; text-align: center;">Faculty Name</th>
+            <th style="width: 120px; text-align: center;">Designation</th>
+            <th style="width: 120px; text-align: center;">Department</th>
+            <th style="width: 120px; text-align: center;">Specialization</th>
+            <th style="width: 120px; text-align: center;">Photo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            string color = string.Empty;
+            int Phd = 0;
+            <tr>
+                <td style="text-align: center; vertical-align: middle;border-bottom: 1px solid #fff;background-color:@color;">
+                    @(index++)
+                </td>
+                <td style="text-align: left; text-transform: uppercase; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                    @Html.DisplayFor(modelItem => item.MiddleName)
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td style="text-align: left; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.designation)
+                </td>
+                <td style="text-align: left; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.DepartmentName)
+                </td>
+                <td style="text-align: left; vertical-align: middle;">
+                    @Html.DisplayFor(modelItem => item.SpecializationName)
+                </td>
+
+
+                <td style="text-align: center; vertical-align: middle;">
+                    @if (!String.IsNullOrEmpty(@item.facultyPhoto))
+                    {
+                        <a href="/Content/Upload/Faculty/Photos/@item.facultyPhoto.Replace(" ~", "" )" target="_blank">
+                            <img src="/Content/Upload/Faculty/Photos/@item.facultyPhoto.Replace(" ~", "" )" style="width:70px;height:70px;" id="PhotoPreview" />
+                        </a>
+                    }
+                    else
+                    {
+                        <img src="/Content/Images/no-photo.gif" style="height: 50px;" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>
+                <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+            </th>
+            <th>
+                <input type="text" id="i-3" style="width: 80%; text-align: left; display: none;" class="search_init">
+            </th>
+        </tr>
+    </tfoot>
+</table>

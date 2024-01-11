@@ -1,0 +1,222 @@
+﻿@model UAAAS.Models.InfrastructureParameters
+@{
+    ViewBag.Title = "Infrastructure Parameters";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+
+@if (ViewBag.IsEditable == true)
+{
+    <h2>Infrastructure Parameters</h2>
+
+    <p class="create_link_right">
+        @Html.ActionLink("Edit", "InfrastructureParametersEdit", "InfrastructureParameters", new { @class = "create_button" /* id=Model.PrimaryKey */ })
+    </p>
+}
+else
+{
+    <p class="create_link_right">
+        <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+    </p>
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    function printdiv(printpage) {
+        $(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        $(".view_hide").show();
+        return false;
+    }
+</script>
+<div id="div_print">
+    @if (ViewBag.IsEditable == false)
+    {
+        <h2>Infrastructure Parameters</h2>
+    }
+    @using (Html.BeginForm())
+    {
+        if (ViewBag.Norecords == true)
+        {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No Data found</p>
+        </div>
+        }
+        else
+        {
+        <table class="four_columns tblInfrastructure" style="width: 100%">
+            <tr>
+                <td class="col11" colspan="8">
+                    <b>Infrastructure Parameters:</b>(Please award points for the following parameters) (TOTAL POINTS: 50)
+                </td>
+                <td class="col11" style="text-align: center; width: 10%">
+                    <b>POINTS
+                    <br />
+                        ALLOTED  </b>
+                </td>
+                <td class="col11" style="text-align: center; width: 10%">
+                    <b>POINTS
+                    <br />
+                        OBTAINED</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="col21" colspan="8">
+                    <b>1.   Built up area (total area in m2/ Quality/Internal Layout/Design/Circulation Area )  </b>
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No short-fall (5) / Short-fall by 5% (4) / Short-fall by 10% (3) / Short-fall by 15% (2) / Short-fall > 20% (1)  
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    <label>(0</label>@Model.allottedPoints1.ToString()<label>)</label>
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.Infrastructure1)
+                </td>
+            </tr>
+            <tr>
+                <td class="col21" colspan="8">
+                    <b>2.	Instructional area (No. of  Classrooms/Area/Furniture/Teaching Aids): </b>
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No short-fall (5)/ Short-fall by 5% (4)/ Short-fall by 10% (3)/ Short-fall by 15% (2)/ Short-fall > 20% (1) 
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    <label>(0</label>@Model.allottedPoints2.ToString()<label>)</label>
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.Infrastructure2)
+                </td>
+            </tr>
+            <tr>
+                <td class="col21" colspan="8">
+                    <b>3.	Laboratories/Workshops (No. of Labs/Workshops, quality of equipment available): </b>
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No short-fall (5)/ Short-fall by 5% (4)/ Short-fall by 10% (3)/ Short-fall by 15% (2)/ Short-fall > 20% (1)
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    <label>(0</label>@Model.allottedPoints3.ToString()<label>)</label>
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.Infrastructure3)
+                </td>
+            </tr>
+            <tr>
+                <td class="col21" colspan="8">
+                    <b>4.	Computing Facilities/Internet Facilities (Student computer ratio & licensed soft wares available):   </b>
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No short-fall (5)/ Short-fall by 5% (4)/ Short-fall by 10% (3)/ Short-fall by 15% (2)/ Short-fall > 20% (1) 
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    <label>(0</label>@Model.allottedPoints3.ToString()<label>)</label>
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.Infrastructure4)
+                </td>
+            </tr>
+            <tr>
+                <td class="col21" colspan="8">
+                    <b>5.	Availability of Qualified Principal (Qualifications+ age+ ratified + experience + duration of present tenure):</b>
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    <label>(0</label>@Model.allottedPoints5.ToString()<label>)</label>
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.Infrastructure5)
+                </td>
+            </tr>
+            <tr>
+                <td class="col21" colspan="8">
+                    <b>6.	Library (Area/Books/Journals/staff/ Timings ):</b>
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No short-fall (5)/ Short-fall by 5% (4)/ Short-fall by 10% (3)/ Short-fall by 15% (2)/ Short-fall > 20% (1)
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    <label>(0</label>@Model.allottedPoints6.ToString()<label>)</label>
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.Infrastructure6)
+                </td>
+            </tr>
+            <tr>
+                <td class="col21" colspan="8">
+                    <b>7. Faculty Student Ratio for UG 1:15 (PG 1 : 12) available FSR = </b>
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No short-fall (5)/ Short-fall by 5% (4)/ Short-fall by 10% (3)/ Short-fall by 15% (2)/ Short-fall > 20% (1)
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    <label>(0</label>@Model.allottedPoints7.ToString()<label>)</label>
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.Infrastructure7)
+                </td>
+            </tr>
+            <tr>
+                <td class="col21" colspan="8">
+                    <b>8.	Cadre Ratio of Faculty (Prof. : Asso. Prof. : Asst. Prof. :: 1:2:6); (Qualifications & Experience, 
+                    <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;as per the norms): </b>
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;No short-fall (5)/ Short-fall by 5% (4)/ Short-fall by 10% (3)/ Short-fall by 15% (2)/ Short-fall > 20% (1)   
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    <label>(0</label>@Model.allottedPoints8.ToString()<label>)</label>
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.Infrastructure8)
+                </td>
+            </tr>
+            <tr>
+                <td class="col21" colspan="8">
+                    <b>9.	Supporting Staff (Faculty to (Programmers/Lab Assistants/Technicians) is 1: 1.25
+                    <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;Qualifications & Experience, competency):</b>
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;No short-fall (5)/ Short-fall by 5% (4)/ Short-fall by 10% (3)/ Short-fall by 15% (2)/ Short-fall > 20% (1)
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    <label>(0</label>@Model.allottedPoints9.ToString()<label>)</label>
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.Infrastructure9)
+                </td>
+            </tr>
+            <tr>
+                <td class="col21" colspan="8">
+                    <b>10.	Power Generator/Approach Road/College Ambience/Drinking Water/Toilets: </b>
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Excellent (5)/ Very Good (4) / Good (3) / Satisfactory (2) /below satisfactory (1)	
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    <label>(0</label>@Model.allottedPoints10.ToString()<label>)</label>
+                </td>
+                <td class="col21" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.Infrastructure10)
+                </td>
+            </tr>
+            <tr>
+                <td class="col11" colspan="8">
+                    <b>TOTAL POINTS OBTAINED FOR INFRASTRUCTURE PARAMETERS    (Y) = </b>
+                </td>
+                <td class="col11" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.totalAllotedPoints)
+                </td>
+                <td class="col11" style="text-align: center; width: 10%">
+                    @Html.DisplayFor(model => model.totalObtainedPoints)
+                </td>
+            </tr>
+        </table>
+        }
+    }
+</div>

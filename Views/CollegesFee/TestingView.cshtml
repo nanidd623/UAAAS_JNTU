@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "TestingView";
+    //Layout = null;
+}
+<h2>TestingView</h2>
+@*<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#DIV").append('<ul id="ULTAG" style="background-color:lightgoldenrodyellow;border:1px solid darkred">&nbsp;');
+        for (var i = 1; i < 8; i++) {
+            $("#ULTAG").append('<li id="LI_' + i + '" style="background-color:whitesmoke;border:1px solid blue">HAI SIVA</li>&nbsp;<div id="div_' + i + '"></div>');
+        }
+        $("#DIV").append('</ul>');
+
+        $("#DIV ul li").click(function () {
+            debugger;
+
+           $("#DIV ul div").find("ul").remove();
+           $("#DIV ul div").empty();
+
+            var LIid = $(this).attr('id');
+            var id = LIid.split('_')[1];
+            var DIVID = "div_" + id;
+            //$(this).append('</li>');
+            $("#" + DIVID +"").append('<ul id="ul_' + id + '" style="background-color:orange;border:1px solid darkred">');
+
+            $.ajax({
+                type : "Get",
+                url: "/COllegesFee/Get_data/",
+                data : {'id' : id},
+                ContentType : "application/json",
+                success: function (Response)
+                {
+                    debugger;
+                    if (Response != null)
+                    {
+                        var ULTAGID = "ul_"+id;
+                        debugger;
+                        $.each(Response.Response, function (index, table) {
+                            $("#"+ULTAGID+"").append('<li>'+table.Text+'</li>');
+
+                        });
+                    }
+                },
+                error : function(){
+                    alert("Some thing Wrong");
+                }
+
+            });
+
+
+            $(this).append('</ul>');
+            $("#" + DIVID + "").append('&nbsp;');
+        });
+    });
+
+
+
+
+
+</script>
+
+<div id="DIV">
+    This is Div
+</div>

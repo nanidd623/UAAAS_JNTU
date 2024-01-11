@@ -1,0 +1,406 @@
+﻿@{
+    ViewBag.Title = "Teaching";
+    Layout = "~/Views/Shared/_PALayoutLeftMenu.cshtml";
+    if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    {
+        Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    }
+    var index = 1;
+    string facultyid = string.Empty;
+    //string collegeredfacultyid = string.Empty;
+    string fid = string.Empty;
+
+}
+<h2>Teaching Faculty</h2>
+@*@section onReady{
+
+        /* Initialize table and make first column non-sortable*/
+        $('#example').dataTable({  "bJQueryUI": true,
+        "iDisplayLength": 2000,
+        "bStateSave": false,
+        "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+        "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null, null, null, null ]
+        });
+    }*@
+
+<html>
+<head>
+    <title></title>
+    @*<link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+        <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />*@
+    <link href="~/Scripts/Jquerydatatables/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Jquerydatatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/Jquerydatatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    @*<script type="text/javascript" src="http://beneposto.pl/jqueryrotate/js/jQueryRotateCompressed.js"></script>*@
+    @*<script src="~/Scripts/RotateImage.js" type="text/javascript"></script>*@
+    <script type="text/javascript"> </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            DataTable();
+        });
+
+        function DataTable() {
+            var otable = $('#example').DataTable({
+                language: {
+                    processing: "<img src='@Url.Content("~/Content/images/ajax-loader.gif")' />"
+                },
+                language: {
+                    sProcessing: "<img src='@Url.Content("~/Content/images/ajax-loader.gif")'/>"
+                },
+                "processing": true,
+                // "serverSide": true,
+                "stateSave": true,
+                // "searching": false,
+                "ajax":
+                  {
+                      "type": "POST",
+                      "url": "/PA_Faculty/TeachingJson",
+                      "dataSrc": ""
+                  },
+                "oLanguage": {
+                    "sProcessing": "<img src='@Url.Content("~/Content/images/ajax-loader.gif")'/>"
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "facultyFirstName" },
+                    { "data": "FacultyRegistrationNumber" },
+                    { "data": "designation" },
+                    { "data": "department" },
+                   { "data": "SpecializationName" },
+                 //   { "data": "Remarks" },
+
+                    {
+                        "render": function (data, type, full) {
+                            return '<a href="/PA_Faculty/FacultyRegistrationNumber?fid=' + full["id"] + '" class ="EditDialog edit_button" style="text-align:center"><span>Edit</span></a>';
+                            //
+                            //var aa = full["facultyAadharDocument"];
+                            //if (aa == null || aa == "") {
+                            // return '<a href="/Faculty/FacultyRegistrationNumber?fid=' + full["id"] + '" class ="EditDialog edit_button" style="text-align:center"><span>Edit</span></a>';
+                            // }
+                            // else
+                            // {
+                            //     return '<a href="">--</a>';
+                            // }
+
+                        }
+                    },
+                    {
+                        "render": function (data, type, full) {
+                            //return '<a href="/NewOnlineRegistration/CollegeViewFacultyDetails?fid=' + full["sfacid"] + ' " target="_blank" class="view_button"><span>View</span></a>';
+                            return '<a href="/NewOnlineRegistration/TeachingViewFacultyDetails?fid=' + full["sfacid"] + ' " target="_blank" class="view_button"><span>View</span></a>';
+                        }
+                    },
+                 {
+                     "render": function (data, type, full) {
+                         return '<a href="/PA_Faculty/Delete?fid=' + full["id"] + '"  class="confirmDialog delete_button"><span>Delete</span></a>';
+                     }
+                 }
+
+                //  ,
+                //{
+                //    "render": function (data, type, full) {
+                //        debugger;
+                //        if (full["BlackList"] === null || full["BlackList"] === false) {
+                //            console.log(full);
+                //            return '<a href="/CollegeFacultyLeaves/Index?fid=' + full["sfacid"] + ' " target="_blank" class="edit_button"><span>Applyleave</span></a>';
+                //        } else {
+                //            return '<a><span>---</span></a>';
+
+                //        }
+                //    }
+                //}
+
+                ],
+                "createdRow": function (row, data, index) {
+
+                    // if (data["designation"] === null || data["department"] === null) {
+                    if (data["facultyRecruitedFor"] === "UG") {
+                        if (data["department"] === null || data["facultyAadhaarNumber"] === null || data["facultyAadharDocument"] === null) {
+                            $('td:eq(0)', row).css("background-color", "red");
+                        }
+                        else {
+                            $('td:eq(0)', row).css("background-color", "green");
+                        }
+                    } else {
+                        if (data["department"] === null || data["SpecializationName"] === null || data["facultyAadhaarNumber"] === null || data["facultyAadharDocument"] === null) {
+                            $('td:eq(0)', row).css("background-color", "red");
+                        }
+                        else {
+                            $('td:eq(0)', row).css("background-color", "green");
+                        }
+                    }
+
+                }
+            });
+
+            otable.on('order.dt search.dt', function () {
+                otable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+        }
+
+        $(document).ready(function () {
+            var mainUrl = window.location;
+            var url;
+            $.ajaxSetup({ cache: false });
+            var $myDialog = $("#dialog-edit").dialog({
+
+                title: 'Verify Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 520,
+                width: 640,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    $(this).dialog("close");
+                }
+            });
+
+            $('.display').find('tr').click(function () {
+                url = $(this).find(".editDialog").attr('href');
+            });
+
+            $("#btncancel").live("click", function (e) {
+                $("#dialog-edit").dialog("close");
+            });
+
+            $($myDialog).bind("dialogclose", function () {
+
+            });
+
+            // Delete Confirmation
+
+
+            $("#btncancel").live("click", function (e) {
+                $("#dialog-edit").dialog("close");
+            });
+
+            $($myDialog).bind("dialogclose", function () {
+                //  window.location = mainUrl;
+            });
+
+        });
+
+        $("#openDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-add").dialog({
+                title: 'Add Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 630,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    location.reload();
+                    //$(this).dialog("close");
+                }
+            });
+
+            $("#dialog-add").dialog('open');
+            return false;
+        });
+
+        //For Deleteing New Code
+        $(".confirmDialog").live("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 520,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/PA_Faculty/Teaching";
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        //$(".confirmDialog").live("click", function (e) {
+
+        //    var url = $(this).attr('href');
+
+        //    $("#dialog-confirm").dialog({
+        //        title: 'Delete Faculty',
+        //        autoOpen: false,
+        //        resizable: false,
+        //        height: 170,
+        //        width: 350,
+        //        show: { effect: 'drop', direction: "up" },
+        //        modal: true,
+        //        draggable: true,
+        //        buttons: {
+        //            "Yes": function () {
+        //                $(this).dialog("close");
+        //                window.location = url;
+
+        //            },
+        //            "No": function () {
+        //                $(this).dialog("close");
+
+        //            }
+        //        }
+        //    });
+
+        //    $("#dialog-confirm").dialog('open');
+        //    return false;
+        //});
+
+        $(".EditDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-edit").dialog({
+                title: 'Edit Faculty',
+                autoOpen: false,
+                resizable: false,
+                height: 620,
+                width: 700,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/PA_Faculty/Teaching";
+                }
+
+            });
+
+            $("#dialog-edit").dialog('open');
+            return false;
+        });
+
+        $("#btneditcancel").live("click", function (e) {
+
+            //$("#dialog-edit").close();
+            window.location.href = "/PA_Faculty/Teaching";
+        });
+
+        $("#btnaddcancel").live("click", function (e) {
+
+            $("#dialog-add").dialog("close");
+        });
+
+    </script>
+</head>
+<body>
+    @if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <p class="create_link_right">
+        @*@Html.ActionLink("Add Teaching Faculty", "Create", "CollegeFaculty", new { type = ViewBag.Type, fid = ViewBag.Id, collegeId = @ViewBag.collegeId }, new { @class = "create_button" })*@
+        @*@Html.ActionLink("Add Teaching Faculty", "FacultyRegistrationNumber", "Faculty", new { type = ViewBag.Type, fid = DBNull.Value, collegeId = @ViewBag.collegeId }, new { @class = "openDialog edit_button1" })*@
+        @Html.ActionLink("Add Teaching Faculty", "AddFaculty", "PA_Faculty", new { type = ViewBag.Type, fid = DBNull.Value, collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })
+    </p>
+    <br />
+    <table id="example" class="display">
+        <thead style="background: #FCF1D1">
+            <tr>
+                <th style="text-align: left;">
+                    S.No
+                </th>
+                <th style="text-align: left;">
+                    Name
+                </th>
+                <th class="ui-state-default" style="text-align: left;">
+                    Registration Number
+                </th>
+                <th style="text-align: left;">
+                    Designation
+                </th>
+                <th style="text-align: left;">
+                    Department
+                </th>
+                <th class="ui-state-default" style="text-align: left;">
+                    Specialization
+                </th>
+                <th style="text-align: center;">
+                    Edit
+                </th>
+                <th class="ui-state-default" style="text-align:center;">
+                    Details
+                </th>
+                <th class="ui-state-default" style="text-align:center;">
+                    Delete
+                </th>
+                @*<th class="ui-state-default" style="text-align:center;">Apply Leave</th>*@
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</body>
+</html>
+<div id="dialog-confirm" style="display: none">
+    @*<p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>*@
+</div>
+
+<div id="dialog-edit" style="display: none">
+</div>
+<div id="dialog-add" style="display: none">
+</div>
+<style>
+    #example_wrapper .row {
+        border: none;
+    }
+
+    #example_filter input[type=search] {
+        border: solid 1px #c0c0c0;
+        padding: 2px;
+    }
+
+    #example thead tr th, #example tfoot tr th {
+        border: 1px solid #d3d3d3;
+    }
+
+    /*#example tbody tr td {
+        text-align: center;
+    }*/
+
+
+    #example_wrapper {
+        border: 1px solid #C0C0C0;
+    }
+
+    #example {
+        padding-top: 10px;
+    }
+</style>

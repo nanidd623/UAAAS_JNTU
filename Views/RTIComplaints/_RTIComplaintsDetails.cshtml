@@ -1,0 +1,46 @@
+﻿@model UAAAS.Models.RTIComplaints
+<div class="details_table">
+@*<div class="display-label" style="width:130px">Complaint Received</div>
+    <div class="display-field" style="width:270px">
+        @Html.DisplayFor(model => model.complaintReceived)
+    </div>*@
+
+    <div class="display-label" style="width:40%;">@Html.LabelFor(model => model.complaintGivenByRegNum)</div>
+    <div class="display-field" style="width:50%;">
+        @Html.DisplayFor(model => model.complaintGivenByRegNum)
+    </div><br />
+    <div class="display-label" style="width:40%;">@Html.LabelFor(model => model.complaintGivenByName)</div>
+    <div class="display-field" style="width:50%;">
+        @Html.DisplayFor(model => model.complaintGivenByName)
+    </div>
+    <div class="display-label" style="width:40%;">@Html.LabelFor(model => model.complaintOnRegNum)</div>
+    <div class="display-field" style="width:50%;">
+        @Html.DisplayFor(model => model.complaintOnRegNum)
+    </div>
+    <div class="display-label" style="width:40%;">@Html.LabelFor(model => model.complaintOnName)</div>
+    <div class="display-field" style="width:50%;">
+        @Html.DisplayFor(model => model.complaintOnName)
+    </div>
+    <div class="display-label" style="width:40%;">@Html.LabelFor(model => model.complaintDescription)</div>
+    <div class="display-field" style="width:50%;">
+        @Html.DisplayFor(model => model.complaintDescription)
+    </div>
+    <div class="display-label" style="width:40%;">@Html.LabelFor(model => model.complaintSupportingDoc)</div>
+    <div class="display-field" style="width:50%;">
+        @if (Model.complaintSupportingDocPath != null)
+        {
+            <a href="../Content/Upload/CollegeEnclosures/RTIDetails/@Model.complaintSupportingDocPath" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+        }
+    </div>
+    <div class="display-label" style="width:40%;">@Html.LabelFor(model => model.actionsTaken)</div>
+    <div class="display-field" style="width:50%;">
+        @Html.DisplayFor(model => model.actionsTaken)
+    </div>
+    <div class="display-label" style="width:40%;">@Html.LabelFor(model => model.actionTakenSupportingDoc)</div>
+    <div class="display-field" style="width:50%;">
+        @if (Model.actionTakenSupportingDocPath != null)
+        {
+            <a href="../Content/Upload/CollegeEnclosures/RTIDetails/@Model.actionTakenSupportingDocPath" target="_blank"><span style="color: red;font-weight: bold ">View</span></a>
+        }
+    </div>
+</div>

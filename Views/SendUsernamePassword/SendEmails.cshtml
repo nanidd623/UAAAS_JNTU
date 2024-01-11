@@ -1,0 +1,23 @@
+﻿@model UAAAS.Models.all_college_emails
+@{
+    ViewBag.Title = "SendEmails";
+}
+
+<h2>SendEmails</h2>
+
+@using (Html.BeginForm())
+{
+    if (TempData["Error"] != null)
+    {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+    }
+    if (TempData["Success"] != null)
+    {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+    }
+    <input type="submit" value="Send" />
+}

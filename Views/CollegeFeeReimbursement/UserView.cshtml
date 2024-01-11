@@ -1,0 +1,84 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeFeeReimbursement>
+@{
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Fee Reimbursement";
+    int num = 1;
+}
+<h2>College Fee Reimbursement</h2>
+@if (ViewBag.Count == 0)
+{
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+}
+else
+{
+    <table class="four_columns" style="width: 100%; font-size: 0.7rem;">
+        <tr>
+            <th class="col11" colspan="15">
+                <b>Details of the Candidates & Fee Reimbursement under Convener Quota & Management Quota for the A.Y.@ViewBag.AcademeicYear :</b>
+            </th>
+        </tr>
+        <tr>
+            <th style="text-align: center;" rowspan="3" class="col11">S.No
+            </th>
+            <th rowspan="3" class="col11">Degree
+            </th>
+            <th style="text-align: center;" rowspan="3" class="col11">Dept.
+            </th>
+            <th style="text-align: center;" rowspan="3" class="col11">Specialization
+            </th>
+            <th style="text-align: center;" rowspan="3" class="col11">Shift
+            </th>
+            <th style="text-align: center;" rowspan="3" class="col11">Year in degree
+            </th>
+            <th style="text-align: center;" colspan="8" class="col11">@ViewBag.AcademeicYear
+            </th>
+        </tr>
+        <tr>
+            <th style="text-align: center;" colspan="4" class="col11">Convener Quota Seats
+            </th>
+            <th style="text-align: center;" colspan="4" class="col11">Management Quota Seats
+            </th>
+        </tr>
+        <tr style="">
+            <th style="text-align: center;" class="col11">Without Re-imbursement Seats
+            </th>
+            <th style="text-align: center;" class="col11">Total Fee(Rs.)
+            </th>
+            <th style="text-align: center;" class="col11">With Re-imbursement Seats
+            </th>
+            <th style="text-align: center;" class="col11">Total Fee(Rs.)
+            </th>
+            <th style="text-align: center;" class="col11">NRI Seats
+            </th>
+            <th style="text-align: center;" class="col11">Total Fee(Rs.)
+            </th>
+            <th style="text-align: center;" class="col11">PIO Seats
+            </th>
+            <th style="text-align: center;" class="col11">Total Fee(Rs.)
+            </th>
+        </tr>
+        @foreach (var item in ViewBag.CollegeFeeReimbursement as List<UAAAS.Models.CollegeFeeReimbursement>)
+        {
+            <tr>
+                <td style="width: 30px; text-align: center;" class="col21">
+                    @(num++)
+                </td>
+                <td style="width: 60px;" class="col21">@item.degree</td>
+                <td style="width: 50px;" class="col21">@item.department</td>
+                <td class="col21">@item.specialization</td>
+                <td style="width: 30px;" class="col21">@item.shift</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.yearInDegree</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.seatsWithoutReimbursement</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.feeWithoutReimbursement</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.seatsWithReimbursement</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.feeWithReimbursement</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.NRISeats</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.totalNRIFee</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.PIOSeats</td>
+                <td style="width: 30px; text-align: center;" class="col21">@item.totalPIOFee</td>
+            </tr>
+        }
+    </table>
+}

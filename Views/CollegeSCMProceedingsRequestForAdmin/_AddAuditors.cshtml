@@ -1,0 +1,69 @@
+﻿@model List<UAAAS.Controllers.Admin.AditorsDetails>
+           
+@using (Ajax.BeginForm("AddAuditors", "CollegeSCMProceedingsRequestForAdmin", new AjaxOptions()))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+
+
+    <table width="100%">
+        <thead style="background: #C1D4E6; font-weight: bold; text-align: left; border: 1px solid #C0C0C0; padding: 5px">
+            <tr>
+                <th width="5%">S.No.</th>
+                <th width="5%">Select</th>
+                <th width="60%">Nominee Name</th>
+                <th width="40%">Nominee Designation</th>
+            </tr>
+        </thead>
+        <tbody style="background: #FCF1D1; border: 1px solid #C0C0C0; padding: 5px">
+            @if (Model.Count() > 0)
+            {
+                for (int i = 0; i < Model.Count(); i++)
+                {
+                    <tr>
+                        <td width="5%" style="text-align: center">
+                            @(i + 1)
+                            @Html.HiddenFor(model => model[i].AditorId)
+                            @Html.HiddenFor(model => model[i].SCMRequestId)
+                        </td>
+                        <td width="5%" style="text-align: center">@Html.CheckBoxFor(model => model[i].Checke)</td>
+                        <td width="60%">@Html.DisplayFor(model => model[i].AditorName)</td>
+                        <td width="40%">@Html.DisplayFor(model => model[i].Designation)</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div style="text-align: center">
+        <p>
+            <input id="btnsubmit" type="submit" value="Submit" class="create_button" />
+        </p>
+    </div>
+}
+<style>
+    table thead tr {
+        height: 30px;
+    }
+    table thead tr th {
+        vertical-align: middle;
+        padding: 5px;
+    }
+    table tbody tr {
+        height: 25px;
+    }
+        table tbody tr td {
+            vertical-align: middle;
+            padding: 3px;
+        }
+</style>

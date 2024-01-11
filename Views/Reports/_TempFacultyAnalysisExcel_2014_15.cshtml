@@ -1,0 +1,62 @@
+﻿@model IList<UAAAS.Models.TempFacultyAnalysis_2014_15>
+@{
+
+    int sno = 1;
+    ViewBag.Title = "Faculty Analasys";   
+}
+<table style="width:100%" border="1px">
+    <thead>
+        <tr>
+            <th style="text-align: center; vertical-align: top;background-color:yellow">S.No</th>
+            <th style="text-align: center; vertical-align: top;background-color:yellow">Code</th>
+            <th style="text-align: center; vertical-align: top;background-color:yellow">College Name</th>
+            <th style="text-align: left; vertical-align: top;background-color:yellow">FirstName</th>
+            <th style="text-align: left; vertical-align: top;background-color:yellow">LastName</th>
+            <th style="text-align: left; vertical-align: top;background-color:yellow">Surname</th>
+            <th style="text-align: left; vertical-align: top;background-color:yellow">Father</th>            
+            <th style="text-align: left; vertical-align: top;background-color:yellow">DOA</th>
+            <th style="text-align: left; vertical-align: top;background-color:yellow">DateOfBirth</th>          
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.OrderBy(f => f.FirstName).ToList())
+        { 
+            <tr>
+                <td style="text-align: center; vertical-align: top;">
+                    @(sno++)
+                </td>            
+                <td style="text-align: center; vertical-align: top;">
+                    @item.Code
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.CollegeName
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.FirstName
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.LastName
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    @item.Surname
+                </td>
+                 <td style="text-align: left; vertical-align: top;">
+                    @item.Father
+                </td>              
+                 <td style="text-align: left; vertical-align: top;">
+                    @item.DateOfAppointment
+                </td>
+                 <td style="text-align: left; vertical-align: top;">
+                    @item.DateOfBirth
+                </td>               
+
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+
+

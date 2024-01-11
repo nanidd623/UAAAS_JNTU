@@ -1,0 +1,418 @@
+﻿@model List<UAAAS.Models.CollegeIntakeExisting>
+@{
+    //Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    //if (Roles.IsUserInRole("Admin") || Roles.IsUserInRole("DataEntry"))
+    //{
+    //    Layout = "~/Views/Shared/_DataEntryLayoutLeftMenu.cshtml";
+    //}
+    ViewBag.Title = "Existing & Proposed Intake";
+    int num = 1;
+    string AICTEApprovalLettr = string.Empty;
+}
+<h2>Existing & Proposed Intake</h2>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+        $('.subtUpload').click(function () {
+
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+
+        });
+        $.ajaxSetup({ cache: false });
+        var $myDialog = $("#dialog-edit").dialog({
+            title: 'Add/Edit Existing Intake',
+            autoOpen: false,
+            resizable: false,
+            height: 610,
+            width: 800,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+        $("#openDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Add Existing Intake'
+            });
+            url = $("#openDialog").attr('href');
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $('.full_table').find('tr').click(function () {
+            url = $(this).find(".editDialog").attr('href');
+        });
+
+        $(".editDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-edit").dialog({
+                title: 'Edit Existing Intake'
+            });
+
+            $myDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-view").dialog({
+                title: 'View Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 600,
+                width: 800,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog("close");
+        });
+
+        $($myDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/FacultyVerificationNew/CollegeIntake?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerificationNew/CollegeIntake';
+            }
+        });
+    });
+</script>
+<table class="faculty_table">
+    <tr>
+        <td class="col1">
+            College
+        </td>
+        <td class="col2">
+            @Html.DropDownList("collegeId", new SelectList(@ViewBag.Colleges, "collegeId", "collegeName"),
+                "--Select--", new { id = "college", @style = "width:95%" })
+        </td>
+    </tr>
+</table>
+@if (@ViewBag.Status == true)
+{
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <br />
+    //using (Html.BeginForm())
+    using (Html.BeginForm("SaveAffiliation", "FacultyVerificationNew", new { collegeId = @ViewBag.collegeId }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @*@Html.Hidden("collegeId", new { @Value = @ViewBag.collegeId });
+        *@
+        <table class="webGrid" style="width: 100%; display: none;">
+            <tr>
+                <td colspan="2" class="col1">
+                    <span>Approved Intake for the A.Y. 2015-16 (as per AICTE)</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: left;" class="col1">
+                    <span>Upload Approval Letter:</span>
+                </td>
+                <td class="col2">
+                    <input type="file" name="fileUploader" id="filepicker" class="file fileUploadcheck" />
+                    @{
+        foreach (var item in Model.Take(1).ToList())
+        {
+            AICTEApprovalLettr = item.AICTEApprovalLettr;
+        }
+                    }
+                    @if (!string.IsNullOrEmpty(AICTEApprovalLettr))
+                    {
+                        <span><a href="../Content/Upload/CollegeEnclosures/@AICTEApprovalLettr" class="viewFileData" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+
+                    } &nbsp &nbsp &nbsp &nbsp &nbsp
+                    <input type="submit" value="Upload" name="fileUploader" class="subtUpload" />
+                </td>
+            </tr>
+        </table>
+        @*<br />*@
+        <table style="width: 100%">
+            <tr>
+                <td class="create_link_right">
+                    @*@Html.ActionLink("Add", "AddEditCollegeIntake", "FacultyVerificationNew", new { collegeId = @ViewBag.collegeId }, new { @id = "openDialog", @class = "create_button" })*@
+                    @*@Html.ActionLink("SAVE", "SaveAffiliation", "FacultyVerificationNew", new { collegeId = @ViewBag.collegeId }, new { @class = "create_button" })*@
+                    <input type="submit" value="SAVE" class="create_button" />
+                </td>
+            </tr>
+        </table>
+        <table style="width: 100%; display: none;">
+            <tr>
+                <td style="text-align: left; color: red; font-size: medium">
+                    <i>
+                        Add Sanctioned / admitted Intake for A.Y-@ViewBag.FirstYear
+                    </i>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: left; color: red; font-size: medium">
+                    <i>
+                        If you have any new course in Proposed Intake , please add them in Existing Intake also.
+                    </i>
+                </td>
+            </tr>
+        </table>
+
+        <table class="full_table" style="width: 100%; font-size: 0.7rem;">
+            <tr>
+                <th style="text-align: center;" rowspan="3">
+                    S.No
+                </th>
+                <th rowspan="3">
+                    Degree
+                </th>
+                <th style="text-align: center;" rowspan="3">
+                    Dept.
+                </th>
+                <th style="text-align: center;" rowspan="3">
+                    Specialization
+                </th>
+                <th style="text-align: center;" rowspan="3">
+                    Shift
+                </th>
+                <th style="text-align: center;" colspan="10">
+                    Approved & Actual Admitted Intake as per Academic Year
+                </th>
+                <th style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">
+                    Approved Intake for the A.Y.
+                    <br />
+                    2015-16 (as per AICTE)
+                </th>
+                <th style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">
+                    Proposed Intake for the A.Y.
+                    <br />
+                    2015-16 (as submitted to AICTE)
+                </th>
+                <th style="text-align: center;" colspan="2">
+                    NBA Accreditation Period (if exists)
+                </th>
+                <th colspan="1" style="text-align: center;" rowspan="3">Edit</th>
+                <th style="text-align: center;" rowspan="3">Affiliation</th>
+            </tr>
+            <tr>
+                <th style="text-align: center;" colspan="2">
+                    @ViewBag.FifthYear
+                </th>
+                <th style="text-align: center;" colspan="2">
+                    @ViewBag.FourthYear
+                </th>
+                <th style="text-align: center;" colspan="2">
+                    @ViewBag.ThirdYear
+                </th>
+                <th style="text-align: center;" colspan="2">
+                    @ViewBag.SecondYear
+                </th>
+                <th style="text-align: center;" colspan="2">
+                    @ViewBag.FirstYear
+                </th>
+                <th style="text-align: center;" colspan="2">
+                    (DD/MM/YYYY)
+                </th>
+            </tr>
+            <tr style="">
+                <th style="text-align: center;">
+                    <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+                </th>
+                <th style="text-align: center;">
+                    <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+                </th>
+                <th style="text-align: center;">
+                    <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+                </th>
+                <th style="text-align: center;">
+                    <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+                </th>
+                <th style="text-align: center;">
+                    <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+                </th>
+                <th style="text-align: center;">
+                    <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+                </th>
+                <th style="text-align: center;">
+                    <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+                </th>
+                <th style="text-align: center;">
+                    <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+                </th>
+                <th style="text-align: center;">
+                    <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+                </th>
+                <th style="text-align: center;">
+                    <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+                </th>
+                <th style="text-align: center;">
+                    From
+                </th>
+                <th style="text-align: center;">
+                    To
+                </th>
+            </tr>
+
+            @*@foreach (var item in Model)*@
+            @for (int i = 0; i < Model.ToList().Count(); i++)
+            {
+                <tr>
+                    <td style="width: 30px; text-align: center;">
+                        @(num++)
+                        @Html.HiddenFor(m => m[i].id)
+                        @Html.HiddenFor(m => m[i].collegeId)
+                    </td>
+                    <td style="width: 60px;">@Model[i].Degree</td>
+                    <td style="width: 50px;">@Model[i].Department</td>
+                    <td>@Model[i].Specialization</td>
+                    <td style="width: 30px; text-align: center;">@Model[i].Shift</td>
+                    <td style="width: 30px; text-align: center;">@Model[i].approvedIntake5</td>
+                    <td style="width: 30px; text-align: center;">@Model[i].admittedIntake5</td>
+                    <td style="width: 30px; text-align: center;">@Model[i].approvedIntake4</td>
+                    <td style="width: 30px; text-align: center;">@Model[i].admittedIntake4</td>
+                    <td style="width: 30px; text-align: center;">@Model[i].approvedIntake3</td>
+                    <td style="width: 30px; text-align: center;">@Model[i].admittedIntake3</td>
+                    <td style="width: 30px; text-align: center;">@Model[i].approvedIntake2</td>
+                    <td style="width: 30px; text-align: center;">@Model[i].admittedIntake2</td>
+                    <td style="width: 30px; text-align: center;">@Model[i].approvedIntake1</td>
+                    <td style="width: 30px; text-align: center;">@Model[i].admittedIntake1</td>
+                    <td style="width: 30px; text-align: center; background-color: lightgreen; font-weight: bold;">
+                        @if (Model[i].ApprovedIntake == 0)
+                        { }
+                        else
+                        {
+                            @Model[i].ApprovedIntake;
+                        }
+                    </td>
+                    <td style="width: 30px; text-align: center; background-color: lightgreen; font-weight: bold;">
+                        @if (Model[i].ProposedIntake == 0)
+                        { }
+                        else
+                        {
+                            @Model[i].ProposedIntake
+                        }
+                    </td>
+                    <td style="width: 65px; text-align: center;">
+                        @if (Model[i].nbaFrom != null)
+                        {
+                            @Model[i].nbaFromDate.ToString().Split(' ')[0]
+                        }
+                    </td>
+                    <td style="width: 65px; text-align: center;">
+                        @if (Model[i].nbaTo != null)
+                        {
+                            @Model[i].nbaToDate.ToString().Split(' ')[0]
+                        }
+                    </td>
+                    <td style="width: 20px; text-align: center;">
+                        @Html.ActionLink("Edit", "AddEditCollegeIntake", "FacultyVerificationNew", new { id = Model[i].id, collegeId = Request.Params["collegeId"] }, new { @class = "editDialog edit_button" })
+                    </td>
+                    @*<td style="width: 20px; text-align: center;">
+                        @Html.ActionLink("Delete", "DeleteCollegeIntake", new { id = Model[i].id }, new { @class = "confirmDialog delete_button" })
+                    </td>*@
+                    <td style="width: 80px; text-align: center; padding: 0; vertical-align: top;">
+                        @if (Model[i].isAffiliated)
+                        {
+                            <div style="width: 100%; background-color: green; color: white; padding: 5px 0;">
+                                <label>@Html.RadioButtonFor(m => m[i].isAffiliated, true, Model[i].isAffiliated ? true : false) YES</label>
+                                <label>@Html.RadioButtonFor(m => m[i].isAffiliated, false, Model[i].isAffiliated ? false : true) NO</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="width: 100%; background-color: red; color: white; padding: 5px 0;">
+                                <label>@Html.RadioButtonFor(m => m[i].isAffiliated, true, Model[i].isAffiliated ? true : false) YES</label>
+                                <label>@Html.RadioButtonFor(m => m[i].isAffiliated, false, Model[i].isAffiliated ? false : true) NO</label>
+                            </div>
+                        }
+                    </td>
+                    <td hidden="hidden">@Model[i].createdBy</td>
+                    <td hidden="hidden">@Model[i].createdOn</td>
+                </tr>
+            }
+        </table>
+    }
+    <div id="dialog-confirm" style="display: none">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            Are you sure to delete ?
+        </p>
+    </div>
+    <div id="dialog-edit" style="display: none">
+    </div>
+    <div id="dialog-view" style="display: none">
+    </div>
+}

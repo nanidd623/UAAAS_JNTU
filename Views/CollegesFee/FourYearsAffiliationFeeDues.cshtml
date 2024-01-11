@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "FourYearsAffiliationFeeDues";
+}
+
+@using (Html.BeginForm("FourYearsAffiliationFeeDues", "CollegesFee"))
+{
+    <div style="display:inline-flex;">
+        <div class="editor-label" style="width: 200px;">
+            <span>Academic Year</span>
+        </div>
+        <div class="editor-field" style="width: 300px;">
+            @Html.DropDownList("AcademicYearId", new SelectList(ViewBag.Years as System.Collections.IEnumerable, "id", "Year"), "---Select---", new { @style = "width:250px;" })
+        </div>
+    </div>
+    <br/>
+    <div style="float:right;">
+        <input type="submit" value="Download" />
+    </div>
+}

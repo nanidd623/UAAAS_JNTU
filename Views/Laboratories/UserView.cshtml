@@ -1,0 +1,131 @@
+﻿@model UAAAS.Models.Laboratories
+@{
+    ViewBag.Title = "Laboratories";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+}
+<h2>Laboratories</h2>
+@using (Html.BeginForm())
+{
+    int count = 0;
+    if (ViewBag.Count == 0)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No records found</p>
+    </div>
+    }
+    else
+    {
+    <table class="four_columns" style="width: 100%;">
+        <tr style="font-weight: bold;">
+            <td style="text-align: center; width: 50px;" class="col11">S.No</td>
+            <td style="text-align: left; width: 100px;" class="col11">Degree</td>
+            <td style="text-align: left; width: 110px;" class="col11">Department</td>
+            <td style="text-align: left;width: 250px;" class="col11">Specialization</td>
+            <td style="text-align: left;width: 20px;" class="col11">Shift</td>
+            <td style="text-align: left;width: 20px;" class="col11">year</td>
+            <td style="text-align: left;width: 250px;" class="col11">Name of the Laboratory</td>
+            <td style="text-align: left;width: 100px;" class="col11">No. of Experiments</td>
+            <td style="text-align: left;width: 100px;" class="col11">Floor Area(in Sqm)</td>
+        </tr>
+        @foreach (var item in ViewBag.Laboratories)
+        {                
+            <tr>
+                <td style="text-align: center;" class="col21">
+                    @(count = count + 1)
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.degree != null)
+                    {
+                        <label>@item.degree</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.department != null)
+                    {
+                        <label>@item.department</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.specializationName != null)
+                    {
+                        <label>@item.specializationName</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.shiftName != null)
+                    {
+                        <label>@item.shiftName</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.year != null)
+                    {
+                        <label>@item.year</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.labName != null)
+                    {
+                        <label>@item.labName</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                 <td style="text-align: left;" class="col21">
+                    @if (item.IsShared != null)
+                    {
+                        <label>@item.IsShared</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.totalExperiments != null)
+                    {
+                        <label>@item.totalExperiments</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+                <td style="text-align: left;" class="col21">
+                    @if (item.labFloorArea != null)
+                    {
+                        <label>@item.labFloorArea</label>
+                    }
+                    else
+                    {
+                        <label></label>
+                    }
+                </td>
+            </tr>
+        }
+    </table>        
+    }
+}
+

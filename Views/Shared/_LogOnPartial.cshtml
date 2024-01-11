@@ -1,0 +1,11 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <text>Welcome <strong>@User.Identity.Name</strong>,
+    <strong>@Html.ActionLink("Logout", "LogOff", "Account")</strong></text>
+}
+else
+{
+    @*<text> @Html.ActionLink("Faculty Registration", "Welcome", "OnlineRegistration") <img src="/Content/images/latest.gif" alt="latest" /> &nbsp; &nbsp; &nbsp; </text>*@
+    @:@Html.ActionLink("Login", "LogOn", "Account")
+    @*@:@Html.ActionLink("Login", "Applicationmirrors", "Account")*@
+}

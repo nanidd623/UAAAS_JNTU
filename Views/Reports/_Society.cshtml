@@ -1,0 +1,51 @@
+﻿@using (Html.BeginForm())
+{
+    int count = 0; 
+    <table border="1" style="width:100%" >
+            <tr>
+                <th style="text-align: center;background-color:#fcf1d1; width: 5%;vertical-align:top" class="col1">S.No
+                </th>
+                <th style="text-align: center;background-color:#fcf1d1; width: 10%">College Code
+                </th>
+                <th style="text-align: center;background-color:#fcf1d1; width: 20%;">College Name
+                </th>
+                <th style="text-align: center;background-color:#fcf1d1; width: 20%;">Society Name
+                </th>
+                <th style="text-align: center; background-color:#fcf1d1;width: 10%">Address
+                </th>
+                <th style="text-align: center;background-color:#fcf1d1; width: 10%">Phone Number
+                </th>
+                <th style="text-align: center;background-color:#fcf1d1; width: 10%">Email
+                </th>
+            </tr>
+            @if (ViewBag.SocietyDetails != null)
+            {
+                foreach (var item in ViewBag.SocietyDetails)
+                {
+                <tr>
+                    <td style="text-align: center;background-color:#e8eff3">
+                        @(count = count + 1)
+                    </td>
+                    <td style="text-align: center;background-color:#e8eff3">
+                        <label style="text-transform: uppercase">@item.CollegeCode</label>
+                    </td>
+                    <td style="text-align: left;background-color:#e8eff3">
+                        <label>@item.CollegeName</label>
+                    </td>
+                    <td style="text-align: left;background-color:#e8eff3">
+                        <label>@item.SocietyName</label>
+                    </td>
+                    <td style="text-align: left;background-color:#e8eff3">
+                        <label>@item.SocietyAddress</label>
+                    </td>
+                    <td style="text-align: center;background-color:#e8eff3">
+                        <label>@item.PhoneNumber</label>
+                    </td>
+                    <td style="text-align: left;background-color:#e8eff3">
+                        <label>@item.Email</label>
+                    </td>
+                </tr>
+                }
+            }
+    </table>
+}

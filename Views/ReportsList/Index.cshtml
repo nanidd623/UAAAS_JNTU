@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <h2>Reports Link</h2><br />
+    <div style="margin:auto;text-align:center;">
+        <div>
+            <a href="@Url.Action("Index", "AffliatedColleges")" class="create_button" target="_blank" style="font-weight:bold;">
+                Affiliated Colleges Counts
+            </a>
+        </div><br /><br />
+        <div>
+            <a href="@Url.Action("Index", "CollegeAddressDetails")" class="create_button" target="_blank" style="font-weight:bold;">
+                College Details With Intake
+            </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="@Url.Action("AutonomousCollegesList", "ReportsList")" class="create_button" target="_blank" style="font-weight:bold;">
+                Autonomous Colleges List
+            </a>
+        </div><br /><br />
+        <div style="display:inline-flex;">
+            <div>
+                <a href="@Url.Action("NBACollegesList", "ReportsList")" class="create_button" target="_blank" style="font-weight:bold;">
+                    NBA Colleges List
+                </a>
+            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div>
+                <a href="@Url.Action("MinorityCollegesList", "ReportsList")" class="create_button" target="_blank" style="font-weight:bold;">
+                    Minority Colleges List
+                </a>
+            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div>
+                <a href="@Url.Action("NAACCollegesList", "ReportsList")" class="create_button" target="_blank" style="font-weight:bold;">
+                    NAAC Colleges List
+                </a>
+            </div>
+        </div><br /><br /><br />
+        <div style="display:inline-flex;">
+            <a href="@Url.Action("Index", "ApprovedAdmittedIntake")" class="create_button" target="_blank" style="font-weight:bold;">
+                Approved and Admitted Intake List
+            </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="@Url.Action("FacultyFlagsVerificationView", "FacultyVerificationDENew")" class="create_button" target="_blank" style="font-weight:bold;">
+                Faculty Flags Verification
+            </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="@Url.Action("DepartmentWiseFacultyView", "FacultyVerificationDENew")" class="create_button" target="_blank" style="font-weight:bold;">
+                Department wise Faculty
+            </a>
+        </div>
+    </div>
+</body>
+</html>

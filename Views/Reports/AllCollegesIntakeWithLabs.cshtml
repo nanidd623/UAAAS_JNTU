@@ -1,0 +1,478 @@
+﻿@model IList<UAAAS.Controllers.Reports.AllCollegesIntakeController.CollegesIntakeWithLabs>
+@using UAAAS.Models;
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "All Colleges - Intake & Labs";
+    int sno = 1;
+    int id = 0;
+    if (Request.Params["collegeId"] != null)
+    {
+        id = Convert.ToInt32(Request.Params["collegeId"].ToString());
+    }
+    int randomCollegeid = db.jntuh_college_randamcodes.Where(r => r.CollegeId == id).Select(r => r.Id).FirstOrDefault();
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/AllCollegesIntake/AllCollegesIntakeWithLabs?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/AllCollegesIntake/AllCollegesIntakeWithLabs';
+            }
+        });
+    });
+</script>
+<h2>All Colleges - Intake & Labs</h2>
+@using (Html.BeginForm())
+{
+    <table class="faculty_table">
+        <tr>
+            <td class="col1">
+                College
+            </td>
+            <td class="col2">
+                @Html.DropDownList("collegeId", new SelectList(@ViewBag.Colleges, "collegeId", "collegeName"),"--Select--", new { id = "college", @style = "width:95%" })
+            </td>
+            <td class="col3">
+                @Html.ActionLink("Export", "AllCollegesIntakeWithLabs", "AllCollegesIntake", new { type = "Excel", collegeId = Request.Params["collegeId"] }, new { @class = "create_button" })
+            </td>
+            <td class="col4">
+               
+               @*@if (User.IsInRole("Admin"))
+               {
+                @Html.ActionLink("Lab wise", "AllCollegesLabsDeficiency", "AllCollegesIntake", new { rid = randomCollegeid }, new { @class = "create_button", target = "_blank" })
+                    <span>&nbsp;</span>@Html.ActionLink("Equipment wise", "CollegeLabs", "FacultyVerificationNew", new { collegeId = Request.Params["collegeId"] }, new { @class = "create_button", target = "_blank" })
+               }
+
+
+
+        
+
+
+                @Html.ActionLink("Export To Excel Specialization wise", "CollegeWiseLabs", "AllCollegesIntake", new { type = "Excel", collegeId = Request.Params["collegeId"] }, new { @class = "create_button" })
+                <br />
+                    <span>&nbsp;</span>@Html.ActionLink("Export To Single Sheet", "AllCollegesLabsDetails", "AllCollegesIntake", new { type = "Excel", cid = Request.Params["collegeId"] }, new { @class = "create_button" })*@
+            </td>
+        </tr>
+    </table>
+
+    <br />
+    <table style="width: 100%; border: 1px; border-color: red" class="faculty_table">
+        <tr>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="3">SNo</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="3">Code</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="3">College Name</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="3">Degree</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="3">Department</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="3">Specialization</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="3">ShiftId</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="4">Intake</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="32">Labs</th>
+        </tr>
+        <tr>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="4"></th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="3">IV - 1</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="3">IV - 2</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="3">III - 1</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="3">III - 2</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="3">II - 1</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="3">II - 2</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="3">I - 1</th>
+            <th class="col1" style="text-align: center; vertical-align: top; " colspan="3">I - 2</th>
+        </tr>
+        <tr>
+            <th class="col1" style="text-align: right; vertical-align: top;">IV Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">III Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">II Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">I Year</th>
+
+            <th class="col1" style="text-align: center; vertical-align: top;">R</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">U</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">NU</th>
+            @*<th class="col1" style="text-align: center; vertical-align: top; background-color:lightgreen;">O</th>*@
+
+            <th class="col1" style="text-align: center; vertical-align: top;">R</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">U</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">NU</th>
+            @*<th class="col1" style="text-align: center; vertical-align: top;  background-color:lightgreen;">O</th>*@
+
+            <th class="col1" style="text-align: center; vertical-align: top;">R</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">U</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">NU</th>
+            @*<th class="col1" style="text-align: center; vertical-align: top;  background-color:lightgreen;">O</th>*@
+
+            <th class="col1" style="text-align: center; vertical-align: top;">R</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">U</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">NU</th>
+            @*<th class="col1" style="text-align: center; vertical-align: top;  background-color:lightgreen;">O</th>*@
+
+            <th class="col1" style="text-align: center; vertical-align: top;">R</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">U</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">NU</th>
+            @*<th class="col1" style="text-align: center; vertical-align: top;  background-color:lightgreen;">O</th>*@
+
+            <th class="col1" style="text-align: center; vertical-align: top;">R</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">U</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">NU</th>
+            @*<th class="col1" style="text-align: center; vertical-align: top;  background-color:lightgreen;">O</th>*@
+
+            <th class="col1" style="text-align: center; vertical-align: top;">R</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">U</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">NU</th>
+            @*<th class="col1" style="text-align: center; vertical-align: top;  background-color:lightgreen;">O</th>*@
+
+            <th class="col1" style="text-align: center; vertical-align: top;">R</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">U</th>
+            <th class="col1" style="text-align: center; vertical-align: top;">NU</th>
+            @*<th class="col1" style="text-align: center; vertical-align: top;  background-color:lightgreen;">O</th>*@
+
+
+        </tr>
+
+        @foreach (var collegeId in Model.Select(c => c.collegeId).Distinct().ToList())
+        {
+            var count = Model.Where(m => m.collegeId == collegeId).Select(m => m).Count();
+            var list = Model.Where(c => c.collegeId == collegeId).ToList();
+
+            foreach (var item in list)
+            {
+                if (list.IndexOf(item) == 0)
+                {
+                    <tr>
+                        <td class="col2" style="text-align: center; vertical-align: top;border:1px" rowspan="@count">@(sno++)</td>
+                        <td class="col2" style="text-align: center; vertical-align: top;border:1px; text-transform: uppercase" rowspan="@count">@item.collegeCode</td>
+                        <td class="col2" style="text-align: left; vertical-align: top; text-transform: uppercase" rowspan="@count">@item.collegeName</td>
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Degree</td>
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Department</td>
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Specialization</td>
+                        <td class="col2" style="text-align: center; vertical-align: top;">@item.shiftId</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake4</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake3</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake2</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake1</td>
+                        @*@if (item.Degree == "B.Tech" || item.Degree == "B.Pharmacy")
+                        {*@
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @item.requiredLabs41
+                                @*@Html.ActionLink(@item.requiredLabs41.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 4, semester = 1 }, new {target = "_blank"})*@
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.uplodedLabs41.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.notuplodedLabs41.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            @*<td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.Autonomus41.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>*@
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @item.requiredLabs42
+                                @*@Html.ActionLink(@item.requiredLabs42.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 4, semester = 2 }, new {target = "_blank"})*@
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.uplodedLabs42.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.notuplodedLabs42.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            @*<td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.Autonomus42.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>*@
+
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @item.requiredLabs31
+                                @*@Html.ActionLink(@item.requiredLabs31.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 3, semester = 1 }, new {target = "_blank"})*@
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.uplodedLabs31.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.notuplodedLabs31.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            @*<td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.Autonomus31.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>*@
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @item.requiredLabs32
+                                @*@Html.ActionLink(@item.requiredLabs32.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 3, semester = 2 }, new {target = "_blank"})*@
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.uplodedLabs32.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.notuplodedLabs32.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            @*<td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.Autonomus32.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>*@
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @item.requiredLabs21
+                                @*@Html.ActionLink(@item.requiredLabs21.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 2, semester = 1 }, new {target = "_blank"})*@
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.uplodedLabs21.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.notuplodedLabs21.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            @*<td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.Autonomus21.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>*@
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @item.requiredLabs22
+                                @*@Html.ActionLink(@item.requiredLabs22.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 2, semester = 2 }, new {target = "_blank"})*@
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.uplodedLabs22.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.notuplodedLabs22.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            @*<td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.Autonomus22.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>*@
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @item.requiredLabs11
+                                @*@Html.ActionLink(@item.requiredLabs11.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 1, semester = 1 }, new {target = "_blank"})*@
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.uplodedLabs11.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.notuplodedLabs11.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            @*<td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.Autonomus11.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>*@
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @item.requiredLabs12
+                                @*@Html.ActionLink(@item.requiredLabs12.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 1, semester = 2 }, new {target = "_blank"})*@
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.uplodedLabs12.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.notuplodedLabs12.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>
+                            @*<td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.Autonomus12.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                            </td>*@
+                        @*}
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+
+
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @item.requiredLabs11
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.uplodedLabs11.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 1 }, new { target = "_blank" })
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.notuplodedLabs11.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 1 }, new { target = "_blank" })
+                            </td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.ActionLink(@item.notuplodedLabs11.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 1 }, new { target = "_blank" })
+                            </td>
+
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                        }*@
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Degree</td>
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Department</td>
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Specialization</td>
+                        <td class="col2" style="text-align: center; vertical-align: top;">@item.shiftId</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake4</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake3</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake2</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake1</td>
+                        @*@if (item.Degree == "B.Tech" || item.Degree == "B.Pharmacy")
+                            {*@
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @item.requiredLabs41
+                            @*@Html.ActionLink(@item.requiredLabs41.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 4, semester = 1 }, new {target = "_blank"})*@
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.uplodedLabs41.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.notuplodedLabs41.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.Autonomus41.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>*@
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @item.requiredLabs42
+                            @*@Html.ActionLink(@item.requiredLabs42.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 4, semester = 2 }, new {target = "_blank"})*@
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.uplodedLabs42.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.notuplodedLabs42.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.Autonomus42.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 4, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>*@
+
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @item.requiredLabs31
+                            @*@Html.ActionLink(@item.requiredLabs31.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 3, semester = 1 }, new {target = "_blank"})*@
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.uplodedLabs31.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.notuplodedLabs31.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.Autonomus31.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>*@
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @item.requiredLabs32
+                            @*@Html.ActionLink(@item.requiredLabs32.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 3, semester = 2 }, new {target = "_blank"})*@
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.uplodedLabs32.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.notuplodedLabs32.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.Autonomus32.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 3, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>*@
+
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @item.requiredLabs21
+                            @*@Html.ActionLink(@item.requiredLabs21.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 2, semester = 1 }, new {target = "_blank"})*@
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.uplodedLabs21.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.notuplodedLabs21.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.Autonomus21.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>*@
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @item.requiredLabs22
+                            @*@Html.ActionLink(@item.requiredLabs22.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 2, semester = 2 }, new {target = "_blank"})*@
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.uplodedLabs22.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.notuplodedLabs22.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.Autonomus22.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 2, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>*@
+                        
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @item.requiredLabs11
+                            @*@Html.ActionLink(@item.requiredLabs11.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 1, semester = 1 }, new {target = "_blank"})*@
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.uplodedLabs11.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.notuplodedLabs11.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.Autonomus11.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 1, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>*@
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @item.requiredLabs12
+                            @*@Html.ActionLink(@item.requiredLabs12.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake",new { specializationId = @item.specializationId,collegeId=@item.collegeId, year = 1, semester = 2 }, new {target = "_blank"})*@
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.uplodedLabs12.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.notuplodedLabs12.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">
+                            @Html.ActionLink(@item.Autonomus12.ToString(), "AutonomusCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 2, DegreeIds = @item.DegreeID }, new { target = "_blank" })
+                        </td>*@
+                        @*}
+                            else
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+
+
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+
+                                <td class="col2" style="text-align: right; vertical-align: top;">
+                                    @item.requiredLabs11
+                                </td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">
+                                    @Html.ActionLink(@item.uplodedLabs11.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 1 }, new { target = "_blank" })
+                                </td>
+                                <td class="col2" style="text-align: right; vertical-align: top;">
+                                    @Html.ActionLink(@item.notuplodedLabs11.ToString(), "AllCollegesIntakeWithLabsDetails", "AllCollegesIntake", new { specializationId = @item.specializationId, collegeId = @item.collegeId, year = 1, semester = 1 }, new { target = "_blank" })
+                                </td>
+
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            }*@
+
+                    </tr>
+                }
+
+            }
+
+        }
+
+    </table>
+}

@@ -1,0 +1,142 @@
+﻿@{
+    ViewBag.Title = "College Faculty";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+
+        $('.subtUpload').click(function () {
+
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+
+        });
+        function GetselectioncommitteeFileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#filepicker")[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+        $(function () {
+            $(".aictepdffile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'xls':
+                        case 'xlsx':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    alert('You can upload only  xls files');
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetselectioncommitteeFileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        alert('Document should not exceed 1 MB in Size');
+                        $(this).val('');
+                    }
+                    else {
+
+                        //$(".selectionfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+    });
+</script>
+<h2>Faculty Data</h2>
+@using (Html.BeginForm("FacultyDetailsUpload", "Dashboard", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+      if (TempData["Error"] != null)
+        {
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+        }
+        if (TempData["Success"] != null)
+        {
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+        }<br/>
+    <table class="webGrid" style="width: 100%;">
+        <tr>
+            <td colspan="2" class="col1">
+                <span><b>FACULTY LIST</b>: (Upload Faculty Data <b>Strictly</b> in this format - <a href="../../Content/Facultydata.xls"><img src="../../Content/images/excel.png" /></a>)</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="col1">
+                <span>College Faculty Details A.Y. 2019-20</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left;" class="col1">
+                <span>Upload Faculty Data:</span>
+            </td>
+            <td class="col2">
+                <input type="file" name="fileUploader" id="filepicker" class="file fileUploadcheck aictepdffile"/>
+                @*@{
+                        foreach (var item in Model.Take(1).ToList())
+                        {
+                            AICTEApprovalLettr = item.AICTEApprovalLettr;
+                        }
+                    }*@
+                @if (ViewBag.facultydetails != null && ViewBag.facultydetails != string.Empty)
+                {
+                    <span><a href="../Content/Upload/CollegeEnclosures/College Faculty Details/@ViewBag.facultydetails" class="viewFileData" target="_blank"><span style="font-weight: bold; color: red">View</span></a></span>
+                }
+                <input type="submit" value="Upload" name="fileUploader" class="subtUpload"/>
+
+            </td>
+        </tr>
+    </table>
+}

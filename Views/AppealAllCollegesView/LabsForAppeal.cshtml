@@ -1,0 +1,747 @@
+﻿
+@model IList<UAAAS.Controllers.AppealAllCollegesViewController.CollegeFacultyWithIntakeReport>
+@using UAAAS.Models;
+@{
+   
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "SUBMISSION OF ONLINE APPEAL";
+    int sno = 1;
+    int num = 1;
+    int msno = 1;
+    int intakenum = 1;
+    int Labscount = 0;
+    int collegeid = 0;
+    string Reveficationscreenshot = string.Empty;
+    string SCMApprovalLetter = string.Empty;
+    string Form16ApprovalLetter = string.Empty;
+}
+@*<h2>Lab For Appeal</h2>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        
+        $("#listequipment tr td:eq(1)").attr('min-width:100px');
+
+
+        var mainUrl = window.location;
+        var url;
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake';
+            }
+        });
+
+        //For collegeintake scripts
+
+        $('.subtUpload').click(function () {
+
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+
+        });
+
+
+        var $myIntakeDialog = $("#dialog-appeal-edit").dialog({
+            title: 'Add/Edit Existing Intake',
+            autoOpen: false,
+            resizable: false,
+            height: 610,
+            width: 800,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+
+        $('.full_table').find('tr').click(function () {
+            url = $(this).find(".editintakeDialog").attr('href');
+        });
+
+        $(".editintakeDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-appeal-edit").dialog({
+                title: 'Edit Existing Intake'
+            });
+
+            $myIntakeDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmIntakeDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-appeal-edit").dialog("close");
+        });
+
+        $($myIntakeDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        //$("#tabla").find('tfoot').append($('<td><b>Total</b></td><td>a</td><td>b</td>'));
+
+        $('.file').change(function () {
+
+            var b = $('.file').val();
+            //alert(b);
+            //get file size
+
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'xls':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+            else {
+                alert('Please select xls file');
+                return false;
+            }
+
+            if (flag == false) {
+                alert("File should be in xls format only");
+                $(this).val('');
+                return false;
+            }
+            else {
+
+                var size = GetFileSize1(file);
+                if (size > 51200) {
+                    alert("File should not exceed 50 KB in Size");
+                    $(this).val('');
+                }
+                else {
+                    $(".files > span").text("");
+                }
+
+            }
+        });
+
+
+        function GetFileSize1(fileid) {
+            debugger;
+            try {
+                var fileSize = 0;
+                //for IE
+
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, 
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb 
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $(".Pfile")[0].files[0].size //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb 
+                }
+
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+
+        $('#btnsubmit').click(function () {
+            var filename = $('#hiddenfile').val();
+            if ($('.file').val() == '' && filename == undefined) {
+                alert('Please select file');
+                return false;
+            }
+            //alert(filename);
+            // return false;
+        });
+
+
+
+
+
+
+
+    });
+
+    var mainUrl = window.location;
+
+    $('.webGrid').find('tr').click(function () {
+        //url = $(this).find(".editDialog").attr("typei");
+        url = "/FacultyVerification/FacultyRegistrationNumber" ;
+        alert(url);
+    });
+
+    $(".editDialog").live("click", function (e) {
+        e.preventDefault();
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/FacultyRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Faculty Appeal For Compliance',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editdefDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        $("#dialog-edit").dialog({
+            title: 'Appeal for Reverification ',
+            resizable: false,
+            height: 150,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+
+    $(".editreverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        var CollegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverificationFaculty?collegeId=" + CollegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        window.open(url);
+        //$("#dialog-edit").dialog({
+        //    title: 'Appeal for Reverification ',
+        //    resizable: false,
+        //    height: 150,
+        //    width: 850,
+        //    show: { effect: 'drop', direction: "up" },
+        //    modal: true,
+        //    draggable: true,
+        //    closeOnEscape: true,
+        //    open: function (event, ui) {
+        //        $(this).load(url);
+        //    },
+        //    close: function (event, ui) {
+        //        $(this).dialog("close");
+        //    }
+        //});
+        //$myDialog.dialog('open');
+        //return false;
+    });
+
+
+    $(".editlabDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecord?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#dialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+    $(".editAppcmpDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecordReverification?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#Appealcpldialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+    $(".editprinpalcomplicanceDialog").live("click", function (e) {
+        e.preventDefault();
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/PrincipalFacultyRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal For Complicance',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editprincipalverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var registrationnumber=  '@ViewBag.PrincipalRegno';
+        var url = "/FacultyVerification/PrincipalAppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&registrationnumber=" + registrationnumber;
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal for Reverification ',
+            resizable: false,
+            height: 200,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    var $myDialog = $("#dialog-edit").dialog({
+        title: 'Add/Edit Lab',
+        autoOpen: false,
+        resizable: false,
+        height: 700,
+        width: 720,
+        show: { effect: 'drop', direction: "up" },
+        modal: true,
+        draggable: true,
+        closeOnEscape: true,
+        open: function (event, ui) {
+            debugger;
+            $(this).load(url);
+        },
+        close: function (event, ui) {
+            $(this).dialog("close");
+
+        }
+    });
+
+    $($myDialog).bind("dialogclose", function () {
+        window.location = mainUrl;
+    });
+
+
+
+</script>
+
+
+
+
+
+<h2 style="text-align: center"><b>SUBMISSION OF ONLINE APPEAL (LABS - step 3/5)</b></h2><br />
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+
+
+
+
+
+
+@using (Html.BeginForm("LabsForAppeal", "FacultyVerification", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    
+    
+    
+    if (@ViewBag.Ismbaclg==true)
+    { 
+    
+    <h2>MAC Address List</h2>
+    <table style="width: 100%; border: 1px; border-color: red" class="webGrid">
+        <tr>
+            <th class="col1" style="text-align: left;">S.No</th>
+            <th class="col1" style="text-align: left;">College Code</th>
+            <th class="col1" style="text-align: left;">No of Computers</th>
+            <th class="col1" style="text-align: left;">Supporting Document</th>
+            <td class="col1" style="text-align: left;"></td>
+        </tr>
+      @for (int i = 0; i < Model[0].MBAMACDetails.Count; i++)
+      { 
+      <tr>         
+          @Html.HiddenFor(model=>model.FirstOrDefault().MBAMACDetails[i].id)
+          @Html.HiddenFor(model=>model.FirstOrDefault().MBAMACDetails[i].CollegeId)
+          <td class="col2" style="width: 30px; text-align: left;vertical-align: middle;">@(msno++)</td>
+          <td class="col2" style="text-align: left; vertical-align: top;width: 30px;">@Model[0].MBAMACDetails[i].CollegeCode</td>
+          <td class="col2" style="text-align: left; vertical-align: top;width: 30px;">@Model[0].MBAMACDetails[i].ComputerDeficiencyCount</td>         
+          <td class="col2" style="text-align: left; vertical-align: top;">
+              @Html.TextBoxFor(model => model.FirstOrDefault().MBAMACDetails[i].MACSupportingDoc, new {type="file",@class="file",@required=true})
+          </td>
+          <td class="col2" style="width: 30px; text-align: left;vertical-align: top;">
+              <input type="submit" class="create_button" value="Submit" id="btnsubmit" />
+          </td>
+      </tr>
+         
+      }
+        
+    </table>
+
+    }
+    else if (@ViewBag.Ismbaclg==false)
+    { 
+
+
+
+
+    <h2>LIST OF EQUIPMENT NOT AVAILABLE</h2>  
+    <table style="width: 100%; border: 1px; border-color: red" id="listequipment" class="webGrid">
+        @*<tr>
+            <th class="col3" colspan="5" style="text-align: center">LIST OF EQUIPMENT NOT AVAILABLE</th>
+        </tr>*@
+        <tr>
+            <th class="col13" style="text-align: left; width: 4%; vertical-align: middle;">S.No </th>
+            <th class="col13" style="text-align: left; vertical-align: middle; width: 10%;">Department</th>
+            <th class="col13" style="text-align: left; vertical-align: middle;width:10%;">Specialization</th>
+            <th class="col13" style="text-align: left; vertical-align: middle;width:33%;">Lab Name</th>
+            <th class="col13" style="text-align: left; vertical-align: middle;width:33%;">Equipment Name</th>
+
+            <th class="col13" style="text-align: center; vertical-align: middle; color: red;width:10%;">Compliance - New Equipment Procurred</th>
+            <th class="col13" style="text-align: center; vertical-align: middle; color: red;width:10%;">Available & Reverify</th>
+
+        </tr>
+
+
+        @*<tr>
+
+                <td class="col2" style="text-align: left; vertical-align: top;"></td>
+                <td class="col2" style="text-align: left; vertical-align: top;"></td>
+
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+            </tr>*@
+
+        @*@for (int i = 0; i < ViewBag.labslistcount; i++)
+            {
+                <tr>
+
+                    <td class="col2" style="text-align: left; vertical-align: top;">@ViewBag.labslist[i].LabName</td>
+                    <td class="col2" style="text-align: left; vertical-align: top;"></td>
+
+                    <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                    <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                </tr>
+            }*@
+
+        @for (int i = 0; i < Model[0].LabsListDefs1.Count; i++)
+        {
+            <tr>
+                <td class="col24" style="width: 0px; text-align: center;">
+                    @(sno++)
+                </td>
+                <td class="col24" style="text-align: left; vertical-align: top;">@Model[0].LabsListDefs1[i].Department</td>
+                <td class="col24" style="text-align: left; vertical-align: top;">@Model[0].LabsListDefs1[i].Specialization</td>
+                <td class="col24" style="text-align: left; vertical-align: top;">@Model[0].LabsListDefs1[i].year - @Model[0].LabsListDefs1[i].Semester - @Model[0].LabsListDefs1[i].LabName</td>
+                <td class="col24" style="text-align: left; vertical-align: top;">@Model[0].LabsListDefs1[i].EquipmentName</td>
+
+                <td class="col24" style="text-align: right; vertical-align: top;">
+                    @{
+            var eqid = Model.FirstOrDefault().LabsListDefs1[i].EquipmentID;
+            var id = Model.FirstOrDefault().LabsListDefs1[i].id;
+            var EquipmentNo = 1;
+            var collegeId = Model.FirstOrDefault().collegeId;
+            Labscount = db.jntuh_appeal_college_laboratories.Where(l => l.id == id && l.EquipmentNo == EquipmentNo && l.CollegeID == collegeId).Select(l => l.id).Count();
+            Reveficationscreenshot = db.jntuh_appeal_college_laboratories.Where(l => l.id == id && l.EquipmentNo == EquipmentNo && l.CollegeID == collegeId).Select(l => l.ReVerificationScreenShot).FirstOrDefault();
+                    }
+                    @if (Labscount > 0 && Reveficationscreenshot == null)
+                    {
+                        if (Labscount > 0)
+                        {
+                            @Html.RadioButton("Availability", true, false, new { id = @Model[0].LabsListDefs1[i].id, eqpid = "undefined", eqpno = 1, @class = "editlabDialog" })
+                            <span style="color: green"><b>Edit</b></span>
+
+                        }
+                        else
+                        {
+                            @Html.RadioButton("Availability", true, false, new { eqpid = @Model[0].LabsListDefs1[i].EquipmentID, id = DBNull.Value, eqpno = 1, @class = "editlabDialog" })
+                            <span style="color:red"><b>Add</b></span>
+                        }
+                    }
+                    else if (Labscount == 0 && Reveficationscreenshot == null)
+                    {
+                        if (Labscount > 0)
+                        {
+                            @Html.RadioButton("Availability", true, false, new { id = @Model[0].LabsListDefs1[i].id, eqpid = "undefined", eqpno = 1, @class = "editlabDialog" })
+                            <span style="color: green"><b>Edit</b></span>
+
+                        }
+                        else
+                        {
+                            @Html.RadioButton("Availability", true, false, new { eqpid = @Model[0].LabsListDefs1[i].EquipmentID, id = DBNull.Value, eqpno = 1, @class = "editlabDialog" })
+                            <span style="color:red"><b>Add</b></span>
+                        }
+                    }
+                    else
+                    {
+                        @Html.RadioButton("Add", true, new { @disabled = true })
+                        <span style="color: red"><b>Add</b></span>
+                    }
+                    @*@if (Labscount > 0)
+            {
+                @Html.RadioButton("Availability", true, false, new {id = @Model[0].LabsListDefs1[i].id, eqpid = "undefined", eqpno = 1, @class = "editlabDialog"})
+                <span style="color: green"><b>Edit</b></span>
+            }
+            else
+            {
+                @Html.RadioButton("Availability", true, false, new {eqpid = @Model[0].LabsListDefs1[i].EquipmentID, id = DBNull.Value, eqpno = 1, @class = "editlabDialog"})
+                <span style="color: red"><b>Add</b></span>
+            }*@
+
+
+
+                </td>
+                @*<td class="col2" style="text-align: right; vertical-align: top;">
+                        @Html.TextBoxFor(model => model.FirstOrDefault().collegeCode, new { type = "file", @class = "file" })
+                    </td>*@
+                <td class="col24" style="text-align: right; vertical-align: top;">
+
+                    @if (Labscount > 0 && Reveficationscreenshot == null)
+                    {
+                        @Html.RadioButton("Add", true, new { @disabled = true })
+                        <span style="color:red"><b>Add</b></span>
+                    }
+                    else
+                    {
+                        if (Reveficationscreenshot != null)
+                        {
+
+                            @Html.RadioButton("Availability", true, false, new { id = @Model[0].LabsListDefs1[i].id, eqpid = "undefined", eqpno = 1, @class = "editAppcmpDialog" })
+                            <span style="color: green"><b>Edit</b></span>
+                        }
+                        else
+                        {
+                            @Html.RadioButton("Availability", true, false, new { eqpid = @Model[0].LabsListDefs1[i].EquipmentID, id = DBNull.Value, eqpno = 1, @class = "editAppcmpDialog" })
+                            <span style="color:red"><b>Add</b></span>
+                        }
+                    }
+                    @*@if (Labscount > 0)
+            {
+                @Html.RadioButton("Availability", true, false, new {id = @Model[0].LabsListDefs1[i].id, eqpid = "undefined", eqpno = 1, @class = "editAppcmpDialog"})
+                <span style="color: green"><b>Edit</b></span>
+            }
+            else
+            {
+                @Html.RadioButton("Availability", true, false, new {eqpid = @Model[0].LabsListDefs1[i].EquipmentID, id = DBNull.Value, eqpno = 1, @class = "editAppcmpDialog"})
+                <span style="color: red"><b>Add</b></span>
+            }*@
+
+
+                </td>
+
+            </tr>
+        }
+
+        @*@foreach (var item in Model.FirstOrDefault().LabsListDefs1)
+            {
+
+                <tr>
+                    <td class="col2" style="width: 30px; text-align: center;">
+                        @(sno++)
+                    </td>
+                    <td class="col2" style="text-align: left; vertical-align: top;">@item.LabName</td>
+                    <td class="col2" style="text-align: left; vertical-align: top;">@item.EquipmentName</td>
+
+                    <td class="col2" style="text-align: right; vertical-align: top;">
+                        @Html.RadioButton("Availability", true,true,new { id = item.EquipmentID, eqpid = "undefined", eqpno = 0, @class = "editlabDialog" }) Add
+                    </td>
+                    <td class="col2" style="text-align: right; vertical-align: top;">
+                        @Html.TextBoxFor(model => model.FirstOrDefault().collegeCode, new { type = "file", @class = "file" })
+                    </td>
+                </tr>
+
+
+            }*@
+
+    </table>
+
+
+<br />
+<p style="text-align:right">
+    @Html.ActionLink("GoTo Step- 4", "ExistingAndProposedIntakeForAppeal", null, new { @class = "create_button" })
+</p>
+}
+}
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+<div id="dialog-appeal-edit" style="display: none">
+</div>
+<div id="Appealcpldialog-edit" style="display: none">
+</div>

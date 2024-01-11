@@ -1,0 +1,1279 @@
+﻿@model IList<UAAAS.Controllers.FacultyVerificationController.CollegeFacultyWithIntakeReport>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+@using UAAAS.Models;
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    ViewBag.Title = "SUBMISSION OF ONLINE APPEAL";
+    int sno = 1;
+    int num = 1;
+    int intakenum = 1;
+    int Labscount = 0;
+    int collegeid = 0;
+    string Reveficationscreenshot = string.Empty;
+    string SCMApprovalLetter = string.Empty;
+    string Form16ApprovalLetter = string.Empty;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake';
+            }
+        });
+
+        //For collegeintake scripts
+
+        $('.subtUpload').click(function () {
+
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+
+        });
+
+
+        var $myIntakeDialog = $("#dialog-appeal-edit").dialog({
+            title: 'Add/Edit Existing Intake',
+            autoOpen: false,
+            resizable: false,
+            height: 610,
+            width: 800,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+
+        $('.full_table').find('tr').click(function () {
+            url = $(this).find(".editintakeDialog").attr('href');
+        });
+
+        $(".editintakeDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-appeal-edit").dialog({
+                title: 'Edit Existing Intake'
+            });
+
+            $myIntakeDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmIntakeDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-appeal-edit").dialog("close");
+        });
+
+        $($myIntakeDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        //$("#tabla").find('tfoot').append($('<td><b>Total</b></td><td>a</td><td>b</td>'));
+
+        //For appeal SCM DOCS
+
+        function GetAppealSCMApprovalLetterfileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#SCMApprovalLetter")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+
+        $(function () {
+            $(".AppealSCMApprovalLetterfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    //$(".AppealSCMApprovalLetterfiles > span").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetAppealSCMApprovalLetterfileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".AppealSCMApprovalLetterfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".AppealSCMApprovalLetterfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+        //For appeal SCM DOCS
+
+        function GetAppealForm16ApprovalLetterfileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#Form16ApprovalLetter")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        $(function () {
+            $(".AppealForm16ApprovalLetterfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    //$(".AppealForm16ApprovalLetterfiles > span").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetAppealForm16ApprovalLetterfileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".AppealForm16ApprovalLetterfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".AppealForm16ApprovalLetterfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+    });
+
+    var mainUrl = window.location;
+
+    $('.webGrid').find('tr').click(function () {
+        //url = $(this).find(".editDialog").attr("typei");
+        url = "/FacultyVerification/FacultyRegistrationNumber";
+        alert(url);
+    });
+
+    $(".editDialog").live("click", function (e) {
+        e.preventDefault();
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/FacultyRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Faculty Appeal For Compliance',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editdefDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        $("#dialog-edit").dialog({
+            title: 'Appeal for Reverification ',
+            resizable: false,
+            height: 150,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+
+    $(".editreverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        var CollegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverificationFaculty?collegeId=" + CollegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        window.open(url);
+        //$("#dialog-edit").dialog({
+        //    title: 'Appeal for Reverification ',
+        //    resizable: false,
+        //    height: 150,
+        //    width: 850,
+        //    show: { effect: 'drop', direction: "up" },
+        //    modal: true,
+        //    draggable: true,
+        //    closeOnEscape: true,
+        //    open: function (event, ui) {
+        //        $(this).load(url);
+        //    },
+        //    close: function (event, ui) {
+        //        $(this).dialog("close");
+        //    }
+        //});
+        //$myDialog.dialog('open');
+        //return false;
+    });
+
+
+    $(".editlabDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecord?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#dialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+    $(".editAppcmpDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecordReverification?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#Appealcpldialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+    $(".editprinpalcomplicanceDialog").live("click", function (e) {
+        e.preventDefault();
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/PrincipalFacultyRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal For Complicance',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editprincipalverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var registrationnumber = '@ViewBag.PrincipalRegno';
+        var url = "/FacultyVerification/PrincipalAppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&registrationnumber=" + registrationnumber;
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal for Reverification ',
+            resizable: false,
+            height: 200,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    var $myDialog = $("#dialog-edit").dialog({
+        title: 'Add/Edit Lab',
+        autoOpen: false,
+        resizable: false,
+        height: 700,
+        width: 720,
+        show: { effect: 'drop', direction: "up" },
+        modal: true,
+        draggable: true,
+        closeOnEscape: true,
+        open: function (event, ui) {
+            debugger;
+            $(this).load(url);
+        },
+        close: function (event, ui) {
+            $(this).dialog("close");
+
+        }
+    });
+
+    $($myDialog).bind("dialogclose", function () {
+        window.location = mainUrl;
+    });
+
+
+
+</script>
+<h2 style="text-align: center"><b>SUBMISSION OF ONLINE APPEAL</b></h2><br />
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+
+@using (Html.BeginForm("AppealDepartmentWiseDocs", "FacultyVerification", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table class="faculty_table">
+        <tr>
+            @*<td class="col1">College
+                </td>
+                <td class="col2">
+                    @Html.DropDownList("collegeId", new SelectList(@ViewBag.Colleges, "collegeId", "collegeName"),
+                    "--Select--", new { id = "college", @style = "width:95%" })
+                </td>*@
+            @*<td style="text-align:right">
+                    @Html.ActionLink("Export", "CollegeFacultyWithIntake", "FacultyVerification", new { type = "Excel"}, new { @class = "create_button" })
+                </td>*@
+        </tr>
+    </table>
+
+    <br />
+
+
+    @*//For Principal*@
+
+    <table class="faculty_table">
+        <tr>
+            <td class="col1" style="font-weight:bold">
+                College
+            </td>
+            <td class="col2">
+                @Html.DisplayFor(model => model.FirstOrDefault().collegeName)
+            </td>
+            <td class="col3" style="font-weight:bold">
+                College Code
+            </td>
+            <td class="col4">
+                @Html.DisplayFor(model => model.FirstOrDefault().collegeCode)
+            </td>
+        </tr>
+        <tr>
+            <td class="col1" style="font-weight:bold">
+                Principal
+            </td>
+            <td class="col2">
+                @if (!string.IsNullOrEmpty(ViewBag.PrincipalRegno))
+                {
+                    @ViewBag.PrincipalRegno
+                }
+            </td>
+            <td class="col3" style="font-weight:bold">
+                Deficiency
+            </td>
+            @foreach (var collegeId in Model.Select(c => c.collegeId).Distinct().ToList())
+            {
+                collegeid = collegeId;
+            }
+            <td class="col4">
+                @if (ViewBag.PrincipalDeficiency == "NO")
+                {
+                    @ViewBag.PrincipalDeficiency
+                }
+
+                else if (ViewBag.principaldeficiencystatus == false)
+                {
+                    @ViewBag.PrincipalDeficiency
+                    <span style="color: red;font-weight: bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Appeal For Compliance</span>
+                    @Html.CheckBox("compliance", false, new { collegeId = collegeid, deficencycount = 0, degree = "", departmentid = 0, specializationid = 0, @class = "editprinpalcomplicanceDialog" })
+                    <span style="color: red; font-weight: bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Appeal For Re-Verification</span>
+                    @Html.CheckBox("reverification", false, new { collegeId = collegeid, deficencycount = 0, degree = "", departmentid = 0, specializationid = 0, @class = "editprincipalverificationDialog" })
+                }
+
+                else if (ViewBag.principaldeficiencystatus == true)
+                {
+                    @ViewBag.PrincipalDeficiency
+                    <span style="color: green;font-weight: bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Appeal Submitted</span>
+                    @Html.CheckBox("compliance", false, new { @disabled = "disabled" })
+                    <span style="color: red; font-weight: bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Appeal For Re-Verification</span>
+                    @Html.CheckBox("reverification", false, new { collegeId = collegeid, deficencycount = 0, degree = "", departmentid = 0, specializationid = 0, @class = "editprincipalverificationDialog" })
+                }
+            </td>
+
+        </tr>
+
+    </table>
+
+    <br />
+
+    @*//For Faculty*@
+    <table style="width: 100%; border: 1px; border-color: red" class="webGrid">
+        <tr>
+            <th class="col3" colspan="20" style="text-align:left">Deficiencies in Faculty (Department / Specialization Wise)</th>
+        </tr>
+        <tr>
+            @*<th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">SNo</th>
+                <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Code</th>
+                <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">College Name</th>*@
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Department</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Degree</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Specialization</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">ShiftId</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" colspan="4">Intake</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Total Intake*</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Specialization Wise Faculty Required</th>
+            @*<th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Total Faculty Requirement</th>*@
+            @*<th class="col1" style="text-align: center; vertical-align: top;" colspan="2">Specialization Wise Available Faculty</th>*@
+
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Specialization Wise Available Faculty</th>
+            @*<th class="col1" style="text-align: center; vertical-align: top; color: red">Whether minimum requirement met</th>*@
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency of Ph.D faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Appeal for Compliance</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Appeal for Reverification </th>
+            @*<th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Supporting Documents</th>*@
+        </tr>
+        <tr>
+            <th class="col1" style="text-align: right; vertical-align: top;">IV Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">III Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">II Year</th>
+            <th class="col1" style="text-align: right; vertical-align: top;">I Year</th>
+
+            @*<th class="col1" style="text-align: center; vertical-align: top;">No. Of UG Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top;">No. Of PG Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top;">No. Of Ph.D Faculty</th>*@
+        </tr>
+
+        @foreach (var collegeId in Model.Select(c => c.collegeId).Distinct().ToList())
+        {
+            collegeid = collegeId;
+            var count = Model.Where(m => m.collegeId == collegeId).Select(m => m).Count();
+            var list = Model.Where(c => c.collegeId == collegeId).ToList();
+            var distDeptcount = 1;
+            var loop = 1;
+            var deptloop = 1;
+
+            foreach (var item in list)
+            {
+                distDeptcount = list.Where(d => d.Department == item.Department).Distinct().Count();
+
+                int indexnow = list.IndexOf(item);
+
+                if (indexnow > 0 && list[indexnow].Department != list[indexnow - 1].Department)
+                {
+                    deptloop = 1;
+                }
+
+                if (list.IndexOf(item) == 0)
+                {
+                    <tr>
+                        @*<td class="col2" style="text-align: center; vertical-align: top;width:10px" rowspan="@count">@(sno++)</td>
+                            <td class="col2" style="text-align: center; vertical-align: top;width:10px; text-transform: uppercase" rowspan="@count">@item.collegeCode</td>
+                            <td class="col2" style="text-align: left; vertical-align: top; text-transform: uppercase" rowspan="@count">@item.collegeName)</td>*@
+                        <td class="col2" style="text-align: center; vertical-align: middle; font-weight: bold" rowspan="@distDeptcount">@item.Department</td>
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Degree</td>
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Specialization</td>
+                        <td class="col2" style="text-align: center; vertical-align: top;">@item.shiftId</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake4</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake3</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake2</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake1</td>
+                        <td class="col2" style="text-align: right; vertical-align: top; font-weight: bold">@item.totalIntake</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@Math.Round(@item.requiredFaculty)</td>
+                        @*<td class="col2" style="text-align: right; vertical-align: top;"></td>*@
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">@item.ugFaculty</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@item.pgFaculty</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@item.phdFaculty</td>*@
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.specializationWiseFaculty</td> @*@item.totalFaculty*@
+                        @if (item.deficiency == true)
+                        {
+                            var deffaculty = Math.Round(@item.requiredFaculty) - @item.specializationWiseFaculty;//@item.totalFaculty
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                YES (@deffaculty)
+                                @*<a href="@Html.ActionLink("fdf", "FacultyRegistrationNumber", new {collegeId = item.collegeId, deficencycount = (int) deffaculty, degree = item.Degree, departmentid = item.DepartmentID})" target="_blank" class="editdefDialog">(@deffaculty)</a>*@
+                                @*@Html.ActionLink("fdf", "FacultyRegistrationNumber", new { collegeId = item.collegeId, deficencycount = (int)deffaculty, degree = item.Degree, departmentid = item.DepartmentID }, new { @class = "editdefDialog" })*@
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+
+                        @*<td class="col2" style="text-align: right; vertical-align: top;"></td>*@
+                        @if (item.PHDdeficiency == true)
+                        {
+                            var phddeffaculty = @item.AvailablePHDFaculty;
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                YES (@phddeffaculty)
+                                @*<a href="" target="_blank">(@phddeffaculty)</a>*@
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+                        @if ((item.deficiency == true || item.PHDdeficiency == true) && item.deficiencystatus == false)
+                        {
+                            var deffaculty = Math.Round(@item.requiredFaculty) - @item.specializationWiseFaculty;//@item.totalFaculty
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @*@Html.RadioButton("Appeal", true, new { @class = "editDialog"  })  &nbsp;&nbsp;*@
+                                @Html.CheckBox("Compliance", false, new { collegeId = item.collegeId, deficencycount = (int)deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editDialog" })  &nbsp;&nbsp;
+                            </td>
+                        }
+                        else if (item.deficiencystatus)
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                <span style="color: green; font-weight: bold;">Appeal Submitted</span>
+                                @Html.CheckBox("Compliance", false, new { @disabled = "disabled" })  &nbsp;&nbsp;
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                        }
+                        @if (item.deficiency == true || item.PHDdeficiency == true)
+                        {
+                            var deffaculty = Math.Round(@item.requiredFaculty) - @item.specializationWiseFaculty;//@item.totalFaculty
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @*@Html.RadioButton("Appeal", true, "")*@
+                                @*@Html.CheckBox("reverification", false, new {collegeId = item.collegeId, deficencycount = (int) deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editdefDialog"}) &nbsp;&nbsp;*@
+                                @Html.CheckBox("reverification", false, new { collegeId = item.collegeId, deficencycount = (int)deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editreverificationDialog" })  &nbsp;&nbsp;
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                        }
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.TextBoxFor(model => model.FirstOrDefault().collegeCode, new { type = "file", @class = "file" })
+                            </td>*@
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        @if (deptloop == 1)
+                        {
+
+                            <td class="col2" style="text-align: center; vertical-align: middle; font-weight: bold" rowspan="@distDeptcount">@item.Department</td>
+                        }
+
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Degree</td>
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Specialization</td>
+                        <td class="col2" style="text-align: center; vertical-align: top;">@item.shiftId</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake4</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake3</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake2</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake1</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;font-weight:bold">@item.totalIntake</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@Math.Round(@item.requiredFaculty)</td>
+                        @*<td class="col2" style="text-align: right; vertical-align: top;"></td>*@
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">@item.ugFaculty</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@item.pgFaculty</td>
+                            @if (deptloop == 1)
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;" rowspan="@distDeptcount">@item.phdFaculty</td>
+                            }*@
+
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.specializationWiseFaculty</td> @*@item.totalFaculty*@
+                        @if (item.deficiency == true)
+                        {
+                            var deffaculty = Math.Round(@item.requiredFaculty) - @item.specializationWiseFaculty;//@item.totalFaculty
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                YES (@deffaculty)
+                                @*<a href="@Html.ActionLink("fdf", "FacultyRegistrationNumber", new {collegeId = item.collegeId, deficencycount = (int) deffaculty, degree = item.Degree, departmentid = item.DepartmentID})" target="_blank" class="editdefDialog">(@deffaculty)</a>*@
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+                        @*<td class="col2" style="text-align: right; vertical-align: top;"></td>*@
+                        @if (item.PHDdeficiency == true)
+                        {
+                            var phddeffaculty = @item.AvailablePHDFaculty;
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                YES (@phddeffaculty)
+                                @*<a href="" target="_blank">(@phddeffaculty)</a>*@
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+                        @if ((item.deficiency == true || item.PHDdeficiency == true) && item.deficiencystatus == false)
+                        {
+                            var deffaculty = Math.Round(@item.requiredFaculty) - @item.specializationWiseFaculty;//@item.totalFaculty
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @*@Html.RadioButton("Appeal", true, new { @class = "editDialog" })  &nbsp;&nbsp;*@
+                                @Html.CheckBox("compliance", false, new { collegeId = item.collegeId, deficencycount = (int)deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editDialog" })  &nbsp;&nbsp;
+                            </td>
+                        }
+                        else if (item.deficiencystatus)
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                <span style="color: green; font-weight: bold">Appeal submitted</span>
+                                @Html.CheckBox("Compliance", false, new { @disabled = "disabled" })  &nbsp;&nbsp;
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                        }
+                        @if (item.deficiency == true || item.PHDdeficiency == true)
+                        {
+                            var deffaculty = Math.Round(@item.requiredFaculty) - @item.specializationWiseFaculty;//@item.totalFaculty
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @*@Html.RadioButton("Appeal", true, "")*@
+                                @*@Html.CheckBox("reverification", false, new { collegeId = item.collegeId, deficencycount = (int)deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editdefDialog" })  &nbsp;&nbsp;*@
+                                @Html.CheckBox("reverification", false, new { collegeId = item.collegeId, deficencycount = (int)deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editreverificationDialog" })  &nbsp;&nbsp;
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                        }
+                        @*@if (item.deficiency == true || item.PHDdeficiency == true)
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;">
+                                    @Html.TextBoxFor(model => model.FirstOrDefault().collegeCode, new {type = "file", @class = "file"})
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            }*@
+                    </tr>
+
+                }
+                deptloop++;
+
+            }
+
+        }
+
+    </table>
+
+    <br />
+
+    @*//For Labs*@
+    <table style="width: 100%; border: 1px; border-color: red" class="webGrid">
+        <tr>
+            <th class="col3" colspan="5" style="text-align: center">LIST OF EQUIPMENT NOT AVAILABLE</th>
+        </tr>
+        <tr>
+            <th class="col1" style="text-align: center;">S.No </th>
+            <th class="col1" style="text-align: left; vertical-align: middle; width: 100px">Lab Name</th>
+            <th class="col1" style="text-align: left; vertical-align: middle;">Equipment Name</th>
+
+            <th class="col1" style="text-align: center; vertical-align: middle; color: red">Appeal for Compliance </th>
+            <th class="col1" style="text-align: center; vertical-align: middle; color: red;">Appeal for Reverification</th>
+
+        </tr>
+
+
+        @*<tr>
+
+                <td class="col2" style="text-align: left; vertical-align: top;"></td>
+                <td class="col2" style="text-align: left; vertical-align: top;"></td>
+
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+            </tr>*@
+
+        @*@for (int i = 0; i < ViewBag.labslistcount; i++)
+            {
+                <tr>
+
+                    <td class="col2" style="text-align: left; vertical-align: top;">@ViewBag.labslist[i].LabName</td>
+                    <td class="col2" style="text-align: left; vertical-align: top;"></td>
+
+                    <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                    <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                </tr>
+            }*@
+
+        @for (int i = 0; i < Model.FirstOrDefault().LabsListDefs1.Count; i++)
+        {
+            <tr>
+                <td class="col2" style="width: 30px; text-align: center;">
+                    @(sno++)
+                </td>
+                <td class="col2" style="text-align: left; vertical-align: top;">@Model[0].LabsListDefs1[i].LabName</td>
+                <td class="col2" style="text-align: left; vertical-align: top;">@Model[0].LabsListDefs1[i].EquipmentName</td>
+
+                <td class="col2" style="text-align: right; vertical-align: top;">
+                    @{
+            var eqid = Model.FirstOrDefault().LabsListDefs1[i].EquipmentID;
+            var id = Model.FirstOrDefault().LabsListDefs1[i].id;
+            var EquipmentNo = 1;
+            var collegeId = Model.FirstOrDefault().collegeId;
+            Labscount = db.jntuh_appeal_college_laboratories.Where(l => l.id == id && l.EquipmentNo == EquipmentNo && l.CollegeID == collegeId).Select(l => l.id).Count();
+            Reveficationscreenshot = db.jntuh_appeal_college_laboratories.Where(l => l.id == id && l.EquipmentNo == EquipmentNo && l.CollegeID == collegeId).Select(l => l.ReVerificationScreenShot).FirstOrDefault();
+                    }
+                    @if (Labscount > 0 && Reveficationscreenshot == null)
+                    {
+                        if (Labscount > 0)
+                        {
+                            @Html.RadioButton("Availability", true, false, new { id = @Model[0].LabsListDefs1[i].id, eqpid = "undefined", eqpno = 1, @class = "editlabDialog" })
+                            <span style="color: green"><b>Edit</b></span>
+
+                        }
+                        else
+                        {
+                            @Html.RadioButton("Availability", true, false, new { eqpid = @Model[0].LabsListDefs1[i].EquipmentID, id = DBNull.Value, eqpno = 1, @class = "editlabDialog" })
+                            <span style="color:red"><b>Add</b></span>
+                        }
+                    }
+                    else if (Labscount == 0 && Reveficationscreenshot == null)
+                    {
+                        if (Labscount > 0)
+                        {
+                            @Html.RadioButton("Availability", true, false, new { id = @Model[0].LabsListDefs1[i].id, eqpid = "undefined", eqpno = 1, @class = "editlabDialog" })
+                            <span style="color: green"><b>Edit</b></span>
+
+                        }
+                        else
+                        {
+                            @Html.RadioButton("Availability", true, false, new { eqpid = @Model[0].LabsListDefs1[i].EquipmentID, id = DBNull.Value, eqpno = 1, @class = "editlabDialog" })
+                            <span style="color:red"><b>Add</b></span>
+                        }
+                    }
+                    else
+                    {
+                        @Html.RadioButton("Add", true, new { @disabled = true })
+                        <span style="color: red"><b>Add</b></span>
+                    }
+                    @*@if (Labscount > 0)
+                        {
+                            @Html.RadioButton("Availability", true, false, new {id = @Model[0].LabsListDefs1[i].id, eqpid = "undefined", eqpno = 1, @class = "editlabDialog"})
+                            <span style="color: green"><b>Edit</b></span>
+                        }
+                        else
+                        {
+                            @Html.RadioButton("Availability", true, false, new {eqpid = @Model[0].LabsListDefs1[i].EquipmentID, id = DBNull.Value, eqpno = 1, @class = "editlabDialog"})
+                            <span style="color: red"><b>Add</b></span>
+                        }*@
+
+
+
+                </td>
+                @*<td class="col2" style="text-align: right; vertical-align: top;">
+                        @Html.TextBoxFor(model => model.FirstOrDefault().collegeCode, new { type = "file", @class = "file" })
+                    </td>*@
+                <td class="col2" style="text-align: right; vertical-align: top;">
+
+                    @if (Labscount > 0 && Reveficationscreenshot == null)
+                    {
+                        @Html.RadioButton("Add", true, new { @disabled = true })
+                        <span style="color:red"><b>Add</b></span>
+                    }
+                    else
+                    {
+                        if (Reveficationscreenshot != null)
+                        {
+
+                            @Html.RadioButton("Availability", true, false, new { id = @Model[0].LabsListDefs1[i].id, eqpid = "undefined", eqpno = 1, @class = "editAppcmpDialog" })
+                            <span style="color: green"><b>Edit</b></span>
+                        }
+                        else
+                        {
+                            @Html.RadioButton("Availability", true, false, new { eqpid = @Model[0].LabsListDefs1[i].EquipmentID, id = DBNull.Value, eqpno = 1, @class = "editAppcmpDialog" })
+                            <span style="color:red"><b>Add</b></span>
+                        }
+                    }
+                    @*@if (Labscount > 0)
+                        {
+                            @Html.RadioButton("Availability", true, false, new {id = @Model[0].LabsListDefs1[i].id, eqpid = "undefined", eqpno = 1, @class = "editAppcmpDialog"})
+                            <span style="color: green"><b>Edit</b></span>
+                        }
+                        else
+                        {
+                            @Html.RadioButton("Availability", true, false, new {eqpid = @Model[0].LabsListDefs1[i].EquipmentID, id = DBNull.Value, eqpno = 1, @class = "editAppcmpDialog"})
+                            <span style="color: red"><b>Add</b></span>
+                        }*@
+
+
+                </td>
+
+            </tr>
+        }
+
+        @*@foreach (var item in Model.FirstOrDefault().LabsListDefs1)
+            {
+
+                <tr>
+                    <td class="col2" style="width: 30px; text-align: center;">
+                        @(sno++)
+                    </td>
+                    <td class="col2" style="text-align: left; vertical-align: top;">@item.LabName</td>
+                    <td class="col2" style="text-align: left; vertical-align: top;">@item.EquipmentName</td>
+
+                    <td class="col2" style="text-align: right; vertical-align: top;">
+                        @Html.RadioButton("Availability", true,true,new { id = item.EquipmentID, eqpid = "undefined", eqpno = 0, @class = "editlabDialog" }) Add
+                    </td>
+                    <td class="col2" style="text-align: right; vertical-align: top;">
+                        @Html.TextBoxFor(model => model.FirstOrDefault().collegeCode, new { type = "file", @class = "file" })
+                    </td>
+                </tr>
+
+
+            }*@
+
+    </table>
+
+    <br />
+
+    @*//For CollegeIntake*@
+
+    <table style="width: 100%; border: 1px; border-color: red" class="full_table">
+        <tr>
+            <th class="col1" colspan="25" style="text-align: center; font-weight: bold;">EXISTING & PROPOSED INTAKE</th>
+        </tr>
+        <tr>
+            <th class="col1" style="text-align: center;" rowspan="3">S.No</th>
+            <th class="col1" rowspan="3">Degree</th>
+            <th class="col1" style="text-align: center;" rowspan="3">Department</th>
+            <th class="col1" style="text-align: center;" rowspan="3">Specialization</th>
+            <th class="col1" style="text-align: center;" rowspan="3">Shift</th>
+            <th class="col1" style="text-align: center;" colspan="10">Approved & Actual Admitted Intake as per Academic Year</th>
+            @*<th style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">Approved Intake for the A.Y.
+                    <br />
+                    2015-16 (as per AICTE)
+                </th>*@
+            <th class="col1" style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">
+                Proposed Intake for the A.Y.<br />
+                2016-17 (as submitted to AICTE)
+            </th>
+            <th class="col1" style="text-align: center; background-color: lightgreen; font-weight: bold;" rowspan="3">Course Status</th>
+            <th class="col1" style="text-align: center;" colspan="2">NBA Accreditation Period (if exists)</th>
+            <th class="col1" colspan="2" style="text-align: center;" rowspan="3"></th>
+        </tr>
+        <tr>
+            <th class="col1" style="text-align: center;" colspan="2">@ViewBag.FifthYear</th>
+            <th class="col1" style="text-align: center;" colspan="2">@ViewBag.FourthYear</th>
+            <th class="col1" style="text-align: center;" colspan="2">@ViewBag.ThirdYear</th>
+            <th class="col1" style="text-align: center;" colspan="2">@ViewBag.SecondYear</th>
+            <th class="col1" style="text-align: center;" colspan="2">@ViewBag.FirstYear</th>
+            <th class="col1" style="text-align: center;" colspan="2">(DD/MM/YYYY)</th>
+        </tr>
+        <tr style="">
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/approved.png" alt="approved" title="Approved" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                <img src="../../Content/images/admitted.png" alt="admitted" title="Admitted" />
+            </th>
+            <th class="col1" style="text-align: center;">
+                From
+            </th>
+            <th class="col1" style="text-align: center;">
+                To
+            </th>
+        </tr>
+
+        @foreach (var item in Model.FirstOrDefault().CollegeIntakeExistings)
+        {
+            <tr>
+                <td class="col2" style="width: 30px; text-align: center;">
+                    @(num++)
+                </td>
+                <td class="col2" style="width: 60px;">@item.Degree</td>
+                <td class="col2" style="width: 50px;">@item.Department</td>
+                <td class="col2">@item.Specialization</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.Shift</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake5</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake5</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake4</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake4</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake3</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake3</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake2</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake2</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.approvedIntake1</td>
+                <td class="col2" style="width: 30px; text-align: center;">@item.admittedIntake1</td>
+                @*<td style="width: 30px; text-align: center; background-color: lightgreen; font-weight: bold;">
+                        @if (item.ApprovedIntake == 0)
+                        { }
+                        else
+                        {
+                            @item.ApprovedIntake
+                        }
+                    </td>*@
+                <td class="col2" style="width: 30px; text-align: center; background-color: lightgreen; font-weight: bold;">
+                    @if (item.ProposedIntake == 0)
+                    {
+                    }
+                    else
+                    {
+                        @item.ProposedIntake
+                    }
+                </td>
+                <td class="col2" style="width: 65px; text-align: center; background-color: lightgreen; font-weight: bold;">@item.courseStatus</td>
+                <td class="col2" style="width: 65px; text-align: center;">
+                    @if (item.nbaFrom != null)
+                    {
+                        @item.nbaFromDate.ToString().Split(' ')[0]
+                    }
+                </td>
+
+                <td class="col2" style="width: 65px; text-align: center;">
+                    @if (item.nbaTo != null)
+                    {
+                        @item.nbaToDate.ToString().Split(' ')[0]
+                    }
+                </td>
+
+                <td class="col2" style="width: 20px; text-align: center;">
+                    @Html.ActionLink("Edit", "AppealAddEditCollegeIntake", "FacultyVerification", new { id = item.id, collegeId = item.collegeId }, new { @class = "editintakeDialog edit_button" })
+                </td>
+                @*<td class="col2" style="width: 20px; text-align: center;">
+                        @Html.ActionLink("Delete", "AppealDeleteCollegeIntake", new {id = item.id}, new {@class = "confirmIntakeDialog delete_button"})
+                    </td>*@
+                <td hidden="hidden">@item.createdBy</td>
+                <td hidden="hidden">@item.createdOn</td>
+            </tr>
+        }
+    </table>
+
+
+    <br />
+    @*//For CollegeIntake departement wise files uploading*@
+    @Html.HiddenFor(model => model.FirstOrDefault().collegeId)
+    @Html.HiddenFor(model => model.FirstOrDefault().collegeCode)
+    <table style="width: 100%; border: 1px; border-color: red" class="full_table" id="tabla">
+        <tr>
+            <th class="col1" colspan="7" style="text-align: center; font-weight: bold;">EXISTING & PROPOSED INTAKE SUPPORTING DOCUMENTS</th>
+        </tr>
+        <tr>
+            <th class="col1" style="text-align: center;">S.No</th>
+            <th class="col1" style="text-align: left;">Degree</th>
+            <th class="col1" style="text-align: left;">Department</th>
+            <th class="col1" style="text-align: left;">Specialization</th>
+            <th class="col1" style="text-align: left;">
+                SCM <br />
+                <span style="color: blue;">
+                    (Pdf should be less than 1 MB size)
+                </span>
+            </th>
+            <th class="col1" style="text-align: left;">
+                Form16 <br />
+                <span style="color: blue;">
+                    (Pdf should be less than 1 MB size)
+                </span>
+            </th>
+            @*<th class="col1" style="text-align: center;">Save</th>*@
+        </tr>
+
+        @for (var i = 0; i < Model.FirstOrDefault().CollegeIntakeExistings.Count; i++)
+        {
+            <tr>
+                <td class="col2" style="width: 30px; text-align: center; height: 37px;">
+                    @(intakenum++)
+                </td>
+                <td class="col2" style="width: 60px; height: 37px;">@Model.FirstOrDefault().CollegeIntakeExistings[i].Degree</td>
+                <td class="col2" style="width: 50px; height: 37px;">@Model.FirstOrDefault().CollegeIntakeExistings[i].Department</td>
+                <td class="col2" style="height: 37px;">@Model.FirstOrDefault().CollegeIntakeExistings[i].Specialization</td>
+                <td class="col2 AppealSCMApprovalLetterfiles" style="width: 30px; text-align: center; height: 37px;">
+                    @Html.TextBoxFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].SCMApprovalLetter, new { type = "file", @class = "AppealSCMApprovalLetterfile" })<br />
+                    <span style="color: red;"></span>
+                </td>
+                <td class="col2 AppealForm16ApprovalLetterfiles" style="width: 30px; text-align: center; height: 37px;">
+                    @Html.TextBoxFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].Form16ApprovalLetter, new { type = "file", @class = "AppealForm16ApprovalLetterfile" })<br />
+                    <span style="color: red;"></span>
+                </td>
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].Degree)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].Department)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].Specialization)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].academicYearId)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].collegeId)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].specializationId)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].DepartmentID)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].nbaFromDate)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].nbaToDate)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].letterPath)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].shiftId)
+                @Html.HiddenFor(model => model.FirstOrDefault().CollegeIntakeExistings[i].courseStatus)
+            </tr>
+        }
+
+        <tr>
+            <td style="text-align: right" colspan="6"><input type="submit" value="Submit Intake Documents" /></td>
+        </tr>
+
+    </table>
+
+}
+<br />
+<p style="text-align:right">@Html.ActionLink("Proceed For Appeal Submission", "AppealSubmission", new { collegeId = collegeid }, new { @class = "create_button" })</p>
+
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+<div id="dialog-appeal-edit" style="display: none">
+</div>
+<div id="Appealcpldialog-edit" style="display: none">
+</div>
+
+

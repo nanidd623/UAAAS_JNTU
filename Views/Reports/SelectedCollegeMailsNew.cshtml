@@ -1,0 +1,245 @@
+﻿@model UAAAS.Models.CollegeMails
+@using UAAAS.Models
+@{
+    ViewBag.Title = "FinalEmailsend";
+    int sno = 1;
+}
+
+
+
+@section onReady{
+    /* Initialize table and make first column non-sortable*/
+    $('#example').dataTable({  "bJQueryUI": true,
+    "iDisplayLength": 50,
+    "bStateSave": false,
+    "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+    "bPaginate": false,
+    "bFilter": false,
+    "bInfo": false,
+    "aoColumns": [ { "bSortable": true, "bSearchable": true }, null, null, null ]
+    });
+}
+<style type="text/css">
+    .top {
+        display: none;
+    }
+</style>
+<script src="../../Scripts/jquery-te-1.4.0.min.js" type="text/javascript"></script>
+<link href="../../Content/jquery-te-1.4.0.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        $('#chkselectall').click(function () {
+            // add multiple select / deselect functionality
+            $('.forcheckbox').attr('checked', this.checked);
+        });
+        $('#btnsubmit').click(function () {
+            debugger;
+            var ValidFile = true;
+           // var ValidCheckBox = true;
+            var ValidMessage = true;
+            var ValidSubject = true;
+            var ValidSMS = true;
+            var file = $('#filepicker').val();
+            var CheckedCount = $("[type='checkbox']:checked").length;
+
+            /* if (file == '') {
+                 alert('Please Choose File');
+                 ValidFile = false;
+             }
+             if (ValidFile == true) {
+                 if (CheckedCount == 0) {
+                     alert('Please select atleast one college to send a mail');
+                     ValidCheckBox = false;
+                 }
+             }
+             if (ValidFile == true && ValidCheckBox == true) {
+                 if ($('#Subject').val() == '') {
+                     alert('Please enter Subject Details');
+                     ValidSubject = false;
+                 }
+             }
+             if (ValidFile == true && ValidCheckBox == true && ValidSubject==true) {
+                 if ($('#Message').val() == '') {
+                     alert('Please enter Message Details');
+                     ValidMessage = false;
+                 }
+             }
+             if (ValidFile == true && ValidCheckBox == true && ValidSubject == true && ValidMessage==true) {
+                 if ($('#SMS').val() == '') {
+                     alert('Please enter SMS Details');
+                     ValidSMS = false;
+                 }
+             }
+             return ValidFile && ValidCheckBox && ValidMessage && ValidSubject && ValidSMS;
+             */
+
+
+
+            //if (CheckedCount == 0) {
+            //    alert('Please select atleast one college to send a mail');
+            //    return false;
+            //}
+            if (ValidCheckBox == true) {
+                if ($('#Subject').val() != '') {
+                    if ($('#Message').val() == '') {
+                        alert('Please enter Message Details');
+                        return false;
+                    }
+                }
+            }
+            if ($('#Subject').val() == '' && $('#Subject').val() == '' && $('#SMS').val() == '') {
+
+                alert('Please enter SMS or email related details');
+                return false;
+            }
+
+        });
+        $('#SMS').keyup(function () {
+            var SMSLength = ($(this).val()).length;
+            var SMSCalculation = (SMSLength / 160);
+            var ResultMessage = SMSLength + '-(' + Math.ceil(SMSCalculation) + ')' + 'Message(s)';
+            $('#SMSText').html(ResultMessage);
+        })
+        //$("#Message").jqte();
+    });
+
+</script>
+<h2>Email And SMS To All Colleges (With Attachment)</h2>
+<br />
+
+<div>
+    @if (TempData["Success"] != null)
+    {
+        <p style="color:forestgreen;float:left;"><strong>Success : </strong>@TempData["Success"].ToString()</p>
+    }
+    @if (TempData["Failure"] != null)
+    {
+        <p style="color:red;float:left;"><strong>Failure : </strong>@TempData["Failure"].ToString()</p>
+    }
+</div>
+<br/>
+@using (Html.BeginForm("FinalEmailSend", "AllCollegeMailsReport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <table class="four_columns" style="margin-left: 10px; width: 80%; font-size: 15px">
+
+        @*@if (TempData["Show"] != null)
+            {*@
+        <tr style="height: 30px">
+            <td class="col1" style="width: 18%">Subject : </td>
+            <td class="col2" style="width: 80%">
+                @Html.TextBoxFor(model => model.Subject, new { style = "width:99%" })
+            </td>
+        </tr>
+        <tr style="height: 30px">
+            <td class="col1" style="vertical-align: top; width: 18%">Message : </td>
+            <td class="col2" style="width: 55%">
+                @Html.TextAreaFor(model => model.Message)
+            </td>
+        </tr>
+        <tr style="height: 30px">
+            <td class="col1" style="vertical-align: top">SMS : </td>
+            <td class="col2">
+                @Html.TextAreaFor(model => model.SMS, new { style = "width:99%" })
+            </td>
+            <td style="width: 20%">
+                <label id="SMSText"></label>
+            </td>
+        </tr>
+        <tr style="height: 30px">
+            <td class="col1">Attachment :</td>
+            <td class="col2">
+                <input type="file" name="fileUploader" id="filepicker" />
+            </td>
+        </tr>
+        <tr style="height: 30px">
+            <td class="col1">Save Subject In College_News :</td>
+            <td class="col2">
+                @Html.CheckBoxFor(model => model.Select, new { style ="width:5%" })
+            </td>
+        </tr>
+
+        <tr style="height: 30px; font-size: 15px">
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                <input type="submit" id="btnsubmit" value="Send" style="padding: 4px 15px; font-size: 15px" name="command" />
+                @Html.ActionLink("Back", "Admin", "Dashboard", null, new { @class = "create_button" })
+                <input type="submit" value="Print" style="padding: 4px 15px; font-size: 15px" name="command" />
+            </td>
+        </tr>
+       
+    </table>
+  
+    <br />
+    <br />
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">S.No</th>
+                <th style="width: 80px; text-align: center;">College Code</th>
+                <th style="text-align: left;">College Name</th>
+                <th style="text-align: left;">Email</th>
+                <th style="text-align: center; width: 80px;" class="ui-state-default">Mobile No</th>
+                @*<th class="ui-state-default" style="width: 60px; text-align: center;">Select</th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.collegeMails.Count(); i++)
+            {
+                <tr>
+                    <td style="text-align: center;">
+                        @(sno++)
+                    </td>
+                    <td style="text-align: center;">
+                        @Html.DisplayFor(m => m.collegeMails[i].collegeCode)
+                        @Html.HiddenFor(m => m.collegeMails[i].collegeCode , new { Value = Model.collegeMails[i].collegeCode })
+                        @Html.HiddenFor(m => m.collegeMails[i].collegeId, new { Value =  Model.collegeMails[i].collegeId })
+                        @Html.HiddenFor(m => m.collegeMails[i].collegeTypeId, new { Value = Model.collegeMails[i].collegeTypeId })
+                    </td>
+                    <td style="text-align: left;">
+                        @Html.DisplayFor(m => m.collegeMails[i].collegeName)
+                        @Html.HiddenFor(m => m.collegeMails[i].collegeName, new { Value = Model.collegeMails[i].collegeName })
+                    </td>
+                    <td style="text-align: left;">
+                        @Html.DisplayFor(m => m.collegeMails[i].email)
+                        @Html.HiddenFor(m => m.collegeMails[i].email, new { Value = Model.collegeMails[i].email })
+                    </td>
+                    <td style="text-align: center;">
+                        @Html.DisplayFor(m => m.collegeMails[i].mobileNo)
+                        @Html.HiddenFor(m => m.collegeMails[i].mobileNo, new { Value = Model.collegeMails[i].mobileNo })
+                    </td>
+                    @*<td style="text-align: center;" id="tdcheck">
+                        @Html.CheckBoxFor(m => m.collegeMails[i].isSelect, new { id = "chkall", @class = "forcheckbox" })
+                        @Html.HiddenFor(m => m.collegeMails[i].collegeId, new { Value = Model.collegeMails[i].collegeId })
+                    </td>*@
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th style="">
+                    <input type="text" id="i-0" style="width: 30%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th style="">
+                    <input type="text" id="i-1" style="width: 80%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th>
+                    <input type="text" id="i-2" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="text-align: left">
+                    <input type="text" id="i-3" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                <th class=" ui-state-default" style="">
+                    <input type="text" id="i-4" style="width: 90%; text-align: left; display: none;" class="search_init">
+                </th>
+                @*<th class=" ui-state-default" style="text-align: left">
+                    <input type="checkbox" id="chkselectall" style="width: 85%; text-align: left;" class="forcheckbox">
+                </th>*@
+            </tr>
+        </tfoot>
+    </table>
+}
+

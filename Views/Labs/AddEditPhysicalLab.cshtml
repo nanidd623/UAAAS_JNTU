@@ -1,0 +1,124 @@
+﻿@model UAAAS.Controllers.LabsController.physicalLab
+@{
+    ViewBag.Title = "Verify Faculty";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+
+@using (Ajax.BeginForm("AddEditPhysicalLab", "Labs", new AjaxOptions()))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["Error"] != null)
+    {
+        <div class="error">
+            <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+        </div>
+    }
+    if (TempData["Success"] != null)
+    {
+        <div class="success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    @*@Html.HiddenFor(model => model., new { @Value = Model.collegeId })
+    @Html.HiddenFor(model => model.id, new { @Value = Model.id })*@
+    <fieldset>
+        <legend></legend>
+
+
+        <div class="editor-label" style="width: 242px;">
+            @*@Html.Label("Degree")*@<b>Degree</b>
+        </div>
+        <div class="editor-field" style="width: 338px;">
+            @Html.DisplayFor(m => m.degree)
+            @Html.HiddenFor(m => m.degreeid)
+            @Html.HiddenFor(m => m.collegeId)
+            @Html.HiddenFor(m => m.id)
+
+
+        </div>
+
+        <div class="editor-label" style="width: 242px;">
+            @*@Html.Label("Department")*@
+            <b>Department</b>
+        </div>
+        <div class="editor-field" style="width: 338px;">
+            @Html.DisplayFor(m => m.department)
+            @Html.HiddenFor(m => m.departmentid)
+        </div>
+
+        <div class="editor-label" style="width: 242px;">
+            @*@Html.Label("Specialization")*@
+            <b>Specialization</b>
+        </div>
+        <div class="editor-field" style="width: 338px;">
+            @Html.DisplayFor(m => m.specialization)
+            @Html.HiddenFor(m => m.specializationid)
+        </div>
+
+
+        <div class="editor-label" style="width: 242px;">
+            @*@Html.Label("Year")*@
+            <b>Year</b>
+        </div>
+        <div class="editor-field" style="width: 338px;">
+            @Html.DisplayFor(m => m.year)
+            @Html.HiddenFor(m => m.year)
+        </div>
+
+        <div class="editor-label" style="width: 242px;">
+            @*@Html.Label("Semister")*@
+            <b>Semister</b>
+        </div>
+        <div class="editor-field" style="width: 338px;">
+            @Html.DisplayFor(m => m.semister)
+            @Html.HiddenFor(m => m.semister)
+        </div>
+        <div class="editor-label" style="width: 242px;">
+            <b> @Html.Label("LabCode")</b>
+        </div>
+        <div class="editor-field" style="width: 338px;">
+            @Html.DisplayFor(m => m.LabCode)
+            @Html.HiddenFor(m => m.LabCode)
+        </div>
+        <div class="editor-label" style="width: 242px;">
+            <b> @Html.Label("LabName")</b>
+        </div>
+        <div class="editor-field" style="width: 338px;">
+            @Html.DisplayFor(m => m.Labname)
+            @Html.HiddenFor(m => m.Labname)
+        </div>
+
+        <div class="editor-label" style="width: 242px; height: 35px;">
+            <b> @Html.Label("Number of Additional Labs Available with same name")</b><span>*</span>
+        </div>
+        <div class="editor-field" style="width: 338px; height: 35px;">
+            @Html.TextBoxFor(m => m.NoOfAvailabeLabs, new {@maxlength = "2"})
+        </div>
+
+        @*<div class="editor-label" style="width: 200px;">
+        @Html.Label("No of Required Labs")
+    </div>
+    <div class="editor-field" style="width: 380px;">
+        @Html.TextBoxFor(m => m.NoOfRequiredLabs,new{@maxlength="2"})
+    </div>*@
+        <div class="editor-label" style="width: 242px;">
+            <b> @Html.Label("Remarks")</b>
+        </div>
+        <div class="editor-field" style="width: 338px;">
+            @Html.TextBoxFor(m => m.Remarks, new {@maxlength = "50"})
+        </div>
+        <div style="text-align: center">
+            <p>
+                <input type="submit" value="Submit"/>
+                @*@Html.ActionLink("Cancel", "Teaching", "Faculty", null, new { @class = "create_button" })*@
+                @*<input type="button" class="create_button" name="Cancel" id="btncancel" value="Cancel" />*@
+            </p>
+        </div>
+        <p style="background: aqua">
+            <b>* Note:  <span>Additional laboratories ( I year and other years ): If the number of students using any laboratory in a particular semester exceeds 300 (as per University sanctioned Intake) then the institution shall provide separate laboratory for every 300 students and multiples thereof.</span></b>
+        </p>
+    
+</fieldset>
+}

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<UAAAS.Models.CollegeDocuments>
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+    ViewBag.Title = "College Photos";
+    int num = 1;
+}
+
+
+
+@*<p class="create_link_right">
+    <input name="btnPrint" type="button" onclick="printdiv('div_print');" value=" Print" class="create_button">
+</p>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".view_hide").show();
+    });
+
+    function printdiv(printpage) {
+        //$(".view_hide").hide();
+        //Get the HTML of div
+        var divElements = document.getElementById(printpage).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+          "<html><head><title></title></head><body>" +
+          divElements.fontsize(1) + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+        //$(".view_hide").show();
+        return false;
+    }
+</script>
+<div id="div_print">
+    <h2>College Photos</h2>
+    <table class="four_columns" style="width: 100%;">
+        <tr>
+            <th style="text-align: center;" class="col11">S.No
+            </th>
+            <th class="col11">Name of Photo
+            </th>
+            <th style="text-align: center;" class="col11">Photo
+            </th>
+        </tr>
+
+        @foreach (var item in ViewBag.CollegeDocuments as List<UAAAS.Models.CollegeDocuments>)
+        {
+            <tr>
+                <td style="width: 30px; text-align: center; vertical-align: top;" class="col21">
+                    @(num++)
+                </td>
+                <td style="vertical-align: top;" class="col21">@item.documentName</td>
+                <td style="width: 50px; vertical-align: top;" class="col21">
+                    @if (item.scannedCopy != null)
+                    {
+                        <img src="@item.scannedCopy.Replace("~", "")" style="width: 100px;" />
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    @if (ViewBag.Count == 0)
+    {
+        <div class="warning" style="width: 200px; margin: 0 auto;">
+            <p>No records found</p>
+        </div>
+    }
+</div>
+

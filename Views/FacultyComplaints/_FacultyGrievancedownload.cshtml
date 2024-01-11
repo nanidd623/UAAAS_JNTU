@@ -1,0 +1,135 @@
+﻿@using UAAAS.Models;
+@model IList<UAAAS.Models.FacultyComplaintsClass>
+@{
+    ViewBag.Title = "_FacultyGrievancedownload";
+}
+
+<h2></h2>
+@using (Html.BeginForm())
+{
+    int count = 0;
+    <table border="1" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    S.No
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Grievance ID
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Registration Number
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Name
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Grievance Type
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Grievance Date
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Address
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    College Name
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Grievance Description
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Grievance File
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Grievance Status
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Reply File
+                </th>
+                <th style="text-align: center; background-color: yellow; vertical-align: top">
+                    Reply Remarks
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item1 in Model)
+            {
+                <tr>
+                    <td style="text-align: center; vertical-align: top">
+                        @(count = count + 1)
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        @item1.TicketId
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        @item1.RegistrationNumber
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        @item1.Facultyname
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        @item1.complaintname
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        @item1.complaintdate
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        @item1.FacultyAddress
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        @item1.Collegename 
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        @item1.ComplaintDesc
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        <a href="http://jntuhaac.in/Content/Upload/ComplaintsGivenbyFaculty/ComplaintFile/@item1.complaintFileview" target="_blank" title="Lab Deficiency">
+                            <span style="color:red;">View</span>
+                        </a>
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        @if (item1.complaintStatus == 1)
+                        {
+                            <span>Processing</span>
+                        }
+                        else if (item1.complaintStatus == 2)
+                        {
+                            <span>Approved</span>
+                        }
+                        else if (item1.complaintStatus == 3)
+                        {
+                            <span>Finshed</span>
+                        }
+                        else if (item1.complaintStatus == 4)
+                        {
+                            <span>Proced to college</span>
+                        }
+                        else if (item1.complaintStatus == 5)
+                        {
+                            <span>Closed</span>
+                        }
+                        else
+                        {
+                            <span>Not Included in View (item.complaintStatus)</span>
+                        }
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        @if (item1.Replaycomplaintsfile != null)
+                        {
+                            <a href="http://jntuhaac.in/Content/Upload/FacultyComplaints/CollegeGrievancesupportdoc/@item1.Replaycomplaintsfile" target="_blank" title="Lab Deficiency">
+                                <span style="color: red;">View</span>
+                            </a>
+                        }
+                    </td>
+                    <td style="text-align: center; vertical-align: top">
+                        @if (item1.Replayremarks != null)
+                        {
+                            @item1.Replayremarks
+                        }
+                    </td>
+</tr>
+            }
+        </tbody>
+    </table>
+}

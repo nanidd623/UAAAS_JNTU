@@ -1,0 +1,26 @@
+﻿@model UAAAS.Models.OtherCollegesSameSociety
+<div class="details_table">
+    <div class="display-label" style="width: 40%;">College Name & Address</div>
+    <div class="display-field" style="width: 50%;">
+        @Html.DisplayFor(model => model.collegeName)
+    </div>
+     <div class="display-label"  style="width: 40%;">Year Of Establishment(YYYY)</div>
+    <div class="display-field"  style="width: 50%;">
+        @Html.DisplayFor(model => model.yearOfEstablishment)
+    </div>
+     <div class="display-label"  style="width: 40%;">College Location</div>
+    <div class="display-field"  style="width: 50%;">
+        @Html.DisplayFor(model => model.collegeLocation)
+    </div>
+    <div class="display-label" style="width: 40%;">Affiliated University</div>
+    <div class="display-field" style="width: 50%;">
+        @if (Model.jntuh_university.universityName.Equals("Other"))
+        {
+            @Html.DisplayFor(model => model.otherUniversityName)
+        }
+        else
+        {
+            @Html.DisplayFor(model => model.jntuh_university.universityName)
+        }
+    </div>
+</div>

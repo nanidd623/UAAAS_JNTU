@@ -1,0 +1,48 @@
+﻿@model IList<UAAAS.Models.CollegePrinterDetails>
+@using UAAAS.Models
+@{
+    ViewBag.Title = "Printers";
+    Layout = "~/Views/Shared/_UserLayoutLeftMenu.cshtml";
+}
+<h2>Printers</h2>
+@using (Html.BeginForm())
+{
+    if (ViewBag.Norecords == true)
+    {
+    <div class="warning" style="width: 200px; margin: 0 auto;">
+        <p>No Data found</p>
+    </div>
+    }
+    else
+    {    
+    <table class="four_columns" style="width: 100%;">
+        <tr style="font-weight: bold;">
+            <td style="text-align: left;width:30%" class="col11">Degree</td>
+            <td style="text-align: center;width:35%" class="col11">Available Computers</td>
+            <td style="text-align: center;width:35%" class="col11">Available Printers</td>
+        </tr>
+        @for (int i = 0; i < ViewBag.Count; i++)
+        {
+            <tr>
+                <td style="text-align: left;" class="col21">
+                    @Html.LabelFor(m => m[i].degree, Model[i].degree == null ? string.Empty : Model[i].degree.ToString())
+                    @Html.HiddenFor(m => m[i].degreeId)
+                </td>
+                <td style="text-align: center;" class="col21">
+                    @Html.LabelFor(m => m[i].availableComputers, Model[i].availableComputers == 0 ? "0" : Model[i].availableComputers.ToString())
+                </td>
+                <td style="text-align: center;" class="col21">
+                    @if (ViewBag.Update == true)
+                    {
+                        @Html.DisplayFor(m => m[i].availablePrinters, new { Value = Model[i].availablePrinters == 0 ? "0" : Model[i].availablePrinters.ToString(), style = "text-align: center;" })
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(m => m[i].availablePrinters, new { Value = Model[i].availablePrinters == 0 ? string.Empty : Model[i].availablePrinters.ToString(), style = "text-align: center;" })
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    }
+}

@@ -1,0 +1,1065 @@
+﻿@model IList<UAAAS.Controllers.College.CollegeFacultyWithIntakeReport>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+
+@using UAAAS.Models;
+@{
+    uaaasDBContext db = new uaaasDBContext();
+    var jntuh_degree = db.jntuh_degree.ToList();
+    ViewBag.Title = "SUBMISSION OF ONLINE APPEAL";
+    int sno = 1;
+    int num = 1;
+    int intakenum = 1;
+    int Labscount = 0;
+    int collegeid = 0;
+    string Reveficationscreenshot = string.Empty;
+    string SCMApprovalLetter = string.Empty;
+    string Form16ApprovalLetter = string.Empty;
+
+    UAAAS.Controllers.FacultyVerificationController con = new UAAAS.Controllers.FacultyVerificationController();
+    
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var mainUrl = window.location;
+        var url;
+        $('#college').change(function () {
+            var collegeId = $(this).val();
+            //alert(collegeId);
+
+            if ($('#college').val() != '') {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake?collegeId=' + collegeId;
+            }
+            else {
+                window.location = '/FacultyVerification/CollegeFacultyWithIntake';
+            }
+        });
+
+        //For collegeintake scripts
+
+        $('.subtUpload').click(function () {
+
+            var filename = $('.fileUploadcheck').val();
+            var path = $('.viewFileData').attr("href");
+            if ((filename == '' || filename == undefined)) {
+                alert('Please select file');
+                return false;
+            }
+
+        });
+
+
+        var $myIntakeDialog = $("#dialog-appeal-edit").dialog({
+            title: 'Add/Edit Existing Intake',
+            autoOpen: false,
+            resizable: false,
+            height: 610,
+            width: 800,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+
+
+        $('.full_table').find('tr').click(function () {
+            url = $(this).find(".editintakeDialog").attr('href');
+        });
+
+        $(".editintakeDialog").live("click", function (e) {
+            e.preventDefault();
+            $("#dialog-appeal-edit").dialog({
+                title: 'Edit Existing Intake'
+            });
+
+            $myIntakeDialog.dialog('open');
+            return false;
+        });
+
+        $(".confirmIntakeDialog").live("click", function (e) {
+
+            var url = $(this).attr('href');
+            $("#dialog-confirm").dialog({
+                title: 'Delete Existing Intake',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-appeal-edit").dialog("close");
+        });
+
+        $($myIntakeDialog).bind("dialogclose", function () {
+            window.location = mainUrl;
+        });
+
+        //$("#tabla").find('tfoot').append($('<td><b>Total</b></td><td>a</td><td>b</td>'));
+
+        //For appeal SCM DOCS
+
+        function GetAppealSCMApprovalLetterfileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#SCMApprovalLetter")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            }
+            else {
+                return strName[0];
+            }
+        }
+
+        $(function () {
+            $(".AppealSCMApprovalLetterfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    //$(".AppealSCMApprovalLetterfiles > span").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetAppealSCMApprovalLetterfileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".AppealSCMApprovalLetterfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".AppealSCMApprovalLetterfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+        //For appeal SCM DOCS
+
+        function GetAppealForm16ApprovalLetterfileSize(fileid) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject, //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //alert(fileSize);
+                    //fileSize = fileSize / 1048576; //size in mb
+                    // fileSize = fileSize / 1048576; //size in mb
+                    alert(fileSize);
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#Form16ApprovalLetter")[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                return fileSize;
+            }
+            catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+
+        $(function () {
+            $(".AppealForm16ApprovalLetterfile").change(function () {
+
+                var file = getNameFromPath($(this).val());
+                var flag;
+                if (file != null) {
+                    var extension = file.substr((file.lastIndexOf('.') + 1));
+                    switch (extension) {
+
+                        case 'pdf':
+                        case 'PDF':
+
+                            flag = true;
+                            break;
+                        default:
+                            flag = false;
+                    }
+                }
+
+                if (flag == false) {
+                    //$(".AppealForm16ApprovalLetterfiles > span").text("You can upload only  PDF files");
+                    alert("You can upload only  PDF files");
+                    $(this).val('');
+                    return false;
+                }
+                else {
+                    var size = GetAppealForm16ApprovalLetterfileSize(file);
+                    size = size / 1048576;
+                    if (size > 1) {
+                        $(".AppealForm16ApprovalLetterfiles > span").text("Document should not exceed 1 MB in Size");
+                        $(this).val('');
+                    }
+                    else {
+
+                        $(".AppealForm16ApprovalLetterfiles > span").text("");
+                    }
+                }
+
+            });
+        });
+
+
+    });
+
+    var mainUrl = window.location;
+
+    $('.webGrid').find('tr').click(function () {
+        //url = $(this).find(".editDialog").attr("typei");
+        url = "/FacultyVerification/FacultyRegistrationNumber";
+        alert(url);
+    });
+
+    $(".editDialog").live("click", function (e) {
+        e.preventDefault();
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        if (degree == "5-Year MBA(Integrated)") {
+            degree = "5-YearMBA(Integrated)";
+        }
+        var url = "/FacultyVerification/FacultyBtechRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Faculty Appeal For Compliance',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editdefDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        $("#dialog-edit").dialog({
+            title: 'Appeal for Reverification ',
+            resizable: false,
+            height: 150,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+
+    $(".editreverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        var CollegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/AppealReverificationBtechFaculty?collegeId=" + CollegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        window.open(url);
+        //$("#dialog-edit").dialog({
+        //    title: 'Appeal for Reverification ',
+        //    resizable: false,
+        //    height: 150,
+        //    width: 850,
+        //    show: { effect: 'drop', direction: "up" },
+        //    modal: true,
+        //    draggable: true,
+        //    closeOnEscape: true,
+        //    open: function (event, ui) {
+        //        $(this).load(url);
+        //    },
+        //    close: function (event, ui) {
+        //        $(this).dialog("close");
+        //    }
+        //});
+        //$myDialog.dialog('open');
+        //return false;
+    });
+
+
+    $(".editlabDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecord?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#dialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+    $(".editAppcmpDialog").live("click", function (e) {
+        debugger;
+        e.preventDefault();
+        var url;
+
+        var eqipid1 = $('input[type=radio]:checked').attr("eqpid");
+        var id = $('input[type=radio]:checked').attr("id");
+        var eqpno = $('input[type=radio]:checked').attr("eqpno");
+        url = "/FacultyVerification/AddEditRecordReverification?eqpid=" + eqipid1 + "&id=" + id + "&eqpno=" + eqpno;
+        $("#Appealcpldialog-edit").dialog({
+            title: 'Add Lab Details',
+            resizable: false,
+            height: 750,
+            width: 750,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                window.location.reload();
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+
+    $(".editprinpalcomplicanceDialog").live("click", function (e) {
+        e.preventDefault();
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var url = "/FacultyVerification/PrincipalFacultyRegistrationNumber?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&specializationid=" + specializationid;
+        //var url = "/FacultyVerification/FacultyRegistrationNumber";specializationid
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal For Complicance',
+            resizable: false,
+            height: 410,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                debugger;
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    $(".editprincipalverificationDialog").live("click", function (e) {
+        e.preventDefault();
+        debugger;
+
+        //var collegeId = $(this).attr('href').split('?')[1].split('&')[0].split('=')[1];
+        //var deficencycount = $(this).attr('href').split('?')[1].split('&')[1].split('=')[1];
+        //var degree = $(this).attr('href').split('?')[1].split('&')[2].split('=')[1];
+        //var departmentid = $(this).attr('href').split('?')[1].split('&')[3].split('=')[1].substring(0, 1);
+        var collegeId = $('input[type=checkbox]:checked').attr('collegeId');
+        var deficencycount = $('input[type=checkbox]:checked').attr('deficencycount');
+        var degree = $('input[type=checkbox]:checked').attr('degree');
+        var departmentid = $('input[type=checkbox]:checked').attr('departmentid');
+        var specializationid = $('input[type=checkbox]:checked').attr('specializationid');
+        var registrationnumber = '@ViewBag.PrincipalRegno';
+        var url = "/FacultyVerification/PrincipalAppealReverification?collegeId=" + collegeId + "&deficencycount=" + deficencycount + "&degree=" + degree + "&departmentid=" + departmentid + "&registrationnumber=" + registrationnumber;
+        $("#dialog-edit").dialog({
+            title: 'Principal Appeal for Reverification ',
+            resizable: false,
+            height: 200,
+            width: 850,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            closeOnEscape: true,
+            open: function (event, ui) {
+                $(this).load(url);
+            },
+            close: function (event, ui) {
+                $(this).dialog("close");
+            }
+        });
+        $myDialog.dialog('open');
+        return false;
+    });
+
+    var $myDialog = $("#dialog-edit").dialog({
+        title: 'Add/Edit Lab',
+        autoOpen: false,
+        resizable: false,
+        height: 700,
+        width: 720,
+        show: { effect: 'drop', direction: "up" },
+        modal: true,
+        draggable: true,
+        closeOnEscape: true,
+        open: function (event, ui) {
+            debugger;
+            $(this).load(url);
+        },
+        close: function (event, ui) {
+            $(this).dialog("close");
+
+        }
+    });
+
+    $($myDialog).bind("dialogclose", function () {
+        window.location = mainUrl;
+    });
+
+
+
+</script>
+<h2 style="text-align: center"><b>SUBMISSION OF ONLINE APPEAL (FACULTY - STEP 3/4)</b></h2><br />
+
+@if (TempData["Error"] != null)
+{
+    <div class="error">
+        <p><strong>Error:</strong> @TempData["Error"].ToString()</p>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<p style="text-align:right">
+    @Html.ActionLink("View Added Faculty", "CollegeFacultyAddedDetails", "FacultyVerification", new { @class = "create_button", @target = "_blank" })
+</p>
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <br />
+    <h2>Appeal for faculty deficiency (Department / Specialization Wise)</h2>
+
+    @*//For Faculty*@
+    <table style="width: 100%; border: 1px; border-color: red" class="webGrid">
+
+        <tr>
+          
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Department</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Degree</th>
+            <th class="col1" style="text-align: left; vertical-align: top;" rowspan="2">Specialization</th>
+
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Total Intake*</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Specialization Wise Faculty Required</th>
+            <th class="col1" style="text-align: center; vertical-align: top;" rowspan="2">Specialization Wise Available Faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Deficiency of Ph.D faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Appointed New Faculty</th>
+            <th class="col1" style="text-align: center; vertical-align: top; color: red" rowspan="2">Faculty Existing-Reverify</th>
+           
+        </tr>
+        <tr>
+            @*<th class="col1" style="text-align: right; vertical-align: top;">IV Year</th>
+                <th class="col1" style="text-align: right; vertical-align: top;">III Year</th>
+                <th class="col1" style="text-align: right; vertical-align: top;">II Year</th>
+                <th class="col1" style="text-align: right; vertical-align: top;">I Year</th>*@
+
+            @*<th class="col1" style="text-align: center; vertical-align: top;">No. Of UG Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top;">No. Of PG Faculty</th>
+                <th class="col1" style="text-align: center; vertical-align: top;">No. Of Ph.D Faculty</th>*@
+        </tr>
+
+        @foreach (var collegeId in Model.Select(c => c.collegeId).Distinct().ToList())
+        {
+            var count = Model.Where(m => m.collegeId == collegeId).Select(m => m).Count();
+            var list = Model.Where(c => c.collegeId == collegeId).ToList();
+
+            var collegeStatus = db.jntuh_collegestatus.Where(e => e.CollegeId == collegeId).Select(e => e).FirstOrDefault();
+            if (collegeStatus != null)
+            {
+                if (collegeStatus.SIStatus == true)
+                {
+                    // facultyCounts = facultyCounts.Where(e => e.Degree != "M.Tech" || e.Degree != "MCA" || e.Degree != "MBA").Select(e => e).ToList();
+                    list = list.Where(e => e.Degree == "B.Tech").Select(e => e).ToList();
+                }
+            }
+
+            string[] ProposedIntakeZeroDeptName;
+            
+            string[] departments = new string[] { "English", "Mathematics", "Physics", "Chemistry", "Others(CSE/IT)", "Others(CIVIL/MECH)", "Others(ECE/EEE)", "Others(MNGT/H&S)" };
+            if (collegeId == 72 || collegeId == 130)
+            {
+                ProposedIntakeZeroDeptName = list.Where(e => e.Degree == "B.Tech" && (e.ProposedIntake == 0) && !departments.Contains(e.Department) && e.Department != "IT").Select(e => e.Department).Distinct().ToArray();
+            }
+            else
+            {
+                ProposedIntakeZeroDeptName = list.Where(e => e.Degree == "B.Tech" && (e.ProposedIntake == 0) && !departments.Contains(e.Department)).Select(e => e.Department).Distinct().ToArray();
+            }
+            
+            var distDeptcount = 1;
+            var SpecializationwisePHDFaculty = 1;
+            var deptloop = 1;
+            decimal departmentWiseRequiredFaculty = 0;
+            int[] OthersSpecIds1 = new int[] { 155, 156, 157, 158 };
+            int[] OthersSpecIds = new int[] { 155, 156, 157, 158,42,48,37,31 };
+           
+            int totalBtechFirstYearIntake = list.Where(d => d.Degree == "B.Tech" && !departments.Contains(d.Department)).Select(d => d.approvedIntake1).Sum();
+            var firstYearRequired = Math.Ceiling((double)totalBtechFirstYearIntake / 160);
+            int remainingFaculty = 0;
+            int remainingPHDFaculty = 0;
+
+            foreach (var item in list.Where(e => e.ispercentage == false && e.ProposedIntake != 0 && !ProposedIntakeZeroDeptName.Contains(e.Department)).Select(e => e).ToList())
+            {
+                //Written by Narayana
+                var jntuh_appeal_facultycheck = db.jntuh_appeal_faculty_registered.Where(c => c.collegeId == item.collegeId&&c.AppealReverificationSupportingDocument==null).Select(s => s).ToList();
+                List<UAAAS.Controllers.FacultyVerificationController.collegeappealdeptfaculty> collegeappealdeptfacultylist = new List<UAAAS.Controllers.FacultyVerificationController.collegeappealdeptfaculty>();
+                foreach (var item1 in jntuh_appeal_facultycheck)
+                {
+                    UAAAS.Controllers.FacultyVerificationController.collegeappealdeptfaculty collegeappealdeptfaculty = new UAAAS.Controllers.FacultyVerificationController.collegeappealdeptfaculty();
+                    collegeappealdeptfaculty.Departmentname =
+                        db.jntuh_department.Where(d => d.id == item1.DepartmentId)
+                            .Select(s => s.departmentName)
+                            .FirstOrDefault();
+                    collegeappealdeptfaculty.DegreeName =
+                        db.jntuh_degree.Where(d => d.id == item1.DegreeId).Select(s => s.degree).FirstOrDefault();
+                    collegeappealdeptfaculty.SpecializationName =
+                        db.jntuh_specialization.Where(s => s.id == item1.SpecializationId).Select(s => s.specializationName).FirstOrDefault();
+                    collegeappealdeptfaculty.RegistrationNumber = item1.RegistrationNumber;
+                    collegeappealdeptfacultylist.Add(collegeappealdeptfaculty);
+
+                }
+                string facultydepartment = db.jntuh_department.Where(d => d.id == item.DepartmentID)
+                            .Select(s => s.departmentName)
+                            .FirstOrDefault();
+                int aadappealcount = collegeappealdeptfacultylist.Where(d => d.Departmentname == facultydepartment).Count();
+                item.deficiencystatus = false;
+                if (aadappealcount == 4)
+                {
+                    item.deficiencystatus = true;
+                }
+                //if (item.Degree == "M.Tech" || item.Degree == "B.Tech")
+                //{
+                //    SpecializationwisePHDFaculty = list.Where(D => D.Department == item.Department && D.Degree == "M.Tech" && D.shiftId == 1).Distinct().Count();
+                //}
+                //else if (item.Degree == "MCA")
+                //{
+                //    SpecializationwisePHDFaculty = list.Where(D => D.Department == item.Department && D.Degree == "MCA" && D.shiftId == 1).Distinct().Count();
+                //}
+
+                //else if (item.Degree == "MBA")
+                //{
+                //    SpecializationwisePHDFaculty = list.Where(D => D.Department == item.Department && D.Degree == "MBA" && D.shiftId == 1).Distinct().Count();
+                //}
+
+                //SpecializationwisePHDFaculty = SpecializationwisePHDFaculty * 2;
+
+
+                if (item.Degree == "M.Tech" || item.Degree == "MCA" || item.Degree == "MBA" || item.Degree == "5-Year MBA(Integrated)")
+                {
+
+                    if (item.Degree == "M.Tech")
+                    {
+                        SpecializationwisePHDFaculty = con.IntakeWisePhdForMtech(item.ProposedIntake, item.shiftId);
+                    }
+                    else if (item.Degree == "MCA")
+                    {
+                        SpecializationwisePHDFaculty = con.IntakeWisePhdForMBAandMCA(item.ProposedIntake);
+                    }
+                    else if (item.Degree == "MBA" || item.Degree == "5-Year MBA(Integrated)")
+                    {
+                        SpecializationwisePHDFaculty = con.IntakeWisePhdForMBAandMCA(item.ProposedIntake);
+                    }
+
+
+                }
+                else if (item.Degree == "B.Tech")
+                {
+                    SpecializationwisePHDFaculty = con.IntakeWisePhdForBtech(item.ProposedIntake);
+                }
+
+
+
+
+                distDeptcount = list.Where(d => d.Department == item.Department && d.ProposedIntake != 0).Distinct().Count();
+
+                int indexnow = list.IndexOf(item);
+
+                if (indexnow > 0 && list[indexnow].Department != list[indexnow - 1].Department)
+                {
+                    deptloop = 1;
+                }
+                if ((collegeId == 72 && item.Department == "IT") || (collegeId == 130 && item.Department == "IT"))
+                {
+                    deptloop = 1;
+                }
+
+                departmentWiseRequiredFaculty = list.Where(d => d.Department == item.Department).Select(d => d.requiredFaculty).Sum();
+
+                string minimumRequirementMet = string.Empty;
+                string PhdminimumRequirementMet = string.Empty;
+                int facultyShortage = 0;
+                int adjustedFaculty = 0;
+                int adjustedPHDFaculty = 0;
+                int othersRequiredfaculty = 0;
+                int tFaculty = 0;
+                int rFaculty = 0;
+                if (item.Department == "MBA" || item.Department == "MCA")
+                {
+                    tFaculty = (int)Math.Ceiling(Convert.ToDecimal(item.totalFaculty)); //item.totalFaculty
+                }
+                else
+                {
+                    tFaculty = (int)Math.Ceiling(Convert.ToDecimal(item.specializationWiseFaculty));
+                }
+                 rFaculty = (int)Math.Ceiling(item.requiredFaculty);
+
+                if (departments.Contains(item.Department))
+                {
+                    if (OthersSpecIds1.Contains(item.specializationId))
+                    {
+                        //rFaculty = 1;
+                        //othersRequiredfaculty = 1;
+                        //item.requiredFaculty = rFaculty;
+                        double rid = (double)(firstYearRequired / 2);
+                        rFaculty = (int)(Math.Ceiling(rid));
+                        item.requiredFaculty = Math.Ceiling((decimal)rFaculty);
+                    }
+                    else
+                    {
+                        rFaculty = (int)firstYearRequired;
+                        departmentWiseRequiredFaculty = (int)firstYearRequired;
+                        item.requiredFaculty = rFaculty;
+                    }
+                    
+                }
+
+                var degreeType = jntuh_degree.Where(d => d.degree == item.Degree).Select(d => d.jntuh_degree_type.degreeType).FirstOrDefault();              
+
+                int addcount = db.jntuh_appeal_faculty_registered.Where(e => e.collegeId == item.collegeId && e.DepartmentId == item.DepartmentID && e.DegreeId == item.DegreeId && e.NOtificationReport != null).Select(e => e).Count();
+                if (list.IndexOf(item) == 0)
+                {
+                    <tr>
+                        
+                        <td class="col2" style="text-align: center; vertical-align: middle; font-weight: bold" rowspan="@distDeptcount">@item.Department</td>
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Degree</td>
+                        @if (item.shiftId == 1)
+                        {
+                            <td class="col2" style="text-align: left; vertical-align: top;">@item.Specialization</td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: left; vertical-align: top;">@item.Specialization<span>-2</span></td>
+                        }
+                        
+                        @*@if (departments.Contains(item.Department))
+                        {
+
+                           
+                            <td class="col2" style="text-align: right; vertical-align: top;">@totalBtechFirstYearIntake</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@Math.Ceiling(firstYearRequired)</td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">@item.totalIntake</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@Math.Ceiling(item.requiredFaculty)</td>
+                        }*@
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.totalIntake</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.Testrequriedfaculty</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.Testavilablefaculty</td>
+                        @if (item.deficiency == true)
+                        {
+                            var deffaculty = Math.Ceiling(@item.requiredFaculty) - adjustedFaculty;
+                            <td class="col2" style="text-align: right; vertical-align: top; font-weight: bold">
+                                YES 
+                                @*(@deffaculty)*@
+                                @*<a href="@Html.ActionLink("fdf", "FacultyRegistrationNumber", new {collegeId = item.collegeId, deficencycount = (int) deffaculty, degree = item.Degree, departmentid = item.DepartmentID})" target="_blank" class="editdefDialog">(@deffaculty)</a>*@
+                                @*@Html.ActionLink("fdf", "FacultyRegistrationNumber", new { collegeId = item.collegeId, deficencycount = (int)deffaculty, degree = item.Degree, departmentid = item.DepartmentID }, new { @class = "editdefDialog" })*@
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+
+                      
+                        @if ((item.PHDdeficiency == true) && deptloop == 1 && item.Testrequriedfaculty > 0)
+                        {
+                            var phddeffaculty = @item.AvailablePHDFaculty;
+                            <td class="col2" style="text-align: right; vertical-align: middle; font-weight: bold;" >
+                                YES 
+                            </td>
+                        }
+                        else if ((item.PHDdeficiency == false) && deptloop == 1)
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;" >NO</td>
+                        }
+                        else if (item.PHDdeficiency == null)
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+                        else if (item.Testrequriedfaculty == 0)
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+                         else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+                        @*@if (aadappealcount == 0 || aadappealcount == 1)
+                        {*@
+                            @if ((item.deficiency == true || item.PHDdeficiency == true) && item.deficiencystatus == false && item.requiredFaculty > 0)
+                             {
+                                 var deffaculty = Math.Ceiling(@item.requiredFaculty) - @item.specializationWiseFaculty; //@item.totalFaculty
+                                 <td class="col2" style="text-align: right; vertical-align: top;">
+                                     @*@Html.RadioButton("Appeal", true, new { @class = "editDialog"  })  &nbsp;&nbsp;*@
+                                     @Html.CheckBox("Compliance", false, new {collegeId = item.collegeId, deficencycount = (int) deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editDialog"}) &nbsp;&nbsp;
+                                 </td>
+                             }
+                             else if (item.deficiencystatus)
+                             {
+                                 <td class="col2" style="text-align: right; vertical-align: top;">
+                                     <span style="color: green; font-weight: bold;">Appeal Submitted</span>
+                                     @Html.CheckBox("Compliance", false, new {@disabled = "disabled"}) &nbsp;&nbsp;
+                                 </td>
+                             }
+                             else
+                             {
+                                 <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                             }
+                        @*}
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                        }*@
+                        @if ((item.deficiency == true || item.PHDdeficiency == true) && item.requiredFaculty > 0)
+                        {
+                            var deffaculty = Math.Ceiling(@item.requiredFaculty) - @item.specializationWiseFaculty;//@item.totalFaculty
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @*@Html.RadioButton("Appeal", true, "")*@
+                                @*@Html.CheckBox("reverification", false, new {collegeId = item.collegeId, deficencycount = (int) deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editdefDialog"}) &nbsp;&nbsp;*@
+                                @Html.CheckBox("reverification", false, new { collegeId = UAAAS.Models.Utilities.EncryptString(item.collegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), deficencycount = (int)deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editreverificationDialog" })  &nbsp;&nbsp;
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                        }
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.TextBoxFor(model => model.FirstOrDefault().collegeCode, new { type = "file", @class = "file" })
+                            </td>*@
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        @if (deptloop == 1)
+                        {
+
+                            <td class="col2" style="text-align: center; vertical-align: middle; font-weight: bold" rowspan="@distDeptcount">@item.Department</td>
+                        }
+
+                        <td class="col2" style="text-align: left; vertical-align: top;">@item.Degree</td>
+                        @if (item.shiftId == 1)
+                        {
+                            <td class="col2" style="text-align: left; vertical-align: top;">@item.Specialization</td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: left; vertical-align: top;">@item.Specialization<span>-2</span></td>
+                        }
+                        @*<td class="col2" style="text-align: center; vertical-align: top;">@item.shiftId</td>*@
+                        @*<td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake4</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake3</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake2</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@item.approvedIntake1</td>*@
+                        @*@if (departments.Contains(item.Department))
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">@totalBtechFirstYearIntake</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@Math.Ceiling(firstYearRequired)</td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">@item.totalIntake</td>
+                            <td class="col2" style="text-align: right; vertical-align: top;">@Math.Ceiling(item.requiredFaculty)</td>
+                        }*@
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.totalIntake</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.Testrequriedfaculty</td>
+                        <td class="col2" style="text-align: right; vertical-align: top;">@item.Testavilablefaculty</td>
+                        @if (item.deficiency == true)
+                        {
+                            var deffaculty = Math.Ceiling(@item.requiredFaculty) - adjustedFaculty;//@item.totalFaculty
+                            <td class="col2" style="text-align: right; vertical-align: top; font-weight: bold">
+                                YES @*(@deffaculty)*@
+                                @*<a href="@Html.ActionLink("fdf", "FacultyRegistrationNumber", new {collegeId = item.collegeId, deficencycount = (int) deffaculty, degree = item.Degree, departmentid = item.DepartmentID})" target="_blank" class="editdefDialog">(@deffaculty)</a>*@
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+                       
+                        @if ((item.PHDdeficiency == true) && deptloop == 1 && item.requiredFaculty > 0)
+                        {
+                            var phddeffaculty = @item.AvailablePHDFaculty;
+                            <td class="col2" style="text-align: right; vertical-align: middle; font-weight: bold;" >  @*rowspan="@distDeptcount"*@
+                                YES @*(@phddeffaculty)*@
+                                @*<a href="" target="_blank">(@phddeffaculty)</a>*@
+                            </td>
+                        }
+                        else if ((item.PHDdeficiency == false) && deptloop == 1)
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>   @*rowspan="@distDeptcount"*@
+                        }
+                        else if (item.PHDdeficiency == null)
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+                        else if (item.requiredFaculty == 0)
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+                        else if (item.PHDdeficiency == true)
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top; font-weight: bold;">YES</td>
+                        }else if (item.PHDdeficiency == true)
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top; font-weight: bold;">YES</td>
+                        }else if (item.PHDdeficiency == false)
+                        {
+                           <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">NO</td>
+                        }
+                    
+                    @if (OthersSpecIds.Contains(@item.specializationId))
+                    {
+
+                        if (aadappealcount == 0 || aadappealcount == 1 || aadappealcount == 2 || aadappealcount == 3)
+                        {
+                        var deffaculty = Math.Ceiling(@item.requiredFaculty) - @item.specializationWiseFaculty;//
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @Html.CheckBox("compliance", false, new {collegeId = item.collegeId, deficencycount = (int) deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editDialog"}) &nbsp;&nbsp;
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                <span style="color: green; font-weight: bold">Appeal submitted</span>
+                                @Html.CheckBox("Compliance", false, new {@disabled = "disabled"}) &nbsp;&nbsp;
+                            </td>
+                        }
+                    }
+
+                    @if (!OthersSpecIds.Contains(@item.specializationId))
+                    {
+                        //if (aadappealcount == 0 || aadappealcount == 1)
+                        //{
+                            if ((item.deficiency == true || item.PHDdeficiency == true) && item.deficiencystatus == false && item.requiredFaculty > 0)
+                            {
+                                var deffaculty = Math.Ceiling(@item.requiredFaculty) - @item.specializationWiseFaculty; //@item.totalFaculty
+                                <td class="col2" style="text-align: right; vertical-align: top;">
+                                    @*@Html.RadioButton("Appeal", true, new { @class = "editDialog" })  &nbsp;&nbsp;*@
+                                    @Html.CheckBox("compliance", false, new {collegeId = item.collegeId, deficencycount = (int) deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editDialog"}) &nbsp;&nbsp;
+                                </td>
+                            }
+                            else if (item.deficiencystatus)
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;">
+                                    <span style="color: green; font-weight: bold">Appeal submitted</span>
+                                    @Html.CheckBox("Compliance", false, new {@disabled = "disabled"}) &nbsp;&nbsp;
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            }
+                        @*}
+                         else
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            }*@
+                    }
+                        @if ((item.deficiency == true || item.PHDdeficiency == true) && item.requiredFaculty > 0)
+                        {
+                            var deffaculty = Math.Ceiling(@item.requiredFaculty) - @item.specializationWiseFaculty;//@item.totalFaculty
+                            <td class="col2" style="text-align: right; vertical-align: top;">
+                                @*@Html.RadioButton("Appeal", true, "")*@
+                                @*@Html.CheckBox("reverification", false, new { collegeId = item.collegeId, deficencycount = (int)deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editdefDialog" })  &nbsp;&nbsp;*@
+                                @Html.CheckBox("reverification", false, new { collegeId = UAAAS.Models.Utilities.EncryptString(item.collegeId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]), deficencycount = (int)deffaculty, degree = item.Degree, departmentid = item.DepartmentID, specializationid = item.specializationId, @class = "editreverificationDialog" })  &nbsp;&nbsp;
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                        }
+                        @*@if (item.deficiency == true || item.PHDdeficiency == true)
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;">
+                                    @Html.TextBoxFor(model => model.FirstOrDefault().collegeCode, new {type = "file", @class = "file"})
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="col2" style="text-align: right; vertical-align: top;"></td>
+                            }*@
+                    </tr>
+
+                }
+                deptloop++;
+
+            }
+        }
+    </table>
+
+    <br />
+}
+<div style="background-color: aqua; border: 1px solid #f49820;">
+    <p style="text-align: left;font-weight: bold"><strong>*</strong> Either Admitted Intake or Sanctioned Intake in Multiples of 60 as the case may be.</p>
+</div>
+<br />
+<p style="text-align:right">
+    @Html.ActionLink("GoTo Next Step", "LabsForAppeal", null, new { @class = "create_button" })
+</p>
+
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>
+<div id="dialog-edit" style="display: none">
+</div>
+
+<div id="dialog-appeal-edit" style="display: none">
+</div>
+<div id="Appealcpldialog-edit" style="display: none">
+</div>

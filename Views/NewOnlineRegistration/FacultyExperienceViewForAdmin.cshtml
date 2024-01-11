@@ -1,0 +1,627 @@
+﻿@model UAAAS.Controllers.OnlineRegistration.FacultyExperience
+@{
+    ViewBag.Title = "FacultyExperienceViewForAdmin";
+    int count = 1;
+    string Display = string.Empty;
+    string PresentDisplay = string.Empty;
+    if (Model.PresentCollegeCode != null)
+    {
+        Display = "contents";
+    }
+    else if (Model.FacultyCollegeid == 0)
+    {
+        Display = "contents";
+        PresentDisplay = "none";
+    }
+    else if (Model.FacultyCollegeid != null)
+    {
+        Display = "none";
+    }
+    else
+    {
+        Display = "none";
+    }
+}
+<h2>Faculty ExperienceView For Admin</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Validations.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jspdf.plugin.from_html.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+        $("#Upload").click(function () {
+            var PresentCollegeId = $("#PresentCollegeid").val();
+            if (PresentCollegeId != null && PresentCollegeId != 0) {
+                $("#PresentDesignationId").addClass("required");
+                $("#PresentfacultyDateOfAppointment").addClass("required");
+                $("#PresentJoiningOrder").addClass("required");
+                return true;
+            }
+        });
+
+
+        $("#Collegeid").change(function () {
+            var id = $(this).val();
+            if (id == "0") {
+                $("#OtherCollegeDiv").show();
+            }
+            else {
+                $("#OtherCollegeDiv").hide();
+            }
+        });
+
+        $("#DesignationId").change(function () {
+            var id = $(this).val();
+            if (id == "4") {
+                $("#OtherDesignationDiv").show();
+            }
+            else {
+                $("#OtherDesignationDiv").hide();
+            }
+
+        });
+
+        $("#PresentDesignationId").change(function () {
+            var id = $(this).val();
+            if (id == "4") {
+                $("#PresentOtherDesignationDiv").show();
+            }
+            else {
+                $("#PresentOtherDesignationDiv").hide();
+            }
+
+        });
+
+        $("#facultyDateOfAppointment").change(function () {
+            var facultyid = $("#facultyId").val();
+            var DateOfApp = $(this).val();
+            var DateOfResign = $("#facultyDateOfResignation").val();
+
+            if (facultyid != "" && DateOfApp != "" && DateOfResign != "") {
+                $.ajax({
+                    type: "GET",
+                    url: "/NewOnlineRegistration/CheckExperienceDates?facultyId=" + facultyid + "&&facultyDateOfAppointment=" + DateOfApp + "&&facultyDateOfResignation=" + DateOfResign + "",
+                    // data: "{'facultyId':'" + facultyid + "', 'facultyDateOfResignation':'" + DateOfApp + "', 'facultyDateOfAppointment':'" + DateOfResign + "'}",
+                    success: function (status) {
+                        if (status.status == true) {
+                            alert(status.message);
+                            $("#facultyDateOfAppointment").val('');
+                            $("#facultyDateOfResignation").val('');
+                        }
+                        else {
+                            return false;
+                        }
+                    },
+                    error: function () {
+
+                    }
+                })
+            }
+
+        });
+
+        $("#facultyDateOfResignation").change(function () {
+            var facultyid = $("#facultyId").val();
+            var DateOfApp = $("#facultyDateOfAppointment").val();
+            var DateOfResign = $(this).val();
+
+            if (facultyid != "" && DateOfApp != "" && DateOfResign != "") {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/NewOnlineRegistration/CheckExperienceDates?facultyId=" + facultyid + "&&facultyDateOfAppointment=" + DateOfApp + "&&facultyDateOfResignation=" + DateOfResign + "",
+                    // data: "{'facultyId':'" + facultyid + "', 'facultyDateOfResignation':'" + DateOfApp + "', 'facultyDateOfAppointment':'" + DateOfResign + "'}",
+                    success: function (status) {
+                        if (status.status == true) {
+                            alert(status.message);
+                            //alert("You have Already selected those Dates");
+                            $("#facultyDateOfAppointment").val('');
+                            $("#facultyDateOfResignation").val('');
+                        }
+                        else {
+                            return false;
+                        }
+                    },
+                    error: function () {
+
+                    }
+                })
+            }
+
+        });
+       
+        $(".JoiningOrder").change(function () {
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "JoiningOrder");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+                    $(".JoiningOrder > span").text("");
+                }
+            }
+
+        });
+
+        $(".RelievingOrder").change(function () {
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "RelievingOrder");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+                    $(".RelievingOrder > span").text("");
+                }
+            }
+
+        });
+
+        $(".SCMDocument").change(function () {
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "SCMDocument");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+                    $(".SCMDocument > span").text("");
+                }
+            }
+
+        });
+
+        $(".PresentJoiningOrder").change(function () {
+            var file = getNameFromPath($(this).val());
+            var flag;
+            if (file != null) {
+                var extension = file.substr((file.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'pdf':
+                    case 'PDF':
+                        flag = true;
+                        break;
+                    default:
+                        flag = false;
+                }
+            }
+
+            if (flag == false) {
+                alert("You can upload only  PDF files");
+                $(this).val('');
+                return false;
+            } else {
+                var size = GetFileSize(file, "PresentJoiningOrder");
+                size = size / 1048576;
+                if (size > 0.2000000000000000) {
+                    alert("Document should not exceed 200 KB in Size");
+                    $(this).val('');
+                } else {
+                    $(".PresentJoiningOrder > span").text("");
+                }
+            }
+
+        });
+
+        //get file size
+        function GetFileSize(fileid, title) {
+            try {
+                var fileSize = 0;
+                //for IE
+                if ($.browser.msie) {
+                    //before making an object of ActiveXObject,
+                    //please make sure ActiveX is enabled in your IE browser
+                    var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+                    var filePath = $("#" + fileid)[0].value;
+                    var objFile = objFSO.getFile(filePath);
+                    var fileSize = objFile.size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+                    //for FF, Safari, Opeara and Others
+                else {
+                    fileSize = $("#" + title)[0].files[0].size; //size in kb
+                    //fileSize = fileSize / 1048576; //size in mb
+                }
+
+                return fileSize;
+            } catch (e) {
+
+                //alert("Error is : " + e);
+            }
+        }
+
+        //get file path from client system
+        function getNameFromPath(strFilepath) {
+            var objRE = new RegExp(/([^\/\\]+)$/);
+            var strName = objRE.exec(strFilepath);
+
+            if (strName == null) {
+                return null;
+            } else {
+                return strName[0];
+            }
+        }
+
+        $(".confirmDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+
+            $("#dialog-confirm").dialog({
+                title: 'Delete Faculty Experience',
+                autoOpen: false,
+                resizable: false,
+                height: 170,
+                width: 350,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog("close");
+                        window.location = url;
+
+                    },
+                    "No": function () {
+                        $(this).dialog("close");
+
+                    }
+                }
+            });
+
+            $("#dialog-confirm").dialog('open');
+            return false;
+        });
+
+        $(".EditDialog").live("click", function (e) {
+           // debugger;
+            var url = $(this).attr('href');
+
+            $("#editDialog").dialog({
+                title: 'Edit Faculty Experience',
+                autoOpen: false,
+                resizable: false,
+                height: 430,
+                width: 600,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                closeOnEscape: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                close: function (event, ui) {
+                    window.location.href = "/NewOnlineRegistration/FacultyExperience";
+                }
+
+            });
+
+            $("#editDialog").dialog('open');
+            return false;
+        });
+
+    });
+</script>
+
+<style>
+    .col1 {
+        width: 14%;
+        height: 20px;
+    }
+
+    .col2 {
+        width: 36%;
+        height: 20px;
+    }
+
+    .PrevoiusCollege{
+        display:@Display;
+    }
+    #Present{
+     display:@PresentDisplay;
+    }
+</style>
+
+@if (TempData["SUCCESS"] != null)
+{
+    <div class="success">
+        <p style="text-align: center;font-weight: bold">@TempData["SUCCESS"].ToString()</p>
+    </div>
+}
+@if (TempData["ERROR"] != null)
+{
+    <div class="error">
+        <p style="text-align: center;font-weight: bold;">@TempData["ERROR"].ToString()</p>
+    </div>
+}
+<br />
+@using (Html.BeginForm("FacultyExperience", "NewOnlineRegistration", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model => model.facultyId)
+    @Html.HiddenFor(model => model.firstName)
+    @Html.HiddenFor(model => model.middleName)
+    @Html.HiddenFor(model => model.lastName)
+    <div style="padding-left:10px;display:none;">
+        <div style="width:50%">
+            <div></div>
+        </div>
+        <div>
+            <table width="100%">
+                <tr>
+                    <td class="col1">RegistrationNumber</td>
+                    <td class="col2">
+                        &nbsp; @Html.DisplayFor(model => model.RegistrationNumber)
+                        @Html.HiddenFor(model => model.RegistrationNumber)
+                    </td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td class="col3">FacultyName</td>
+                    <td class="col4">
+                        &nbsp; @Html.DisplayFor(model => model.Name)
+                        @Html.HiddenFor(model => model.Name)
+                    </td>
+                </tr>
+                <tr><td style="height: 15px;"></td></tr>
+                <tr id="Present">
+                    <td colspan="5">
+                        <div class="note">
+                            <table>
+                                <tr>
+                                    <td class="td1">
+                                        <b>NOTE : </b>
+                                    </td>
+
+                                    <td class="td2">
+                                        <span>&nbsp;&nbsp;&nbsp;<b>Add your present appointment details.</b></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="Present"><td style="height: 10px;"></td></tr>
+                @if (Model.PresentCollegeid != null)
+                {
+                    <tr style="height: 20px;">
+                        <td colspan="8">
+                            <table width="100%" border="0" class="webGrid">
+                                <thead>
+                                    <tr style="background-color: #C1D4E6;">
+                                        <th>CollegeCode</th>
+                                        <th>CollegeName</th>
+                                        <th>Designation</th>
+                                        <th>Date of Appoinment</th>
+                                        <th>Experience</th>
+                                        <th>Joining Order</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="background-color: #FCF1D1;">
+                                        <td>@Html.DisplayFor(model => model.PresentCollegeCode)</td>
+                                        <td>@Html.DisplayFor(model => model.PresentCollegeName)</td>
+                                        @if (Model.PresentDesignation == "Others")
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(model => model.PresentDesignation)
+                                                <span>(@Model.PresentOtherDesignation)</span>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(model => model.PresentDesignation)
+                                            </td>
+                                        }
+
+                                        <td>@Html.DisplayFor(model => model.PresentfacultyDateOfAppointment)</td>
+                                        <td>@Html.DisplayFor(model => model.PresentCollegeTotalExperience)</td>
+                                        <td>
+                                            @if (Model.PresentfacultyJoiningDocument != null && Model.PresentfacultyJoiningDocument != "")
+                                            {
+                                                <a href="~/Content/Upload/Faculty/ExperienceDocuments/@Model.PresentfacultyJoiningDocument" target="_blank">
+                                                    <span style="color: red;"><b>View</b></span>
+                                                </a>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a href="/NewOnlineRegistration/DeletePresentcollegeExperience?facultyId=@(UAAAS.Models.Utilities.EncryptString(Model.facultyId.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["CryptoKey"]))" class="confirmDialog delete_button"><span>Delete</span></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr id="Present">
+                        <td class="col1">Present College</td>
+                        <td class="col2">
+                            @Html.DropDownListFor(model => model.PresentCollegeid, new SelectList(ViewBag.PresentColleges as System.Collections.IEnumerable, "CollegeId", "CollegeName"), "---Select---", new { @style = "width:400px;", @id = "PresentCollegeid" })
+                            @Html.ValidationMessageFor(model => model.PresentCollegeid)
+                        </td>
+                        <td>&nbsp;&nbsp;</td>
+                        <td class="col1">Designation </td>
+                        <td class="col2">
+                            @Html.DropDownListFor(model => model.PresentDesignationId, new SelectList(ViewBag.Designation as System.Collections.IEnumerable, "Id", "designation"), "---Select---", new { @style = "width:400px;", @id = "PresentDesignationId", @class = "" })
+                            @Html.ValidationMessageFor(model => model.PresentDesignationId)
+                            <div id="PresentOtherDesignationDiv" style="display: none;">
+                                <br />
+                                @Html.TextBoxFor(model => model.PresentOtherDesignation, new { @style = "width:200px;" })
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="Present">
+                        <td class="col3"> Date of Appoinment</td>
+                        <td class="col4">
+                            @Html.TextBoxFor(model => model.PresentfacultyDateOfAppointment, new { @class = "calendar", @placeholder = "DD/MM/YYYY" })
+                            @Html.ValidationMessageFor(model => model.PresentfacultyDateOfAppointment)
+                        </td>
+                        <td>&nbsp;&nbsp;</td>
+                        <td class="col1"> Appoinment Order</td>
+                        <td class="col2">
+                            @Html.TextBoxFor(model => model.PresentJoiningOrder, new { @type = "file", @class = "PresentJoiningOrder" })
+                            @Html.ValidationMessageFor(model => model.PresentJoiningOrder)
+                        </td>
+                    </tr>
+
+                }
+                <tr><td colspan="5" style="height: 15px;"></td></tr>
+                <tr class="PrevoiusCollege">
+                    <td colspan="8">
+                        <div class="note">
+                            <table>
+                                <tr>
+                                    <td class="td1">
+                                        <b>NOTE : </b>
+                                    </td>
+
+                                    <td class="td2">
+                                        <span>&nbsp;&nbsp;&nbsp;<b>Add all your previous experiences step by step by uploading sequentially.</b></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <table class="PrevoiusCollege">
+                <tr class="">
+                    <td class="col1">Previous Working Colleges </td>
+                    <td class="col2">
+                        @Html.DropDownListFor(model => model.Collegeid, new SelectList(ViewBag.Colleges as System.Collections.IEnumerable, "Value", "Text"), "---Select---", new { @style = "width:400px;", @id = "Collegeid" })
+                        <div id="OtherCollegeDiv" style="display: none;">
+                            <br />
+                            @Html.TextBoxFor(model => model.OtherCollegeName, new { @style = "width:400px;" })
+                        </div>
+                    </td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td class="col1">Designation </td>
+                    <td class="col2">
+                        @Html.DropDownListFor(model => model.DesignationId, new SelectList(ViewBag.Designation as System.Collections.IEnumerable, "Id", "designation"), "---Select---", new { @style = "width:400px;", @id = "DesignationId", @class = "required" })
+                        <div id="OtherDesignationDiv" style="display: none;">
+                            <br />
+                            @Html.TextBoxFor(model => model.OtherDesignation, new { @style = "width:200px;" })
+                        </div>
+                    </td>
+                </tr>
+                <tr class="">
+                    <td class="col1"> Date of Appoinment</td>
+                    <td class="col2">
+                        @Html.TextBoxFor(model => model.facultyDateOfAppointment, new { @class = "calendar", @placeholder = "DD/MM/YYYY" })
+                        @Html.ValidationMessageFor(model => model.facultyDateOfAppointment)
+
+                    </td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td class="col1"> Appoinment Order</td>
+                    <td class="col2">
+                        @Html.TextBoxFor(model => model.JoiningOrder, new { @type = "file", @class = "JoiningOrder" })
+                    </td>
+                </tr>
+                <tr class="">
+                    <td class="col1"> Date of Reliving</td>
+                    <td class="col2">
+                        @*@Html.TextBoxFor(model => model.facultyDateOfResignation, new { Value = @Model.facultyDateOfResignation != null && @Model.facultyDateOfResignation.Equals("01/01/0001") ? string.Empty : @Model.facultyDateOfResignation, @class = "calendar", style = "width: 247px;", @placeholder = "Select Date of Ratification" })*@
+                        @Html.TextBoxFor(model => model.facultyDateOfResignation, new { @class = "calendar", @placeholder = "DD/MM/YYYY" })
+                    </td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td class="col1"> Reliving Order & Sevice Certificates</td>
+                    <td class="col2">
+                        @Html.TextBoxFor(model => model.RelievingOrder, new { @type = "file", @class = "RelievingOrder" })
+                    </td>
+                </tr>
+                <tr class="PrevoiusCollege">
+                    <td class="col1">Gross Salary</td>
+                    <td class="col2">
+                        @Html.TextBoxFor(model => model.facultySalary, new { @placeholder = "Enter Gross Salary" })
+                    </td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td class="col1">SCM Document</td>
+                    <td class="col2">
+                        @Html.TextBoxFor(model => model.SCMDocument, new { @type = "file", @class = "SCMDocument" })
+                    </td>
+                </tr>
+                @*<tr>
+                        <td colspan="8">
+                            <div style="float:right;">
+                                <input type="submit" id="Upload" name="Upload" value="Upload" style="float:right;" />
+                            </div>
+
+                        </td>
+                    </tr>*@
+            </table>
+
+            <div style="float:right;">
+                <input type="submit" id="Upload" name="Upload" value="Upload" style="float:right;" />
+            </div>
+        </div>
+
+    </div>
+    <br />
+  
+}
+
+<div id="editDialog" style="display: none"></div>
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure to delete ?
+    </p>
+</div>

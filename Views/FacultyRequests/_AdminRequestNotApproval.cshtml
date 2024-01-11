@@ -1,0 +1,35 @@
+﻿@model UAAAS.Models.AdminRequestsClass
+@{
+    ViewBag.Title = "Faculty Request";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="~/Scripts/Validations.js"></script>
+@using (Ajax.BeginForm("AdminRequestNotApproval", "FacultyRequests", new AjaxOptions(), new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend></legend>
+        @Html.HiddenFor(model=>model.Id)
+        @Html.HiddenFor(model=>model.FacultyId)
+        @Html.HiddenFor(model => model.FieldId)
+        @*<div class="editor-label" style="width: 150px;">
+            <span style="float:right;">Request Reason</span>
+        </div>
+        <div class="editor-field" style="width: 430px;">
+            @Html.DisplayFor(model => model.requestReason)
+        </div>*@
+        <div class="editor-label" style="width: 150px;height:92px;">
+            <span style="float:right;">Reject Reason</span>
+        </div>
+        <div class="editor-field" style="width: 430px;">
+            @Html.TextAreaFor(model => model.rejectReason, new {@class= "required" ,@style="width:90%;"})
+        </div>
+        <div style="">
+            <p>
+                <input type="submit" value="Submit" id="btnsend" name="cmd" />
+                @*<input type="button" class="create_button" value="Cancel" id="btneditcancel" />*@
+            </p>
+        </div>
+    </fieldset>
+}

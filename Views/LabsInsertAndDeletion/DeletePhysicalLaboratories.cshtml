@@ -1,0 +1,193 @@
+﻿@model List<UAAAS.Controllers.LabsController.physicalLab>
+@{
+    ViewBag.Title = "DeletePhysicalLaboratories";
+}
+
+<h2>DeletePhysicalLaboratories</h2>
+
+<script type="text/javascript">
+    var asInitVals = new Array();
+    $(document).ready(function () {
+        var mainUrl = window.location;
+        var url;
+
+        /* Initialize table and make first column non-sortable*/
+        var oTable = $('#example').dataTable({
+            "bJQueryUI": true,
+            "iDisplayLength": 500,
+            "bStateSave": false,
+            "sDom": '<"top"lfip>rt<"bottom"ip<"clear">',
+            //"sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sSearch": "Search all columns:",
+                "oPaginate": {
+                    "sFirst": "",
+                    "sLast": "",
+                    "sNext": "",
+                    "sPrevious": ""
+                }
+            },
+            "fnInitComplete": function () {
+                var oSettings = $('#example').dataTable().fnSettings();
+                for (var i = 0 ; i < oSettings.aoPreSearchCols.length ; i++) {
+                    if (oSettings.aoPreSearchCols[i].sSearch.length > 0) {
+                        $("tfoot input")[i].value = oSettings.aoPreSearchCols[i].sSearch;
+                        $("tfoot input")[i].className = "";
+                    }
+                }
+            },
+            "aoColumns": [{ "bSortable": true, "bSearchable": true }, null, null, null, null, null, null,null],
+            //"aoColumns": [{ type: "select", values: ['Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman'] },{ type: "text" },null,{ type: "number" },{ type: "select" }]
+        });
+        /*
+         * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
+         * the footer
+         */
+        $("tfoot input").each(function (i) {
+            asInitVals[i] = this.value;
+        });
+        $("tfoot input").focus(function () {
+            if (this.className == "search_init") {
+                this.className = "";
+                this.value = "";
+            }
+        });
+        $("tfoot input").blur(function (i) {
+            if (this.value == "") {
+                this.className = "search_init";
+                this.value = asInitVals[$("tfoot input").index(this)];
+            }
+        });
+
+        $("tfoot input").keyup(function () {
+            /* Filter on the column (the index) of this element */
+            oTable.fnFilter(this.value, $("tfoot input").index(this));
+        });
+
+        var $tblChkBox = $("#checkBoxes input:checkbox");
+        $("#ckbCheckAll").on("click", function () {
+            $($tblChkBox).prop('checked', $(this).prop('checked'));
+        });
+
+    });
+</script>
+
+@if (Model != null)
+{
+    using (Html.BeginForm("DeleteBySem", "LabsDeletion"))
+    {
+        <div class="text-right">
+            @*<input type="checkbox" id="ckbCheckAll" />
+                <label for="ckbCheckAll">Select All</label>*@
+        </div>
+        <div id="checkBoxes">
+            <table id="example" class="display">
+                <thead>
+                    <tr>
+                        <th>
+                            S No
+                        </th>
+                        <th>
+                            year
+                        </th>
+                        <th>
+                            Semester
+                        </th>
+                        <th>
+                            Degree
+                        </th>
+                        <th>
+                            Department
+                        </th>
+                        <th>
+                            Labcode
+                        </th>
+                        <th>
+                            LabName
+                        </th>
+                        <th>
+                            EquipmentName
+                        </th>
+                        @*<th>
+                            checked
+                        </th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count(); i++)
+                    {
+                        @Html.HiddenFor(m => m[i].Id)
+                        <tr>
+                            <td>
+                                @(sno++)
+                            </td>
+                            <td style="text-align: center;">
+                                @Html.DisplayFor(m => m[i].Year)
+                                @Html.HiddenFor(m => m[i].Year)
+                            </td>
+                            <td style="text-align:center;">
+                                @Html.HiddenFor(m => m[i].Semester)
+                                @Html.DisplayFor(m => m[i].Semester)
+                            </td>
+                            <td style="text-align: center;">
+                                @Html.DisplayFor(m => m[i].degree)
+                                @Html.HiddenFor(m => m[i].degree)
+                            </td>
+                            <td style="text-align:center;">
+                                @Html.HiddenFor(m => m[i].Semester)
+                                @Html.DisplayFor(m => m[i].Semester)
+                            </td>
+                            <td>
+                                @Html.HiddenFor(m => m[i].Labcode)
+                                @Html.DisplayFor(m => m[i].Labcode)
+                            </td>
+                            <td>
+                                @Html.HiddenFor(m => m[i].LabName)
+                                @Html.DisplayFor(m => m[i].LabName)
+                            </td>
+                            <td>
+                                @Html.HiddenFor(m => m[i].NoOfAvailabeLabs])
+                                @Html.DisplayFor(m => m[i].NoOfAvailabeLabs)
+                            </td>
+                            @*<td style="text-align:center;">
+                                <div class="checkbox">
+                                    @Html.CheckBoxFor(m => m.Item2[i].IsChecked, new { id = "IsChecked", @class = "forcheckbox" })
+                                    @Html.HiddenFor(m => m.Item2[i].Id, new { Value = Model.Item2[i].Id })
+                                </div>
+                            </td>*@
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>
+                            <input type="text" id="i-0" style="width: 80%; text-align: left; display: none;" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-1" style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-2" style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-3" style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-4" style="width: 90%; text-align: center" class="search_init">
+                        </th>
+                        <th>
+                            <input type="text" id="i-5" style="width: 90%; text-align: center" class="search_init">
+                        </th>
+                        <th>
+                            <input type="checkbox" id="ckbCheckAll" style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                        <th>
+                            <input type="checkbox" id="ckbCheckAll" style="width: 90%; text-align: center;" class="search_init">
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <input type="submit" value="Delete Labs" />
+    }
+}
